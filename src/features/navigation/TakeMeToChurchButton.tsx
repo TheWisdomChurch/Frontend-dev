@@ -250,7 +250,7 @@ export default function TakeMeToChurchButton({
               </p>
 
               <div className="mt-6 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
-                <div className="rounded-2xl bg-[#f4f1e9] p-4">
+                <div className="rounded-card bg-[var(--app-canvas-2)] p-4">
                   <Clock3
                     className="h-5 w-5 text-[var(--app-primary-dark)]"
                     aria-hidden="true"
@@ -262,7 +262,7 @@ export default function TakeMeToChurchButton({
                     Estimated time
                   </span>
                 </div>
-                <div className="rounded-2xl bg-[#f4f1e9] p-4">
+                <div className="rounded-card bg-[var(--app-canvas-2)] p-4">
                   <MapPin
                     className="h-5 w-5 text-[var(--app-primary-dark)]"
                     aria-hidden="true"
@@ -315,7 +315,7 @@ export default function TakeMeToChurchButton({
         forceBottomSheet
       >
         <div className="min-w-0">
-          <div className="flex items-start gap-3 rounded-2xl border border-amber-300/15 bg-amber-300/[0.06] p-4">
+          <div className="flex items-start gap-3 rounded-card border border-[var(--status-warning)]/15 bg-[var(--status-warning)]/[0.06] p-4">
             <LocateFixed className="mt-0.5 h-5 w-5 shrink-0 text-[var(--app-primary)]" />
             <p className="font-ui text-sm leading-6 text-white/62">
               {failure === 'permission_denied'

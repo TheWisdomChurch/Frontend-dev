@@ -3,13 +3,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
+import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { getEventTimestamp as getTimestamp } from '@/shared/utils/eventDate';
+import {
+  EditorialContainer,
+  EditorialPage,
+  EditorialEmptyState,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = [
@@ -109,16 +114,16 @@ export default function CalendarPage() {
   );
 
   return (
-    <main className="min-h-screen">
-      <PageHero
+    <EditorialPage>
+      <SiteHero
         eyebrow="Church Calendar"
         title="Every event, every month."
         subtitle="Browse the full calendar of services, programs, and special gatherings."
         compact
       />
 
-      <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-14 lg:py-18">
-        <Container size="xl">
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
           {/* Month navigation */}
           <ScrollFadeIn className="mb-10 flex items-center justify-between">
             <button
@@ -138,7 +143,7 @@ export default function CalendarPage() {
               </svg>
             </button>
             <div className="text-center">
-              <p className="font-headline text-heading-md font-normal text-[var(--app-ink)]">
+              <p className="font-ui text-heading-md font-semibold text-[var(--app-ink)]">
                 {MONTHS[viewMonth]}
               </p>
               <p className="font-ui text-label font-semibold text-[var(--app-ink)]/60">
@@ -253,7 +258,7 @@ export default function CalendarPage() {
                   return (
                     <div key={ev.id} className="flex items-center gap-6 py-5">
                       <div className="w-14 shrink-0 text-right">
-                        <p className="font-headline text-heading-md font-normal leading-none text-[var(--app-ink)]">
+                        <p className="font-ui text-heading-md font-semibold leading-none text-[var(--app-ink)]">
                           {d.getDate()}
                         </p>
                         <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-primary)]">
@@ -263,7 +268,7 @@ export default function CalendarPage() {
                         </p>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-headline text-body-lg font-normal text-[var(--app-ink)] truncate">
+                        <p className="font-ui text-body-lg font-semibold text-[var(--app-ink)] truncate">
                           {ev.title}
                         </p>
                         {ev.location && (
@@ -288,8 +293,20 @@ export default function CalendarPage() {
           )}
 
           {!loading && monthEvents.length === 0 && (
-            <ScrollFadeIn className="mt-10">
-              <p className="font-ui text-body-sm text-[var(--app-ink)]/60 text-center py-6">
+            <div className="mt-10">
+              <EditorialEmptyState
+                title={`No events scheduled for ${MONTHS[viewMonth]}.`}
+                description="Navigate to another month or view all upcoming events."
+                action={
+                  <Link
+                    href="/events"
+                    className="font-ui text-label font-bold text-[var(--app-primary-dark)] underline underline-offset-4"
+                  >
+                    View all events
+                  </Link>
+                }
+              />
+              <p className="sr-only">
                 No events scheduled for {MONTHS[viewMonth]}. Navigate to another
                 month or{' '}
                 <Link
@@ -299,10 +316,10 @@ export default function CalendarPage() {
                   view all events.
                 </Link>
               </p>
-            </ScrollFadeIn>
+            </div>
           )}
-        </Container>
-      </section>
-    </main>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }

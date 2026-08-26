@@ -10,13 +10,11 @@ import {
   Headphones,
   Play,
   Search,
-  Sparkles,
   X,
 } from 'lucide-react';
 
 import type { SermonDiscovery, YouTubeVideo } from '@/domain/media/types';
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
+import SiteHero from '@/features/hero/SiteHero';
 import { Media } from '@/shared/ui/Media';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
@@ -24,6 +22,14 @@ import { useChurchAnalytics } from '@/shared/analytics/churchAnalytics';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 import YouTubePlayer from './YoutubePlayer';
+import {
+  EditorialContainer,
+  EditorialEmptyState,
+  EditorialPanel,
+  EditorialSection,
+  editorialActionClass,
+  editorialFieldClass,
+} from '@/shared/ui/editorial';
 
 /** Sermon titles arrive as uploaded to YouTube — entity-encoded and often
  * "{Title} | {Church Name} | {Date}". Every user-facing heading in this
@@ -79,7 +85,7 @@ function SermonCard({
     <article className="group min-w-0">
       <button type="button" onClick={onPlay} className="block w-full text-left">
         <div
-          className={`relative overflow-hidden bg-[#111] ${compact ? 'aspect-[16/10]' : 'aspect-video'}`}
+          className={`relative overflow-hidden bg-[var(--app-dark-3)] ${compact ? 'aspect-[16/10]' : 'aspect-video'}`}
         >
           <Media
             src={sermon.thumbnail}
@@ -100,7 +106,7 @@ function SermonCard({
         <p className="mt-4 truncate font-ui text-[10px] font-bold uppercase tracking-[.19em] text-[var(--app-primary-dark)]">
           {sermon.series || 'Wisdom teaching'}
         </p>
-        <h3 className="mt-2 line-clamp-2 font-headline text-xl leading-[1.18] text-[var(--app-ink)] transition group-hover:text-[var(--app-primary-dark)]">
+        <h3 className="mt-2 line-clamp-2 font-ui text-xl font-semibold leading-[1.18] text-[var(--app-ink)] transition group-hover:text-[var(--app-primary-dark)]">
           {displayTitle(sermon.title)}
         </h3>
         <p className="mt-2 truncate font-ui text-xs text-black/48">
@@ -124,10 +130,10 @@ function Rail({
 }) {
   if (!sermons.length) return null;
   return (
-    <section className="border-t border-black/10 py-12 sm:py-16">
+    <section className="border-t border-black/10 py-section-xs">
       <div className="mb-7 flex items-end justify-between gap-5">
         <div>
-          <h2 className="font-headline text-3xl text-[var(--app-ink)] sm:text-4xl">
+          <h2 className="font-ui text-3xl font-medium tracking-[-0.035em] text-[var(--app-ink)] sm:text-4xl">
             {title}
           </h2>
           <p className="mt-2 max-w-xl font-ui text-sm leading-6 text-black/50">
@@ -291,18 +297,20 @@ export default function SermonLibrary({
 
   return (
     <>
-      <PageHero
+      <SiteHero
         eyebrow="Wisdom Church Media"
         title="Truth for every season."
         subtitle="Start with what matters to you. Discover relevant teachings, continue where you left off, and grow one message at a time."
         compact
       />
       {selected && (
-        <section
+        <EditorialSection
           ref={playerRef}
-          className="scroll-mt-20 overflow-hidden border-b border-white/10 bg-[#08080a] py-8 sm:py-12"
+          tone="dark"
+          compact
+          className="scroll-mt-20"
         >
-          <Container size="xl">
+          <EditorialContainer>
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(290px,.7fr)] lg:items-center">
               <YouTubePlayer
                 key={selected.id}
@@ -314,7 +322,7 @@ export default function SermonLibrary({
                 <p className="font-ui text-[10px] font-bold uppercase tracking-[.24em] text-[var(--app-primary)]">
                   Now playing · {selected.series}
                 </p>
-                <h1 className="mt-4 font-headline text-3xl leading-[1.08] text-white sm:text-4xl">
+                <h1 className="mt-4 font-ui text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl">
                   {displayTitle(selected.title)}
                 </h1>
                 <p className="mt-4 font-ui text-sm text-white/50">
@@ -331,7 +339,7 @@ export default function SermonLibrary({
                     href={selected.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 bg-[var(--app-primary)] px-5 py-3 font-ui text-xs font-bold uppercase tracking-wider text-black"
+                    className={editorialActionClass.primary}
                   >
                     Watch on YouTube <ArrowRight className="h-4 w-4" />
                   </a>
@@ -339,7 +347,7 @@ export default function SermonLibrary({
                     <button
                       type="button"
                       onClick={() => play(recommended[0])}
-                      className="border border-white/15 px-5 py-3 font-ui text-xs font-bold uppercase tracking-wider text-white"
+                      className={editorialActionClass.outline}
                     >
                       Play next
                     </button>
@@ -347,17 +355,14 @@ export default function SermonLibrary({
                 </div>
               </div>
             </div>
-          </Container>
-        </section>
+          </EditorialContainer>
+        </EditorialSection>
       )}
 
-      <section className="bg-[var(--app-canvas)] py-12 sm:py-16">
-        <Container size="xl">
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
           {unavailable && (
-            <section
-              className="overflow-hidden rounded-[1.75rem] bg-[#09090b] text-white shadow-[0_30px_90px_rgba(20,15,8,.18)] sm:rounded-[2.5rem]"
-              role="status"
-            >
+            <EditorialPanel tone="dark" role="status">
               <div className="grid lg:min-h-[620px] lg:grid-cols-[1.05fr_.95fr]">
                 <div className="relative min-h-[330px] overflow-hidden sm:min-h-[430px] lg:min-h-full">
                   <Media
@@ -366,7 +371,7 @@ export default function SermonLibrary({
                     sizes="(max-width:1024px) 100vw, 52vw"
                     className="object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-black/10 lg:to-[#09090b]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-black/10 lg:to-[var(--app-dark)]" />
                   <a
                     href={SOCIAL_LINKS.youtube}
                     target="_blank"
@@ -390,7 +395,7 @@ export default function SermonLibrary({
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--app-primary)]" />{' '}
                       Media library online
                     </div>
-                    <h2 className="mt-6 max-w-lg font-headline text-4xl leading-[1.02] sm:text-5xl lg:text-[3.5rem]">
+                    <h2 className="mt-6 max-w-lg font-ui text-4xl font-medium leading-[1.02] tracking-[-0.04em] sm:text-5xl lg:text-[3.5rem]">
                       Every message.
                       <br />
                       <em className="text-[var(--app-primary)]">
@@ -405,7 +410,7 @@ export default function SermonLibrary({
                     </p>
                     <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                       <a
-                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-6 font-ui text-xs font-bold uppercase tracking-[.13em] text-black transition hover:brightness-110"
+                        className={editorialActionClass.primary}
                         href={SOCIAL_LINKS.youtube}
                         target="_blank"
                         rel="noreferrer"
@@ -413,7 +418,7 @@ export default function SermonLibrary({
                         Explore all messages <ArrowRight className="h-4 w-4" />
                       </a>
                       <a
-                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/15 px-6 font-ui text-xs font-bold uppercase tracking-[.13em] text-white transition hover:border-white/35 hover:bg-white/[.06]"
+                        className={editorialActionClass.outline}
                         href={`${SOCIAL_LINKS.youtube}/streams`}
                         target="_blank"
                         rel="noreferrer"
@@ -459,7 +464,7 @@ export default function SermonLibrary({
                   </div>
                 </div>
               </div>
-            </section>
+            </EditorialPanel>
           )}
           {!unavailable && source === 'legacy' && (
             <p className="mb-6 font-ui text-xs text-black/45">
@@ -512,7 +517,7 @@ export default function SermonLibrary({
                   <p className="font-ui text-[10px] font-bold uppercase tracking-[.22em] text-[var(--app-primary-dark)]">
                     Complete library
                   </p>
-                  <h2 className="mt-2 font-headline text-3xl sm:text-4xl">
+                  <h2 className="mt-2 font-ui text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
                     Explore every message.
                   </h2>
                 </div>
@@ -520,7 +525,7 @@ export default function SermonLibrary({
                   {results.length} available
                 </p>
               </div>
-              <div className="mt-7 rounded-2xl border border-black/10 bg-white p-3 shadow-[0_18px_50px_rgba(20,15,8,.06)]">
+              <EditorialPanel className="mt-7 p-3">
                 <div className="flex gap-2">
                   <label className="relative min-w-0 flex-1">
                     <span className="sr-only">Search the sermon library</span>
@@ -534,7 +539,7 @@ export default function SermonLibrary({
                         setVisible(12);
                       }}
                       placeholder="Search a topic, title or speaker"
-                      className="h-12 w-full rounded-xl bg-black/[.035] pl-10 pr-10 font-ui text-sm outline-none ring-[var(--app-primary)] focus:ring-2"
+                      className={`${editorialFieldClass} h-12 pl-10 pr-10`}
                     />
                     {query && (
                       <button
@@ -568,7 +573,7 @@ export default function SermonLibrary({
                       aria-label="Filter by series"
                       value={series}
                       onChange={event => setSeries(event.target.value)}
-                      className="h-11 rounded-xl bg-black/[.035] px-3 font-ui text-sm"
+                      className={`${editorialFieldClass} h-11`}
                     >
                       <option value="all">Every series</option>
                       {seriesOptions.map(item => (
@@ -581,7 +586,7 @@ export default function SermonLibrary({
                       aria-label="Filter by speaker"
                       value={speaker}
                       onChange={event => setSpeaker(event.target.value)}
-                      className="h-11 rounded-xl bg-black/[.035] px-3 font-ui text-sm"
+                      className={`${editorialFieldClass} h-11`}
                     >
                       <option value="all">Every speaker</option>
                       {speakerOptions.map(item => (
@@ -594,7 +599,7 @@ export default function SermonLibrary({
                       aria-label="Sort library"
                       value={sort}
                       onChange={event => setSort(event.target.value as Sort)}
-                      className="h-11 rounded-xl bg-black/[.035] px-3 font-ui text-sm"
+                      className={`${editorialFieldClass} h-11`}
                     >
                       <option value="recommended">Recommended</option>
                       <option value="newest">Newest</option>
@@ -602,7 +607,7 @@ export default function SermonLibrary({
                     </select>
                   </div>
                 )}
-              </div>
+              </EditorialPanel>
               {activeFilters && (
                 <div className="mt-4 flex items-center justify-between">
                   <p className="font-ui text-xs text-black/45">
@@ -618,23 +623,20 @@ export default function SermonLibrary({
                 </div>
               )}
               {!results.length ? (
-                <div className="mt-8 rounded-3xl border border-black/10 bg-white px-6 py-14 text-center">
-                  <Sparkles className="mx-auto h-6 w-6 text-[var(--app-primary-dark)]" />
-                  <h3 className="mt-4 font-headline text-2xl">
-                    Let’s find another path
-                  </h3>
-                  <p className="mt-2 font-ui text-sm text-black/50">
-                    No message matches all those choices. Clear the filters to
-                    see the full library.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={reset}
-                    className="mt-5 font-ui text-sm font-bold text-[var(--app-primary-dark)] underline"
-                  >
-                    Show everything
-                  </button>
-                </div>
+                <EditorialEmptyState
+                  className="mt-8"
+                  title="Let’s find another path"
+                  description="No message matches all those choices. Clear the filters to see the full library."
+                  action={
+                    <button
+                      type="button"
+                      onClick={reset}
+                      className={editorialActionClass.dark}
+                    >
+                      Show everything
+                    </button>
+                  }
+                />
               ) : (
                 <div className="mt-9 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {results.slice(0, visible).map(item => (
@@ -660,12 +662,15 @@ export default function SermonLibrary({
             </section>
           )}
           {!unavailable && (
-            <div className="mt-16 grid gap-4 rounded-3xl bg-[var(--app-ink)] p-7 text-white sm:grid-cols-[1fr_auto] sm:items-center sm:p-10">
+            <EditorialPanel
+              tone="dark"
+              className="mt-16 grid gap-4 p-7 sm:grid-cols-[1fr_auto] sm:items-center sm:p-10"
+            >
               <div>
                 <p className="flex items-center gap-2 font-ui text-[10px] font-bold uppercase tracking-[.22em] text-[var(--app-primary)]">
                   <Clock3 className="h-4 w-4" /> Updated automatically
                 </p>
-                <p className="mt-3 max-w-xl font-headline text-2xl sm:text-3xl">
+                <p className="mt-3 max-w-xl font-ui text-2xl font-medium tracking-[-0.03em] sm:text-3xl">
                   Fresh teaching flows directly from the official Wisdom Church
                   channel.
                 </p>
@@ -674,14 +679,14 @@ export default function SermonLibrary({
                 href={SOCIAL_LINKS.youtube}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-ui text-xs font-bold uppercase tracking-wider text-black"
+                className={editorialActionClass.primary}
               >
                 Subscribe <ArrowRight className="h-4 w-4" />
               </a>
-            </div>
+            </EditorialPanel>
           )}
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
     </>
   );
 }

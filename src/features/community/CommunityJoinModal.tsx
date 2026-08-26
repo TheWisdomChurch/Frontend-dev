@@ -137,7 +137,7 @@ export default function CommunityJoinModal() {
     >
       {submitted ? (
         <div className="min-w-0 text-center">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-card border border-[var(--status-success)]/20 bg-[var(--status-success)]/10 text-[var(--status-success)]">
             <CheckCircle2 className="h-8 w-8" />
           </div>
           <h3 className="mt-5 break-words font-headline text-2xl leading-tight text-white sm:text-3xl">
@@ -162,7 +162,7 @@ export default function CommunityJoinModal() {
               href={whatsappHref}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-whatsapp,#25D366)] px-5 py-3 font-ui text-sm font-extrabold text-black transition hover:brightness-110"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button bg-[var(--app-whatsapp)] px-5 py-3 font-ui text-sm font-extrabold text-black transition hover:brightness-110"
             >
               <MessageCircle className="h-4 w-4" /> Continue on WhatsApp
             </a>
@@ -177,7 +177,7 @@ export default function CommunityJoinModal() {
         </div>
       ) : (
         <form className="min-w-0 space-y-5 pb-1" onSubmit={submit}>
-          <div className="relative overflow-hidden rounded-2xl border border-[var(--app-primary)]/20 bg-[linear-gradient(135deg,rgba(201,150,26,.15),rgba(255,255,255,.03))] p-4 sm:p-5">
+          <div className="relative overflow-hidden rounded-card border border-[var(--app-primary)]/20 bg-[var(--app-primary-10)] p-4 sm:p-5">
             <div className="relative flex min-w-0 items-start gap-3">
               <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[var(--app-primary)]/12 text-[var(--app-primary)]">
                 <HeartHandshake className="h-5 w-5" />
@@ -326,7 +326,7 @@ export default function CommunityJoinModal() {
 
           <div className="grid gap-4 rounded-2xl border border-white/8 bg-white/[0.025] p-4 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-5 sm:p-5">
             <div className="flex min-w-0 items-start gap-2 text-white/45">
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-success)]" />
               <p className="break-words font-ui text-xs leading-5">
                 Your request is recorded before the optional WhatsApp handoff.
               </p>
@@ -344,7 +344,7 @@ export default function CommunityJoinModal() {
           {submissionError ? (
             <div
               role="alert"
-              className="rounded-2xl border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 font-ui text-xs leading-5 text-rose-100"
+              className="rounded-card border border-[var(--status-error)]/20 bg-[var(--status-error)]/[0.08] px-4 py-3 font-ui text-xs leading-5 text-[var(--status-error)]"
             >
               <p>{submissionError}</p>
               <a

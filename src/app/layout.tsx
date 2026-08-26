@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 
 import '@/app/globals.scss';
 
-import { bricolageGrotesque, playfair, worksans } from '@/shared/fonts/fonts';
+import { dmSans, playfair } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
@@ -145,12 +145,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={cn(
-        bricolageGrotesque.variable,
-        worksans.variable,
-        playfair.variable,
-        'antialiased'
-      )}
+      className={cn(dmSans.variable, playfair.variable, 'antialiased')}
       suppressHydrationWarning
     >
       <body

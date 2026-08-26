@@ -304,7 +304,7 @@ export const OnlinegivingOptions = [
       // {
       //   bank: "Providus Bank",
       //   accountNumber: "9876 5432 1098",
-      //   accountName: "Wisdom House Church",
+      //   accountName: "The Wisdom Church",
       //   image:ProvidusBank// Optional
       // },
     ],

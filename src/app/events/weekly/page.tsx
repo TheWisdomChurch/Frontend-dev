@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
+import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildRecurringEventSchema, buildPageMetadata } from '@/lib/seo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import Arrow from '@/shared/ui/icons/Arrow';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
+import {
+  EditorialContainer,
+  EditorialPage,
+  EditorialHeader,
+  EditorialLink,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 
 // Metadata fields a route doesn't set are inherited from the parent layout,
 // not reset — without its own `alternates`, this page was silently
@@ -74,12 +78,12 @@ const RECURRING_SCHEMAS = [
 
 export default function WeeklyPage() {
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       {RECURRING_SCHEMAS.map((schema, i) => (
         <JsonLd key={i} data={schema} />
       ))}
 
-      <PageHero
+      <SiteHero
         eyebrow="Weekly Services"
         title="We gather. Every week."
         subtitle="Sunday morning worship, and Daily Prayer every weekday morning — all open to everyone."
@@ -87,18 +91,18 @@ export default function WeeklyPage() {
       />
 
       {/* Service panels */}
-      <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)]">
-        <Container size="xl">
-          <div className="divide-y divide-[var(--app-ink)]/8 border-b border-[var(--app-ink)]/8 py-14 lg:py-18">
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
+          <div className="divide-y divide-[var(--app-ink)]/8 border-b border-[var(--app-ink)]/8">
             {services.map((svc, i) => (
               <ScrollFadeIn key={svc.day} delay={i * 0.08}>
                 <div
-                  className={`grid gap-10 py-12 lg:grid-cols-2 lg:gap-20 lg:py-14 ${i === 0 ? 'pt-0' : ''}`}
+                  className={`grid gap-8 py-section-xs md:gap-10 lg:grid-cols-2 lg:gap-16 ${i === 0 ? 'pt-0' : ''} ${i === services.length - 1 ? 'pb-0' : ''}`}
                 >
                   {/* Left — day + time */}
                   <div>
                     <div className="flex items-baseline gap-5">
-                      <p className="font-headline text-display-sm font-normal leading-none text-[var(--app-ink)] lg:text-display-md">
+                      <p className="font-ui text-display-sm font-medium leading-none tracking-[-0.04em] text-[var(--app-ink)] lg:text-display-md">
                         {svc.day}
                       </p>
                       <p className="font-ui text-body-lg font-bold text-[var(--app-primary)]">
@@ -106,7 +110,7 @@ export default function WeeklyPage() {
                       </p>
                     </div>
                     <div className="mt-6 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-                    <p className="mt-5 font-headline text-heading-sm font-normal text-[var(--app-ink)]">
+                    <p className="mt-5 font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                       {svc.name}
                     </p>
                     <p className="mt-3 font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/70 max-w-sm">
@@ -143,44 +147,33 @@ export default function WeeklyPage() {
               </ScrollFadeIn>
             ))}
           </div>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* CTA dark */}
-      <ScrollFadeIn>
-        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
-          <SectionGlow />
-          <Container size="lg">
-            <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                First time?
-              </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
-                Walk in. You belong here.
-              </h2>
-              <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-body-sm leading-[1.9] text-white/70">
-                No pressure, no expectations — just come and experience the
-                community. Our welcome team will be right there when you arrive.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <PlanVisitTrigger
-                  icon={false}
-                  className="rounded-none px-8 py-3.5 text-label uppercase tracking-[0.14em]"
-                >
-                  Let us know you're coming <Arrow />
-                </PlanVisitTrigger>
-                <Link
-                  href="/events"
-                  className="inline-flex items-center justify-center gap-2 border border-white/18 px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] text-white/55 transition hover:border-white/35 hover:text-white"
-                >
-                  See all events
-                </Link>
-              </div>
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <div className="flex flex-col items-center gap-7 text-center">
+            <EditorialHeader
+              eyebrow="First time?"
+              title="Walk in. You belong here."
+              description="No pressure, no expectations—just come and experience the community. Our welcome team will be right there when you arrive."
+              tone="dark"
+            />
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <PlanVisitTrigger
+                icon={false}
+                className="rounded-none px-8 py-3.5 text-label uppercase tracking-[0.14em]"
+              >
+                Let us know you're coming <Arrow />
+              </PlanVisitTrigger>
+              <EditorialLink href="/events" variant="outline">
+                See all events
+              </EditorialLink>
             </div>
-          </Container>
-        </section>
-      </ScrollFadeIn>
-    </main>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }

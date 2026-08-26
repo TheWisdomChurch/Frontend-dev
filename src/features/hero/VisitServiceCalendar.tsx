@@ -81,7 +81,7 @@ export default function VisitServiceCalendar({
   return (
     <div className="mt-2 min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]">
       {selected ? (
-        <div className="flex min-w-0 flex-col gap-3 bg-[linear-gradient(135deg,rgba(201,150,26,.10),rgba(0,0,0,.12))] px-4 py-4 min-[420px]:flex-row min-[420px]:items-center sm:px-5">
+        <div className="flex min-w-0 flex-col gap-3 bg-[var(--app-primary-10)] px-4 py-4 min-[420px]:flex-row min-[420px]:items-center sm:px-5">
           <div className="flex min-w-0 flex-1 items-start gap-3">
             <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--app-primary)]/14 text-[var(--app-primary)]">
               <CalendarCheck2 className="h-5 w-5" />

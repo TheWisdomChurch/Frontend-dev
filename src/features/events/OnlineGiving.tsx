@@ -14,9 +14,11 @@ const GivingModal = dynamic(() => import('@/shared/ui/modals/GivingModal'), {
 import { handleContactCall } from '@/shared/utils/functionUtils/contactUtils';
 import apiClient from '@/lib/api';
 import type { GivingOption } from '@/lib/types';
-import { Section, Container } from '@/shared/layout';
-import SectionGlow from '@/shared/ui/SectionGlow';
-import { SectionHeading } from '@/shared/ui/SectionHeading';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 import {
   staggerContainer,
   staggerItem,
@@ -64,42 +66,26 @@ export default function OnlineGiving() {
 
   return (
     <>
-      <Section padding="none" className="relative bg-[var(--app-dark)]">
-        <SectionGlow />
-        <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
-          <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={staggerViewport}
-              className="max-w-xl lg:sticky lg:top-28 lg:col-start-1 lg:row-start-1"
-            >
-              <motion.p
-                variants={staggerItem}
-                className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
-              >
-                Give with purpose
-              </motion.p>
-              <SectionHeading tone="light" size="md" className="mt-5">
-                Your generosity
-                <br />
-                <span className="text-[var(--app-primary)]">builds</span> the
-                church.
-              </SectionHeading>
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <div className="grid gap-8 md:gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-6 xl:gap-x-20">
+            <div className="max-w-xl lg:sticky lg:top-28 lg:col-start-1 lg:row-start-1">
+              <EditorialHeader
+                eyebrow="Give with purpose"
+                title="Your generosity"
+                accent="builds the church."
+                tone="dark"
+              />
 
-              <motion.blockquote
-                variants={staggerItem}
-                className="mt-8 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-5 font-ui text-base italic leading-8 text-white/70"
-              >
+              <blockquote className="mt-8 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-5 font-ui text-base italic leading-8 text-white/70">
                 &ldquo;As each has purposed in his heart, so let him give… God
                 loves a cheerful giver.&rdquo;
                 <br />
                 <cite className="mt-2 block text-xs not-italic uppercase tracking-[0.16em] text-white/55">
                   2 Corinthians 9:7
                 </cite>
-              </motion.blockquote>
-            </motion.div>
+              </blockquote>
+            </div>
 
             {/* Giving options */}
             {loading ? (
@@ -129,7 +115,7 @@ export default function OnlineGiving() {
                 viewport={staggerViewport}
                 className="border-t border-white/15 lg:col-start-2 lg:row-start-1 lg:row-span-2"
               >
-                {givingOptions.slice(0, 3).map((opt, index) => (
+                {givingOptions.slice(0, 3).map(opt => (
                   <motion.button
                     key={opt.title}
                     variants={staggerItem}
@@ -137,11 +123,8 @@ export default function OnlineGiving() {
                     onClick={() => handleGive(opt)}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-                    className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/15 py-7 text-left transition-colors duration-200 hover:bg-white/[0.035] sm:gap-7 sm:px-5 sm:py-9"
+                    className="group grid w-full grid-cols-[1fr_auto] items-start gap-4 border-b border-white/15 py-7 text-left transition-colors duration-200 hover:bg-white/[0.035] sm:gap-7 sm:px-5 sm:py-9"
                   >
-                    <span className="pt-1 font-ui text-xs tabular-nums text-[var(--app-primary)]">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
                     <span>
                       <span className="block font-ui text-lg font-bold leading-6 text-white sm:text-xl">
                         {opt.title}
@@ -173,7 +156,7 @@ export default function OnlineGiving() {
                       actionLabel: 'Got it',
                     })
                   }
-                  className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-8 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex h-12 items-center gap-2 rounded-button bg-[var(--app-primary)] px-8 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   Give Online
                 </button>
@@ -190,7 +173,7 @@ export default function OnlineGiving() {
               <button
                 type="button"
                 onClick={handleContactCall}
-                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex h-11 items-center gap-2 rounded-button border border-white/15 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 <Phone className="h-3.5 w-3.5" />
                 Other ways to give
@@ -203,8 +186,8 @@ export default function OnlineGiving() {
               </Link>
             </motion.div>
           </div>
-        </Container>
-      </Section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {selected && (
         <GivingModal

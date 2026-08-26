@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 
 import type { Coordinates } from '@/domain/navigation/directions';
+import { editorialColorToken } from '@/shared/ui/editorial';
 
 let configuredKey: string | undefined;
 
@@ -64,7 +65,7 @@ export default function ChurchRouteMap({
           new google.maps.Polyline({
             map,
             path,
-            strokeColor: '#c9961a',
+            strokeColor: editorialColorToken.brand,
             strokeOpacity: 1,
             strokeWeight: 6,
           })
@@ -75,7 +76,11 @@ export default function ChurchRouteMap({
             map,
             position: originPosition,
             title: 'Your location',
-            label: { text: 'A', color: '#ffffff', fontWeight: '700' },
+            label: {
+              text: 'A',
+              color: editorialColorToken.white,
+              fontWeight: '700',
+            },
           })
         );
         overlays.push(
@@ -83,7 +88,11 @@ export default function ChurchRouteMap({
             map,
             position: path[path.length - 1]!,
             title: 'The Wisdom Church',
-            label: { text: 'W', color: '#ffffff', fontWeight: '700' },
+            label: {
+              text: 'W',
+              color: editorialColorToken.white,
+              fontWeight: '700',
+            },
           })
         );
 
@@ -104,7 +113,7 @@ export default function ChurchRouteMap({
 
   if (!browserKey) {
     return (
-      <div className="flex h-full min-h-[320px] items-center justify-center bg-[#ede9df] p-8 text-center font-ui text-sm text-black/65">
+      <div className="flex h-full min-h-[320px] items-center justify-center bg-[var(--app-canvas-3)] p-8 text-center font-ui text-sm text-black/65">
         The secure route is ready. Configure the browser-restricted Maps key to
         display the interactive map.
       </div>
@@ -113,7 +122,7 @@ export default function ChurchRouteMap({
 
   if (loadError) {
     return (
-      <div className="flex h-full min-h-[320px] items-center justify-center bg-[#ede9df] p-8 text-center font-ui text-sm text-black/65">
+      <div className="flex h-full min-h-[320px] items-center justify-center bg-[var(--app-canvas-3)] p-8 text-center font-ui text-sm text-black/65">
         The map could not load. You can still continue with turn-by-turn
         navigation.
       </div>
@@ -121,7 +130,7 @@ export default function ChurchRouteMap({
   }
 
   return (
-    <div className="relative h-full min-h-[320px] w-full bg-[#ede9df]">
+    <div className="relative h-full min-h-[320px] w-full bg-[var(--app-canvas-3)]">
       <div
         ref={containerRef}
         className="absolute inset-0"
@@ -129,7 +138,7 @@ export default function ChurchRouteMap({
         aria-label="Driving route from your location to The Wisdom Church"
       />
       {!ready ? (
-        <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[#ede9df] font-ui text-sm text-black/60">
+        <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[var(--app-canvas-3)] font-ui text-sm text-black/60">
           Loading your route map…
         </div>
       ) : null}

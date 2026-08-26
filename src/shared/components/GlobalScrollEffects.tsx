@@ -61,9 +61,7 @@ export default function GlobalScrollEffects() {
     const runEffects = () => {
       if (cancelled) return;
 
-      const root = document.querySelector(
-        'main.page-shell'
-      ) as HTMLElement | null;
+      const root = document.querySelector<HTMLElement>('.page-shell');
       if (!root) return;
 
       const reduceMotion = window.matchMedia(
@@ -80,10 +78,65 @@ export default function GlobalScrollEffects() {
       const parallaxScale = isTablet ? 0.5 : 1;
 
       ctx = gsap.context(() => {
+        const hero = root.querySelector<HTMLElement>('[data-site-hero]');
         const revealTargets = collectRevealTargets(root);
         const parallaxTargets = Array.from(
           root.querySelectorAll<HTMLElement>('[data-parallax-global]')
         ).filter(isEligibleTarget);
+
+        if (!reduceMotion && hero) {
+          const media = hero.querySelector<HTMLElement>('[data-hero-media]');
+          const overlay = hero.querySelector<HTMLElement>(
+            '[data-hero-overlay]'
+          );
+          const titleLines = hero.querySelectorAll<HTMLElement>(
+            '[data-hero-title-line]'
+          );
+          const items = hero.querySelectorAll<HTMLElement>('[data-hero-item]');
+
+          const heroTimeline = gsap.timeline({
+            defaults: { ease: 'power3.out' },
+          });
+
+          if (media) {
+            heroTimeline.fromTo(
+              media,
+              { scale: isMobile ? 1.035 : 1.075 },
+              { scale: 1, duration: isMobile ? 1.1 : 1.55, ease: 'power2.out' },
+              0
+            );
+          }
+          if (overlay) {
+            heroTimeline.fromTo(
+              overlay,
+              { opacity: 0.35 },
+              { opacity: 1, duration: 1.1 },
+              0
+            );
+          }
+          heroTimeline.fromTo(
+            titleLines,
+            { yPercent: 112, autoAlpha: 0 },
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+              duration: isMobile ? 0.72 : 0.95,
+              stagger: 0.1,
+            },
+            0.18
+          );
+          heroTimeline.fromTo(
+            items,
+            { y: isMobile ? 14 : 20, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.68,
+              stagger: 0.08,
+            },
+            0.34
+          );
+        }
 
         if (!reduceMotion && revealTargets.length > 0) {
           gsap.set(revealTargets, {

@@ -93,7 +93,7 @@ const CheckoutForm = () => {
       title: 'Bank Transfer',
       description: 'Transfer to our account and upload proof',
       icon: Building,
-      color: '#3b82f6',
+      color: 'var(--status-info)',
       fee: 0,
     },
     {
@@ -101,7 +101,7 @@ const CheckoutForm = () => {
       title: 'Online Payment',
       description: 'Currently under maintenance',
       icon: CreditCard,
-      color: '#22c55e',
+      color: 'var(--status-success)',
       fee: 0,
       disabled: true,
     },
@@ -110,7 +110,7 @@ const CheckoutForm = () => {
       title: 'Pay on Delivery',
       description: 'Pay when your order arrives (Delivery fee applies)',
       icon: Truck,
-      color: '#eab308',
+      color: 'var(--status-warning)',
       fee: deliveryFee,
     },
   ];
@@ -315,7 +315,7 @@ const CheckoutForm = () => {
 
   const inputClass = (field: string) =>
     `w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200 bg-white/[0.04] text-white ${
-      formErrors[field] ? 'border-red-500' : 'border-white/[0.14]'
+      formErrors[field] ? 'border-[var(--status-error)]' : 'border-white/[0.14]'
     }`;
 
   return (
@@ -384,7 +384,7 @@ const CheckoutForm = () => {
                   placeholder=""
                 />
                 {formErrors[field] && (
-                  <Caption className="text-red-500 text-xs mt-1">
+                  <Caption className="text-[var(--status-error)] text-xs mt-1">
                     {formErrors[field]}
                   </Caption>
                 )}
@@ -610,7 +610,7 @@ const CheckoutForm = () => {
                         className={inputClass('customerAccountName')}
                       />
                       {formErrors.customerAccountName && (
-                        <Caption className="text-red-500 text-xs mt-1">
+                        <Caption className="text-[var(--status-error)] text-xs mt-1">
                           {formErrors.customerAccountName}
                         </Caption>
                       )}
@@ -629,7 +629,7 @@ const CheckoutForm = () => {
                         className={inputClass('customerBankName')}
                       />
                       {formErrors.customerBankName && (
-                        <Caption className="text-red-500 text-xs mt-1">
+                        <Caption className="text-[var(--status-error)] text-xs mt-1">
                           {formErrors.customerBankName}
                         </Caption>
                       )}
@@ -652,7 +652,7 @@ const CheckoutForm = () => {
                         htmlFor="paymentSlip"
                         className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 hover:border-yellow-400 bg-white/[0.04] ${
                           formErrors.paymentSlip
-                            ? 'border-red-500'
+                            ? 'border-[var(--status-error)]'
                             : 'border-white/[0.14]'
                         }`}
                       >
@@ -663,7 +663,7 @@ const CheckoutForm = () => {
                               {formData.paymentSlip.name}
                             </BaseText>
                             {uploadProgress > 0 && uploadProgress < 100 && (
-                              <div className="mt-2 h-2 w-48 rounded-full bg-gray-700">
+                              <div className="mt-2 h-2 w-48 rounded-full bg-[var(--app-dark-3)]">
                                 <div
                                   className="bg-green-500 h-2 rounded-full transition-all duration-300"
                                   // eslint-disable-next-line no-restricted-syntax
@@ -692,7 +692,7 @@ const CheckoutForm = () => {
                       </label>
                     </div>
                     {formErrors.paymentSlip && (
-                      <Caption className="text-red-500 text-xs mt-1">
+                      <Caption className="text-[var(--status-error)] text-xs mt-1">
                         {formErrors.paymentSlip}
                       </Caption>
                     )}
@@ -779,7 +779,7 @@ const CheckoutForm = () => {
                   className={inputClass('address')}
                 />
                 {formErrors.address && (
-                  <Caption className="text-red-500 text-xs mt-1">
+                  <Caption className="text-[var(--status-error)] text-xs mt-1">
                     {formErrors.address}
                   </Caption>
                 )}
@@ -814,7 +814,7 @@ const CheckoutForm = () => {
                   className={inputClass('zipCode')}
                 />
                 {formErrors.zipCode ? (
-                  <Caption className="mt-1 text-xs text-red-500">
+                  <Caption className="mt-1 text-xs text-[var(--status-error)]">
                     {formErrors.zipCode}
                   </Caption>
                 ) : null}
@@ -828,7 +828,7 @@ const CheckoutForm = () => {
           <H3 className="text-xl font-bold mb-6 text-white">Order Summary</H3>
 
           <div className="space-y-4">
-            <div className="mb-4 rounded-xl bg-gray-900 p-3">
+            <div className="mb-4 rounded-card bg-[var(--app-dark-3)] p-3">
               <Caption className="text-sm font-medium mb-1 text-white/60">
                 Order ID
               </Caption>
@@ -904,10 +904,12 @@ const CheckoutForm = () => {
         </div>
 
         {formErrors.submit && (
-          <div className="rounded-2xl border border-red-800 bg-red-900/30 p-4">
+          <div className="rounded-card border border-[var(--status-error)]/40 bg-[var(--status-error)]/10 p-4">
             <FlexboxLayout align="center" gap="sm">
-              <AlertCircle className="h-5 w-5 text-red-400" />
-              <Caption className="text-red-400">{formErrors.submit}</Caption>
+              <AlertCircle className="h-5 w-5 text-[var(--status-error)]" />
+              <Caption className="text-[var(--status-error)]">
+                {formErrors.submit}
+              </Caption>
             </FlexboxLayout>
           </div>
         )}

@@ -139,10 +139,10 @@ const YouTubePlayer = ({
     >
       {/* Loading State */}
       {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-black z-10">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-[var(--app-dark-2)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
-            <Caption className="text-gray-300">Loading video...</Caption>
+            <Caption className="text-white/70">Loading video...</Caption>
           </div>
         </div>
       )}

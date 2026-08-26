@@ -24,11 +24,11 @@ const sizeClasses: Record<ContainerSize, string> = {
 
 const paddingClasses: Record<ContainerPadding, string> = {
   none: 'px-0',
-  xs: 'px-3 sm:px-4',
-  sm: 'px-4 sm:px-5 lg:px-6',
-  md: 'px-4 sm:px-6 lg:px-8',
-  lg: 'px-5 sm:px-8 lg:px-10',
-  xl: 'px-5 sm:px-10 lg:px-12',
+  xs: 'px-[var(--page-gutter-compact)]',
+  sm: 'px-[var(--page-gutter)]',
+  md: 'px-[var(--page-gutter)]',
+  lg: 'px-[var(--page-gutter)]',
+  xl: 'px-[var(--page-gutter)]',
 };
 
 export default function Container({

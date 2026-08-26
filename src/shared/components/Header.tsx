@@ -275,10 +275,6 @@ export default function Header() {
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ '--nav-i': i } as React.CSSProperties}
                 >
-                  <span className="nav-item__num" aria-hidden="true">
-                    0{i + 1}
-                  </span>
-
                   <Link
                     href={item.href}
                     prefetch={false}

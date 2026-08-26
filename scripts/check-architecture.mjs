@@ -4,6 +4,39 @@ import { join, relative } from 'node:path';
 const root = process.cwd();
 const violations = [];
 
+const requiredPublicPages = [
+  'src/app/page.tsx',
+  'src/app/about/page.tsx',
+  'src/app/contact/page.tsx',
+  'src/app/cookies/page.tsx',
+  'src/app/privacy/page.tsx',
+  'src/app/terms/page.tsx',
+  'src/app/events/page.tsx',
+  'src/app/events/calendar/page.tsx',
+  'src/app/events/upcoming/page.tsx',
+  'src/app/events/weekly/page.tsx',
+  'src/app/leadership/page.tsx',
+  'src/app/ministries/page.tsx',
+  'src/app/ministries/children/page.tsx',
+  'src/app/ministries/men/page.tsx',
+  'src/app/ministries/outreach/page.tsx',
+  'src/app/ministries/women/page.tsx',
+  'src/app/ministries/youth/page.tsx',
+  'src/app/pastoral/page.tsx',
+  'src/app/resources/page.tsx',
+  'src/app/resources/blogs/page.tsx',
+  'src/app/resources/publications/page.tsx',
+  'src/app/resources/sermons/page.tsx',
+  'src/app/resources/store/page.tsx',
+  'src/app/testimonies/page.tsx',
+];
+
+for (const page of requiredPublicPages) {
+  if (!existsSync(join(root, page))) {
+    violations.push(`${page}: required public route entry is missing`);
+  }
+}
+
 const forbiddenRootFiles = [
   'ANALYTICS_CONFIGURATION.ts',
   'ANALYTICS_EXAMPLES.tsx',
@@ -37,6 +70,23 @@ const sourceFiles = filesBelow(join(root, 'src')).filter(file =>
   /\.(?:ts|tsx)$/.test(file)
 );
 
+const editorialFeatureFiles = new Set([
+  'src/features/Conversations.tsx',
+  'src/features/events/EventsShowcase.tsx',
+  'src/features/events/JoinUs.tsx',
+  'src/features/events/OnlineGiving.tsx',
+  'src/features/resources/Resource.tsx',
+  'src/features/resources/Sermons/SermonLibrary.tsx',
+  'src/features/testimonials/HomeTestimonials.tsx',
+  'src/shared/ui/forms/eventsForm/PastoralCare.tsx',
+]);
+
+const publicPresentationFiles = new Set([
+  ...editorialFeatureFiles,
+  'src/features/PremiumHome.tsx',
+  'src/app/resources/blogs/BlogSubscribeForm.tsx',
+]);
+
 for (const file of sourceFiles) {
   const source = readFileSync(file, 'utf8');
   const displayPath = relative(root, file);
@@ -47,6 +97,46 @@ for (const file of sourceFiles) {
 
   if (source.trim().length === 0) {
     violations.push(`${displayPath}: empty source files are not allowed`);
+  }
+
+  if (editorialFeatureFiles.has(displayPath)) {
+    if (/from\s+['"]@\/shared\/layout['"]/.test(source)) {
+      violations.push(
+        `${displayPath}: public-facing feature sections must compose the editorial system, not legacy layout primitives`
+      );
+    }
+    if (/SectionGlow|GridBackground/.test(source)) {
+      violations.push(
+        `${displayPath}: public-facing feature sections must not restore retired glow/grid decoration`
+      );
+    }
+  }
+
+  const isPublicPresentation =
+    displayPath.startsWith('src/app/') ||
+    displayPath.startsWith('src/features/') ||
+    displayPath.startsWith('src/shared/ui/forms/') ||
+    publicPresentationFiles.has(displayPath);
+  if (isPublicPresentation) {
+    const rawPalette =
+      /(?:bg|text|border|ring|shadow)-(?:stone|amber|rose|emerald|red|gray|zinc|neutral|slate)-\d+/;
+    const rawColor = /#[0-9a-fA-F]{3,8}|rgba?\(/;
+    if (rawPalette.test(source) || rawColor.test(source)) {
+      violations.push(
+        `${displayPath}: public presentation must use semantic design tokens instead of raw palette or color values`
+      );
+    }
+  }
+
+  for (const match of source.matchAll(
+    /['"`](\/(?:images|Picflow)\/[^'"`?#]+)['"`]/g
+  )) {
+    const publicAsset = join(root, 'public', match[1]);
+    if (!existsSync(publicAsset)) {
+      violations.push(
+        `${displayPath}: referenced public asset does not exist: ${match[1]}`
+      );
+    }
   }
 
   if (
@@ -87,6 +177,33 @@ for (const file of sourceFiles) {
       violations.push(
         `${displayPath}: metadata exports belong in a server component or route layout`
       );
+    }
+
+    if (/\/page\.tsx$/.test(displayPath)) {
+      if (/<main\b/.test(source)) {
+        violations.push(
+          `${displayPath}: route page shells must use EditorialPage instead of handwritten main elements`
+        );
+      }
+      if (
+        /EditorialSection/.test(source) &&
+        !/EditorialPage/.test(source) &&
+        !/MinistryPageTemplate/.test(source)
+      ) {
+        violations.push(
+          `${displayPath}: routes composing editorial sections must declare an EditorialPage shell`
+        );
+      }
+      if (/from\s+['"]@\/shared\/layout['"]/.test(source)) {
+        violations.push(
+          `${displayPath}: route pages must use the editorial page system instead of the legacy shared layout primitives`
+        );
+      }
+      if (/SectionGlow|GridBackground/.test(source)) {
+        violations.push(
+          `${displayPath}: route pages must not restore the retired glow/grid presentation architecture`
+        );
+      }
     }
   }
 }

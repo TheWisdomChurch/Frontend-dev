@@ -29,8 +29,13 @@ if [[ "${KEEP_PREPUSH_ARTIFACTS:-0}" != "1" ]]; then
   rm -rf .next-prepush
 fi
 
-# ── 1. TypeScript – full project ─────────────────────────────────────────────
-echo "[pre-push] 1/3  TypeScript full type check …"
+# ── 1. Architecture and route integrity ──────────────────────────────────────
+echo "[pre-push] 1/4  Architecture and route integrity …"
+node scripts/check-architecture.mjs
+echo "[pre-push] ✔  Architecture passed."
+
+# ── 2. TypeScript – full project ─────────────────────────────────────────────
+echo "[pre-push] 2/4  TypeScript full type check …"
 mkdir -p .cache/tsc
 node ./node_modules/typescript/bin/tsc \
   --noEmit \
@@ -39,8 +44,8 @@ node ./node_modules/typescript/bin/tsc \
   --tsBuildInfoFile .cache/tsc/pre-push.tsbuildinfo
 echo "[pre-push] ✔  TypeScript passed."
 
-# ── 2. ESLint – full project (errors only; warnings are non-blocking) ────────
-echo "[pre-push] 2/3  ESLint full scan (errors block push) …"
+# ── 3. ESLint – full project (errors only; warnings are non-blocking) ────────
+echo "[pre-push] 3/4  ESLint full scan (errors block push) …"
 node ./node_modules/eslint/bin/eslint.js src \
   --ext .ts,.tsx,.js,.jsx \
   --cache \
@@ -48,7 +53,7 @@ node ./node_modules/eslint/bin/eslint.js src \
   --no-warn-ignored
 echo "[pre-push] ✔  ESLint passed (0 errors)."
 
-# ── 3. Next.js production build ──────────────────────────────────────────────
+# ── 4. Next.js production build ──────────────────────────────────────────────
 if [[ "${SKIP_PREPUSH_BUILD:-0}" == "1" ]]; then
   echo "[pre-push] SKIP_PREPUSH_BUILD=1 — skipping build."
   echo ""
@@ -56,7 +61,7 @@ if [[ "${SKIP_PREPUSH_BUILD:-0}" == "1" ]]; then
   exit 0
 fi
 
-echo "[pre-push] 3/3  Next.js production build …"
+echo "[pre-push] 4/4  Next.js production build …"
 NEXT_DIST_DIR=.next-prepush node ./node_modules/next/dist/bin/next build --webpack
 echo "[pre-push] ✔  Build passed."
 

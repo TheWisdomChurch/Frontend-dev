@@ -20,12 +20,15 @@ import {
   Video,
 } from 'lucide-react';
 
-import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { BodySM, Caption } from '@/shared/text';
-import SectionGlow from '@/shared/ui/SectionGlow';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import { isValidNationalPhone, PHONE_COUNTRIES } from '@/lib/validation/phone';
@@ -225,7 +228,11 @@ const mSelect =
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return <p className="mt-1.5 font-ui text-label text-rose-300">{message}</p>;
+  return (
+    <p className="mt-1.5 font-ui text-label text-[var(--status-error)]">
+      {message}
+    </p>
+  );
 }
 
 const defaultValues: ModalValues = {
@@ -244,7 +251,7 @@ const defaultValues: ModalValues = {
 
 /* ─── Component ───────────────────────────────────────────────────── */
 
-export default function JoinWisdomHouse() {
+export default function JoinWorkforce() {
   const { open } = useServiceUnavailable();
 
   // modalStep === null means closed. 'detail' shows the department
@@ -358,36 +365,25 @@ export default function JoinWisdomHouse() {
   });
 
   return (
-    <Section
-      padding="none"
-      fullHeight={false}
-      className="relative overflow-hidden bg-[var(--app-dark)]"
-    >
-      <SectionGlow />
-
+    <EditorialSection tone="dark" flush className="overflow-hidden">
       {/* ── Banner ───────────────────────────────────────────── */}
       {/* TODO: was a photo banner (Dept_1) — source image is missing from
           the repo; needs a real photo re-uploaded to shared/assets. */}
       <div className="relative overflow-hidden border-b border-white/8">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_25%,rgba(201,150,26,0.18),transparent_55%)]" />
         </div>
 
-        <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
+        <EditorialContainer className="relative py-section-xs">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Join the workforce
-              </p>
-              <h2 className="font-headline text-display-md font-normal text-white">
-                Serve with excellence.
-              </h2>
-              <p className="mt-3 max-w-[460px] font-ui text-body-md leading-[1.8] text-white/62">
-                Use your gifts to build the church. Every team here has a role
-                and a seat — find yours.
-              </p>
-            </div>
+            <EditorialHeader
+              eyebrow="Join the workforce"
+              title="Serve with"
+              accent="excellence."
+              description="Use your gifts to build the church. Every team here has a role and a seat — find yours."
+              tone="dark"
+              className="max-w-2xl"
+            />
 
             {submitted && (
               <div className="inline-flex items-center gap-2 font-ui text-body-sm font-semibold text-[var(--app-primary)]">
@@ -416,23 +412,19 @@ export default function JoinWisdomHouse() {
               </div>
             ))}
           </div>
-        </Container>
+        </EditorialContainer>
       </div>
 
       {/* ── Department index ──────────────────────────────────── */}
-      <Container size="xl" className="relative py-12 sm:py-14 lg:py-[4.5rem]">
+      <EditorialContainer className="relative py-section-xs">
         <div className="mb-8 grid gap-5 border-b border-white/10 pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
-          <div>
-            <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-              Serve at Wisdom Church
-            </p>
-            <h3 className="mt-3 max-w-2xl font-sans text-display-md font-black uppercase leading-[0.94] tracking-[-0.04em] text-white">
-              Bring your gift.
-              <span className="block text-[var(--app-primary)]">
-                Build with us.
-              </span>
-            </h3>
-          </div>
+          <EditorialHeader
+            eyebrow="Serve at Wisdom Church"
+            title="Bring your gift."
+            accent="Build with us."
+            tone="dark"
+            size="sm"
+          />
           <p className="max-w-sm font-ui text-sm leading-6 text-white/45 sm:text-right">
             Whatever your experience, there is room to grow, contribute and
             serve alongside others.
@@ -455,10 +447,10 @@ export default function JoinWisdomHouse() {
                 onClick={() => openFor(dept)}
                 whileTap={{ scale: 0.985 }}
                 transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                className={`group relative flex min-h-[176px] flex-col justify-between overflow-hidden bg-[#0d0d0d] p-4 text-left transition-colors duration-300 hover:bg-[#16130d] sm:min-h-[220px] sm:p-6 lg:min-h-[245px] ${departmentSpanPattern[index % departmentSpanPattern.length]}`}
+                className={`group relative flex min-h-[176px] flex-col justify-between overflow-hidden bg-[var(--app-dark-2)] p-4 text-left transition-colors duration-300 hover:bg-[var(--app-dark-3)] sm:min-h-[220px] sm:p-6 lg:min-h-[245px] ${departmentSpanPattern[index % departmentSpanPattern.length]}`}
               >
                 <span
-                  className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_35%,rgba(201,150,26,0.13))] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  className="pointer-events-none absolute inset-0 bg-[var(--app-primary-10)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   aria-hidden="true"
                 />
                 <div className="relative flex items-start justify-between gap-4">
@@ -490,7 +482,7 @@ export default function JoinWisdomHouse() {
           <button
             type="button"
             onClick={openGeneric}
-            className="group inline-flex h-11 items-center gap-2 border border-white/18 bg-transparent px-6 font-ui text-label font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
+            className="group inline-flex h-11 items-center gap-2 rounded-button border border-white/18 bg-transparent px-6 font-ui text-label font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
           >
             Not sure which team? Apply anyway
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -499,7 +491,7 @@ export default function JoinWisdomHouse() {
             No experience required — just a willing heart.
           </p>
         </div>
-      </Container>
+      </EditorialContainer>
 
       {/* ── Department detail + application modal ─────────────────── */}
       <BaseModal
@@ -736,6 +728,6 @@ export default function JoinWisdomHouse() {
           </div>
         )}
       </BaseModal>
-    </Section>
+    </EditorialSection>
   );
 }

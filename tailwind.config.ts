@@ -17,7 +17,7 @@ export default {
       ),
       fontFamily: {
         sans: [
-          'var(--font-bricolage)',
+          'var(--font-product-sans)',
           'Inter',
           'SF Pro Text',
           'Segoe UI',
@@ -27,7 +27,7 @@ export default {
         ],
         serif: ['var(--font-playfair)', 'serif'],
         body: [
-          'var(--font-bricolage)',
+          'var(--font-product-sans)',
           'Inter',
           'SF Pro Text',
           'Segoe UI',
@@ -36,7 +36,7 @@ export default {
           'sans-serif',
         ],
         ui: [
-          'var(--font-bricolage)',
+          'var(--font-product-sans)',
           'Inter',
           'SF Pro Text',
           'Segoe UI',

@@ -12,7 +12,7 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#07060a]">
+      <body className="min-h-screen bg-[var(--app-dark)]">
         <ErrorView
           error={error}
           onRetry={reset}

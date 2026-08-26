@@ -15,13 +15,18 @@ import {
   ShoppingBag,
 } from 'lucide-react';
 
-import { Container, Section } from '@/shared/layout';
-import GridBackground from '@/shared/ui/GridBackground';
-import { H2, BodySM, BaseText, LightText } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { BodySM, BaseText, LightText } from '@/shared/text';
 import OrderConfirmation from '@/features/store/Store/orderDetails';
-import PageHero from '@/features/hero/PageHero';
+import SiteHero from '@/features/hero/SiteHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialPanel,
+  EditorialPage,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 
 const nextSteps = [
   {
@@ -58,38 +63,29 @@ function SimpleConfirmation() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--app-dark)] text-white">
-      <PageHero
+    <EditorialPage tone="dark">
+      <SiteHero
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
         description="Your order is confirmed and a receipt has been sent to your email."
         compact
       />
 
-      <Section
-        padding="lg"
-        fullHeight={false}
-        className="relative overflow-hidden bg-[var(--app-dark)]"
-      >
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(201,150,26,0.11),transparent_34%),radial-gradient(circle_at_15%_30%,rgba(255,255,255,0.06),transparent_30%)]" />
-          <GridBackground />
-        </div>
-
-        <Container size="xl" className="relative z-10">
-          <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] shadow-[0_30px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <EditorialPanel tone="dark" className="mx-auto max-w-5xl">
             <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
               <div className="confirmation-animate border-b border-white/10 p-6 text-center sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
-                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10 text-green-500 shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10 text-green-500">
                   <CheckCircle2 className="h-12 w-12" />
                 </div>
 
-                <H2
-                  className="mt-7 text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
-                  useThemeColor={false}
-                >
-                  Order Confirmed
-                </H2>
+                <EditorialHeader
+                  eyebrow="Purchase complete"
+                  title="Order confirmed."
+                  tone="dark"
+                  className="mt-7"
+                />
 
                 <LightText
                   className="mt-4 block text-base leading-7 text-white/62"
@@ -108,28 +104,20 @@ function SimpleConfirmation() {
                 </BaseText>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                  <Link href="/resources/store">
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      curvature="full"
-                      leftIcon={<ShoppingBag className="h-5 w-5" />}
-                      className="h-12 w-full px-6 font-bold sm:w-auto"
-                    >
-                      Continue Shopping
-                    </Button>
+                  <Link
+                    href="/resources/store"
+                    className={`${editorialActionClass.primary} w-full gap-2 sm:w-auto`}
+                  >
+                    <ShoppingBag className="h-5 w-5" />
+                    Continue Shopping
                   </Link>
 
-                  <Link href="/">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      curvature="full"
-                      leftIcon={<Home className="h-5 w-5" />}
-                      className="h-12 w-full border border-[var(--app-primary)]/50 px-6 font-bold text-[var(--app-primary)] sm:w-auto"
-                    >
-                      Back to Home
-                    </Button>
+                  <Link
+                    href="/"
+                    className={`${editorialActionClass.outline} w-full gap-2 text-[var(--app-primary)] sm:w-auto`}
+                  >
+                    <Home className="h-5 w-5" />
+                    Back to Home
                   </Link>
                 </div>
               </div>
@@ -149,7 +137,7 @@ function SimpleConfirmation() {
                     return (
                       <div
                         key={item.title}
-                        className="confirmation-animate rounded-[1.35rem] border border-white/10 bg-black/24 p-4"
+                        className="confirmation-animate border-t border-white/12 p-4"
                         // eslint-disable-next-line no-restricted-syntax
                         style={{ transitionDelay: `${index * 60}ms` }}
                       >
@@ -172,7 +160,7 @@ function SimpleConfirmation() {
                   })}
                 </div>
 
-                <div className="confirmation-animate mt-6 rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
+                <div className="confirmation-animate mt-6 border-t border-white/12 p-4">
                   <BodySM className="text-white/60">
                     Need help with your order? Contact the church/store team
                     from the contact page and include your order information.
@@ -188,10 +176,10 @@ function SimpleConfirmation() {
                 </div>
               </div>
             </div>
-          </div>
-        </Container>
-      </Section>
-    </div>
+          </EditorialPanel>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }
 

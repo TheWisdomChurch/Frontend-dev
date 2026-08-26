@@ -5,8 +5,13 @@ import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 
-import { Container, Section } from '@/shared/layout';
-import { SectionHeading } from '@/shared/ui/SectionHeading';
+import {
+  EditorialContainer,
+  EditorialEmptyState,
+  EditorialHeader,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 import {
   staggerContainer,
   staggerItem,
@@ -150,42 +155,21 @@ export default function HomeTestimonials() {
   const q = quotes[current];
 
   return (
-    <Section padding="none" className="bg-[var(--app-canvas-2)]">
-      <Container size="2xl" className="py-16 sm:py-20 lg:py-24">
+    <EditorialSection tone="muted">
+      <EditorialContainer>
         <div
-          className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-6"
+          className="grid gap-8 md:gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-6 xl:gap-x-20"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Intro column */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={staggerViewport}
+          <EditorialHeader
+            eyebrow="Testimonies"
+            title="Real stories,"
+            accent="real breakthroughs."
+            description="Hear how God is moving through worship, healing, and everyday faithfulness in the Wisdom Church community."
             className="max-w-xl lg:sticky lg:top-28 lg:col-start-1 lg:row-start-1"
-          >
-            <motion.p
-              variants={staggerItem}
-              className="font-ui text-xs font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]"
-            >
-              Testimonies
-            </motion.p>
-            <SectionHeading tone="dark" size="md" className="mt-5">
-              Real stories,
-              <br />
-              <span className="text-[var(--app-primary)]">real</span>{' '}
-              breakthroughs.
-            </SectionHeading>
-
-            <motion.p
-              variants={staggerItem}
-              className="mt-8 max-w-md font-ui text-base leading-7 text-[color-mix(in_srgb,var(--app-ink)_60%,transparent)]"
-            >
-              Hear how God is moving through worship, healing, and everyday
-              faithfulness in the Wisdom Church community.
-            </motion.p>
-          </motion.div>
+          />
 
           {/* Testimony content */}
           {loading ? (
@@ -204,24 +188,19 @@ export default function HomeTestimonials() {
               </div>
             </div>
           ) : !q ? (
-            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] px-6 text-center lg:col-start-2 lg:row-start-1 lg:row-span-2">
-              <p
-                className="font-headline font-normal italic text-[color-mix(in_srgb,var(--app-ink)_70%,transparent)]"
-                // eslint-disable-next-line no-restricted-syntax
-                style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}
-              >
-                Testimonies coming soon.
-              </p>
-              <p className="font-ui text-sm text-[color-mix(in_srgb,var(--app-ink)_50%,transparent)]">
-                Be the first to share your story.
-              </p>
-              <Link
-                href="/forms/share-testimony"
-                className="mt-2 inline-flex h-11 items-center gap-2 bg-[var(--app-primary)] px-6 font-ui text-xs font-bold uppercase tracking-[0.1em] text-black transition hover:bg-[var(--app-primary-light)]"
-              >
-                Share your story
-              </Link>
-            </div>
+            <EditorialEmptyState
+              title="Testimonies coming soon."
+              description="Be the first to share your story."
+              className="lg:col-start-2 lg:row-start-1 lg:row-span-2"
+              action={
+                <Link
+                  href="/forms/share-testimony"
+                  className={editorialActionClass.primary}
+                >
+                  Share your story <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              }
+            />
           ) : (
             <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px] lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <article className="relative flex min-h-[340px] flex-col overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
@@ -351,7 +330,7 @@ export default function HomeTestimonials() {
             >
               <Link
                 href="/forms/share-testimony"
-                className="inline-flex h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                className="inline-flex h-11 items-center gap-2 rounded-button border border-[color-mix(in_srgb,var(--app-ink)_15%,transparent)] px-5 font-ui text-xs font-bold text-[color-mix(in_srgb,var(--app-ink)_65%,transparent)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               >
                 Share your story
               </Link>
@@ -364,7 +343,7 @@ export default function HomeTestimonials() {
             </motion.div>
           ) : null}
         </div>
-      </Container>
-    </Section>
+      </EditorialContainer>
+    </EditorialSection>
   );
 }

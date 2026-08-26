@@ -19,6 +19,15 @@ export type HomeImage = {
 };
 
 export const HOME_COPY = {
+  actions: {
+    watchLive: 'Watch live',
+    planVisit: 'Plan your visit',
+    discoverStory: 'Discover our story',
+    joinCommunity: 'Join our community',
+    planFirstVisit: 'Plan your first visit',
+    meetLeadership: 'Meet our leadership',
+    connect: 'Connect with us',
+  },
   hero: {
     eyebrow: 'Welcome home to The Wisdom Church',
     titleLead: 'Raising ',
@@ -28,7 +37,7 @@ export const HOME_COPY = {
       'A Spirit-filled family where the Word works, prayer is a lifestyle, and every believer is equipped for greatness.',
   },
   welcome: {
-    // eyebrow: 'Welcome home',
+    eyebrow: 'Welcome home',
     title: 'More than a church.',
     accent: 'We are family.',
     description:
@@ -43,17 +52,20 @@ export const HOME_COPY = {
   },
   service: {
     eyebrow: 'Worship with us',
-    title: 'Sundays are better together.',
+    title: 'Sundays are',
+    accent: 'better together.',
   },
   pastor: {
     eyebrow: 'Our senior pastor',
-    title: 'Bishop Gabriel Ayilara',
+    title: 'Bishop',
+    accent: 'Gabriel Ayilara',
     description:
       'A teacher and spiritual leader committed to raising complete believers through the wisdom of God, practical faith, and the transforming power of the Holy Spirit.',
   },
   community: {
     eyebrow: 'Find your people',
-    title: "We don't do life alone.",
+    title: "We don't do",
+    accent: 'life alone.',
     description:
       'Build meaningful relationships, grow in faith, and discover where you belong in a community that feels like home.',
   },
@@ -65,6 +77,8 @@ export const HOME_BELIEFS: {
   image: StaticImageData | string;
   imageAlt: string;
   imagePosition: string;
+  layoutClass: string;
+  parallaxDepth: number;
 }[] = [
   {
     title: 'The Word',
@@ -72,6 +86,8 @@ export const HOME_BELIEFS: {
     image: WhatWeDo_3,
     imageAlt: 'A pastor teaching from the pulpit at The Wisdom Church',
     imagePosition: 'object-[30%_center]',
+    layoutClass: 'lg:col-span-7',
+    parallaxDepth: 0.1,
   },
   {
     title: 'Prayer',
@@ -79,6 +95,8 @@ export const HOME_BELIEFS: {
     image: '/Picflow/DSC06712 copy.webp',
     imageAlt: 'A member deep in prayer at The Wisdom Church',
     imagePosition: 'object-center',
+    layoutClass: 'lg:col-span-5',
+    parallaxDepth: 0.16,
   },
   {
     title: 'Worship',
@@ -86,13 +104,17 @@ export const HOME_BELIEFS: {
     image: '/Picflow/DSC00019 copy.webp',
     imageAlt: 'Worship on stage at The Wisdom Church',
     imagePosition: 'object-[center_18%]',
+    layoutClass: 'lg:col-span-5',
+    parallaxDepth: 0.13,
   },
   {
     title: 'Community',
     body: 'We grow together, serve one another, and share life.',
-    image: '/Picflow/DSC06902 copy.webp',
+    image: '/Picflow/DSC00268 copy.webp',
     imageAlt: 'Members embracing in fellowship at The Wisdom Church',
     imagePosition: 'object-center',
+    layoutClass: 'lg:col-span-7',
+    parallaxDepth: 0.18,
   },
 ];
 
@@ -119,8 +141,29 @@ export const HOME_IMAGES = {
     position: 'object-bottom',
   },
   community: {
-    src: '/images/worship-service-community-wide.png',
+    src: '/images/worship-service-community-generated-v3.png',
     alt: 'Wisdom Church leaders ministering together',
     position: 'object-center',
   },
 } satisfies Record<string, HomeImage>;
+
+export const HOME_COMMUNITY_GALLERY = [
+  {
+    src: '/Picflow/DSC00054 copy.webp',
+    alt: 'A mother and child at The Wisdom Church',
+    position: 'object-[center_32%]',
+    unoptimized: true,
+  },
+  {
+    src: '/images/worship-service-community-generated-v3.png',
+    alt: 'Worshippers sharing a service at The Wisdom Church',
+    position: 'object-center',
+    unoptimized: false,
+  },
+  {
+    src: '/Picflow/DSC00268 copy.webp',
+    alt: 'A volunteer serving during worship',
+    position: 'object-[52%_center]',
+    unoptimized: false,
+  },
+] as const;

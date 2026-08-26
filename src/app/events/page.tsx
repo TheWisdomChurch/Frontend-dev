@@ -1,10 +1,18 @@
 import Link from 'next/link';
+import {
+  CalendarClock,
+  CalendarDays,
+  CalendarRange,
+  Clock3,
+  List,
+  MapPin,
+  Sparkles,
+  SunMedium,
+} from 'lucide-react';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
+import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { Media } from '@/shared/ui/Media';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
@@ -18,6 +26,14 @@ import {
   getEventTimestamp as getTimestamp,
   isUpcomingEvent as isUpcoming,
 } from '@/shared/utils/eventDate';
+import {
+  EditorialContainer,
+  EditorialPage,
+  EditorialHeader,
+  EditorialLink,
+  EditorialPanel,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -38,12 +54,14 @@ const WEEKLY = [
     name: 'Sunday Worship Service',
     description:
       'Spirit-filled corporate worship, prayer, and the preached Word.',
+    icon: SunMedium,
   },
   {
     day: SERVICE_INFO.dailyPrayer.daysShort,
     time: SERVICE_INFO.dailyPrayer.time,
     name: 'Daily Morning Prayer',
     description: 'Start the day in prayer, declaration, and the Word.',
+    icon: CalendarClock,
   },
 ] as const;
 
@@ -56,7 +74,7 @@ function EventCard({ event }: { event: EventPublic }) {
   const imgSrc = event.bannerUrl ?? event.imageUrl ?? null;
 
   return (
-    <article className="group flex flex-col overflow-hidden border border-white/10 bg-white/[0.03] transition duration-300 hover:border-[var(--app-primary)]/35">
+    <article className="group flex h-full flex-col overflow-hidden rounded-card border border-white/10 bg-white/[0.03] transition duration-300 motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.05] hover:shadow-xl hover:shadow-black/20">
       {/* Image / date block */}
       <div className="relative aspect-video overflow-hidden bg-[var(--app-dark-2)]">
         {imgSrc ? (
@@ -72,7 +90,7 @@ function EventCard({ event }: { event: EventPublic }) {
             <span className="font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               {date.month}
             </span>
-            <span className="font-headline text-display-sm font-normal leading-none text-white/90">
+            <span className="font-ui text-display-sm font-medium leading-none text-white/90">
               {date.day}
             </span>
           </div>
@@ -82,7 +100,7 @@ function EventCard({ event }: { event: EventPublic }) {
         {/* Date badge — only when there's an image */}
         {imgSrc && (
           <div className="absolute bottom-3 left-4 flex items-baseline gap-2">
-            <span className="font-headline text-heading-md font-normal leading-none text-white">
+            <span className="font-ui text-heading-md font-semibold leading-none text-white">
               {date.day}
             </span>
             <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
@@ -94,7 +112,7 @@ function EventCard({ event }: { event: EventPublic }) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-5 pt-4">
-        <h3 className="font-headline text-heading-sm font-normal leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
+        <h3 className="font-ui text-heading-sm font-semibold leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
           {event.title}
         </h3>
 
@@ -120,12 +138,13 @@ function EventCard({ event }: { event: EventPublic }) {
         {href ? (
           <a
             href={href}
-            className="mt-2 inline-flex items-center gap-2 self-start border border-[var(--app-primary)]/40 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition duration-150 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+            className="group/action mt-2 inline-flex items-center gap-2 self-start rounded-button border border-[var(--app-primary)]/40 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition duration-200 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]"
           >
-            Register <Arrow />
+            Register{' '}
+            <Arrow className="transition-transform group-hover/action:translate-x-1" />
           </a>
         ) : (
-          <span className="mt-2 inline-flex items-center gap-2 self-start border border-white/12 px-5 py-2.5 font-ui text-label font-semibold text-white/35">
+          <span className="mt-2 inline-flex items-center gap-2 self-start rounded-button border border-white/12 px-5 py-2.5 font-ui text-label font-semibold text-white/35">
             Free entry
           </span>
         )}
@@ -139,22 +158,22 @@ function EventCard({ event }: { event: EventPublic }) {
 function EmptyState() {
   return (
     <ScrollFadeIn>
-      <div className="flex flex-col items-center gap-6 border border-white/8 bg-white/[0.025] px-8 py-16 text-center">
-        <div className="h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-        <h3 className="font-headline text-heading-md font-normal text-white">
+      <EditorialPanel
+        tone="dark"
+        className="group flex flex-col items-center gap-5 p-6 text-center transition duration-300 hover:border-[var(--app-primary)]/30 hover:bg-white/[0.05] sm:p-10 lg:p-12"
+      >
+        <span className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
+          <CalendarClock className="h-6 w-6" aria-hidden="true" />
+        </span>
+        <h3 className="font-ui text-heading-md font-semibold text-white">
           Events are on their way.
         </h3>
         <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/65">
           Nothing is scheduled right now. In the meantime, join us for Sunday
           Worship and Daily Prayer, Monday through Friday.
         </p>
-        <PlanVisitTrigger
-          icon={false}
-          className="inline-flex items-center gap-2 border border-white/18 px-6 py-2.5 font-ui text-label font-semibold text-white/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-        >
-          Plan a visit <Arrow />
-        </PlanVisitTrigger>
-      </div>
+        <PlanVisitTrigger className="mt-1">Plan a visit</PlanVisitTrigger>
+      </EditorialPanel>
     </ScrollFadeIn>
   );
 }
@@ -170,7 +189,7 @@ export default async function EventsPage() {
     .sort((a, b) => getTimestamp(a) - getTimestamp(b));
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -184,7 +203,7 @@ export default async function EventsPage() {
           <JsonLd key={event.id} data={buildEventSchema(event)} />
         ))}
       {/* ── 1. Hero ──────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow="Events & Programs"
         title="What's happening at Wisdom Church."
         subtitle="Weekly services, special gatherings, and everything in between."
@@ -192,111 +211,136 @@ export default async function EventsPage() {
       />
 
       {/* ── 1.5 Sub-nav — other ways to browse events ────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-        <Container size="xl">
+      <EditorialSection compact tone="canvas">
+        <EditorialContainer>
           <nav
             aria-label="Events sections"
             className="flex flex-wrap gap-2 py-5"
           >
             {[
-              { href: '/events/weekly', label: 'Weekly Services' },
-              { href: '/events/calendar', label: 'Calendar View' },
-              { href: '/events/upcoming', label: 'Upcoming (List)' },
-            ].map(item => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="inline-flex items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              >
-                {item.label} <Arrow />
-              </Link>
-            ))}
+              {
+                href: '/events/weekly',
+                label: 'Weekly Services',
+                icon: CalendarDays,
+              },
+              {
+                href: '/events/calendar',
+                label: 'Calendar View',
+                icon: CalendarRange,
+              },
+              {
+                href: '/events/upcoming',
+                label: 'Upcoming Events',
+                icon: List,
+              },
+            ].map((item, index) => {
+              const NavIcon = item.icon;
+              return (
+                <ScrollFadeIn
+                  key={item.href}
+                  delay={index * 0.06}
+                  y={12}
+                  className="flex-1 sm:min-w-52 sm:flex-none"
+                >
+                  <Link
+                    href={item.href}
+                    className="group flex min-h-12 w-full items-center justify-between gap-4 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-label font-bold text-[var(--app-ink)] transition duration-200 motion-safe:hover:-translate-y-0.5 hover:border-[var(--app-primary)] hover:shadow-md"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)] transition group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
+                        <NavIcon className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      {item.label}
+                    </span>
+                    <Arrow className="transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </ScrollFadeIn>
+              );
+            })}
           </nav>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 2. Weekly rhythm — canvas, always present ────────── */}
-      <section className="overflow-hidden min-w-0 border-b border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-        <Container size="xl">
-          <ScrollFadeIn className="py-12 lg:py-16">
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Weekly rhythm
-            </p>
-            <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
-              We gather every week.
-              <em className="italic text-[var(--app-primary)]/75">
-                {' '}
-                Come as you are.
-              </em>
-            </h2>
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
+          <ScrollFadeIn>
+            <EditorialHeader
+              eyebrow="Weekly rhythm"
+              title="We gather every week."
+              accent="Come as you are."
+            />
           </ScrollFadeIn>
 
           {/* Two service panels */}
-          <div className="grid border-t border-[var(--app-ink)]/8 sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/8">
-            {WEEKLY.map((svc, i) => (
-              <ScrollFadeIn key={svc.day} delay={i * 0.09}>
-                <div
-                  className={`flex flex-col gap-5 p-8 lg:p-10 ${i === 0 ? '' : 'border-t border-[var(--app-ink)]/8 sm:border-t-0'}`}
-                >
-                  {/* Day + time */}
-                  <div className="flex items-baseline gap-4">
-                    <p className="font-headline text-heading-lg font-normal leading-none text-[var(--app-ink)] lg:text-heading-lg">
-                      {svc.day}
-                    </p>
-                    <p className="font-ui text-body-sm font-bold text-[var(--app-primary)]">
-                      {svc.time}
-                    </p>
+          <div className="mt-8 grid gap-4 md:mt-10 md:grid-cols-2">
+            {WEEKLY.map((svc, i) => {
+              const ServiceIcon = svc.icon;
+              return (
+                <ScrollFadeIn key={svc.day} delay={i * 0.09} className="h-full">
+                  <div className="group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 transition duration-300 motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/45 hover:shadow-xl hover:shadow-black/5 sm:p-7 lg:p-8">
+                    {/* Day + time */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)]">
+                          {svc.day}
+                        </p>
+                        <p className="mt-2 flex items-center gap-2 font-ui text-body-sm font-bold text-[var(--app-primary-dark)]">
+                          <Clock3 className="h-4 w-4" aria-hidden="true" />
+                          {svc.time}
+                        </p>
+                      </div>
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
+                        <ServiceIcon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                    </div>
+
+                    {/* Gold rule */}
+                    <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
+
+                    {/* Service info */}
+                    <div className="space-y-1.5">
+                      <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
+                        {svc.name}
+                      </p>
+                      <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/65">
+                        {svc.description}
+                      </p>
+                      <p className="flex items-start gap-2 font-ui text-label leading-relaxed text-[var(--app-ink)]/55">
+                        <MapPin
+                          className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
+                          aria-hidden="true"
+                        />
+                        <span>{SERVICE_INFO.venue.full}</span>
+                      </p>
+                    </div>
+
+                    {/* CTA */}
+                    <PlanVisitTrigger className="mt-auto self-start border-[var(--app-border)] bg-transparent text-[var(--app-ink)] hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)]">
+                      Plan a visit
+                    </PlanVisitTrigger>
                   </div>
-
-                  {/* Gold rule */}
-                  <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-
-                  {/* Service info */}
-                  <div className="space-y-1.5">
-                    <p className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
-                      {svc.name}
-                    </p>
-                    <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/65">
-                      {svc.description}
-                    </p>
-                    <p className="font-ui text-label text-[var(--app-ink)]/50">
-                      {SERVICE_INFO.venue.full}
-                    </p>
-                  </div>
-
-                  {/* CTA */}
-                  <PlanVisitTrigger
-                    icon={false}
-                    className="mt-1 inline-flex items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition duration-150 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                  >
-                    Plan a visit <Arrow />
-                  </PlanVisitTrigger>
-                </div>
-              </ScrollFadeIn>
-            ))}
+                </ScrollFadeIn>
+              );
+            })}
           </div>
-
-          {/* Bottom padding spacer */}
-          <div className="pb-12 lg:pb-16" />
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
-      <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-16 lg:py-20">
-        <SectionGlow />
-        <Container size="xl">
+      <EditorialSection tone="dark">
+        <EditorialContainer>
           {/* Header */}
-          <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Upcoming events
-              </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
-                Special gatherings &amp; programs.
-              </h2>
-            </div>
+          <ScrollFadeIn className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+            <EditorialHeader
+              eyebrow="Upcoming events"
+              title="Special gatherings & programs."
+              tone="dark"
+              size="sm"
+            />
             {events.length > 0 && (
-              <span className="inline-flex items-center self-start border border-white/12 px-4 py-2 font-ui text-label font-semibold text-white/45 sm:self-auto">
+              <span className="inline-flex items-center gap-2 self-start rounded-badge border border-white/12 px-4 py-2 font-ui text-label font-semibold text-white/55 sm:self-auto">
+                <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 {events.length} event{events.length !== 1 ? 's' : ''}
               </span>
             )}
@@ -314,32 +358,27 @@ export default async function EventsPage() {
               ))}
             </div>
           )}
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 4. CTA strip ─────────────────────────────────────── */}
-      <ScrollFadeIn>
-        <section className="overflow-hidden min-w-0 border-t border-white/8 bg-[var(--app-dark-2)] py-10">
-          <Container size="xl">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="font-headline text-heading-sm font-normal text-white">
-                  Have a question about an event?
-                </p>
-                <p className="mt-1 font-ui text-body-sm text-white/55">
-                  Our team is happy to help — reach out any time.
-                </p>
-              </div>
-              <Link
-                href="/contact"
-                className="inline-flex shrink-0 items-center gap-2 border border-white/20 px-6 py-3 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              >
-                Contact us <Arrow />
-              </Link>
+      <EditorialSection compact tone="dark" className="bg-[var(--app-dark-2)]">
+        <EditorialContainer>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-ui text-heading-sm font-semibold text-white">
+                Have a question about an event?
+              </p>
+              <p className="mt-1 font-ui text-body-sm text-white/55">
+                Our team is happy to help — reach out any time.
+              </p>
             </div>
-          </Container>
-        </section>
-      </ScrollFadeIn>
-    </main>
+            <EditorialLink href="/contact" variant="outline">
+              Contact us <Arrow />
+            </EditorialLink>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }

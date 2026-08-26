@@ -16,7 +16,6 @@ import {
   Users,
 } from 'lucide-react';
 
-import { Container, Section } from '@/shared/layout';
 import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/domain/media/types';
 import { mediaApi } from '@/domain/media/api';
@@ -24,13 +23,13 @@ import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
-import {
-  staggerContainer,
-  staggerItem,
-  staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
 
 const fetchLatestSermons = (signal: AbortSignal) =>
   mediaApi.listSermons({ sort: 'newest', limit: 1, signal });
@@ -108,17 +107,15 @@ function ResourceCarousel() {
   const canNext = translateX < maxTranslate;
 
   return (
-    <div className="mt-16 border-t border-[var(--app-ink)]/8 pt-14">
+    <div>
       {/* Header */}
       <div className="mb-8 flex items-end justify-between gap-4">
-        <div>
-          <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Explore
-          </p>
-          <h3 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
-            You can do more
-          </h3>
-        </div>
+        <EditorialHeader
+          eyebrow="Explore"
+          title="You can do"
+          accent="more"
+          size="sm"
+        />
 
         {/* Navigation arrows */}
         <div className="flex shrink-0 items-center gap-2">
@@ -250,127 +247,127 @@ export default function ResourceSection() {
     : null;
 
   return (
-    <Section
-      ref={sectionRef}
-      id="resources"
-      padding="none"
-      className="bg-[var(--app-canvas)]"
-    >
-      <Container size="xl" className="py-section-md">
-        {/* ── Section header ───────────────────────────────── */}
-        <div className="mb-10">
-          <p className="mb-3 text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            Latest Message
-          </p>
-          <h2 className="font-headline text-display-sm font-normal text-[var(--app-ink)]">
-            Hear the Word.
-          </h2>
-        </div>
+    <EditorialSection ref={sectionRef} id="resources" tone="surface" flush>
+      <div className="relative overflow-hidden bg-[var(--app-dark)]">
+        <EditorialContainer className="relative py-section-sm">
+          <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 xl:gap-20">
+            <div>
+              <EditorialHeader
+                eyebrow="Latest Message"
+                title="Hear the"
+                accent="Word."
+                tone="dark"
+              />
 
-        {/* ── Layout ───────────────────────────────────────── */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={staggerViewport}
-          className="grid gap-8 lg:grid-cols-2 lg:items-start"
-        >
-          {/* Left — content */}
-          <motion.div
-            variants={staggerItem}
-            className="order-1 flex flex-col lg:col-start-1 lg:row-start-1"
-          >
-            <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]/60">
-              {SERVICE_INFO.sunday.day}s {SERVICE_INFO.sunday.time} ·{' '}
-              {SERVICE_INFO.dailyPrayer.label} {SERVICE_INFO.dailyPrayer.time}
-            </p>
-
-            {loading ? (
-              <div className="flex h-24 items-center gap-3 text-sm text-[var(--app-ink)]/60">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading latest message…
+              <div className="mt-8 flex flex-wrap gap-2.5">
+                <span className="rounded-badge border border-white/12 bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-white/68">
+                  {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
+                </span>
+                <span className="rounded-badge border border-white/12 bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-white/68">
+                  {SERVICE_INFO.dailyPrayer.label} ·{' '}
+                  {SERVICE_INFO.dailyPrayer.time}
+                </span>
               </div>
-            ) : recentVideo ? (
-              <>
-                <h3 className="line-clamp-3 font-headline text-heading-lg font-normal leading-snug text-[var(--app-ink)]">
-                  {recentVideoTitle}
-                </h3>
-                <p className="mt-2 text-body-sm text-[var(--app-ink)]/50">
-                  The Wisdom Church
-                </p>
-              </>
-            ) : (
-              <h3 className="font-headline text-heading-md font-normal text-[var(--app-ink)]/60">
-                Message coming soon
-              </h3>
-            )}
-          </motion.div>
 
-          {/* Right — video thumbnail (spans both rows so the button below
-              the left column lines up level with its bottom edge) */}
-          <motion.div
-            variants={staggerItem}
-            className="order-2 relative aspect-video w-full overflow-hidden bg-[var(--app-ink)]/8 shadow-xl lg:col-start-2 lg:row-start-1 lg:row-span-2"
-          >
-            {loading ? (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-[var(--app-ink)]/60" />
-              </div>
-            ) : recentVideo ? (
-              <>
-                {thumb ? (
-                  <Media
-                    src={thumb}
-                    alt={recentVideoTitle}
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-center"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-[var(--app-ink)]/8" />
-                )}
-                <div className="absolute inset-0 bg-black/20" />
-                {videoUrl ? (
-                  <a
-                    href={videoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="absolute inset-0 flex items-center justify-center"
-                    aria-label={`Watch ${recentVideoTitle}`}
+              <div className="mt-10 min-h-28 border-l border-[var(--app-primary)]/60 pl-6">
+                {loading ? (
+                  <div
+                    className="space-y-4"
+                    aria-label="Loading latest message"
                   >
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-2xl transition duration-300 hover:scale-[1.06] hover:bg-white">
-                      <PlayCircle className="h-7 w-7 text-[var(--app-ink)]" />
-                    </div>
-                  </a>
-                ) : null}
-              </>
-            ) : (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
-                <PlayCircle className="h-10 w-10 text-[var(--app-ink)]/60" />
-                <p className="text-sm text-[var(--app-ink)]/60">
-                  Latest message coming soon
-                </p>
+                    <div className="h-7 w-4/5 animate-pulse rounded bg-white/10" />
+                    <div className="h-4 w-2/5 animate-pulse rounded bg-white/[0.06]" />
+                  </div>
+                ) : recentVideo ? (
+                  <>
+                    <h3 className="line-clamp-3 font-headline text-heading-lg font-semibold leading-tight !text-white">
+                      {recentVideoTitle}
+                    </h3>
+                    <p className="mt-3 font-ui text-body-sm text-white/52">
+                      The Wisdom Church
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="font-headline text-heading-md font-semibold !text-white">
+                      Message coming soon
+                    </h3>
+                    <p className="mt-3 max-w-md font-ui text-body-sm leading-7 text-white/52">
+                      Our latest teaching will appear here as soon as it is
+                      published.
+                    </p>
+                  </>
+                )}
               </div>
-            )}
-          </motion.div>
 
-          {/* Button — after the video on mobile/tablet, under the text
-              column on desktop */}
-          <motion.div
-            variants={staggerItem}
-            className="order-3 mt-2 lg:col-start-1 lg:row-start-2 lg:mt-0"
-          >
-            <Link
-              href="/resources/sermons"
-              className="inline-flex h-12 items-center gap-2 bg-[var(--app-primary)] px-7 text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+              <Link
+                href="/resources/sermons"
+                className="mt-9 inline-flex h-12 items-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--app-primary-light)]"
+              >
+                Explore sermons <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div
+              data-gsap="reveal"
+              className="relative aspect-video w-full overflow-hidden rounded-image border border-white/12 bg-white/[0.035] shadow-2xl shadow-black/30"
             >
-              All sermons <ArrowRight className="h-4 w-4" />
-            </Link>
-          </motion.div>
-        </motion.div>
+              {loading ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                  <Loader2 className="h-7 w-7 animate-spin text-[var(--app-primary)]" />
+                  <p className="font-ui text-label text-white/48">
+                    Preparing the latest message…
+                  </p>
+                </div>
+              ) : recentVideo ? (
+                <>
+                  {thumb ? (
+                    <Media
+                      src={thumb}
+                      alt={recentVideoTitle}
+                      sizes="(max-width: 1024px) 100vw, 58vw"
+                      className="object-center"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-white/[0.04]" />
+                  )}
+                  <div className="absolute inset-0 bg-black/35" />
+                  {videoUrl ? (
+                    <a
+                      href={videoUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group absolute inset-0 flex items-center justify-center"
+                      aria-label={`Watch ${recentVideoTitle}`}
+                    >
+                      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--app-primary)] text-black shadow-2xl transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary-light)]">
+                        <PlayCircle className="h-7 w-7" />
+                      </span>
+                    </a>
+                  ) : null}
+                </>
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--app-primary)]/35 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+                    <PlayCircle className="h-7 w-7" />
+                  </span>
+                  <p className="mt-6 font-headline text-heading-sm font-semibold !text-white">
+                    Latest message coming soon
+                  </p>
+                  <p className="mt-2 max-w-sm font-ui text-body-sm leading-7 text-white/48">
+                    Explore previous sermons while the newest teaching is being
+                    prepared.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </EditorialContainer>
+      </div>
 
-        {/* ── You can do more ──────────────────────────────── */}
+      <EditorialContainer className="py-section-sm">
         <ResourceCarousel />
-      </Container>
-    </Section>
+      </EditorialContainer>
+    </EditorialSection>
   );
 }

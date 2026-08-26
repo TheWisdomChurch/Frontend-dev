@@ -2,15 +2,18 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
-import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
+import SiteHero from '@/features/hero/SiteHero';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
-import styles from './ministries.module.css';
+import {
+  EditorialContainer,
+  EditorialPage,
+  EditorialHeader,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Ministries — Find Your Place',
@@ -44,7 +47,7 @@ const ministries = [
     description:
       'A brotherhood forming men of conviction, spiritual discipline, integrity, and servant leadership.',
     href: '/ministries/men',
-    image: '/Picflow/DSC06877 copy.webp',
+    image: '/Picflow/menleaders.webp',
     position: 'object-center',
   },
   {
@@ -62,35 +65,29 @@ const ministries = [
     description:
       'Serving our neighbours, sharing the gospel, and expressing the love of Christ through practical care.',
     href: '/ministries/outreach',
-    image: '/Picflow/DSC00258 copy.webp',
+    image: '/Picflow/DSC00019 copy.webp',
     position: 'object-[center_42%]',
   },
 ] as const;
 
 const pathway = [
   {
-    number: '01',
     title: 'Discover',
     body: 'Explore each ministry and find the community that fits your season of life.',
   },
   {
-    number: '02',
     title: 'Meet the team',
     body: 'Tell our welcome team where you would like to connect. A real person will help you take the next step.',
   },
   {
-    number: '03',
     title: 'Grow and serve',
     body: 'Build relationships, grow through discipleship, and use your gifts in the life of the church.',
   },
 ] as const;
 
-const primaryActionClass =
-  'inline-flex min-h-12 items-center justify-center gap-2.5 bg-[var(--app-primary)] px-6 py-3 font-ui text-label font-bold uppercase tracking-[0.12em] text-[var(--app-ink)] transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-dark)]';
-
 export default function MinistriesPage() {
   return (
-    <main className="min-h-screen overflow-hidden">
+    <EditorialPage className="overflow-hidden">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -98,7 +95,7 @@ export default function MinistriesPage() {
         ])}
       />
 
-      <PageHero
+      <SiteHero
         eyebrow="Life together"
         title="There is a place for you in this church family."
         subtitle="Find a community where you can be known, grow in Christ, build lasting relationships, and serve with the gifts God has given you."
@@ -108,12 +105,15 @@ export default function MinistriesPage() {
         chips={['Belong', 'Grow', 'Serve']}
         actions={
           <>
-            <Link href="#find-a-ministry" className={primaryActionClass}>
+            <Link
+              href="#find-a-ministry"
+              className={editorialActionClass.primary}
+            >
               Find a ministry <Arrow />
             </Link>
             <Link
               href="/contact?topic=connect"
-              className="inline-flex min-h-12 items-center justify-center gap-2.5 border border-white/30 bg-white/[0.06] px-6 py-3 font-ui text-label font-semibold text-white transition hover:border-white/60 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className={editorialActionClass.outline}
             >
               Help me choose <Arrow />
             </Link>
@@ -121,17 +121,13 @@ export default function MinistriesPage() {
         }
       />
 
-      <section className="border-b border-[var(--app-ink)]/10 bg-[var(--app-canvas)] py-14 sm:py-16 lg:py-20">
-        <Container size="xl">
-          <ScrollFadeIn className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                More than a Sunday crowd
-              </p>
-              <h2 className="mt-4 max-w-xl font-headline text-heading-md font-normal leading-[1.16] text-[var(--app-ink)] sm:text-heading-lg lg:text-display-sm">
-                We grow best when we walk with others.
-              </h2>
-            </div>
+      <EditorialSection tone="canvas">
+        <EditorialContainer>
+          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end lg:gap-16">
+            <EditorialHeader
+              eyebrow="More than a Sunday crowd"
+              title="We grow best when we walk with others."
+            />
             <div className="border-l-2 border-[var(--app-primary)]/55 pl-5 sm:pl-7">
               <p className="max-w-2xl font-ui text-body-md leading-[1.85] text-[var(--app-ink)]/75">
                 Ministry is where church becomes personal. It is where names are
@@ -139,38 +135,35 @@ export default function MinistriesPage() {
                 generation finds room to flourish in Christ.
               </p>
             </div>
-          </ScrollFadeIn>
-        </Container>
-      </section>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
 
-      <section
+      <EditorialSection
         id="find-a-ministry"
-        className="scroll-mt-24 bg-[var(--app-canvas-2)] py-14 sm:py-18 lg:py-24"
+        tone="canvas"
+        className="scroll-mt-24 bg-[var(--app-canvas-2)]"
       >
-        <Container size="xl">
-          <ScrollFadeIn className="mb-10 flex flex-col gap-4 sm:mb-12 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Find your community
-              </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-heading-lg">
-                Explore our ministries
-              </h2>
-            </div>
+        <EditorialContainer>
+          <div className="mb-10 flex flex-col gap-4 sm:mb-12 lg:flex-row lg:items-end lg:justify-between">
+            <EditorialHeader
+              eyebrow="Find your community"
+              title="Explore our ministries"
+            />
             <p className="max-w-md font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/65">
               Choose a ministry to learn what happens, who it serves, and how to
               join. You do not need to have everything figured out first.
             </p>
-          </ScrollFadeIn>
+          </div>
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {ministries.map((ministry, index) => {
+            {ministries.map(ministry => {
               return (
-                <ScrollFadeIn key={ministry.title} delay={index * 0.06}>
+                <div key={ministry.title} data-gsap="reveal">
                   <Link
                     href={ministry.href}
                     aria-label={`Explore ${ministry.title}`}
-                    className="group relative block min-h-[470px] overflow-hidden rounded-[2px] bg-[var(--app-dark)] shadow-[0_18px_50px_rgba(20,16,8,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[500px] lg:min-h-[520px]"
+                    className="group relative block min-h-[380px] overflow-hidden rounded-image bg-[var(--app-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[440px] lg:min-h-[500px]"
                   >
                     <div className="absolute inset-0 overflow-hidden">
                       <Image
@@ -183,76 +176,64 @@ export default function MinistriesPage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-black/10 transition-colors duration-500 group-hover:from-black/45" />
                     </div>
-                    <div
-                      className={`${styles.cardContent} absolute inset-x-4 bottom-4 flex flex-col justify-end overflow-hidden rounded-[2px] border border-white/20 bg-[rgba(12,12,14,0.58)] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl backdrop-saturate-150 sm:inset-x-5 sm:bottom-5 sm:p-6`}
-                    >
+                    <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end p-6 sm:p-8">
                       <div>
                         <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
                           {ministry.label}
                         </p>
-                        <h3 className="mt-3 font-headline text-heading-md font-normal leading-tight text-white sm:text-heading-lg">
+                        <h3 className="mt-3 font-ui text-heading-md font-semibold leading-tight text-white sm:text-heading-lg">
                           {ministry.title}
                         </h3>
-                        <div className={styles.cardReveal}>
-                          <div>
-                            <p className="mt-3 max-w-lg font-ui text-body-sm leading-[1.75] text-white/78">
-                              {ministry.description}
-                            </p>
-                            <span className="mt-6 inline-flex items-center gap-2 self-start font-ui text-label font-bold uppercase tracking-[0.12em] text-white">
-                              Learn more
-                              <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
-                            </span>
-                          </div>
+                        <div>
+                          <p className="mt-3 max-w-lg font-ui text-body-sm leading-[1.75] text-white/78">
+                            {ministry.description}
+                          </p>
+                          <span className="mt-6 inline-flex items-center gap-2 self-start font-ui text-label font-bold uppercase tracking-[0.12em] text-white">
+                            Learn more
+                            <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                          </span>
                         </div>
                       </div>
                     </div>
                   </Link>
-                </ScrollFadeIn>
+                </div>
               );
             })}
           </div>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
-      <section className="border-y border-[var(--app-ink)]/10 bg-[var(--app-canvas)] py-14 sm:py-18 lg:py-24">
-        <Container size="xl">
-          <ScrollFadeIn className="max-w-2xl">
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Your next step
-            </p>
-            <h2 className="mt-3 font-headline text-heading-md font-normal leading-tight text-[var(--app-ink)] sm:text-heading-lg">
-              A simple path from visiting to belonging.
-            </h2>
-          </ScrollFadeIn>
+      <EditorialSection>
+        <EditorialContainer>
+          <EditorialHeader
+            eyebrow="Your next step"
+            title="A simple path from visiting to belonging."
+          />
           <div className="mt-10 grid border-y border-[var(--app-ink)]/10 md:grid-cols-3 md:divide-x md:divide-[var(--app-ink)]/10">
-            {pathway.map((step, index) => (
-              <ScrollFadeIn key={step.number} delay={index * 0.08}>
+            {pathway.map(step => (
+              <div key={step.title} data-gsap="reveal">
                 <article className="border-b border-[var(--app-ink)]/10 py-8 last:border-b-0 md:min-h-[270px] md:border-b-0 md:px-8 lg:px-10 lg:py-10">
-                  <span className="font-ui text-label font-bold tracking-[0.14em] text-[var(--app-primary)]">
-                    {step.number}
-                  </span>
-                  <h3 className="mt-8 font-headline text-heading-md font-normal text-[var(--app-ink)]">
+                  <h3 className="font-ui text-heading-md font-semibold text-[var(--app-ink)]">
                     {step.title}
                   </h3>
                   <p className="mt-4 font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/68">
                     {step.body}
                   </p>
                 </article>
-              </ScrollFadeIn>
+              </div>
             ))}
           </div>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
-      <section className="relative bg-[var(--app-dark)] py-16 sm:py-20 lg:py-24">
-        <SectionGlow />
-        <Container size="lg">
-          <ScrollFadeIn className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                 We will help you connect
               </p>
-              <h2 className="mt-4 max-w-2xl font-headline text-heading-md font-normal leading-[1.15] text-white sm:text-heading-lg lg:text-display-sm">
+              <h2 className="mt-4 max-w-2xl font-ui text-heading-md font-medium leading-[1.05] tracking-[-0.04em] text-white sm:text-heading-lg lg:text-display-sm">
                 Not sure where you belong yet?
               </h2>
               <p className="mt-5 max-w-xl font-ui text-body-sm leading-[1.85] text-white/78">
@@ -264,20 +245,17 @@ export default function MinistriesPage() {
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <Link
                 href="/contact?topic=connect"
-                className={primaryActionClass}
+                className={editorialActionClass.primary}
               >
                 Help me connect <Arrow />
               </Link>
-              <Link
-                href="/pastoral"
-                className="inline-flex min-h-12 items-center justify-center gap-2.5 border border-white/25 px-6 py-3 font-ui text-label font-semibold text-white transition hover:border-white/55 hover:bg-white/[0.06]"
-              >
+              <Link href="/pastoral" className={editorialActionClass.outline}>
                 Prayer &amp; pastoral care <Arrow />
               </Link>
             </div>
-          </ScrollFadeIn>
-        </Container>
-      </section>
-    </main>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }

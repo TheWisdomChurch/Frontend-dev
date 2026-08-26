@@ -1,7 +1,5 @@
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
+import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { apiClient } from '@/lib/api';
 import type {
   LeadershipMember,
@@ -15,6 +13,14 @@ import {
   ROLE_LABEL,
   initials,
 } from '@/features/leadership/LeadershipCards';
+import {
+  EditorialContainer,
+  EditorialPage,
+  EditorialEmptyState,
+  EditorialHeader,
+  EditorialLink,
+  EditorialSection,
+} from '@/shared/ui/editorial';
 
 const SENIOR_ROLES: LeadershipRole[] = [
   'senior_pastor',
@@ -27,21 +33,11 @@ const BOARD_ROLES: LeadershipRole[] = ['deacon', 'deaconess'];
 
 function EmptyState({ dark }: { dark?: boolean }) {
   return (
-    <div
-      className={`flex flex-col items-center gap-5 border px-8 py-16 text-center ${dark ? 'border-white/8 bg-white/[0.025]' : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]'}`}
-    >
-      <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-      <p
-        className={`font-headline text-heading-sm font-normal ${dark ? 'text-white' : 'text-[var(--app-ink)]'}`}
-      >
-        Leadership listings coming soon.
-      </p>
-      <p
-        className={`max-w-sm font-ui text-body-sm leading-[1.85] ${dark ? 'text-white/65' : 'text-[var(--app-ink)]/65'}`}
-      >
-        Our leadership directory will be published here shortly.
-      </p>
-    </div>
+    <EditorialEmptyState
+      title="Leadership listings coming soon."
+      description="Our leadership directory will be published here shortly."
+      tone={dark ? 'dark' : 'light'}
+    />
   );
 }
 
@@ -56,7 +52,7 @@ export default async function LeadershipPage() {
   const board = leaders.filter(l => BOARD_ROLES.includes(l.role));
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -78,41 +74,30 @@ export default async function LeadershipPage() {
       ))}
 
       {/* ── 1. Hero ──────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow="Leadership"
         title="The people who shepherd this church."
         subtitle="Called, committed, and accountable — meet the team that serves the Wisdom Church community."
         compact
       />
 
-      {/* ── 2. Senior leadership header — dark ───────────────── */}
-      <section className="relative overflow-hidden min-w-0 border-b border-white/8 bg-[var(--app-dark)] px-6 py-14 lg:px-10 lg:py-18">
-        <SectionGlow />
-        <Container size="xl">
-          <ScrollFadeIn className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-lg">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Pastoral leadership
-              </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
-                Shepherds of the
-                <em className="italic text-[var(--app-primary)]/80">
-                  {' '}
-                  Word and community.
-                </em>
-              </h2>
-            </div>
-          </ScrollFadeIn>
-        </Container>
-      </section>
+      <EditorialSection tone="dark" compact>
+        <EditorialContainer>
+          <EditorialHeader
+            eyebrow="Pastoral leadership"
+            title="Shepherds of the"
+            accent="Word and community."
+            tone="dark"
+          />
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── 3. Senior portrait panels ────────────────────────── */}
       {seniorTeam.length === 0 ? (
         <div className="relative bg-[var(--app-dark)] px-6 py-10 lg:px-10">
-          <SectionGlow />
-          <Container size="xl">
+          <EditorialContainer>
             <EmptyState dark />
-          </Container>
+          </EditorialContainer>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2">
@@ -145,17 +130,13 @@ export default async function LeadershipPage() {
 
       {/* ── 4. Board header — canvas ─────────────────────────── */}
       {board.length > 0 && (
-        <section className="overflow-hidden min-w-0 border-y border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-          <Container size="xl">
-            <ScrollFadeIn className="py-12 lg:py-14">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Board of leaders
-              </p>
-              <h2 className="mt-3 font-headline text-heading-md font-normal leading-snug text-[var(--app-ink)] sm:text-heading-lg">
-                Deacons &amp; Deaconesses.
-              </h2>
-            </ScrollFadeIn>
-          </Container>
+        <EditorialSection tone="canvas">
+          <EditorialContainer>
+            <EditorialHeader
+              eyebrow="Board of leaders"
+              title="Deacons & Deaconesses."
+            />
+          </EditorialContainer>
 
           {/* Name list — editorial rows */}
           <div className="divide-y divide-[var(--app-ink)]/8 border-t border-[var(--app-ink)]/8">
@@ -164,7 +145,7 @@ export default async function LeadershipPage() {
                 <div
                   className={`${i % 2 === 0 ? 'bg-[var(--app-canvas)]' : 'bg-[var(--app-canvas-2)]'}`}
                 >
-                  <Container size="xl">
+                  <EditorialContainer>
                     <div className="grid items-center gap-3 py-6 sm:grid-cols-[1fr_auto] sm:gap-10">
                       <div className="flex items-center gap-5">
                         {/* Initials badge */}
@@ -172,7 +153,7 @@ export default async function LeadershipPage() {
                           {initials(leader.firstName, leader.lastName)}
                         </div>
                         <div>
-                          <p className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
+                          <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                             {leader.firstName} {leader.lastName}
                           </p>
                           {leader.bio && (
@@ -186,62 +167,33 @@ export default async function LeadershipPage() {
                         {ROLE_LABEL[leader.role]}
                       </span>
                     </div>
-                  </Container>
+                  </EditorialContainer>
                 </div>
               </ScrollFadeIn>
             ))}
           </div>
 
           <div className="pb-12 lg:pb-16" />
-        </section>
+        </EditorialSection>
       )}
 
       {/* ── 5. CTA ───────────────────────────────────────────── */}
-      <ScrollFadeIn>
-        <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
-          <SectionGlow />
-          <Container size="lg">
-            <div className="flex flex-col items-center gap-7 text-center">
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Serve with us
-              </p>
-              <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
-                Leadership is an invitation,
-                <em className="italic text-[var(--app-primary)]/80">
-                  {' '}
-                  not just a title.
-                </em>
-              </h2>
-              <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-              <p className="max-w-md font-ui text-body-sm leading-[1.9] text-white/70">
-                If you feel called to serve the church in a meaningful way, we
-                would love to have a conversation with you.
-              </p>
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-2 border border-white/20 px-7 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.12em] text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              >
-                Get in touch
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M1 6h10M6 1l5 5-5 5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-            </div>
-          </Container>
-        </section>
-      </ScrollFadeIn>
-    </main>
+      <EditorialSection tone="dark">
+        <EditorialContainer>
+          <div className="mx-auto max-w-3xl text-center">
+            <EditorialHeader
+              eyebrow="Serve with us"
+              title="Leadership is an invitation,"
+              accent="not just a title."
+              description="If you feel called to serve the church in a meaningful way, we would love to have a conversation with you."
+              tone="dark"
+            />
+            <EditorialLink href="/contact" variant="outline" className="mt-8">
+              Get in touch
+            </EditorialLink>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }

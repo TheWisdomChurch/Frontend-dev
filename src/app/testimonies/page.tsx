@@ -3,16 +3,23 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
+import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import Arrow from '@/shared/ui/icons/Arrow';
+import {
+  EditorialContainer,
+  EditorialEmptyState,
+  EditorialHeader,
+  EditorialPage,
+  EditorialPanel,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -117,7 +124,7 @@ export default function TestimoniesPage() {
 
   return (
     <>
-      <main className="min-h-screen">
+      <EditorialPage>
         <JsonLd
           data={buildBreadcrumbSchema([
             { name: 'Home', path: '/' },
@@ -126,7 +133,7 @@ export default function TestimoniesPage() {
         />
 
         {/* ── 1. Hero ────────────────────────────────────────── */}
-        <PageHero
+        <SiteHero
           eyebrow="Testimonies"
           title="Stories of faith, healing, and change."
           subtitle="Real accounts from the Wisdom Church community — God still moves."
@@ -135,45 +142,37 @@ export default function TestimoniesPage() {
 
         {/* ── 2. Featured testimony — dark ─────────────────── */}
         {!loading && featured && (
-          <ScrollFadeIn>
-            <section className="min-w-0 relative overflow-hidden border-b border-white/8 bg-[var(--app-dark)] py-20 lg:py-28">
-              <SectionGlow />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(201,150,26,0.07),transparent)]" />
-              <Container size="md" className="relative text-center">
-                <OpenQuote className="text-display-lg text-[var(--app-primary)]/30 lg:text-display-xl" />
-                <p className="mx-auto mt-2 max-w-2xl font-headline text-heading-sm font-normal leading-[1.65] text-white sm:text-heading-md lg:text-heading-md">
-                  {featured.quote}
+          <EditorialSection tone="dark">
+            <EditorialContainer className="text-center">
+              <OpenQuote className="text-display-lg text-[var(--app-primary)]/30 lg:text-display-xl" />
+              <p className="mx-auto mt-2 max-w-2xl font-headline text-heading-sm font-normal leading-[1.65] text-white sm:text-heading-md lg:text-heading-md">
+                {featured.quote}
+              </p>
+              <div className="mx-auto mt-8 flex items-center justify-center gap-4">
+                <div className="h-px w-8 bg-[var(--app-primary)]/45" />
+                <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                  {featured.isAnonymous ? 'Anonymous member' : featured.name}
                 </p>
-                <div className="mx-auto mt-8 flex items-center justify-center gap-4">
-                  <div className="h-px w-8 bg-[var(--app-primary)]/45" />
-                  <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-                    {featured.isAnonymous ? 'Anonymous member' : featured.name}
-                  </p>
-                  <div className="h-px w-8 bg-[var(--app-primary)]/45" />
-                </div>
-              </Container>
-            </section>
-          </ScrollFadeIn>
+                <div className="h-px w-8 bg-[var(--app-primary)]/45" />
+              </div>
+            </EditorialContainer>
+          </EditorialSection>
         )}
 
         {/* ── 3. Testimony grid — canvas ───────────────────── */}
-        <section className="overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
-          <Container size="xl">
+        <EditorialSection tone="canvas">
+          <EditorialContainer>
             {/* Section header */}
             <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                  Community stories
-                </p>
-                <h2 className="mt-2 font-headline text-heading-md font-normal text-[var(--app-ink)] sm:text-heading-lg">
-                  What God has done in our community.
-                </h2>
-              </div>
+              <EditorialHeader
+                eyebrow="Community stories"
+                title="What God has done in our community."
+              />
               <a
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-2 self-start border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:self-auto"
+                className={editorialActionClass.outline}
               >
                 Share your story <Arrow />
               </a>
@@ -193,26 +192,22 @@ export default function TestimoniesPage() {
 
             {/* Empty */}
             {!loading && visible.length === 0 && (
-              <ScrollFadeIn>
-                <div className="flex flex-col items-center gap-5 border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] px-8 py-16 text-center">
-                  <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-                  <h3 className="font-headline text-heading-sm font-normal text-[var(--app-ink)]">
-                    Stories are coming.
-                  </h3>
-                  <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/50">
-                    Approved testimonies will appear here. Be the first to share
-                    what God has done in your life.
-                  </p>
-                  <a
-                    href={shareUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                  >
-                    Share your story <Arrow />
-                  </a>
-                </div>
-              </ScrollFadeIn>
+              <div>
+                <EditorialEmptyState
+                  title="Stories are coming."
+                  description="Approved testimonies will appear here. Be the first to share what God has done in your life."
+                  action={
+                    <a
+                      href={shareUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={editorialActionClass.dark}
+                    >
+                      Share your story
+                    </a>
+                  }
+                />
+              </div>
             )}
 
             {/* Testimony cards */}
@@ -238,9 +233,7 @@ export default function TestimoniesPage() {
                       delay={i * 0.04}
                       className={spanClass}
                     >
-                      <article
-                        className={`flex flex-col p-6 lg:p-7 ${i % 3 === 1 ? 'bg-[var(--app-canvas-2)]' : 'border border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'}`}
-                      >
+                      <EditorialPanel className="flex h-full flex-col p-6 lg:p-7">
                         {/* Quote mark */}
                         <OpenQuote className="mb-1 text-heading-lg text-[var(--app-primary)]/35" />
                         {/* Quote text */}
@@ -259,49 +252,38 @@ export default function TestimoniesPage() {
                             Wisdom Church
                           </p>
                         </div>
-                      </article>
+                      </EditorialPanel>
                     </ScrollFadeIn>
                   );
                 })}
               </div>
             )}
-          </Container>
-        </section>
+          </EditorialContainer>
+        </EditorialSection>
 
         {/* ── 4. CTA — dark ──────────────────────────────────── */}
-        <ScrollFadeIn>
-          <section className="relative overflow-hidden min-w-0 bg-[var(--app-dark)] py-20 lg:py-24">
-            <SectionGlow />
-            <Container size="lg">
-              <div className="flex flex-col items-center gap-7 text-center">
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                  Share your story
-                </p>
-                <h2 className="font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
-                  If God has done something in your life,
-                  <em className="italic text-[var(--app-primary)]/80">
-                    {' '}
-                    someone needs to hear it.
-                  </em>
-                </h2>
-                <div className="h-px w-10 bg-[var(--app-primary)]/40" />
-                <p className="max-w-md font-ui text-body-sm leading-[1.9] text-white/70">
-                  Testimonies encourage the people who are still praying, still
-                  waiting, and still learning to trust. Your story matters.
-                </p>
-                <a
-                  href={shareUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
-                >
-                  Submit a testimony <Arrow />
-                </a>
-              </div>
-            </Container>
-          </section>
-        </ScrollFadeIn>
-      </main>
+        <EditorialSection tone="dark">
+          <EditorialContainer>
+            <div className="flex flex-col items-center gap-7 text-center">
+              <EditorialHeader
+                eyebrow="Share your story"
+                title="If God has done something in your life,"
+                accent="someone needs to hear it."
+                description="Testimonies encourage the people who are still praying, still waiting, and still learning to trust. Your story matters."
+                tone="dark"
+              />
+              <a
+                href={shareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={editorialActionClass.primary}
+              >
+                Submit a testimony <Arrow />
+              </a>
+            </div>
+          </EditorialContainer>
+        </EditorialSection>
+      </EditorialPage>
 
       <SuccessModal
         isOpen={showSuccess}

@@ -61,7 +61,9 @@ export function LocationFields({
           ))}
         </select>
         {errors.country ? (
-          <p className="mt-1 text-xs text-rose-500">{errors.country}</p>
+          <p className="mt-1 text-xs text-[var(--status-error)]">
+            {errors.country}
+          </p>
         ) : null}
       </div>
       <div>
@@ -107,7 +109,9 @@ export function LocationFields({
           />
         )}
         {errors.state ? (
-          <p className="mt-1 text-xs text-rose-500">{errors.state}</p>
+          <p className="mt-1 text-xs text-[var(--status-error)]">
+            {errors.state}
+          </p>
         ) : null}
       </div>
       <div>
@@ -143,7 +147,9 @@ export function LocationFields({
           />
         )}
         {errors.city ? (
-          <p className="mt-1 text-xs text-rose-500">{errors.city}</p>
+          <p className="mt-1 text-xs text-[var(--status-error)]">
+            {errors.city}
+          </p>
         ) : null}
       </div>
     </div>

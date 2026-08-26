@@ -403,7 +403,7 @@ export default function HeroHighlights({
         icon={<CalendarClock />}
       >
         <form className="min-w-0 space-y-5 pb-1" onSubmit={onSubmitVisit}>
-          <div className="relative min-w-0 overflow-hidden rounded-2xl border border-[var(--app-primary)]/20 bg-[linear-gradient(135deg,rgba(201,150,26,.16),rgba(255,255,255,.035))] p-4 sm:rounded-3xl sm:p-5">
+          <div className="relative min-w-0 overflow-hidden rounded-card border border-[var(--app-primary)]/20 bg-[var(--app-primary-10)] p-4 sm:p-5">
             <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
             <div className="relative flex min-w-0 items-start gap-3 sm:gap-4">
               <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[var(--app-primary)]/25 bg-black/25 text-[var(--app-primary)] sm:h-11 sm:w-11 sm:rounded-2xl">
@@ -441,8 +441,8 @@ export default function HeroHighlights({
               }
             />
             {!scheduleLoading && !scheduleVerified ? (
-              <div className="mt-3 flex min-w-0 flex-col items-start gap-2 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] px-4 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
-                <p className="font-ui text-xs leading-5 text-amber-100/70">
+              <div className="mt-3 flex min-w-0 flex-col items-start gap-2 rounded-card border border-[var(--status-warning)]/20 bg-[var(--status-warning)]/[0.06] px-4 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+                <p className="font-ui text-xs leading-5 text-white/70">
                   Booking is paused until the live service calendar is verified.
                 </p>
                 <button
@@ -567,7 +567,7 @@ export default function HeroHighlights({
           {submissionError ? (
             <p
               role="alert"
-              className="rounded-2xl border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 font-ui text-xs leading-5 text-rose-100"
+              className="rounded-card border border-[var(--status-error)]/20 bg-[var(--status-error)]/[0.08] px-4 py-3 font-ui text-xs leading-5 text-[var(--status-error)]"
             >
               {submissionError}
             </p>
@@ -575,7 +575,7 @@ export default function HeroHighlights({
 
           <div className="min-w-0 rounded-2xl border border-white/8 bg-white/[0.025] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5 sm:p-5">
             <div className="flex items-start gap-2.5">
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-success)]" />
               <p className="min-w-0 break-words font-ui text-xs leading-5 text-white/45">
                 We’ll email your confirmation, directions, and a reminder before
                 service.
@@ -655,7 +655,7 @@ export default function HeroHighlights({
           {submissionError ? (
             <p
               role="alert"
-              className="border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 font-ui text-xs leading-5 text-rose-100"
+              className="border border-[var(--status-error)]/20 bg-[var(--status-error)]/[0.08] px-4 py-3 font-ui text-xs leading-5 text-[var(--status-error)]"
             >
               {submissionError}
             </p>
@@ -682,7 +682,7 @@ export default function HeroHighlights({
       >
         {visitConfirmation ? (
           <div className="text-center">
-            <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-card border border-[var(--status-success)]/20 bg-[var(--status-success)]/10 text-[var(--status-success)]">
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <p className="mt-5 font-ui text-xs font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">

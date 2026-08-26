@@ -1,1 +1,1 @@
-export { default as SeniorPastor } from './SeniorPastor';
+export * from './LeadershipCards';

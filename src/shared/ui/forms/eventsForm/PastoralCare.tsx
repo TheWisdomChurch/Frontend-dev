@@ -10,10 +10,9 @@ import {
   User,
   CheckCircle2,
 } from 'lucide-react';
-import { Container, Section } from '@/shared/layout';
 import { Button } from '@/shared/utils/buttons';
 import { BaseModal } from '@/shared/ui/modals/Base';
-import SectionGlow from '@/shared/ui/SectionGlow';
+import { EditorialContainer, EditorialSection } from '@/shared/ui/editorial';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import {
@@ -74,7 +73,7 @@ const PRAYER_CATEGORIES = [
 
 const EVENT_TYPES = [
   'Wedding Ceremony',
-  'House Opening / Warming',
+  'Home Opening / Warming',
   'Book Launch',
   'Naming Ceremony',
   'Birthday Celebration',
@@ -152,20 +151,24 @@ const fieldInput =
   'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 const fieldInputError =
-  'w-full border border-rose-400/50 bg-rose-500/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20';
+  'w-full border border-[var(--status-error)]/50 bg-[var(--status-error)]/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-[var(--status-error)] focus:ring-2 focus:ring-[var(--status-error)]/20';
 
 const fieldSelect =
   'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 const fieldSelectError =
-  'w-full border border-rose-400/50 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20';
+  'w-full border border-[var(--status-error)]/50 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition focus:border-[var(--status-error)] focus:ring-2 focus:ring-[var(--status-error)]/20';
 
 const fieldLabel =
   'block font-ui text-caption font-bold uppercase tracking-[0.15em] text-white/45';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return <p className="mt-1.5 font-ui text-label text-rose-300">{message}</p>;
+  return (
+    <p className="mt-1.5 font-ui text-label text-[var(--status-error)]">
+      {message}
+    </p>
+  );
 }
 
 function getMinDate() {
@@ -399,12 +402,11 @@ const PastoralCareForm = () => {
   const successCopy = SUCCESS_COPY[intent];
 
   return (
-    <Section
-      padding="xl"
-      className="relative overflow-hidden border-b border-white/8 bg-[var(--app-dark)]"
+    <EditorialSection
+      tone="dark"
+      className="overflow-hidden border-b border-white/8"
     >
-      <SectionGlow variant="double" />
-      <Container size="xl">
+      <EditorialContainer>
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -581,7 +583,7 @@ const PastoralCareForm = () => {
 
               <div className="border-t border-white/8 pt-6">
                 {submitError && (
-                  <div className="mb-4 border border-rose-400/40 bg-rose-500/10 px-4 py-3 font-ui text-body-sm text-rose-200">
+                  <div className="mb-4 border border-[var(--status-error)]/40 bg-[var(--status-error)]/10 px-4 py-3 font-ui text-body-sm text-[var(--status-error)]">
                     {submitError}
                   </div>
                 )}
@@ -824,7 +826,7 @@ const PastoralCareForm = () => {
 
               <div className="border-t border-white/8 pt-6">
                 {submitError && (
-                  <div className="mb-4 border border-rose-400/40 bg-rose-500/10 px-4 py-3 font-ui text-body-sm text-rose-200">
+                  <div className="mb-4 border border-[var(--status-error)]/40 bg-[var(--status-error)]/10 px-4 py-3 font-ui text-body-sm text-[var(--status-error)]">
                     {submitError}
                   </div>
                 )}
@@ -845,7 +847,7 @@ const PastoralCareForm = () => {
             </form>
           )}
         </div>
-      </Container>
+      </EditorialContainer>
 
       <BaseModal
         isOpen={showSuccess}
@@ -865,7 +867,7 @@ const PastoralCareForm = () => {
           </p>
         </div>
       </BaseModal>
-    </Section>
+    </EditorialSection>
   );
 };
 

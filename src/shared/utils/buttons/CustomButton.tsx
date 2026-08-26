@@ -58,11 +58,11 @@ const contentGapClasses: Record<ButtonSize, string> = {
 };
 
 const radiusClasses = {
-  sm: 'rounded-lg',
-  md: 'rounded-xl',
-  lg: 'rounded-2xl',
-  xl: 'rounded-[1.25rem]',
-  full: 'rounded-full',
+  sm: 'rounded-button',
+  md: 'rounded-button',
+  lg: 'rounded-button',
+  xl: 'rounded-button',
+  full: 'rounded-button',
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -109,7 +109,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       leftIcon,
       rightIcon,
       elevated = false,
-      curvature = 'full',
+      curvature = 'md',
       className,
       type = 'button',
       onClick,

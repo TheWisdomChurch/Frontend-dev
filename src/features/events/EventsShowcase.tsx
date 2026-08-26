@@ -5,15 +5,20 @@ import Link from 'next/link';
 import { Play } from 'lucide-react';
 
 import { EventBannerDesktop } from '@/shared/assets';
-import { Container } from '@/shared/layout';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 import { AnimatePresence, motion } from '@/lib/safe-motion';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import { Media } from '@/shared/ui/Media';
 import Arrow from '@/shared/ui/icons/Arrow';
+import {
+  EditorialContainer,
+  EditorialEmptyState,
+  EditorialHeader,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 import {
   staggerContainer,
   staggerItem,
@@ -166,14 +171,14 @@ function FeaturedCard({
           {slide.href && !isReel && (
             <Link
               href={slide.href}
-              className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              className="mt-4 inline-flex items-center gap-2 rounded-button border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               {slide.cta} <Arrow />
             </Link>
           )}
           {isReel && (
-            <span className="mt-4 inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60">
+            <span className="mt-4 inline-flex items-center gap-2 rounded-button border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60">
               {slide.cta} <Arrow />
             </span>
           )}
@@ -290,26 +295,27 @@ function PortraitCard({
 
 function EmptyState({ category }: { category: Category }) {
   return (
-    <div className="flex min-h-[300px] flex-col items-center justify-center gap-6 border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] px-8 py-16 text-center lg:min-h-[360px]">
-      <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
-      <p className="font-headline text-heading-md font-normal text-[var(--app-ink)]">
-        {category === 'program'
+    <EditorialEmptyState
+      title={
+        category === 'program'
           ? 'No programs scheduled right now.'
-          : 'No reels published yet.'}
-      </p>
-      <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/48">
-        {category === 'program'
+          : 'No reels published yet.'
+      }
+      description={
+        category === 'program'
           ? `Join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time}, and for ${SERVICE_INFO.dailyPrayer.label} ${SERVICE_INFO.dailyPrayer.daysShort} at ${SERVICE_INFO.dailyPrayer.time}, at ${SERVICE_INFO.venue.short}.`
-          : 'Check back soon — new content is added regularly.'}
-      </p>
-      <Link
-        href={category === 'program' ? '/events' : '/resources'}
-        className="inline-flex items-center gap-2 border border-[var(--app-ink)]/18 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-      >
-        {category === 'program' ? 'View all events' : 'Go to resources'}{' '}
-        <Arrow />
-      </Link>
-    </div>
+          : 'Check back soon — new content is added regularly.'
+      }
+      action={
+        <Link
+          href={category === 'program' ? '/events' : '/resources'}
+          className={editorialActionClass.outline}
+        >
+          {category === 'program' ? 'View all events' : 'Go to resources'}{' '}
+          <Arrow />
+        </Link>
+      }
+    />
   );
 }
 
@@ -430,19 +436,16 @@ export default function EventsShowcase() {
   const onlyFeatured = !!featured && rest.length === 0;
 
   return (
-    <section className="relative overflow-hidden min-w-0 bg-[var(--app-canvas)] py-16 lg:py-20">
-      <SectionGlow />
-      <Container size="xl">
+    <EditorialSection tone="surface" className="min-w-0 overflow-hidden">
+      <EditorialContainer>
         {/* ── Section header ──────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="mb-2 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              Events &amp; Programs
-            </p>
-            <h2 className="font-headline text-heading-lg font-normal leading-tight text-[var(--app-ink)] sm:text-heading-lg lg:text-display-sm">
-              What&apos;s happening
-            </h2>
-          </div>
+          <EditorialHeader
+            eyebrow="Events & Programs"
+            title="What's"
+            accent="happening"
+            size="sm"
+          />
 
           <div className="flex items-center justify-end gap-5">
             {/* Category tabs */}
@@ -472,7 +475,7 @@ export default function EventsShowcase() {
 
             <Link
               href="/events"
-              className="hidden items-center gap-1.5 border border-[var(--app-ink)]/14 px-4 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
+              className="hidden items-center gap-1.5 rounded-button border border-[var(--app-ink)]/14 px-4 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
             >
               See all <Arrow />
             </Link>
@@ -552,12 +555,12 @@ export default function EventsShowcase() {
         <div className="mt-8 sm:hidden">
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 border border-[var(--app-ink)]/14 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+            className="inline-flex items-center gap-2 rounded-button border border-[var(--app-ink)]/14 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
           >
             See all events <Arrow />
           </Link>
         </div>
-      </Container>
+      </EditorialContainer>
 
       {/* Reel modal */}
       {reelModal && (
@@ -587,6 +590,6 @@ export default function EventsShowcase() {
           )}
         </BaseModal>
       )}
-    </section>
+    </EditorialSection>
   );
 }

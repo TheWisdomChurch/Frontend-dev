@@ -1,12 +1,16 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 
-import PageHero from '@/features/hero/PageHero';
-import { Container } from '@/shared/layout';
+import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import SectionGlow from '@/shared/ui/SectionGlow';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { cn } from '@/lib/cn';
+import {
+  EditorialContainer,
+  EditorialPage,
+  EditorialSection,
+  editorialActionClass,
+} from '@/shared/ui/editorial';
 
 export type MinistryHeading = { lead: string; accent: string; tail?: string };
 export type MinistryActivity = { title: string; description: string };
@@ -89,9 +93,9 @@ export default function MinistryPageTemplate({
   const { hero, conference, mission, activities, extra, values, cta } = config;
 
   return (
-    <main className="min-h-screen">
+    <EditorialPage>
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <PageHero
+      <SiteHero
         eyebrow={hero.eyebrow}
         title={hero.title}
         subtitle={hero.subtitle}
@@ -100,16 +104,15 @@ export default function MinistryPageTemplate({
 
       {/* ── Conference (optional) — dark ─────────────────────── */}
       {conference ? (
-        <section className="relative min-w-0 overflow-hidden border-b border-white/8 bg-[var(--app-dark)]">
-          <SectionGlow />
-          <Container size="xl">
+        <EditorialSection tone="dark">
+          <EditorialContainer>
             <ScrollFadeIn className="pt-14 lg:pt-18">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <Eyebrow>{conference.eyebrow}</Eyebrow>
                   <Heading
                     heading={conference.heading}
-                    className="mt-3 font-headline text-heading-lg font-normal leading-snug text-white sm:text-heading-lg lg:text-display-sm"
+                    className="mt-3 font-ui text-heading-lg font-medium leading-[1.05] tracking-[-0.04em] text-white sm:text-heading-lg lg:text-display-sm"
                   />
                   <p className="mt-4 max-w-xl font-ui text-body-sm leading-[2] text-white/70">
                     {conference.description}
@@ -138,27 +141,19 @@ export default function MinistryPageTemplate({
                 </div>
               </div>
             </ScrollFadeIn>
-          </Container>
-        </section>
+          </EditorialContainer>
+        </EditorialSection>
       ) : null}
 
       {/* ── Mission ──────────────────────────────────────────── */}
-      <section
-        className={cn(
-          'relative min-w-0 overflow-hidden border-b',
-          mission.dark
-            ? 'border-white/8 bg-[var(--app-dark)]'
-            : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'
-        )}
-      >
-        {mission.dark ? <SectionGlow /> : null}
-        <Container size="xl">
-          <ScrollFadeIn className="py-16 lg:py-20">
+      <EditorialSection tone={mission.dark ? 'dark' : 'canvas'}>
+        <EditorialContainer>
+          <ScrollFadeIn>
             <Eyebrow>Our mission</Eyebrow>
             <Heading
               heading={mission.heading}
               className={cn(
-                'mt-4 max-w-2xl font-headline text-heading-md font-normal leading-snug sm:text-heading-lg',
+                'mt-4 max-w-2xl font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
                 mission.dark ? 'text-white' : 'text-[var(--app-ink)]'
               )}
             />
@@ -172,25 +167,18 @@ export default function MinistryPageTemplate({
               {mission.body}
             </p>
           </ScrollFadeIn>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── What we do ───────────────────────────────────────── */}
-      <section
-        className={cn(
-          'min-w-0 overflow-hidden border-b',
-          activities.dark
-            ? 'border-white/8 bg-[var(--app-dark)]'
-            : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'
-        )}
-      >
-        <Container size="xl">
+      <EditorialSection tone={activities.dark ? 'dark' : 'canvas'}>
+        <EditorialContainer>
           <ScrollFadeIn className="pt-16 lg:pt-20">
             <Eyebrow>What we do</Eyebrow>
             <Heading
               heading={activities.heading}
               className={cn(
-                'mt-3 max-w-xl font-headline text-heading-md font-normal leading-snug sm:text-heading-lg',
+                'mt-3 max-w-xl font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
                 activities.dark ? 'text-white' : 'text-[var(--app-ink)]'
               )}
             />
@@ -210,7 +198,7 @@ export default function MinistryPageTemplate({
                   <div className="mb-4 h-[1.5px] w-6 bg-[var(--app-primary)]/50" />
                   <h3
                     className={cn(
-                      'font-headline text-heading-sm font-normal',
+                      'font-ui text-heading-sm font-semibold',
                       activities.dark ? 'text-white' : 'text-[var(--app-ink)]'
                     )}
                   >
@@ -230,26 +218,19 @@ export default function MinistryPageTemplate({
               </ScrollFadeIn>
             ))}
           </div>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── Extra (optional page-specific section) ───────────── */}
       {extra}
 
       {/* ── Core values ──────────────────────────────────────── */}
-      <section
-        className={cn(
-          'min-w-0 overflow-hidden border-b',
-          values.dark
-            ? 'border-white/8 bg-[var(--app-dark)]'
-            : 'border-[var(--app-ink)]/8 bg-[var(--app-canvas)]'
-        )}
-      >
-        <Container size="xl">
+      <EditorialSection tone={values.dark ? 'dark' : 'canvas'}>
+        <EditorialContainer>
           <ScrollFadeIn>
             <div
               className={cn(
-                'border-b py-12 lg:py-14',
+                'border-b pb-8 sm:pb-10',
                 values.dark ? 'border-white/8' : 'border-[var(--app-ink)]/8'
               )}
             >
@@ -257,7 +238,7 @@ export default function MinistryPageTemplate({
               <Heading
                 heading={values.heading}
                 className={cn(
-                  'mt-3 max-w-lg font-headline text-heading-md font-normal leading-snug sm:text-heading-lg',
+                  'mt-3 max-w-lg font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
                   values.dark ? 'text-white' : 'text-[var(--app-ink)]'
                 )}
               />
@@ -274,11 +255,11 @@ export default function MinistryPageTemplate({
           >
             {values.items.map((v, i) => (
               <ScrollFadeIn key={v.title} delay={i * 0.08}>
-                <div className="flex flex-col py-10 sm:px-8 lg:px-10 lg:py-12">
+                <div className="flex flex-col py-8 sm:px-6 lg:px-8 lg:py-10">
                   <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
                   <h3
                     className={cn(
-                      'font-headline text-heading-md font-normal leading-none lg:text-heading-lg',
+                      'font-ui text-heading-md font-medium leading-none tracking-[-0.03em] lg:text-heading-lg',
                       values.dark ? 'text-white' : 'text-[var(--app-ink)]'
                     )}
                   >
@@ -296,65 +277,52 @@ export default function MinistryPageTemplate({
               </ScrollFadeIn>
             ))}
           </div>
-        </Container>
-      </section>
+        </EditorialContainer>
+      </EditorialSection>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <ScrollFadeIn>
-        <section
-          className={cn(
-            'relative min-w-0 overflow-hidden py-20 lg:py-28',
-            cta.dark ? 'bg-[var(--app-dark)]' : 'bg-[var(--app-canvas)]'
-          )}
-        >
-          {cta.dark ? <SectionGlow /> : null}
-          <Container size="lg">
-            <div className="flex flex-col items-center gap-7 text-center">
-              <Eyebrow>{cta.eyebrow ?? 'Join the ministry'}</Eyebrow>
-              <Heading
-                heading={cta.heading}
-                className={cn(
-                  'font-headline text-heading-md font-normal leading-snug sm:text-heading-lg',
-                  cta.dark ? 'text-white' : 'text-[var(--app-ink)]'
-                )}
-              />
-              <div
-                className={cn(
-                  'h-px w-10 bg-[var(--app-primary)]',
-                  cta.dark ? 'opacity-40' : 'opacity-35'
-                )}
-              />
-              <p
-                className={cn(
-                  'max-w-md font-ui text-body-sm leading-[2]',
-                  cta.dark ? 'text-white/70' : 'text-[var(--app-ink)]/68'
-                )}
+      <EditorialSection tone={cta.dark ? 'dark' : 'canvas'}>
+        <EditorialContainer>
+          <div className="flex flex-col items-center gap-7 text-center">
+            <Eyebrow>{cta.eyebrow ?? 'Join the ministry'}</Eyebrow>
+            <Heading
+              heading={cta.heading}
+              className={cn(
+                'font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
+                cta.dark ? 'text-white' : 'text-[var(--app-ink)]'
+              )}
+            />
+            <div
+              className={cn(
+                'h-px w-10 bg-[var(--app-primary)]',
+                cta.dark ? 'opacity-40' : 'opacity-35'
+              )}
+            />
+            <p
+              className={cn(
+                'max-w-md font-ui text-body-sm leading-[2]',
+                cta.dark ? 'text-white/70' : 'text-[var(--app-ink)]/68'
+              )}
+            >
+              {cta.body}
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href={cta.primaryHref}
+                className={editorialActionClass.primary}
               >
-                {cta.body}
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href={cta.primaryHref}
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--app-primary)] px-8 py-3.5 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)] transition hover:brightness-105"
-                >
-                  {cta.primaryLabel} <Arrow />
-                </Link>
-                <Link
-                  href={cta.secondaryHref}
-                  className={cn(
-                    'inline-flex items-center justify-center gap-2 border px-8 py-3.5 font-ui text-label font-semibold uppercase tracking-[0.14em] transition',
-                    cta.dark
-                      ? 'border-white/18 text-white/50 hover:border-white/35 hover:text-white'
-                      : 'border-[var(--app-ink)]/18 text-[var(--app-ink)]/50 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]'
-                  )}
-                >
-                  {cta.secondaryLabel}
-                </Link>
-              </div>
+                {cta.primaryLabel} <Arrow />
+              </Link>
+              <Link
+                href={cta.secondaryHref}
+                className={editorialActionClass.outline}
+              >
+                {cta.secondaryLabel}
+              </Link>
             </div>
-          </Container>
-        </section>
-      </ScrollFadeIn>
-    </main>
+          </div>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }

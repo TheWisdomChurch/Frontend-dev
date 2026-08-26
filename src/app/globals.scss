@@ -1,8 +1,16 @@
 @use '../styles/index';
 
 :root {
+  /* Semantic typography aliases. Existing components can migrate without
+     creating competing font systems. */
+  --font-bricolage: var(--font-product-sans);
   --app-header-height: 72px;
   --app-radius: 18px;
+
+  /* Responsive layout rhythm. These are the only page-level gutter and
+     section-spacing sources; components consume them through layout recipes. */
+  --page-gutter: clamp(1rem, 2.7vw, 2.5rem);
+  --page-gutter-compact: clamp(0.75rem, 2vw, 1.5rem);
 
   /* Surfaces — clean white */
   --app-surface: #ffffff;
@@ -38,6 +46,8 @@
 
   /* Brand-partner colors */
   --app-whatsapp: #25d366;
+  --app-youtube: #cc0000;
+  --app-youtube-hover: #aa0000;
 
   /* Base corner radius consumed by Tailwind's rounded-lg/md/sm utilities */
   --radius: 0.875rem;
@@ -71,11 +81,11 @@
   --type-eyebrow: clamp(0.58rem, 0.57rem + 0.05vw, 0.64rem);
 
   /* Section spacing scale */
-  --section-xs: clamp(3rem, 6vw, 5rem);
-  --section-sm: clamp(5rem, 8vw, 7rem);
-  --section-md: clamp(6rem, 10vw, 9rem);
-  --section-lg: clamp(8rem, 14vw, 12rem);
-  --section-xl: clamp(10rem, 18vw, 16rem);
+  --section-xs: clamp(2.25rem, 4vw, 3.5rem);
+  --section-sm: clamp(3.5rem, 6vw, 5.5rem);
+  --section-md: clamp(4.5rem, 8vw, 7rem);
+  --section-lg: clamp(5.5rem, 10vw, 9rem);
+  --section-xl: clamp(7rem, 12vw, 11rem);
 
   /* Refined border radii */
   --radius-card: 0.875rem;
@@ -98,18 +108,6 @@
   /* Overlays */
   --overlay-light: rgba(255, 255, 255, 0.06);
   --overlay-dark: rgba(0, 0, 0, 0.6);
-}
-
-/* Keep API-driven legacy sections in the homepage's unified grotesque system
-   while their data fetching, modals, and accessibility behavior stay shared. */
-.premium-home .font-headline {
-  font-family: var(--font-bricolage), 'Inter', sans-serif;
-  font-style: normal;
-  letter-spacing: -0.035em;
-}
-
-.premium-home h2 {
-  text-wrap: balance;
 }
 
 /* Modal content needs a visible, restrained scroll affordance even though the
@@ -476,28 +474,6 @@ section[data-gsap='reveal'] {
     font-size: 15px;
     line-height: 1.55;
   }
-
-  .px-8,
-  .px-10,
-  .px-12,
-  .px-16 {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-
-  .py-20,
-  .py-24,
-  .py-28,
-  .py-32 {
-    padding-top: 3.75rem !important;
-    padding-bottom: 3.75rem !important;
-  }
-
-  .gap-12,
-  .gap-16,
-  .gap-20 {
-    gap: 2rem !important;
-  }
 }
 
 /* =========================
@@ -526,6 +502,15 @@ body[data-scrolled='true'] .site-header {
   backdrop-filter: blur(24px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   box-shadow: 0 1px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* The premium landing page uses one calm sans-serif display language.
+   Editorial serif remains available for quotations and long-form content. */
+.premium-home h2,
+.premium-home h3 {
+  font-family: var(--font-product-sans), 'Inter', sans-serif;
+  font-style: normal;
+  letter-spacing: -0.035em;
 }
 
 .site-header__inner {
@@ -569,8 +554,9 @@ body[data-scrolled='true'] .site-header {
 .site-header__nav-icon {
   width: 0.75rem;
   height: 0.75rem;
-  opacity: 0;
-  transform: translate(-3px, 3px);
+  opacity: 0.72;
+  color: var(--app-primary);
+  transform: translate(0, 0);
   transition:
     opacity 180ms ease,
     transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -596,7 +582,7 @@ body[data-scrolled='true'] .site-header {
 }
 
 .site-header__nav-link:hover {
-  color: #ffffff;
+  color: var(--app-primary);
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -998,16 +984,6 @@ body.nav-open {
 .nav-overlay.is-open .nav-item {
   opacity: 1;
   transform: translateX(0);
-}
-
-.nav-item__num {
-  font-family: var(--font-bricolage, sans-serif);
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--app-primary, #c9961a);
-  margin-bottom: 0.2rem;
 }
 
 .nav-item__link {

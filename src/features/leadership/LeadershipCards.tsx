@@ -65,7 +65,7 @@ export function CanvasCard({ leader }: { leader: LeadershipMember }) {
 export function DarkCard({ leader }: { leader: LeadershipMember }) {
   const name = `${leader.firstName} ${leader.lastName}`.trim();
   return (
-    <article className="group relative aspect-[4/5] min-h-[460px] overflow-hidden bg-[var(--app-dark)] sm:aspect-[3/4] lg:aspect-auto lg:min-h-[580px]">
+    <article className="group relative aspect-[4/5] min-h-[380px] overflow-hidden bg-[var(--app-dark)] sm:aspect-[3/4] sm:min-h-[440px] lg:aspect-auto lg:min-h-[540px]">
       <Media
         src={leader.imageUrl}
         alt={name}
@@ -83,7 +83,7 @@ export function DarkCard({ leader }: { leader: LeadershipMember }) {
         <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
           {ROLE_LABEL[leader.role]}
         </p>
-        <h3 className="mt-2 font-headline text-heading-md font-normal leading-snug text-white">
+        <h3 className="mt-2 font-headline text-heading-md font-normal leading-snug !text-white">
           {name}
         </h3>
         <div className="mt-3 h-[1.5px] w-8 bg-[var(--app-primary)]/60" />

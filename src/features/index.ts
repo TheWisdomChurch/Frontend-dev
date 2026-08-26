@@ -3,9 +3,6 @@
  * Page-section specific components (Hero, Events, Resources, etc.)
  */
 
-export { default as EngagementSection } from './EngagementSection';
-export { default as WhatWeDo } from './WhatWeDo';
-
 // Sub-features
 export * from './hero';
 export * from './events';

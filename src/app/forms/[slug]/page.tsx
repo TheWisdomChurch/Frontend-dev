@@ -4,12 +4,13 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { H1, H2, H3, H4, BodySM, Caption, Eyebrow } from '@/shared/text';
-import { Container, Section } from '@/shared/layout';
+import { H2, H3, H4, BodySM, Caption, Eyebrow } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import apiClient, { isApiError } from '@/lib/api';
 import type {
   EventPublic,
+  PublicFormContentSection,
+  PublicFormContentSectionItem,
   PublicFormField,
   PublicFormPayload,
 } from '@/lib/apiTypes';
@@ -21,6 +22,19 @@ import {
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
 import { BaseModal } from '@/shared/ui/modals/Base';
+import {
+  EditorialContainer,
+  EditorialHeader,
+  EditorialNotice,
+  EditorialPage,
+  EditorialPanel,
+  EditorialSection,
+  editorialChoiceClass,
+  editorialErrorClass,
+  editorialFieldClass,
+  editorialHelpClass,
+  editorialLabelClass,
+} from '@/shared/ui/editorial';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -39,17 +53,13 @@ const MONTH_OPTIONS = [
   { value: '12', label: 'December' },
 ] as const;
 
-const fieldShellClass =
-  'rounded-2xl border border-stone-200 bg-white p-4 sm:p-5';
+const fieldShellClass = 'border-t border-[var(--app-border)] py-5';
 
-const fieldBaseClass =
-  'min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-body-md text-stone-950 outline-none transition placeholder:text-stone-400 focus:border-[var(--app-primary)]/70 focus:bg-white focus:ring-4 focus:ring-[var(--app-primary)]/10';
+const fieldBaseClass = `min-h-12 ${editorialFieldClass}`;
 
-const fieldSelectClass =
-  'min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-body-md text-stone-950 outline-none transition focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+const fieldSelectClass = `min-h-12 ${editorialFieldClass}`;
 
-const labelClass =
-  'block text-label font-bold uppercase tracking-[0.16em] text-stone-600';
+const labelClass = editorialLabelClass;
 
 function splitE164(
   value: string
@@ -712,7 +722,7 @@ export default function PublicFormPage() {
 
     const Error = () =>
       errorMessage ? (
-        <BodySM className="text-rose-300">{errorMessage}</BodySM>
+        <BodySM className={editorialErrorClass}>{errorMessage}</BodySM>
       ) : null;
 
     if (field.type === 'textarea') {
@@ -739,7 +749,7 @@ export default function PublicFormPage() {
             />
             <div className="flex flex-wrap items-center justify-between gap-2">
               {typeof maxWords === 'number' ? (
-                <Caption className="text-stone-500">
+                <Caption className={editorialHelpClass}>
                   {wordCount}/{maxWords} words
                 </Caption>
               ) : (
@@ -772,7 +782,7 @@ export default function PublicFormPage() {
                 <option
                   key={option.value}
                   value={option.value}
-                  className="bg-white text-stone-950"
+                  className="bg-[var(--app-surface)] text-[var(--app-ink)]"
                 >
                   {option.label}
                 </option>
@@ -797,10 +807,7 @@ export default function PublicFormPage() {
 
             <div className="grid gap-2 sm:grid-cols-2">
               {field.options?.map(option => (
-                <label
-                  key={option.value}
-                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-700 transition hover:bg-white"
-                >
+                <label key={option.value} className={editorialChoiceClass}>
                   <input
                     type="radio"
                     name={field.key}
@@ -838,10 +845,7 @@ export default function PublicFormPage() {
 
             <div className="grid gap-2 sm:grid-cols-2">
               {field.options.map(option => (
-                <label
-                  key={option.value}
-                  className="flex min-h-11 items-center gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-700 transition hover:bg-white"
-                >
+                <label key={option.value} className={editorialChoiceClass}>
                   <input
                     type="checkbox"
                     checked={currentValues.includes(option.value)}
@@ -868,7 +872,7 @@ export default function PublicFormPage() {
     if (field.type === 'checkbox') {
       return (
         <div key={field.key} className={wrapperClass}>
-          <label className="flex items-start gap-3 text-sm leading-6 text-stone-700">
+          <label className="flex items-start gap-3 font-ui text-body-sm leading-relaxed text-[var(--app-muted)]">
             <input
               type="checkbox"
               checked={Boolean(value)}
@@ -906,11 +910,11 @@ export default function PublicFormPage() {
                 handleChange(field.key, event.target.files?.[0] || null)
               }
             />
-            <Caption className="text-stone-500">
+            <Caption className={editorialHelpClass}>
               JPEG, PNG, or WebP. Maximum file size is 5MB.
             </Caption>
             {selectedFile ? (
-              <Caption className="text-stone-600">
+              <Caption className={editorialHelpClass}>
                 Selected: {selectedFile.name}
               </Caption>
             ) : null}
@@ -960,7 +964,7 @@ export default function PublicFormPage() {
               required={field.required}
             />
 
-            <Caption className="text-stone-500">
+            <Caption className={editorialHelpClass}>
               Use your country code and active phone number.
             </Caption>
           </label>
@@ -1025,7 +1029,7 @@ export default function PublicFormPage() {
               </select>
             </div>
 
-            <Caption className="text-stone-500">
+            <Caption className={editorialHelpClass}>
               Stored as DD-MM format.
             </Caption>
             <Error />
@@ -1052,70 +1056,42 @@ export default function PublicFormPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#faf9f6] text-stone-950">
-      <Section
-        padding="none"
-        className="relative isolate overflow-hidden border-b border-stone-200 bg-white"
-      >
-        <div className="absolute inset-x-0 top-0 -z-10 h-1 bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700" />
-        <div className="absolute -right-32 -top-32 -z-10 h-80 w-80 rounded-full bg-amber-100/70 blur-3xl" />
+    <EditorialPage>
+      {showHeroCopy ? (
+        <EditorialSection compact tone="canvas">
+          <EditorialContainer className="relative z-10">
+            <EditorialHeader
+              eyebrow="Public form"
+              title={presentation.title}
+              description={presentation.subtitle}
+              size="sm"
+            />
+          </EditorialContainer>
+        </EditorialSection>
+      ) : null}
 
-        <Container
-          size="xl"
-          className={
-            showHeroCopy
-              ? 'relative z-10 py-14 sm:py-18 lg:py-20'
-              : 'relative z-10 py-6'
-          }
-        >
-          {showHeroCopy ? (
-            <div className="max-w-3xl">
-              <Eyebrow className="text-[var(--app-primary)]">
-                Public form
-              </Eyebrow>
-              <H1 className="mt-3 text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl lg:text-5xl">
-                {presentation.title}
-              </H1>
-              <BodySM className="mt-4 max-w-2xl text-stone-600">
-                {presentation.subtitle}
-              </BodySM>
-            </div>
-          ) : (
-            <div className="h-8" aria-hidden />
-          )}
-        </Container>
-      </Section>
-
-      <Section padding="none" className="relative overflow-hidden bg-[#faf9f6]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_5%,rgba(217,160,31,0.07),transparent_30%)]" />
-
-        <Container size="xl" className="relative z-10">
-          <div className="py-8 sm:py-10 lg:py-14">
-            {loading ? (
-              <div className="rounded-[1.5rem] border border-stone-200 bg-white p-6 text-sm text-stone-600 shadow-sm">
-                Loading form...
-              </div>
-            ) : null}
+      <EditorialSection tone="canvas">
+        <EditorialContainer className="relative z-10">
+          <div>
+            {loading ? <EditorialNotice>Loading form…</EditorialNotice> : null}
 
             {!loading && error ? (
-              <div className="rounded-[1.5rem] border border-rose-400/25 bg-rose-400/10 p-6 text-sm leading-7 text-rose-100 shadow-2xl shadow-black/25">
-                {error}
-              </div>
+              <EditorialNotice status="error">{error}</EditorialNotice>
             ) : null}
 
             {!loading && form && !submitted ? (
-              <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
-                <aside className="h-fit rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-sm xl:sticky xl:top-24">
+              <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]">
+                <EditorialPanel className="h-fit p-5 lg:sticky lg:top-24">
                   {!showHeroCopy ? (
                     <div>
                       <Eyebrow className="text-[var(--app-primary)]">
                         Public form
                       </Eyebrow>
-                      <H2 className="mt-3 text-2xl font-semibold tracking-tight text-stone-950">
+                      <H2 className="mt-3 text-heading-md font-semibold text-[var(--app-ink)]">
                         {form.title}
                       </H2>
                       {form.description ? (
-                        <BodySM className="mt-3 text-stone-600">
+                        <BodySM className="mt-3 text-[var(--app-muted)]">
                           {form.description}
                         </BodySM>
                       ) : null}
@@ -1125,55 +1101,55 @@ export default function PublicFormPage() {
                       <Eyebrow className="text-[var(--app-primary)]">
                         Form details
                       </Eyebrow>
-                      <H3 className="mt-3 text-xl text-stone-950">
+                      <H3 className="mt-3 text-heading-sm text-[var(--app-ink)]">
                         Complete your response
                       </H3>
-                      <BodySM className="mt-2 text-stone-600">
+                      <BodySM className="mt-2 text-[var(--app-muted)]">
                         Please provide accurate details before submitting.
                       </BodySM>
                     </div>
                   )}
 
                   {presentation.headerNote ? (
-                    <div className="mt-5 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm leading-6 text-stone-600">
+                    <EditorialNotice className="mt-5">
                       {presentation.headerNote}
-                    </div>
+                    </EditorialNotice>
                   ) : null}
 
-                  <div className="mt-5 rounded-2xl border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-4 py-3">
+                  <EditorialNotice status="brand" className="mt-5">
                     <Eyebrow className="text-[var(--app-primary)]">
                       Form overview
                     </Eyebrow>
-                    <BodySM className="mt-2 text-stone-700">
+                    <BodySM className="mt-2 text-[var(--app-muted)]">
                       {visibleFields.length} visible field
                       {visibleFields.length === 1 ? '' : 's'} to complete.
                     </BodySM>
-                  </div>
-                </aside>
+                  </EditorialNotice>
+                </EditorialPanel>
 
                 <form
                   onSubmit={handleSubmit}
-                  className="rounded-[1.5rem] border border-stone-200 bg-white p-4 shadow-xl shadow-stone-900/5 sm:p-6 lg:p-8"
+                  className="rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4 sm:p-6 lg:p-8"
                 >
                   {presentation.detailItems.length > 0 ||
                   presentation.sections.length > 0 ? (
-                    <div className="mb-6 space-y-4 rounded-[1.25rem] border border-stone-200 bg-stone-50 p-4 sm:p-5">
+                    <EditorialPanel className="mb-6 space-y-4 bg-[var(--app-canvas)] p-4 sm:p-5">
                       {presentation.detailItems.length > 0 ? (
                         <div className="grid gap-3 sm:grid-cols-2">
                           {presentation.detailItems.map(
                             (item: string, index: number) => (
                               <div
                                 key={`${item}-${index}`}
-                                className="rounded-2xl border border-stone-200 bg-white p-4"
+                                className="rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4"
                               >
                                 <BodySM
                                   weight="semibold"
-                                  className="text-stone-950"
+                                  className="text-[var(--app-ink)]"
                                 >
                                   {item}
                                 </BodySM>
                                 {presentation.detailSubtexts[index] ? (
-                                  <BodySM className="mt-2 text-stone-600">
+                                  <BodySM className="mt-2 text-[var(--app-muted)]">
                                     {presentation.detailSubtexts[index]}
                                   </BodySM>
                                 ) : null}
@@ -1183,60 +1159,65 @@ export default function PublicFormPage() {
                         </div>
                       ) : null}
 
-                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                      {presentation.sections.map((section: any) => (
-                        <section key={section.id || section.title}>
-                          <H4 className="text-base text-stone-950">
-                            {section.title}
-                          </H4>
-                          {section.subtitle ? (
-                            <BodySM className="mt-1 text-stone-600">
-                              {section.subtitle}
-                            </BodySM>
-                          ) : null}
+                      {presentation.sections.map(
+                        (section: PublicFormContentSection) => (
+                          <section key={section.id || section.title}>
+                            <H4 className="text-body-lg text-[var(--app-ink)]">
+                              {section.title}
+                            </H4>
+                            {section.subtitle ? (
+                              <BodySM className="mt-1 text-[var(--app-muted)]">
+                                {section.subtitle}
+                              </BodySM>
+                            ) : null}
 
-                          {Array.isArray(section.items) &&
-                          section.items.length > 0 ? (
-                            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                              {section.items.map((item: any, index: number) => (
-                                <div
-                                  key={`${section.title}-${item.title}-${index}`}
-                                  className="rounded-2xl border border-stone-200 bg-white p-4"
-                                >
-                                  {item.eyebrow ? (
-                                    <Eyebrow className="text-[var(--app-primary)]">
-                                      {item.eyebrow}
-                                    </Eyebrow>
-                                  ) : null}
-                                  <BodySM
-                                    weight="semibold"
-                                    className="mt-1 text-stone-950"
-                                  >
-                                    {item.title}
-                                  </BodySM>
-                                  {item.body ? (
-                                    <BodySM className="mt-2 text-stone-600">
-                                      {item.body}
-                                    </BodySM>
-                                  ) : null}
-                                  {item.linkText && item.linkUrl ? (
-                                    <a
-                                      href={item.linkUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="mt-3 inline-flex text-sm font-bold text-[var(--app-primary)] hover:underline"
+                            {Array.isArray(section.items) &&
+                            section.items.length > 0 ? (
+                              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                {section.items.map(
+                                  (
+                                    item: PublicFormContentSectionItem,
+                                    index: number
+                                  ) => (
+                                    <div
+                                      key={`${section.title}-${item.title}-${index}`}
+                                      className="rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4"
                                     >
-                                      {item.linkText}
-                                    </a>
-                                  ) : null}
-                                </div>
-                              ))}
-                            </div>
-                          ) : null}
-                        </section>
-                      ))}
-                    </div>
+                                      {item.eyebrow ? (
+                                        <Eyebrow className="text-[var(--app-primary)]">
+                                          {item.eyebrow}
+                                        </Eyebrow>
+                                      ) : null}
+                                      <BodySM
+                                        weight="semibold"
+                                        className="mt-1 text-[var(--app-ink)]"
+                                      >
+                                        {item.title}
+                                      </BodySM>
+                                      {item.body ? (
+                                        <BodySM className="mt-2 text-[var(--app-muted)]">
+                                          {item.body}
+                                        </BodySM>
+                                      ) : null}
+                                      {item.linkText && item.linkUrl ? (
+                                        <a
+                                          href={item.linkUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="mt-3 inline-flex text-sm font-bold text-[var(--app-primary)] hover:underline"
+                                        >
+                                          {item.linkText}
+                                        </a>
+                                      ) : null}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            ) : null}
+                          </section>
+                        )
+                      )}
+                    </EditorialPanel>
                   ) : null}
 
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -1244,57 +1225,57 @@ export default function PublicFormPage() {
                   </div>
 
                   <section
-                    className="mt-7 rounded-2xl border border-stone-200 bg-stone-50 p-5 sm:p-6"
+                    className="mt-7 rounded-card border border-[var(--app-border)] bg-[var(--app-canvas)] p-5 sm:p-6"
                     aria-labelledby="privacy-consent-title"
                   >
-                    <Eyebrow className="text-emerald-700">
+                    <Eyebrow className="text-[var(--status-success)]">
                       Privacy and consent
                     </Eyebrow>
                     <H3
                       id="privacy-consent-title"
-                      className="mt-2 text-lg text-stone-950"
+                      className="mt-2 text-body-lg text-[var(--app-ink)]"
                     >
                       {consent.title}
                     </H3>
-                    <BodySM className="mt-3 leading-6 text-stone-700">
+                    <BodySM className="mt-3 leading-relaxed text-[var(--app-muted)]">
                       {consent.introduction}
                     </BodySM>
-                    <ul className="mt-4 space-y-2 text-sm leading-6 text-stone-700">
+                    <ul className="mt-4 space-y-2 font-ui text-body-sm leading-relaxed text-[var(--app-muted)]">
                       {consent.purposes.map(purpose => (
                         <li key={purpose} className="flex gap-2">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" />
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--status-success)]" />
                           {purpose}
                         </li>
                       ))}
                     </ul>
-                    <div className="mt-4 grid gap-4 text-sm leading-6 text-stone-600 sm:grid-cols-2">
+                    <div className="mt-4 grid gap-4 font-ui text-body-sm leading-relaxed text-[var(--app-muted)] sm:grid-cols-2">
                       <div>
-                        <strong className="block text-stone-900">
+                        <strong className="block text-[var(--app-ink)]">
                           Responsible access
                         </strong>
                         {consent.dataUse}
                       </div>
                       <div>
-                        <strong className="block text-stone-900">
+                        <strong className="block text-[var(--app-ink)]">
                           Retention
                         </strong>
                         {consent.retention}
                       </div>
                       <div>
-                        <strong className="block text-stone-900">
+                        <strong className="block text-[var(--app-ink)]">
                           Your rights
                         </strong>
                         {consent.rights}
                       </div>
                       <div>
-                        <strong className="block text-stone-900">
+                        <strong className="block text-[var(--app-ink)]">
                           Questions and corrections
                         </strong>
                         {consent.contact}
                       </div>
                     </div>
                     <label
-                      className={`mt-5 flex cursor-pointer items-start gap-3 rounded-xl border bg-white p-4 text-sm leading-6 text-stone-700 ${consentError ? 'border-rose-400 ring-2 ring-rose-100' : 'border-stone-300'}`}
+                      className={`mt-5 flex cursor-pointer items-start gap-3 rounded-input border bg-[var(--app-surface)] p-4 font-ui text-body-sm leading-relaxed text-[var(--app-muted)] ${consentError ? 'border-[var(--status-error)] ring-2 ring-[color-mix(in_srgb,var(--status-error)_15%,transparent)]' : 'border-[var(--app-border)]'}`}
                     >
                       <input
                         type="checkbox"
@@ -1303,35 +1284,32 @@ export default function PublicFormPage() {
                           setConsentAccepted(event.target.checked);
                           if (event.target.checked) setConsentError('');
                         }}
-                        className="mt-1 h-4 w-4 accent-emerald-700"
+                        className="mt-1 h-4 w-4 accent-[var(--status-success)]"
                       />
                       <span>
-                        <strong className="block text-stone-950">
+                        <strong className="block text-[var(--app-ink)]">
                           Required acknowledgement
                         </strong>
                         {consent.acknowledgementLabel}
                       </span>
                     </label>
                     {consentError ? (
-                      <p
-                        className="mt-2 text-sm font-semibold text-rose-700"
-                        role="alert"
-                      >
+                      <p className={`mt-2 ${editorialErrorClass}`} role="alert">
                         {consentError}
                       </p>
                     ) : null}
-                    <p className="mt-3 text-xs text-stone-500">
+                    <p className={`mt-3 ${editorialHelpClass}`}>
                       Privacy notice version {consent.version}
                     </p>
                   </section>
 
                   {error ? (
-                    <div className="mt-6 rounded-2xl border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm leading-6 text-rose-100">
+                    <EditorialNotice status="error" className="mt-6">
                       {error}
-                    </div>
+                    </EditorialNotice>
                   ) : null}
 
-                  <div className="mt-7 flex flex-col gap-4 border-t border-stone-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mt-7 flex flex-col gap-4 border-t border-[var(--app-border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
                     <Button
                       type="submit"
                       variant="primary"
@@ -1342,7 +1320,7 @@ export default function PublicFormPage() {
                       {submitting ? 'Submitting...' : 'Submit form'}
                     </Button>
 
-                    <BodySM className="text-stone-500">
+                    <BodySM className="text-[var(--app-subtle)]">
                       We will follow up using the details you provide.
                     </BodySM>
                   </div>
@@ -1359,11 +1337,11 @@ export default function PublicFormPage() {
               forceBottomSheet
               maxWidth="max-w-lg"
             >
-              <div className="min-w-0 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.055] p-4 sm:p-5">
-                <BodySM className="text-emerald-100/82">
+              <EditorialNotice status="success" className="min-w-0 p-4 sm:p-5">
+                <BodySM className="text-[var(--app-ink)]">
                   {presentation.successMessage}
                 </BodySM>
-                <BodySM className="mt-4 text-emerald-100/65">
+                <BodySM className="mt-4 text-[var(--app-muted)]">
                   You can now return to the previous page.
                 </BodySM>
 
@@ -1380,16 +1358,16 @@ export default function PublicFormPage() {
 
                   <Link
                     href={returnPath}
-                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-emerald-100/20 px-6 text-sm font-bold text-emerald-100 transition hover:bg-emerald-100/10 sm:w-auto"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-button border border-[var(--app-border)] px-6 font-ui text-body-sm font-bold text-[var(--app-ink)] transition hover:border-[var(--app-primary)] sm:w-auto"
                   >
                     {returnPath}
                   </Link>
                 </div>
-              </div>
+              </EditorialNotice>
             </BaseModal>
           </div>
-        </Container>
-      </Section>
-    </main>
+        </EditorialContainer>
+      </EditorialSection>
+    </EditorialPage>
   );
 }
