@@ -28,7 +28,7 @@ const ProductModal = dynamic(
   () => import('@/features/store/modals/ProductModal'),
   { ssr: false }
 );
-import { H2, H3, H4, BodyLG, SmallText, Caption, Eyebrow } from '@/shared/text';
+import { BodyLG, SmallText, Caption, Eyebrow } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import CartSidebar from '@/features/store/Store/CartSidebar';
 import ProductCard from '@/features/store/Store/ProductCard';
