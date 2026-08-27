@@ -126,6 +126,7 @@ export function EditorialStack({
 }) {
   return (
     <div
+      data-motion-group
       className={cn(
         'flex flex-col',
         gap === 'sm' && 'gap-4',
@@ -288,7 +289,7 @@ export function EditorialPanel({
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-card border',
+        'overflow-hidden rounded-card border transition-[transform,border-color,box-shadow,background-color] duration-500 ease-out',
         tone === 'dark'
           ? 'border-white/12 bg-white/[0.035] text-white'
           : 'border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-ink)]',
@@ -314,9 +315,41 @@ export function EditorialSplit({
 }) {
   return (
     <div
+      data-motion-group
       className={cn(
         'grid items-center gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20',
         reverse && 'lg:[&>*:first-child]:order-2',
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function EditorialRail({
+  children,
+  columns = 3,
+  className,
+  itemWidth = 'wide',
+}: {
+  children: ReactNode;
+  columns?: 2 | 3 | 4;
+  className?: string;
+  itemWidth?: 'compact' | 'wide';
+}) {
+  return (
+    <div
+      data-motion-group
+      className={cn(
+        '-mx-[var(--page-gutter)] flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain px-[var(--page-gutter)] pb-5 [scrollbar-width:thin] md:mx-0 md:grid md:snap-none md:overflow-visible md:px-0 md:pb-0',
+        itemWidth === 'compact'
+          ? '[&>*]:w-[min(78vw,19rem)]'
+          : '[&>*]:w-[min(86vw,25rem)]',
+        '[&>*]:shrink-0 [&>*]:snap-start md:[&>*]:w-auto md:[&>*]:shrink',
+        columns === 2 && 'md:grid-cols-2',
+        columns === 3 && 'md:grid-cols-2 xl:grid-cols-3',
+        columns === 4 && 'md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4',
         className
       )}
     >
@@ -392,12 +425,15 @@ export function EditorialImage({
   alt,
   className,
   imageClassName,
+  parallax = false,
   ...props
 }: Omit<ComponentProps<typeof Image>, 'quality'> & {
   imageClassName?: string;
+  parallax?: boolean;
 }) {
   return (
     <div
+      data-parallax-global={parallax ? '0.12' : undefined}
       className={cn(
         'relative overflow-hidden rounded-image bg-[var(--app-surface-2)]',
         className
@@ -407,7 +443,11 @@ export function EditorialImage({
         {...props}
         alt={alt}
         quality={IMAGE_QUALITY}
-        className={cn('object-cover', imageClassName)}
+        className={cn(
+          'object-cover transition-transform duration-700 ease-out',
+          parallax && 'scale-[1.04]',
+          imageClassName
+        )}
       />
     </div>
   );

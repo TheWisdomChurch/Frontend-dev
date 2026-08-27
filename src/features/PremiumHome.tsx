@@ -83,6 +83,7 @@ export default function PremiumHome() {
               </div>
             </div>
             <EditorialImage
+              parallax
               src={HOME_IMAGES.welcome.src}
               alt={HOME_IMAGES.welcome.alt}
               fill
@@ -203,6 +204,7 @@ export default function PremiumHome() {
         <EditorialContainer>
           <EditorialSplit>
             <EditorialImage
+              parallax
               src={HOME_IMAGES.pastor.src}
               alt={HOME_IMAGES.pastor.alt}
               fill

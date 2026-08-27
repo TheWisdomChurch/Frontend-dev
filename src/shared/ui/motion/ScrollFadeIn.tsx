@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import type { HTMLMotionProps } from 'framer-motion';
 import { motion } from '@/lib/safe-motion';
+import { motionDistance, motionDuration, motionEase } from './tokens';
 
 interface ScrollFadeInProps extends HTMLMotionProps<'div'> {
   children: ReactNode;
@@ -15,8 +16,8 @@ interface ScrollFadeInProps extends HTMLMotionProps<'div'> {
 export function ScrollFadeIn({
   children,
   delay = 0,
-  y = 24,
-  duration = 0.65,
+  y = motionDistance.base,
+  duration = motionDuration.slow,
   once = true,
   ...props
 }: ScrollFadeInProps) {
@@ -25,7 +26,7 @@ export function ScrollFadeIn({
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, amount: 0.22 }}
-      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration, delay, ease: motionEase }}
       suppressHydrationWarning
       {...props}
     >

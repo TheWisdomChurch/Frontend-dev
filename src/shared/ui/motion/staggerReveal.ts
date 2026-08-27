@@ -5,7 +5,10 @@
 export const staggerContainer = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.05 },
+    transition: {
+      staggerChildren: motionStagger.relaxed,
+      delayChildren: motionStagger.tight,
+    },
   },
 };
 
@@ -14,8 +17,9 @@ export const staggerItem = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: motionDuration.slow, ease: motionEase },
   },
 };
 
 export const staggerViewport = { once: true, amount: 0.25 } as const;
+import { motionDuration, motionEase, motionStagger } from './tokens';

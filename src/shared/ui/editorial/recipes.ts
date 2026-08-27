@@ -40,4 +40,4 @@ export const editorialErrorClass =
   'font-ui text-body-sm font-semibold text-[var(--status-error)]';
 
 export const editorialInteractiveClass =
-  'transition duration-300 motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/45 hover:shadow-xl hover:shadow-black/10 focus-within:border-[var(--app-primary)]/55 focus-within:shadow-lg motion-reduce:transform-none';
+  'group/card transform-gpu transition-[transform,border-color,box-shadow,background-color] duration-500 ease-out motion-safe:hover:-translate-y-1.5 hover:border-[var(--app-primary)]/45 hover:shadow-2xl hover:shadow-black/10 focus-within:border-[var(--app-primary)]/55 focus-within:shadow-xl motion-reduce:transform-none motion-reduce:transition-none';
