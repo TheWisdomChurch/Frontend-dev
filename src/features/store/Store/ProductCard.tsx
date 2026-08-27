@@ -21,7 +21,7 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
   const colors = Array.isArray(product.colors) ? product.colors.length : 0;
 
   return (
-    <article className="product-card group overflow-hidden rounded-[1.75rem] border border-white/[0.12] bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]">
+    <article className="product-card group overflow-hidden rounded-[1.75rem] border border-[var(--color-border-card)] bg-[var(--color-surface-card)] shadow-[var(--shadow-card)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[var(--color-border-card-hover)] hover:bg-[var(--color-surface-card-hover)]">
       <Button
         type="button"
         variant="ghost"
@@ -44,13 +44,13 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
 
         <div className="absolute left-4 top-4 flex flex-col gap-2">
           {product.originalPrice && (
-            <span className="rounded-full bg-[var(--color-error)] px-3 py-1 text-xs font-bold text-[var(--color-text-inverse)] shadow-lg">
+            <span className="rounded-full bg-[var(--color-error)] px-3 py-1 text-xs font-bold text-[var(--color-text-inverse)] shadow-[var(--shadow-sm)]">
               SALE
             </span>
           )}
 
           {soldOut && (
-            <span className="rounded-full bg-[var(--color-surface)] px-3 py-1 text-xs font-bold text-[var(--color-text-primary)] shadow-lg">
+            <span className="rounded-full bg-[var(--color-surface)] px-3 py-1 text-xs font-bold text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
               OUT OF STOCK
             </span>
           )}
