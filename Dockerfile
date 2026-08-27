@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- deps ----
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 
 # Needed for registry TLS + some native deps
@@ -23,7 +23,7 @@ RUN npm pkg delete scripts.prepare || true
 RUN npm ci --no-audit --no-fund
 
 # ---- development ----
-FROM node:20-alpine AS development
+FROM node:22-alpine AS development
 WORKDIR /app
 
 RUN apk add --no-cache ca-certificates libc6-compat ffmpeg \
@@ -40,7 +40,7 @@ EXPOSE 2000
 CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "2000"]
 
 # ---- builder ----
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Native deps for Next toolchain + media pipeline (sharp + ffmpeg)
@@ -64,7 +64,7 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN npm run build --loglevel verbose
 
 # ---- production runner ----
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 WORKDIR /app
 
 RUN apk add --no-cache ca-certificates libc6-compat \

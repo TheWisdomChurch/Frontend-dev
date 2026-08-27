@@ -7,7 +7,7 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ChevronRight, Heart } from 'lucide-react';
+import { ChevronRight, Heart } from 'lucide-react';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
 type NavChild = {
@@ -158,10 +158,6 @@ export default function Header() {
                 className={`site-header__nav-link${isActive(item.href) ? ' is-active' : ''}`}
               >
                 {item.label}
-                <ArrowUpRight
-                  className="site-header__nav-icon"
-                  aria-hidden="true"
-                />
               </Link>
             ))}
           </nav>

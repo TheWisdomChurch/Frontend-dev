@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { ArrowRight, Phone } from 'lucide-react';
+import { ArrowRight, Heart, Phone, ShieldCheck } from 'lucide-react';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 
@@ -17,7 +17,9 @@ import type { GivingOption } from '@/lib/types';
 import {
   EditorialContainer,
   EditorialHeader,
+  EditorialPanel,
   EditorialSection,
+  editorialActionClass,
 } from '@/shared/ui/editorial';
 import {
   staggerContainer,
@@ -64,12 +66,27 @@ export default function OnlineGiving() {
     // }).catch(() => {});
   }, []);
 
+  const handlePrimaryGive = useCallback(() => {
+    const firstOption = givingOptions[0];
+    if (firstOption) {
+      handleGive(firstOption);
+      return;
+    }
+
+    open({
+      title: 'Coming soon',
+      message:
+        'Our online giving portal is being set up. Please check back or contact us for available giving options.',
+      actionLabel: 'Got it',
+    });
+  }, [givingOptions, handleGive, open]);
+
   return (
     <>
-      <EditorialSection tone="dark">
+      <EditorialSection tone="dark" className="bg-[var(--app-dark-2)]">
         <EditorialContainer>
-          <div className="grid gap-8 md:gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-6 xl:gap-x-20">
-            <div className="max-w-xl lg:sticky lg:top-28 lg:col-start-1 lg:row-start-1">
+          <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:gap-14 xl:gap-20">
+            <div className="max-w-xl lg:sticky lg:top-28">
               <EditorialHeader
                 eyebrow="Give with purpose"
                 title="Your generosity"
@@ -77,26 +94,56 @@ export default function OnlineGiving() {
                 tone="dark"
               />
 
-              <blockquote className="mt-8 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-5 font-ui text-base italic leading-8 text-white/70">
-                &ldquo;As each has purposed in his heart, so let him give… God
-                loves a cheerful giver.&rdquo;
-                <br />
-                <cite className="mt-2 block text-xs not-italic uppercase tracking-[0.16em] text-white/55">
+              <EditorialPanel
+                tone="dark"
+                reveal
+                className="mt-8 border-white/12 bg-white/[0.035] p-6 sm:p-7"
+              >
+                <Heart
+                  aria-hidden="true"
+                  className="h-5 w-5 text-[var(--app-primary)]"
+                />
+                <blockquote className="mt-5 font-ui text-body-lg italic leading-relaxed text-white/78">
+                  &ldquo;As each has purposed in his heart, so let him give… God
+                  loves a cheerful giver.&rdquo;
+                </blockquote>
+                <cite className="mt-5 block border-t border-white/10 pt-4 font-ui text-caption not-italic font-bold uppercase tracking-[0.16em] text-white/50">
                   2 Corinthians 9:7
                 </cite>
-              </blockquote>
+              </EditorialPanel>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <button
+                  type="button"
+                  onClick={handlePrimaryGive}
+                  className={editorialActionClass.primary}
+                >
+                  Give Online <ArrowRight className="ml-2 h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleContactCall}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button border border-white/15 px-5 font-ui text-label font-bold text-white/72 transition duration-300 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  Other ways to give
+                </button>
+              </div>
             </div>
 
             {/* Giving options */}
             {loading ? (
               <div
-                className="border-t border-white/15 lg:col-start-2 lg:row-start-1 lg:row-span-2"
+                className="overflow-hidden rounded-card border border-white/12 bg-white/[0.025]"
                 aria-hidden="true"
               >
+                <div className="border-b border-white/10 px-5 py-5 sm:px-7">
+                  <span className="h-3 w-32 animate-pulse rounded bg-white/10" />
+                </div>
                 {[0, 1, 2].map(i => (
                   <div
                     key={i}
-                    className="grid grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/15 py-7 sm:gap-7 sm:px-5 sm:py-9"
+                    className="grid grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/10 px-5 py-7 last:border-b-0 sm:gap-7 sm:px-7 sm:py-9"
                   >
                     <span className="h-3 w-4 animate-pulse rounded bg-white/10" />
                     <span className="flex flex-col gap-3">
@@ -113,9 +160,20 @@ export default function OnlineGiving() {
                 initial="hidden"
                 whileInView="show"
                 viewport={staggerViewport}
-                className="border-t border-white/15 lg:col-start-2 lg:row-start-1 lg:row-span-2"
+                className="overflow-hidden rounded-card border border-white/12 bg-white/[0.025]"
               >
-                {givingOptions.slice(0, 3).map(opt => (
+                <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-7">
+                  <div>
+                    <p className="font-ui text-label font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]">
+                      Choose an option
+                    </p>
+                    <p className="mt-1 font-ui text-body-sm text-white/52">
+                      Securely continue with your preferred method.
+                    </p>
+                  </div>
+                  <ShieldCheck className="h-5 w-5 shrink-0 text-white/45" />
+                </div>
+                {givingOptions.slice(0, 3).map((opt, index) => (
                   <motion.button
                     key={opt.title}
                     variants={staggerItem}
@@ -123,8 +181,11 @@ export default function OnlineGiving() {
                     onClick={() => handleGive(opt)}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-                    className="group grid w-full grid-cols-[1fr_auto] items-start gap-4 border-b border-white/15 py-7 text-left transition-colors duration-200 hover:bg-white/[0.035] sm:gap-7 sm:px-5 sm:py-9"
+                    className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/10 px-5 py-7 text-left transition-[background-color,transform] duration-300 hover:bg-white/[0.055] sm:gap-7 sm:px-7 sm:py-9"
                   >
+                    <span className="pt-0.5 font-ui text-caption font-bold tracking-[0.16em] text-[var(--app-primary)]/75">
+                      0{index + 1}
+                    </span>
                     <span>
                       <span className="block font-ui text-lg font-bold leading-6 text-white sm:text-xl">
                         {opt.title}
@@ -145,7 +206,23 @@ export default function OnlineGiving() {
                 ))}
               </motion.div>
             ) : (
-              <div className="border-t border-white/15 pt-9 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:text-left">
+              <EditorialPanel
+                tone="dark"
+                reveal
+                className="flex min-h-[19rem] flex-col justify-between border-white/12 bg-white/[0.025] p-6 sm:min-h-[22rem] sm:p-8"
+              >
+                <div>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--app-primary-10)] text-[var(--app-primary)]">
+                    <Heart className="h-5 w-5" />
+                  </span>
+                  <h3 className="mt-7 font-ui text-heading-md font-semibold text-white">
+                    Online giving is being prepared.
+                  </h3>
+                  <p className="mt-4 max-w-lg font-ui text-body-md leading-loose text-white/60">
+                    Our giving portal is being set up. You can still reach us
+                    for the available ways to give today.
+                  </p>
+                </div>
                 <button
                   type="button"
                   onClick={() =>
@@ -156,36 +233,20 @@ export default function OnlineGiving() {
                       actionLabel: 'Got it',
                     })
                   }
-                  className="inline-flex h-12 items-center gap-2 rounded-button bg-[var(--app-primary)] px-8 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
                 >
                   Give Online
                 </button>
-              </div>
+              </EditorialPanel>
             )}
-
-            <motion.div
-              variants={staggerItem}
-              initial="hidden"
-              whileInView="show"
-              viewport={staggerViewport}
-              className="flex flex-wrap items-center gap-3 lg:col-start-1 lg:row-start-2 lg:self-end"
-            >
-              <button
-                type="button"
-                onClick={handleContactCall}
-                className="inline-flex h-11 items-center gap-2 rounded-button border border-white/15 px-5 font-ui text-xs font-bold text-white/65 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              >
-                <Phone className="h-3.5 w-3.5" />
-                Other ways to give
-              </button>
-              <Link
-                href="/contact"
-                className="inline-flex h-11 items-center gap-2 px-3 font-ui text-xs font-bold text-white/50 transition hover:text-white"
-              >
-                Contact us <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </motion.div>
           </div>
+          <Link
+            href="/contact"
+            className="mt-8 inline-flex items-center gap-2 font-ui text-label font-semibold text-white/55 transition duration-300 hover:text-white"
+          >
+            Need help with giving? Contact us{' '}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </EditorialContainer>
       </EditorialSection>
 
