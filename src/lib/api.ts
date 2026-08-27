@@ -921,7 +921,13 @@ export const apiClient = {
 
   async listLeadership(role?: LeadershipRole): Promise<LeadershipMember[]> {
     const qs = toQueryString({ role });
-    const res = await request<unknown>(`/leadership${qs}`, { method: 'GET' });
+    // Leadership approval is editorial publishing: the public directory must
+    // reflect an admin decision immediately, not an old process-local cache.
+    const res = await request<unknown>(
+      `/leadership${qs}`,
+      { method: 'GET' },
+      { skipCache: true }
+    );
     return unwrapData<LeadershipMember[]>(res);
   },
 

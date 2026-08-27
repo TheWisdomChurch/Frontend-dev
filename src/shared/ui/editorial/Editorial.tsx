@@ -12,6 +12,7 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container } from '@/shared/layout';
 import {
   editorialActionClass,
+  editorialInteractiveClass,
   editorialLabelClass,
   editorialToneClass,
   editorialWidthClass,
@@ -275,10 +276,14 @@ export function EditorialDocument({
 export function EditorialPanel({
   children,
   tone = 'light',
+  interactive = false,
+  reveal = false,
   className,
   ...props
 }: ComponentPropsWithoutRef<'div'> & {
   tone?: 'light' | 'dark';
+  interactive?: boolean;
+  reveal?: boolean;
 }) {
   return (
     <div
@@ -287,8 +292,10 @@ export function EditorialPanel({
         tone === 'dark'
           ? 'border-white/12 bg-white/[0.035] text-white'
           : 'border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-ink)]',
+        interactive && editorialInteractiveClass,
         className
       )}
+      data-gsap={reveal ? 'reveal' : undefined}
       {...props}
     >
       {children}

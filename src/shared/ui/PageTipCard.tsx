@@ -23,7 +23,7 @@ export default function PageTipCard({
           animate={{ opacity: 1, y: 0, x: 0 }}
           exit={{ opacity: 0, y: 10, transition: { duration: 0.18 } }}
           transition={{ type: 'spring', stiffness: 340, damping: 30 }}
-          className="fixed bottom-6 left-6 z-[70] flex max-w-[300px] items-start gap-3 rounded-2xl border border-white/10 bg-[#161310]/95 px-4 py-3.5 shadow-2xl shadow-black/40 backdrop-blur-xl"
+          className="fixed inset-x-[var(--page-gutter)] bottom-[max(var(--page-gutter),env(safe-area-inset-bottom))] z-[70] flex items-start gap-3 rounded-2xl border border-white/10 bg-[var(--app-dark-3)]/95 px-4 py-3.5 shadow-2xl shadow-black/40 backdrop-blur-xl sm:left-[var(--page-gutter)] sm:right-auto sm:max-w-[300px]"
         >
           <div className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-[var(--app-primary)]/12 text-[var(--app-primary)]">
             <Info className="h-3.5 w-3.5" />

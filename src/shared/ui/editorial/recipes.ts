@@ -13,7 +13,7 @@ export const editorialToneClass: Record<EditorialTone, string> = {
 export const editorialWidthClass: Record<EditorialWidth, string> = {
   narrow: 'max-w-3xl',
   content: 'max-w-5xl',
-  wide: 'max-w-7xl',
+  wide: 'max-w-[var(--content-wide)]',
 };
 
 export const editorialActionClass = {
@@ -38,3 +38,6 @@ export const editorialHelpClass =
 
 export const editorialErrorClass =
   'font-ui text-body-sm font-semibold text-[var(--status-error)]';
+
+export const editorialInteractiveClass =
+  'transition duration-300 motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/45 hover:shadow-xl hover:shadow-black/10 focus-within:border-[var(--app-primary)]/55 focus-within:shadow-lg motion-reduce:transform-none';

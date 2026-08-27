@@ -170,75 +170,87 @@ export default function CalendarPage() {
 
           {/* Calendar grid */}
           <ScrollFadeIn>
-            <div className="border border-[var(--app-ink)]/10">
-              {/* Day headers */}
-              <div className="grid grid-cols-7 border-b border-[var(--app-ink)]/10">
-                {DAYS.map(d => (
+            <p className="mb-3 font-ui text-caption text-[var(--app-subtle)] md:hidden">
+              Swipe horizontally to see the full week.
+            </p>
+            <div
+              className="overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:thin]"
+              role="region"
+              aria-label="Monthly event calendar"
+              tabIndex={0}
+            >
+              <div className="min-w-[42rem] border border-[var(--app-ink)]/10 md:min-w-0">
+                {/* Day headers */}
+                <div className="grid grid-cols-7 border-b border-[var(--app-ink)]/10">
+                  {DAYS.map(d => (
+                    <div
+                      key={d}
+                      className="py-2.5 text-center font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/60"
+                    >
+                      {d}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Weeks */}
+                {Array.from({ length: cells.length / 7 }, (_, w) => (
                   <div
-                    key={d}
-                    className="py-2.5 text-center font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/60"
+                    key={w}
+                    className="grid grid-cols-7 border-b border-[var(--app-ink)]/8 last:border-b-0"
                   >
-                    {d}
+                    {cells.slice(w * 7, w * 7 + 7).map((day, j) => {
+                      const hasEvents =
+                        day !== null && eventsByDay[day]?.length > 0;
+                      return (
+                        <div
+                          key={j}
+                          className={[
+                            'relative min-h-[56px] border-r border-[var(--app-ink)]/8 last:border-r-0 p-2 lg:min-h-[72px] lg:p-3',
+                            day === null
+                              ? 'bg-[var(--app-canvas-2)]'
+                              : 'bg-[var(--app-canvas)]',
+                            isToday(day!)
+                              ? 'bg-[var(--app-primary)]/[0.06]'
+                              : '',
+                          ].join(' ')}
+                        >
+                          {day !== null && (
+                            <>
+                              <span
+                                className={[
+                                  'font-ui text-label font-semibold',
+                                  isToday(day)
+                                    ? 'text-[var(--app-primary)]'
+                                    : 'text-[var(--app-ink)]/50',
+                                ].join(' ')}
+                              >
+                                {day}
+                              </span>
+                              {hasEvents && (
+                                <div className="mt-1 flex flex-col gap-0.5">
+                                  {eventsByDay[day].slice(0, 2).map(ev => (
+                                    <span
+                                      key={ev.id}
+                                      className="block truncate rounded-[2px] bg-[var(--app-primary)]/15 px-1 py-0.5 font-ui text-eyebrow text-[var(--app-primary)] leading-tight"
+                                    >
+                                      {ev.title}
+                                    </span>
+                                  ))}
+                                  {eventsByDay[day].length > 2 && (
+                                    <span className="font-ui text-eyebrow text-[var(--app-ink)]/60">
+                                      +{eventsByDay[day].length - 2} more
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 ))}
               </div>
-
-              {/* Weeks */}
-              {Array.from({ length: cells.length / 7 }, (_, w) => (
-                <div
-                  key={w}
-                  className="grid grid-cols-7 border-b border-[var(--app-ink)]/8 last:border-b-0"
-                >
-                  {cells.slice(w * 7, w * 7 + 7).map((day, j) => {
-                    const hasEvents =
-                      day !== null && eventsByDay[day]?.length > 0;
-                    return (
-                      <div
-                        key={j}
-                        className={[
-                          'relative min-h-[56px] border-r border-[var(--app-ink)]/8 last:border-r-0 p-2 lg:min-h-[72px] lg:p-3',
-                          day === null
-                            ? 'bg-[var(--app-canvas-2)]'
-                            : 'bg-[var(--app-canvas)]',
-                          isToday(day!) ? 'bg-[var(--app-primary)]/[0.06]' : '',
-                        ].join(' ')}
-                      >
-                        {day !== null && (
-                          <>
-                            <span
-                              className={[
-                                'font-ui text-label font-semibold',
-                                isToday(day)
-                                  ? 'text-[var(--app-primary)]'
-                                  : 'text-[var(--app-ink)]/50',
-                              ].join(' ')}
-                            >
-                              {day}
-                            </span>
-                            {hasEvents && (
-                              <div className="mt-1 flex flex-col gap-0.5">
-                                {eventsByDay[day].slice(0, 2).map(ev => (
-                                  <span
-                                    key={ev.id}
-                                    className="block truncate rounded-[2px] bg-[var(--app-primary)]/15 px-1 py-0.5 font-ui text-eyebrow text-[var(--app-primary)] leading-tight"
-                                  >
-                                    {ev.title}
-                                  </span>
-                                ))}
-                                {eventsByDay[day].length > 2 && (
-                                  <span className="font-ui text-eyebrow text-[var(--app-ink)]/60">
-                                    +{eventsByDay[day].length - 2} more
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
             </div>
           </ScrollFadeIn>
 

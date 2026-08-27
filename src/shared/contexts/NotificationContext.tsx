@@ -118,7 +118,7 @@ function NotificationStack({
   removeNotification: (id: string) => void;
 }) {
   return (
-    <div className="pointer-events-none fixed right-[20px] top-[100px] z-[9999] flex max-w-[400px] flex-col gap-3">
+    <div className="pointer-events-none fixed inset-x-[var(--page-gutter)] top-[calc(var(--app-header-height)+1rem)] z-[9999] flex flex-col gap-3 sm:left-auto sm:w-[min(25rem,calc(100vw-(2*var(--page-gutter))))]">
       {notifications.map(notif => (
         <NotificationItem
           key={notif.id}

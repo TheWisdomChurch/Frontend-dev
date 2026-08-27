@@ -207,15 +207,15 @@ function ModalPanel({
       ? 'border-black/10 bg-[linear-gradient(155deg,#ffffff_0%,#fbfaf7_100%)] text-black'
       : 'border-white/[0.11] bg-[linear-gradient(155deg,#1b1712_0%,#100d0a_48%,#090806_100%)] text-white ring-1 ring-black/30',
     dragEnabled
-      ? 'max-h-[calc(100svh-0.5rem)] rounded-t-[1.75rem] rounded-b-none'
-      : 'max-h-[calc(100svh-1rem)] rounded-[1.5rem] sm:max-h-[min(90vh,880px)] sm:rounded-[2rem]',
+      ? 'max-h-[calc(100dvh-0.5rem)] rounded-t-[1.75rem] rounded-b-none'
+      : 'max-h-[calc(100dvh-1rem)] rounded-[1.5rem] sm:max-h-[min(90dvh,880px)] sm:rounded-[2rem]',
     maxWidth
   );
 
   return (
     <motion.div
       className={cn(
-        'fixed inset-0 z-[11000] flex min-w-0 bg-[rgba(7,5,3,0.76)] px-2 py-2 backdrop-blur-[10px] sm:px-5 sm:py-5',
+        'fixed inset-0 z-[11000] flex min-w-0 bg-[rgba(7,5,3,0.76)] px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur-[10px] sm:px-5 sm:py-5',
         isSheet
           ? 'items-end justify-center px-0 pb-0 sm:items-center sm:px-4 sm:pb-4'
           : 'items-center justify-center'

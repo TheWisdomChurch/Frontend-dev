@@ -1,10 +1,7 @@
 import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
-import type {
-  LeadershipMember,
-  LeadershipRole,
-} from '@/domain/leadership/types';
+import type { LeadershipRole } from '@/domain/leadership/types';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
 import {
@@ -21,6 +18,10 @@ import {
   EditorialLink,
   EditorialSection,
 } from '@/shared/ui/editorial';
+
+// Approved leadership is CMS-managed content. Render it per request so a
+// production build cannot freeze an empty or outdated directory indefinitely.
+export const dynamic = 'force-dynamic';
 
 const SENIOR_ROLES: LeadershipRole[] = [
   'senior_pastor',
@@ -44,9 +45,9 @@ function EmptyState({ dark }: { dark?: boolean }) {
 /* ── Page ───────────────────────────────────────────────── */
 
 export default async function LeadershipPage() {
-  const leaders = await apiClient
-    .listLeadership()
-    .catch(() => [] as LeadershipMember[]);
+  // Preserve transport failures for the route error boundary. Treating a
+  // 429/5xx as [] made approved records look as though they were unpublished.
+  const leaders = await apiClient.listLeadership();
 
   const seniorTeam = leaders.filter(l => SENIOR_ROLES.includes(l.role));
   const board = leaders.filter(l => BOARD_ROLES.includes(l.role));
