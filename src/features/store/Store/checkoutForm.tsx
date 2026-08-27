@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useAppSelector, useAppDispatch } from '@/shared/utils/hooks/redux';
 import { clearCart } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
@@ -19,7 +20,9 @@ import {
   User,
   Banknote,
 } from 'lucide-react';
-import OnlinePaymentModal from './OnlinePaymentModal';
+const OnlinePaymentModal = dynamic(() => import('./OnlinePaymentModal'), {
+  ssr: false,
+});
 import { LocationFields, PhoneNumberField } from '@/shared/ui/forms';
 import {
   DEFAULT_PHONE_COUNTRY,

@@ -17,7 +17,7 @@ import {
   buildHreflangAlternates,
 } from '@/lib/seo';
 import HeroHighlights from '@/features/hero/HeroHighlights';
-import CommunityJoinModal from '@/features/community/CommunityJoinModal';
+import CommunityJoinModal from '@/features/community/CommunityJoinModalLoader';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
