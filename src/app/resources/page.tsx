@@ -31,6 +31,7 @@ import {
   EditorialHeader,
   EditorialPanel,
   EditorialPage,
+  EditorialRail,
   EditorialSection,
   editorialFieldClass,
 } from '@/shared/ui/editorial';
@@ -182,52 +183,39 @@ export default function ResourcesPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {quickActions.map((item, index) => {
+          <EditorialRail columns={3} itemWidth="compact" className="gap-4">
+            {quickActions.map(item => {
               const Icon = item.icon;
 
-              // Fills the dangling grid cell a lone trailing card would
-              // otherwise leave at 2- and 3-column breakpoints. Recompute
-              // the span if quickActions' length ever changes.
-              const isTrailingGap =
-                index === quickActions.length - 1 &&
-                quickActions.length % 2 === 1 &&
-                quickActions.length % 3 === 1;
-
               return (
-                <ScrollFadeIn
+                <Link
                   key={item.title}
-                  delay={index * 0.04}
-                  className={isTrailingGap ? 'sm:col-span-2 lg:col-span-3' : ''}
+                  href={item.href}
+                  className="group relative block h-full min-h-[11rem] overflow-hidden rounded-card border border-white/12 bg-white/[0.035] p-6 transition duration-500 ease-out motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/40"
                 >
-                  <Link
-                    href={item.href}
-                    className="group relative block h-full overflow-hidden rounded-card border border-white/12 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--app-primary)]/40"
-                  >
-                    <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-0 blur-3xl transition group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
-                    <div className="relative z-10 flex items-start gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
-                        <Icon className="h-5 w-5" />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <H3 className="text-base font-semibold leading-tight text-white">
-                          {item.title}
-                        </H3>
-
-                        <SmallText className="mt-2 block text-sm leading-6 text-white/58">
-                          {item.desc}
-                        </SmallText>
-                      </div>
-
-                      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
+                  <div className="relative z-10 flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)] transition-transform duration-500 ease-out group-hover:scale-110">
+                      <Icon className="h-5 w-5" />
                     </div>
-                  </Link>
-                </ScrollFadeIn>
+
+                    <div className="min-w-0 flex-1">
+                      <H3 className="text-base font-semibold leading-tight text-white">
+                        {item.title}
+                      </H3>
+
+                      <SmallText className="mt-2 block text-sm leading-6 text-white/58">
+                        {item.desc}
+                      </SmallText>
+                    </div>
+
+                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
+                  </div>
+                </Link>
               );
             })}
-          </div>
+          </EditorialRail>
         </EditorialContainer>
       </EditorialSection>
 

@@ -11,6 +11,7 @@ import {
   EditorialContainer,
   EditorialPage,
   EditorialHeader,
+  EditorialRail,
   EditorialSection,
   editorialActionClass,
 } from '@/shared/ui/editorial';
@@ -156,10 +157,10 @@ export default function MinistriesPage() {
             </p>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <EditorialRail columns={3} className="gap-5">
             {ministries.map(ministry => {
               return (
-                <div key={ministry.title} data-gsap="reveal">
+                <div key={ministry.title}>
                   <Link
                     href={ministry.href}
                     aria-label={`Explore ${ministry.title}`}
@@ -199,7 +200,7 @@ export default function MinistriesPage() {
                 </div>
               );
             })}
-          </div>
+          </EditorialRail>
         </EditorialContainer>
       </EditorialSection>
 

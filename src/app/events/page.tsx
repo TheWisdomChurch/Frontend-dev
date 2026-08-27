@@ -33,6 +33,7 @@ import {
   EditorialLink,
   EditorialPanel,
   EditorialSection,
+  editorialInteractiveClass,
 } from '@/shared/ui/editorial';
 
 /* ── Utilities ──────────────────────────────────────────── */
@@ -74,7 +75,9 @@ function EventCard({ event }: { event: EventPublic }) {
   const imgSrc = event.bannerUrl ?? event.imageUrl ?? null;
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-card border border-white/10 bg-white/[0.03] transition duration-300 motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/35 hover:bg-white/[0.05] hover:shadow-xl hover:shadow-black/20">
+    <article
+      className={`group flex h-full flex-col overflow-hidden rounded-card border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] ${editorialInteractiveClass}`}
+    >
       {/* Image / date block */}
       <div className="relative aspect-video overflow-hidden bg-[var(--app-dark-2)]">
         {imgSrc ? (
@@ -160,7 +163,8 @@ function EmptyState() {
     <ScrollFadeIn>
       <EditorialPanel
         tone="dark"
-        className="group flex flex-col items-center gap-5 p-6 text-center transition duration-300 hover:border-[var(--app-primary)]/30 hover:bg-white/[0.05] sm:p-10 lg:p-12"
+        interactive
+        className="group flex flex-col items-center gap-5 p-6 text-center hover:bg-white/[0.05] sm:p-10 lg:p-12"
       >
         <span className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
           <CalendarClock className="h-6 w-6" aria-hidden="true" />
@@ -278,7 +282,9 @@ export default async function EventsPage() {
               const ServiceIcon = svc.icon;
               return (
                 <ScrollFadeIn key={svc.day} delay={i * 0.09} className="h-full">
-                  <div className="group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 transition duration-300 motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/45 hover:shadow-xl hover:shadow-black/5 sm:p-7 lg:p-8">
+                  <div
+                    className={`group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:p-8 ${editorialInteractiveClass}`}
+                  >
                     {/* Day + time */}
                     <div className="flex items-start justify-between gap-4">
                       <div>

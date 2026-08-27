@@ -134,7 +134,7 @@ export default function SiteHero({
                 <span
                   data-hero-title-line
                   className={cn(
-                    'block whitespace-normal sm:whitespace-nowrap',
+                    'block whitespace-normal',
                     index === 1 && highlightSecondLine
                       ? 'font-normal text-[var(--app-primary-light)]'
                       : 'text-white'

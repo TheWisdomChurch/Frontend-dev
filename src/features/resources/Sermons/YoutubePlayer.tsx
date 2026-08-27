@@ -231,7 +231,7 @@ export const YouTubePlayerWithBackground = ({
         transition-all duration-500 ease-in-out
         ${
           isDetached
-            ? 'fixed bottom-6 right-6 w-80 h-45 z-50 shadow-2xl rounded-2xl overflow-hidden border-2 border-yellow-400'
+            ? 'fixed inset-x-[var(--page-gutter)] bottom-[max(var(--page-gutter),env(safe-area-inset-bottom))] z-50 aspect-video overflow-hidden rounded-xl border-2 border-[var(--app-primary)] shadow-2xl sm:left-auto sm:w-80 sm:rounded-2xl'
             : 'w-full'
         }
       `}

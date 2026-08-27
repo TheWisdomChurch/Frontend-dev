@@ -17,8 +17,8 @@ const sizeClasses: Record<ContainerSize, string> = {
   sm: 'max-w-3xl',
   md: 'max-w-4xl',
   lg: 'max-w-6xl',
-  xl: 'max-w-7xl',
-  '2xl': 'max-w-[1440px]',
+  xl: 'max-w-[var(--content-wide)]',
+  '2xl': 'max-w-[var(--content-wide)]',
   full: 'max-w-none',
 };
 

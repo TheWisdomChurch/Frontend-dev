@@ -43,7 +43,7 @@ export default function ClientScrollToTop() {
       type="button"
       aria-label="Scroll to top"
       onClick={scrollToTop}
-      className={`fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-black/90 text-white shadow-xl backdrop-blur-md transition-all duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] active:scale-[0.95] sm:bottom-7 sm:right-7 ${
+      className={`fixed bottom-[max(var(--page-gutter),env(safe-area-inset-bottom))] right-[var(--page-gutter)] z-50 flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-black/90 text-white shadow-xl backdrop-blur-md transition-all duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] active:scale-[0.95] ${
         visible
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-3 pointer-events-none'

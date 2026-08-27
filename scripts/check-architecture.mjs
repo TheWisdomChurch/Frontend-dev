@@ -126,6 +126,21 @@ for (const file of sourceFiles) {
         `${displayPath}: public presentation must use semantic design tokens instead of raw palette or color values`
       );
     }
+
+    if (
+      /sm:whitespace-nowrap/.test(source) &&
+      /(?:h1|h2|title)/i.test(source)
+    ) {
+      violations.push(
+        `${displayPath}: headings must remain wrappable at every viewport width`
+      );
+    }
+
+    if (/\bfixed\b[^'"`\n]*\brelative\b/.test(source)) {
+      violations.push(
+        `${displayPath}: fixed UI cannot also declare relative positioning in the same class list`
+      );
+    }
   }
 
   for (const match of source.matchAll(

@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 import SiteHero from '@/features/hero/SiteHero';
-import { ScrollFadeIn } from '@/shared/ui/motion';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildRecurringEventSchema, buildPageMetadata } from '@/lib/seo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import Arrow from '@/shared/ui/icons/Arrow';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
+import WeeklyServiceCard from '@/features/events/WeeklyServiceCard';
 import {
   EditorialContainer,
   EditorialPage,
@@ -93,58 +93,15 @@ export default function WeeklyPage() {
       {/* Service panels */}
       <EditorialSection tone="canvas">
         <EditorialContainer>
-          <div className="divide-y divide-[var(--app-ink)]/8 border-b border-[var(--app-ink)]/8">
-            {services.map((svc, i) => (
-              <ScrollFadeIn key={svc.day} delay={i * 0.08}>
-                <div
-                  className={`grid gap-8 py-section-xs md:gap-10 lg:grid-cols-2 lg:gap-16 ${i === 0 ? 'pt-0' : ''} ${i === services.length - 1 ? 'pb-0' : ''}`}
-                >
-                  {/* Left — day + time */}
-                  <div>
-                    <div className="flex items-baseline gap-5">
-                      <p className="font-ui text-display-sm font-medium leading-none tracking-[-0.04em] text-[var(--app-ink)] lg:text-display-md">
-                        {svc.day}
-                      </p>
-                      <p className="font-ui text-body-lg font-bold text-[var(--app-primary)]">
-                        {svc.time}
-                      </p>
-                    </div>
-                    <div className="mt-6 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-                    <p className="mt-5 font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
-                      {svc.name}
-                    </p>
-                    <p className="mt-3 font-ui text-body-sm leading-[1.9] text-[var(--app-ink)]/70 max-w-sm">
-                      {svc.description}
-                    </p>
-                  </div>
-
-                  {/* Right — detail bullets + cta */}
-                  <div className="flex flex-col gap-6 lg:pt-4">
-                    <ul className="space-y-3">
-                      {svc.details.map(d => (
-                        <li key={d} className="flex items-start gap-3">
-                          <div className="mt-[0.55rem] h-[1.5px] w-4 shrink-0 bg-[var(--app-primary)]/55" />
-                          <span className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/72">
-                            {d}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="font-ui text-label text-[var(--app-ink)]/55">
-                      {SERVICE_INFO.venue.name},{' '}
-                      {SERVICE_INFO.venue.streetAddress}
-                      ,<br />
-                      {SERVICE_INFO.venue.locality}
-                    </p>
-                    <PlanVisitTrigger
-                      icon={false}
-                      className="self-start rounded-none border-[var(--app-ink)]/18 bg-transparent px-5 py-2.5 text-[var(--app-ink)]/60 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-                    >
-                      Plan your visit <Arrow />
-                    </PlanVisitTrigger>
-                  </div>
-                </div>
-              </ScrollFadeIn>
+          <div className="grid gap-4 md:grid-cols-2">
+            {services.map((service, index) => (
+              <WeeklyServiceCard
+                key={service.day}
+                {...service}
+                variant={index === 0 ? 'sunday' : 'prayer'}
+                location={SERVICE_INFO.venue.full}
+                delay={index * 0.08}
+              />
             ))}
           </div>
         </EditorialContainer>

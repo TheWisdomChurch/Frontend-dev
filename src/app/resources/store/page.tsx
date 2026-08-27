@@ -28,7 +28,7 @@ const ProductModal = dynamic(
   () => import('@/features/store/modals/ProductModal'),
   { ssr: false }
 );
-import { H2, H3, H4, BodyLG, SmallText, Caption, Eyebrow } from '@/shared/text';
+import { BodyLG, SmallText, Caption, Eyebrow } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import CartSidebar from '@/features/store/Store/CartSidebar';
 import ProductCard from '@/features/store/Store/ProductCard';
@@ -215,7 +215,7 @@ function StorePageContent() {
         size="icon"
         curvature="full"
         onClick={() => dispatch(toggleCart())}
-        className="fixed bottom-6 right-5 z-50 relative h-14 w-14 bg-[var(--app-primary)] text-black shadow-xl hover:-translate-y-1 hover:scale-105 sm:right-6 sm:h-16 sm:w-16"
+        className="fixed bottom-[max(var(--page-gutter),env(safe-area-inset-bottom))] right-[var(--page-gutter)] z-50 h-14 w-14 bg-[var(--app-primary)] text-black shadow-xl hover:-translate-y-1 hover:scale-105 sm:h-16 sm:w-16"
         aria-label="Open cart"
       >
         <ShoppingBag className="h-6 w-6" />

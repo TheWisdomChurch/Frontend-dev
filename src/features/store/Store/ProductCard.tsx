@@ -21,41 +21,43 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
   const colors = Array.isArray(product.colors) ? product.colors.length : 0;
 
   return (
-    <article className="product-card group overflow-hidden rounded-[1.75rem] border border-white/[0.12] bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]">
+    <article className="product-card group overflow-hidden rounded-[1.75rem] border border-[var(--color-border-card)] bg-[var(--color-surface-card)] shadow-[var(--shadow-card)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[var(--color-border-card-hover)] hover:bg-[var(--color-surface-card-hover)]">
       <Button
         type="button"
         variant="ghost"
         onClick={() => onQuickView(product)}
-        className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[#0d0d0d] rounded-none"
+        className="relative block aspect-square w-full min-h-0 h-auto p-0 overflow-hidden bg-[var(--color-surface-dark)] rounded-none"
       >
         <Media
           src={product.image}
           alt={product.name}
           fit="contain"
           className="p-4 transition duration-500 group-hover:scale-105 sm:p-5"
-          frameClassName="bg-[#0d0d0d]"
+          frameClassName="bg-[var(--color-surface-dark)]"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          fallback={<ShoppingBag className="h-12 w-12 text-white/35" />}
+          fallback={
+            <ShoppingBag className="h-12 w-12 text-[var(--color-text-disabled)]" />
+          }
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/10 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-overlay-heavy)] via-[var(--color-overlay-light)] to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
 
         <div className="absolute left-4 top-4 flex flex-col gap-2">
           {product.originalPrice && (
-            <span className="rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
+            <span className="rounded-full bg-[var(--color-error)] px-3 py-1 text-xs font-bold text-[var(--color-text-inverse)] shadow-[var(--shadow-sm)]">
               SALE
             </span>
           )}
 
           {soldOut && (
-            <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-black shadow-lg">
+            <span className="rounded-full bg-[var(--color-surface)] px-3 py-1 text-xs font-bold text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
               OUT OF STOCK
             </span>
           )}
         </div>
 
         <div className="absolute inset-x-4 bottom-4 translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <span className="flex h-11 w-full items-center justify-center rounded-full text-sm font-bold text-black bg-[var(--app-primary)]">
+          <span className="flex h-11 w-full items-center justify-center rounded-full text-sm font-bold text-[var(--color-text-inverse)] bg-[var(--app-primary)]">
             {soldOut ? 'View Product' : 'Quick View'}
           </span>
         </div>
@@ -65,7 +67,7 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
         <div className="mb-3 flex items-start justify-between gap-3">
           <SmallText
             weight="bold"
-            className="line-clamp-2 text-base leading-snug text-white"
+            className="line-clamp-2 text-base leading-snug text-[var(--color-text-primary)]"
             useThemeColor={false}
           >
             {product.name}
@@ -73,7 +75,7 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
         </div>
 
         <Caption
-          className="line-clamp-2 text-sm leading-6 text-white/58"
+          className="line-clamp-2 text-sm leading-6 text-[var(--color-text-secondary)]"
           useThemeColor={false}
         >
           {product.description}
@@ -90,7 +92,7 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
 
           {product.originalPrice && (
             <Caption
-              className="pb-1 text-sm line-through text-white/38"
+              className="pb-1 text-sm line-through text-[var(--color-text-disabled)]"
               useThemeColor={false}
             >
               {product.originalPrice}
@@ -106,12 +108,17 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
           ].map(([value, label]) => (
             <div
               key={label}
-              className="rounded-2xl border border-white/8 bg-black/25 px-2 py-2 text-center"
+              className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-2 py-2 text-center"
             >
-              <BodySM weight="bold" className="text-white">
+              <BodySM
+                weight="bold"
+                className="text-[var(--color-text-primary)]"
+              >
                 {value}
               </BodySM>
-              <Eyebrow className="mt-0.5 text-white/38">{label}</Eyebrow>
+              <Eyebrow className="mt-0.5 text-[var(--color-text-disabled)]">
+                {label}
+              </Eyebrow>
             </div>
           ))}
         </div>

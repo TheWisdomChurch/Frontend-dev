@@ -20,6 +20,7 @@ import {
   EditorialHeader,
   EditorialSection,
   editorialActionClass,
+  editorialInteractiveClass,
 } from '@/shared/ui/editorial';
 
 export default function UpcomingPage() {
@@ -102,7 +103,7 @@ export default function UpcomingPage() {
 
           {!loading && events.length > 0 && (
             /* Timeline list — date left, content right */
-            <div className="divide-y divide-[var(--app-ink)]/8 border-y border-[var(--app-ink)]/8">
+            <div className="grid gap-4">
               {events.map((event, i) => {
                 const date = formatDate(event);
                 const href =
@@ -110,7 +111,9 @@ export default function UpcomingPage() {
                   (event.formSlug ? `/forms/${event.formSlug}` : null);
                 return (
                   <ScrollFadeIn key={event.id} delay={i * 0.04}>
-                    <div className="group grid items-start gap-6 py-8 lg:grid-cols-[120px_1fr_auto] lg:gap-10 lg:py-9">
+                    <article
+                      className={`group grid items-start gap-6 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:grid-cols-[120px_1fr_auto] lg:gap-10 ${editorialInteractiveClass}`}
+                    >
                       {/* Date column */}
                       <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
                         <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)]">
@@ -153,7 +156,7 @@ export default function UpcomingPage() {
                           </span>
                         )}
                       </div>
-                    </div>
+                    </article>
                   </ScrollFadeIn>
                 );
               })}

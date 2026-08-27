@@ -14,6 +14,7 @@ if (
 
 const EXPLICIT_REVEAL_SELECTOR =
   '[data-gsap="reveal"], [data-scroll-fade], [data-reveal]';
+const MOTION_GROUP_SELECTOR = '[data-motion-group]';
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -42,6 +43,14 @@ const collectRevealTargets = (root: HTMLElement): HTMLElement[] => {
   // their own Framer Motion `whileInView` reveals).
   root.querySelectorAll(EXPLICIT_REVEAL_SELECTOR).forEach(node => {
     if (isEligibleTarget(node)) unique.add(node);
+  });
+
+  root.querySelectorAll(MOTION_GROUP_SELECTOR).forEach(group => {
+    Array.from(group.children).forEach(node => {
+      if (isEligibleTarget(node) && !node.hasAttribute('data-scroll-ignore')) {
+        unique.add(node);
+      }
+    });
   });
 
   return Array.from(unique);
@@ -74,7 +83,7 @@ export default function GlobalScrollEffects() {
 
       const revealDistance = isMobile ? 16 : isTablet ? 22 : 28;
       const revealDuration = isMobile ? 0.42 : isTablet ? 0.55 : 0.68;
-      const revealStagger = isMobile ? 0.025 : 0.05;
+      const revealStagger = isMobile ? 0.035 : isTablet ? 0.05 : 0.065;
       const parallaxScale = isTablet ? 0.5 : 1;
 
       ctx = gsap.context(() => {
@@ -146,7 +155,7 @@ export default function GlobalScrollEffects() {
           });
 
           ScrollTrigger.batch(revealTargets, {
-            start: 'top 88%',
+            start: isMobile ? 'top 94%' : 'top 88%',
             once: true,
             onEnter: (batch: Element[]) => {
               gsap.to(batch, {
