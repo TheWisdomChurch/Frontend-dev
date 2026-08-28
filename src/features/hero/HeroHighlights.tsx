@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import { BaseModal } from '@/shared/ui/modals/Modal';
+import { buttonClass } from '@/shared/ui/button';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { Container } from '@/shared/ui/Container';
 import { Button } from '@/shared/ui/button';
@@ -726,7 +727,7 @@ export default function HeroHighlights({
                 })}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 font-ui text-sm font-bold text-black transition hover:brightness-110"
+                className={buttonClass('primary')}
               >
                 <Navigation className="h-4 w-4" /> Get directions
               </a>

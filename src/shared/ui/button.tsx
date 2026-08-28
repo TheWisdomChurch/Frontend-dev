@@ -6,15 +6,20 @@ import { cn } from '@/lib/cn';
 /**
  * The single button system. `<Button>` renders a real <button>; `buttonClass()`
  * produces the same styling for an <a>/<Link>. One shape (`--radius-button`),
- * four variants, three sizes. `outline` and `ghost` adapt to the surrounding
- * text colour, so they work on light and dark sections without a prop.
+ * four variants, four sizes.
+ *
+ * Theme behaviour — every variant works on a light section and inside
+ * `.tone-dark` with no prop:
+ *  - `primary`  gold fill, always-dark label (gold is a light colour in both themes)
+ *  - `solid`    high-contrast fill that inverts with the surface (ink→surface tokens)
+ *  - `outline`  / `ghost`  borrow `currentColor`, so they read on any surface
  */
 
-export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'ghost';
+export type ButtonVariant = 'primary' | 'solid' | 'dark' | 'outline' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 const base =
-  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] transition-[transform,background-color,border-color,box-shadow,color] duration-200 ease-out outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0';
+  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] outline-none transition-[transform,background-color,border-color,box-shadow,color] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985]';
 
 const sizeClass: Record<ButtonSize, string> = {
   sm: 'min-h-9 px-4 text-body-sm',
@@ -23,13 +28,21 @@ const sizeClass: Record<ButtonSize, string> = {
   icon: 'h-11 w-11 p-0',
 };
 
+const solid =
+  'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm hover:bg-[var(--app-ink)]/90 hover:shadow-lg hover:shadow-black/20';
+
 const variantClass: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--app-primary)] text-[var(--app-ink)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-md',
-  dark: 'bg-[var(--app-dark)] text-white hover:bg-[var(--app-neutral)]',
+    'bg-[var(--app-primary)] text-[var(--app-dark)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-lg hover:shadow-[var(--app-primary)]/30',
+  solid,
+  // Back-compat alias — `dark` is the same high-contrast solid button.
+  dark: solid,
+  // Always shows a hairline; hover firms it up and adds a wash.
   outline:
-    'border border-current/30 bg-transparent text-current hover:border-current/60 hover:bg-current/[0.06]',
-  ghost: 'bg-transparent text-current hover:bg-current/10',
+    'border border-current/35 bg-transparent text-current hover:border-current hover:bg-current/[0.08] hover:shadow-sm',
+  // No background at rest; a border appears on hover along with a faint wash.
+  ghost:
+    'border border-transparent bg-transparent text-current hover:border-current/30 hover:bg-current/[0.07]',
 };
 
 export function buttonClass(

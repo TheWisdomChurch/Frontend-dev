@@ -22,6 +22,7 @@ import {
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
 import { BaseModal } from '@/shared/ui/modals/Modal';
+import { buttonClass } from '@/shared/ui/button';
 import {
   Container,
   SectionHeader,
@@ -1354,7 +1355,7 @@ export default function PublicFormPage() {
 
                   <Link
                     href={returnPath}
-                    className="inline-flex min-h-11 w-full items-center justify-center rounded-button border border-[var(--app-border)] px-6 font-ui text-body-sm font-bold text-[var(--app-ink)] transition hover:border-[var(--app-primary)] sm:w-auto"
+                    className={buttonClass('outline', 'md', 'w-full sm:w-auto')}
                   >
                     {returnPath}
                   </Link>

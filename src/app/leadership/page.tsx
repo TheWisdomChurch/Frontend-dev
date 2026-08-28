@@ -79,7 +79,6 @@ export default async function LeadershipPage() {
         eyebrow="Leadership"
         title="The people who shepherd this church."
         subtitle="Called, committed, and accountable — meet the team that serves the Wisdom Church community."
-        compact
       />
 
       <Section tone="dark" compact>
@@ -95,7 +94,7 @@ export default async function LeadershipPage() {
 
       {/* ── 3. Senior portrait panels ────────────────────────── */}
       {seniorTeam.length === 0 ? (
-        <div className="relative bg-[var(--app-dark)] px-6 py-10 lg:px-10">
+        <div className="tone-dark relative bg-[var(--app-dark)] px-6 py-10 lg:px-10">
           <Container>
             <EmptyState dark />
           </Container>

@@ -73,7 +73,7 @@ export default function WomenMinistryPage() {
               <article
                 key={item.label}
                 data-gsap="reveal"
-                className="bg-[var(--app-dark)] p-8 sm:p-12 lg:p-16"
+                className="tone-dark bg-[var(--app-dark)] p-8 sm:p-12 lg:p-16"
               >
                 <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
                   {item.label}

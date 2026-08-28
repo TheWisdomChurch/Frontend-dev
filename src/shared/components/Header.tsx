@@ -329,6 +329,7 @@ export default function Header() {
                 <p className="nav-panel__detail">{SERVICE_INFO.venue.short}</p>
                 <PlanVisitTrigger
                   icon={false}
+                  plain
                   className="nav-panel__cta"
                   onClick={close}
                   tabIndex={navOpen ? 0 : -1}
@@ -377,6 +378,7 @@ export default function Header() {
               <p className="nav-footer__venue">{SERVICE_INFO.venue.short}</p>
               <PlanVisitTrigger
                 icon={false}
+                plain
                 className="nav-footer__cta"
                 onClick={close}
                 tabIndex={navOpen ? 0 : -1}

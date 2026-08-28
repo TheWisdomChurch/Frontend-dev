@@ -59,11 +59,11 @@ export default {
       },
       fontWeight: {
         // The design runs a lighter "bold" (600) than the browser default so
-        // headings in the sturdy grotesque don't read as heavy. The ladder
-        // stays monotonic — extrabold/black sit above it, not below.
+        // body/section headings in the sturdy grotesque don't read as heavy.
+        // extrabold/black stay heavy for hero display type that must command.
         bold: '600',
-        extrabold: '700',
-        black: '800',
+        extrabold: '800',
+        black: '900',
       },
       fontSize: {
         // Fluid overrides for Tailwind's large display sizes so a bare

@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container, SectionHeader, Section } from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 import { staggerViewport } from '@/shared/ui/motion';
 
 const slides = [
@@ -126,7 +127,7 @@ export default function Conversations() {
                 type="button"
                 onClick={() => move(1)}
                 aria-label="Next conversation image"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--app-primary)] text-black transition duration-200 hover:bg-[var(--app-primary-light)]"
+                className={buttonClass('primary', 'icon', '!rounded-full')}
               >
                 <ArrowRight className="h-4 w-4" />
               </button>

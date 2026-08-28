@@ -20,6 +20,7 @@ import {
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import { BaseModal } from '@/shared/ui/modals/Modal';
+import { buttonClass } from '@/shared/ui/button';
 import { Button } from '@/shared/ui/button';
 import { COMMUNITY_JOIN_EVENT } from './communityJoinEvent';
 
@@ -162,7 +163,11 @@ export default function CommunityJoinModal() {
               href={whatsappHref}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button bg-[var(--app-whatsapp)] px-5 py-3 font-ui text-sm font-extrabold text-black transition hover:brightness-110"
+              className={buttonClass(
+                'solid',
+                'md',
+                'bg-[var(--app-whatsapp)] text-black hover:bg-[var(--app-whatsapp)]/90'
+              )}
             >
               <MessageCircle className="h-4 w-4" /> Continue on WhatsApp
             </a>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { buttonClass } from '@/shared/ui/button';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import { Button } from '@/shared/ui/button';
@@ -233,7 +234,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => apply({ analytics: true, marketing: true })}
-                className="inline-flex h-9 min-w-0 items-center justify-center rounded-button bg-[var(--app-primary)] px-2 font-ui text-caption font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] sm:px-4 sm:text-label"
+                className={buttonClass('primary', 'sm')}
               >
                 Accept all
               </button>

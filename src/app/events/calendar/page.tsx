@@ -114,7 +114,6 @@ export default function CalendarPage() {
         eyebrow="Church Calendar"
         title="Every event, every month."
         subtitle="Browse the full calendar of services, programs, and special gatherings."
-        compact
       />
 
       <Section tone="canvas">

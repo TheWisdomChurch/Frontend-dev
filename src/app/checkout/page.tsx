@@ -17,6 +17,7 @@ import {
   Panel,
   Section,
 } from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 function CheckoutPageContent() {
   const router = useRouter();
@@ -44,7 +45,6 @@ function CheckoutPageContent() {
           title="Checkout"
           subtitle="Complete your order securely."
           description="Review your items and finalize your purchase."
-          compact
         />
 
         <Section tone="dark">
@@ -58,7 +58,7 @@ function CheckoutPageContent() {
                 <button
                   type="button"
                   onClick={() => router.push('/resources/store')}
-                  className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)]"
+                  className={buttonClass('primary')}
                 >
                   <ShoppingBag className="mr-2 h-4 w-4" /> Back to store
                 </button>
@@ -76,7 +76,6 @@ function CheckoutPageContent() {
         title="Checkout"
         subtitle="Complete your order securely."
         description="Review your items and finalize your purchase."
-        compact
       />
 
       <Section tone="dark">

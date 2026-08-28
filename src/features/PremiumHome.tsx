@@ -32,7 +32,6 @@ export default function PremiumHome() {
         size="home"
         align="center"
         priority
-        eyebrow={HOME_COPY.hero.eyebrow}
         title={`${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}${HOME_COPY.hero.titleTail}`}
         titleLines={[
           `${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}`.trim(),
@@ -48,12 +47,12 @@ export default function PremiumHome() {
               href={SOCIAL_LINKS.youtube}
               target="_blank"
               rel="noreferrer"
-              className={buttonClass('primary')}
+              className={buttonClass('primary', 'lg')}
             >
               <Play className="mr-2 h-4 w-4 fill-current" />{' '}
               {HOME_COPY.actions.watchLive}
             </a>
-            <PlanVisitTrigger className={buttonClass('outline')}>
+            <PlanVisitTrigger variant="outline" size="lg">
               {HOME_COPY.actions.planVisit}
             </PlanVisitTrigger>
           </>
@@ -70,14 +69,11 @@ export default function PremiumHome() {
                 accent={HOME_COPY.welcome.accent}
                 description={HOME_COPY.welcome.description}
               />
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <CtaLink href="/about" variant="dark">
                   {HOME_COPY.actions.discoverStory}
                 </CtaLink>
-                <CommunityJoinTrigger
-                  icon={false}
-                  className={buttonClass('outline')}
-                >
+                <CommunityJoinTrigger icon={false}>
                   {HOME_COPY.actions.joinCommunity}
                 </CommunityJoinTrigger>
               </div>
@@ -108,7 +104,7 @@ export default function PremiumHome() {
             className="max-w-5xl"
           />
 
-          <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-12 lg:gap-3">
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
             {HOME_BELIEFS.map((belief, index) => (
               <article
                 key={belief.title}
@@ -173,7 +169,7 @@ export default function PremiumHome() {
                 title={HOME_COPY.service.title}
                 accent={HOME_COPY.service.accent}
               />
-              <div className="mt-8 space-y-5 border-y border-[var(--app-border)] py-6 font-ui text-body-md">
+              <div className="mt-10 space-y-5 border-y border-[var(--app-border)] py-7 font-ui text-body-md">
                 <p className="flex items-center gap-4">
                   <CalendarDays className="h-5 w-5 text-[var(--app-primary-dark)]" />
                   <strong>
@@ -186,12 +182,9 @@ export default function PremiumHome() {
                   <strong>{SERVICE_INFO.venue.full}</strong>
                 </p>
               </div>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <TakeMeToChurchButton />
-                <PlanVisitTrigger
-                  icon={false}
-                  className={buttonClass('outline')}
-                >
+                <PlanVisitTrigger icon={false} variant="outline">
                   {HOME_COPY.actions.planFirstVisit}
                 </PlanVisitTrigger>
               </div>
@@ -219,7 +212,7 @@ export default function PremiumHome() {
                 accent={HOME_COPY.pastor.accent}
                 description={HOME_COPY.pastor.description}
               />
-              <CtaLink href="/leadership" variant="dark" className="mt-8">
+              <CtaLink href="/leadership" variant="dark" className="mt-10">
                 {HOME_COPY.actions.meetLeadership}
               </CtaLink>
             </div>
@@ -230,7 +223,7 @@ export default function PremiumHome() {
       <Section>
         <Container>
           <Split reverse>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-5">
               <Figure
                 src={HOME_COMMUNITY_GALLERY[0].src}
                 alt={HOME_COMMUNITY_GALLERY[0].alt}
@@ -240,7 +233,7 @@ export default function PremiumHome() {
                 className="aspect-[4/5]"
                 imageClassName={HOME_COMMUNITY_GALLERY[0].position}
               />
-              <div className="grid gap-3 pt-10">
+              <div className="grid gap-5 pt-12">
                 <Figure
                   src={HOME_COMMUNITY_GALLERY[1].src}
                   alt={HOME_COMMUNITY_GALLERY[1].alt}
@@ -268,7 +261,7 @@ export default function PremiumHome() {
                 accent={HOME_COPY.community.accent}
                 description={HOME_COPY.community.description}
               />
-              <CtaLink href="/contact" variant="dark" className="mt-8">
+              <CtaLink href="/contact" variant="dark" className="mt-10">
                 <Users className="mr-2 h-4 w-4" /> {HOME_COPY.actions.connect}
               </CtaLink>
             </div>

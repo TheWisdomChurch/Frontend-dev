@@ -102,7 +102,6 @@ export default function MinistriesPage() {
         subtitle="Find a community where you can be known, grow in Christ, build lasting relationships, and serve with the gifts God has given you."
         backgroundImage="/Picflow/DSC00268 copy.webp"
         imagePositionClassName="object-[62%_38%] sm:object-[center_35%]"
-        compact
         chips={['Belong', 'Grow', 'Serve']}
         actions={
           <>

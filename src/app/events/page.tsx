@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { buttonClass } from '@/shared/ui/button';
 import {
   CalendarClock,
   CalendarDays,
@@ -141,7 +142,7 @@ function EventCard({ event }: { event: EventPublic }) {
         {href ? (
           <a
             href={href}
-            className="group/action mt-2 inline-flex items-center gap-2 self-start rounded-button border border-[var(--app-primary)]/40 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition duration-200 hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]"
+            className={buttonClass('outline', 'sm', 'mt-2 self-start')}
           >
             Register{' '}
             <Arrow className="transition-transform group-hover/action:translate-x-1" />
@@ -211,7 +212,6 @@ export default async function EventsPage() {
         eyebrow="Events & Programs"
         title="What's happening at Wisdom Church."
         subtitle="Weekly services, special gatherings, and everything in between."
-        compact
       />
 
       {/* ── 1.5 Sub-nav — other ways to browse events ────────── */}
@@ -322,7 +322,10 @@ export default async function EventsPage() {
                     </div>
 
                     {/* CTA */}
-                    <PlanVisitTrigger className="mt-auto self-start border-[var(--app-border)] bg-transparent text-[var(--app-ink)] hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)]">
+                    <PlanVisitTrigger
+                      variant="outline"
+                      className="mt-auto self-start"
+                    >
                       Plan a visit
                     </PlanVisitTrigger>
                   </div>

@@ -15,6 +15,7 @@ import { buildDrivingDirectionsUrl } from '@/domain/navigation/directions';
 import type { Coordinates } from '@/domain/navigation/directions';
 import type { RoutePreview } from '@/domain/navigation/types';
 import { cn } from '@/lib/cn';
+import { buttonClass } from '@/shared/ui/button';
 import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import ChurchRouteMap from './ChurchRouteMap';
@@ -166,9 +167,10 @@ export default function TakeMeToChurchButton({
         onClick={startNavigation}
         disabled={state === 'locating'}
         aria-describedby={state === 'locating' ? statusId : undefined}
-        className={cn(
-          'group inline-flex min-h-12 min-w-0 items-center justify-center gap-2 whitespace-normal rounded-full border border-black bg-black px-4 py-3 text-center font-ui text-xs font-bold leading-5 text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75 sm:gap-3 sm:px-5 sm:text-sm',
-          fullWidth && 'w-full justify-center'
+        className={buttonClass(
+          'dark',
+          'md',
+          cn('min-w-0 whitespace-normal', fullWidth && 'w-full')
         )}
       >
         {state === 'locating' ? (
@@ -293,7 +295,7 @@ export default function TakeMeToChurchButton({
               <button
                 type="button"
                 onClick={beginTurnByTurnNavigation}
-                className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-black px-5 font-ui text-sm font-bold text-white transition hover:bg-[var(--app-primary-dark)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20"
+                className={buttonClass('dark', 'md', 'mt-4 w-full')}
               >
                 <Navigation
                   className="h-4 w-4 fill-current"
@@ -329,7 +331,7 @@ export default function TakeMeToChurchButton({
             <button
               type="button"
               onClick={useMapsFallback}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 font-ui text-sm font-extrabold text-black transition hover:brightness-110"
+              className={buttonClass('primary')}
             >
               <Navigation className="h-4 w-4 fill-current" /> Open directions in
               Maps

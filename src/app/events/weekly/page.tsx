@@ -87,7 +87,6 @@ export default function WeeklyPage() {
         eyebrow="Weekly Services"
         title="We gather. Every week."
         subtitle="Sunday morning worship, and Daily Prayer every weekday morning — all open to everyone."
-        compact
       />
 
       {/* Service panels */}
@@ -118,10 +117,7 @@ export default function WeeklyPage() {
               tone="dark"
             />
             <div className="flex flex-col gap-3 sm:flex-row">
-              <PlanVisitTrigger
-                icon={false}
-                className="rounded-none px-8 py-3.5 text-label uppercase tracking-[0.14em]"
-              >
+              <PlanVisitTrigger icon={false} size="lg">
                 Let us know you're coming <Arrow />
               </PlanVisitTrigger>
               <CtaLink href="/events" variant="outline">

@@ -22,6 +22,7 @@ import {
   Section,
   Split,
 } from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 
 export const dynamic = 'force-dynamic';
@@ -86,14 +87,12 @@ export default async function AboutPage() {
         priority
         actions={
           <>
-            <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)]">
-              Worship with us
-            </PlanVisitTrigger>
+            <PlanVisitTrigger size="lg">Worship with us</PlanVisitTrigger>
             <a
               href={SOCIAL_LINKS.youtube}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button border border-white/20 px-7 font-ui text-label font-bold uppercase tracking-widest text-white"
+              className={buttonClass('outline', 'lg')}
             >
               <Play className="h-4 w-4" /> Watch a service
             </a>
@@ -264,9 +263,7 @@ export default async function AboutPage() {
             className="mx-auto max-w-4xl"
           />
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-dark)] px-7 font-ui text-label font-bold uppercase tracking-widest text-white">
-              Plan your visit
-            </PlanVisitTrigger>
+            <PlanVisitTrigger variant="dark">Plan your visit</PlanVisitTrigger>
             <CtaLink href="/ministries" variant="outline">
               Explore ministries
             </CtaLink>

@@ -23,10 +23,12 @@ export type { ContainerWidth } from '@/shared/ui/Container';
 export type SectionTone = 'surface' | 'canvas' | 'muted' | 'dark' | 'brand';
 
 export const sectionToneClass: Record<SectionTone, string> = {
-  surface: 'bg-[var(--app-surface)] text-[var(--app-ink)]',
-  canvas: 'bg-[var(--app-canvas)] text-[var(--app-ink)]',
-  muted: 'bg-[var(--app-canvas-2)] text-[var(--app-ink)]',
-  dark: 'bg-[var(--app-dark)] text-white',
+  surface: 'bg-[var(--app-surface)] text-[var(--app-text)]',
+  canvas: 'bg-[var(--app-canvas)] text-[var(--app-text)]',
+  muted: 'bg-[var(--app-canvas-2)] text-[var(--app-text)]',
+  // `tone-dark` re-themes the tokens, so descendants using --app-* text
+  // colours (and bare <p>/<h*>) stay readable on the dark surface.
+  dark: 'tone-dark bg-[var(--app-dark)] text-[var(--app-text)]',
   brand: 'bg-[var(--app-primary)] text-[var(--app-ink)]',
 };
 
@@ -154,9 +156,9 @@ export function Stack({
       data-motion-group
       className={cn(
         'flex flex-col',
-        gap === 'sm' && 'gap-4',
-        gap === 'md' && 'gap-7',
-        gap === 'lg' && 'gap-10 lg:gap-14',
+        gap === 'sm' && 'gap-5',
+        gap === 'md' && 'gap-8 sm:gap-10',
+        gap === 'lg' && 'gap-12 lg:gap-16',
         className
       )}
     >
@@ -310,10 +312,8 @@ export function Panel({
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-card border transition-[transform,border-color,box-shadow,background-color] duration-500 ease-out',
-        tone === 'dark'
-          ? 'border-white/12 bg-white/[0.035] text-white'
-          : 'border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-ink)]',
+        'overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)] transition-[transform,border-color,box-shadow,background-color] duration-500 ease-out',
+        tone === 'dark' && 'tone-dark',
         interactive && interactiveCardClass,
         className
       )}
@@ -338,7 +338,7 @@ export function Split({
     <div
       data-motion-group
       className={cn(
-        'grid items-center gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20',
+        'grid gap-10 sm:gap-12 lg:grid-cols-2 lg:items-center lg:gap-20 xl:gap-24',
         reverse && 'lg:[&>*:first-child]:order-2',
         className
       )}
@@ -363,7 +363,7 @@ export function CardRail({
     <div
       data-motion-group
       className={cn(
-        '-mx-[var(--page-gutter)] flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain px-[var(--page-gutter)] pb-5 [scrollbar-width:thin] md:mx-0 md:grid md:snap-none md:overflow-visible md:px-0 md:pb-0',
+        '-mx-[var(--page-gutter)] flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain px-[var(--page-gutter)] pb-5 [scrollbar-width:thin] md:mx-0 md:grid md:snap-none md:overflow-visible md:px-0 md:pb-0',
         itemWidth === 'compact'
           ? '[&>*]:w-[min(78vw,19rem)]'
           : '[&>*]:w-[min(86vw,25rem)]',
@@ -397,24 +397,19 @@ export function SectionHeader({
   className?: string;
 }) {
   return (
-    <header className={className} data-gsap="reveal">
-      <p
-        className={cn(
-          'font-ui text-eyebrow font-bold uppercase tracking-[0.22em]',
-          tone === 'dark'
-            ? 'text-[var(--app-primary)]'
-            : 'text-[var(--app-primary-dark)]'
-        )}
-      >
+    <header
+      className={cn(tone === 'dark' && 'tone-dark', className)}
+      data-gsap="reveal"
+    >
+      <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
         {eyebrow}
       </p>
       <h2
         className={cn(
-          'mt-5 text-balance font-ui font-medium leading-[1.03] tracking-[-0.04em] text-current',
-          size === 'sm' && 'text-heading-lg sm:text-display-sm',
-          size === 'md' && 'text-display-sm sm:text-display-md',
-          size === 'lg' &&
-            'text-display-sm sm:text-display-md lg:text-display-lg'
+          'mt-4 text-balance font-ui font-semibold leading-[1.08] tracking-[-0.03em] text-current',
+          size === 'sm' && 'text-heading-lg sm:text-heading-lg',
+          size === 'md' && 'text-heading-lg sm:text-display-sm',
+          size === 'lg' && 'text-display-sm sm:text-display-md'
         )}
       >
         {title}
@@ -428,12 +423,7 @@ export function SectionHeader({
         ) : null}
       </h2>
       {description ? (
-        <p
-          className={cn(
-            'mt-6 max-w-2xl font-ui text-body-lg leading-loose',
-            tone === 'dark' ? 'text-white/70' : 'text-[var(--app-ink)]/70'
-          )}
-        >
+        <p className="mt-6 max-w-[46ch] font-ui text-body-lg leading-[1.75] text-[var(--app-muted)]">
           {description}
         </p>
       ) : null}
@@ -490,10 +480,8 @@ export function SectionEmpty({
     <div
       data-gsap="reveal"
       className={cn(
-        'flex min-h-[20rem] flex-col items-center justify-center rounded-card border px-6 py-14 text-center sm:px-10',
-        tone === 'dark'
-          ? 'border-white/12 bg-white/[0.035]'
-          : 'border-[var(--app-border)] bg-[var(--app-surface)]',
+        'flex min-h-[20rem] flex-col items-center justify-center rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] px-6 py-14 text-center sm:px-10',
+        tone === 'dark' && 'tone-dark',
         className
       )}
     >
@@ -501,21 +489,11 @@ export function SectionEmpty({
         className="mb-7 h-px w-12 bg-[var(--app-primary)]"
         aria-hidden="true"
       />
-      <h3
-        className={cn(
-          'max-w-xl font-headline text-heading-md font-semibold',
-          tone === 'dark' ? '!text-white' : '!text-[var(--app-ink)]'
-        )}
-      >
+      <h3 className="max-w-xl font-headline text-heading-md font-semibold text-[var(--app-text)]">
         {title}
       </h3>
       {description ? (
-        <p
-          className={cn(
-            'mt-4 max-w-lg font-ui text-body-md leading-loose',
-            tone === 'dark' ? 'text-white/62' : 'text-[var(--app-ink)]/62'
-          )}
-        >
+        <p className="mt-4 max-w-lg font-ui text-body-md leading-loose text-[var(--app-muted)]">
           {description}
         </p>
       ) : null}

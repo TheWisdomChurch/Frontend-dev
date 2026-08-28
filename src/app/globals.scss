@@ -24,6 +24,9 @@
   --app-surface: #ffffff;
   --app-surface-2: #f5f5f5;
   --app-surface-3: #ebebeb;
+  /* Opaque near-white — for solid fills that must stay readable in both
+     themes even where --app-surface itself is translucent. */
+  --app-surface-solid: #ffffff;
   --app-canvas: #faf9f7;
   --app-canvas-2: #f2f0ec;
   --app-canvas-3: #e8e5e0;
@@ -68,30 +71,34 @@
 
   /* ------------------------------------------------------------------ *
    * TYPE SCALE  (bridged to Tailwind `text-*` utilities in config)     *
+   * Tuned for editorial legibility: body sits at 15–18px, the display  *
+   * ladder is generous but restrained.                                 *
    * ------------------------------------------------------------------ */
-  --type-display-xl: clamp(4rem, 9vw, 7.5rem);
-  --type-display-lg: clamp(3rem, 6vw, 5.5rem);
-  --type-display-md: clamp(2.25rem, 4vw, 3.75rem);
-  --type-display-sm: clamp(1.75rem, 3vw, 2.75rem);
-  --type-heading-lg: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
-  --type-heading-md: clamp(1.25rem, 1rem + 1vw, 1.65rem);
-  --type-heading-sm: clamp(1.05rem, 0.94rem + 0.5vw, 1.3rem);
-  --type-lead: clamp(1.05rem, 1.5vw, 1.25rem);
-  --type-body-lg: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
-  --type-body-md: clamp(0.85rem, 0.82rem + 0.15vw, 0.92rem);
-  --type-body-sm: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
-  --type-label: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
-  --type-caption: clamp(0.68rem, 0.66rem + 0.08vw, 0.72rem);
-  --type-eyebrow: clamp(0.58rem, 0.57rem + 0.05vw, 0.64rem);
+  --type-display-xl: clamp(3.25rem, 7vw, 6rem);
+  --type-display-lg: clamp(2.75rem, 5.5vw, 4.75rem);
+  --type-display-md: clamp(2.25rem, 4vw, 3.5rem);
+  --type-display-sm: clamp(1.85rem, 3vw, 2.6rem);
+  --type-heading-lg: clamp(1.55rem, 1.2rem + 1.5vw, 2.15rem);
+  --type-heading-md: clamp(1.3rem, 1.1rem + 0.9vw, 1.7rem);
+  --type-heading-sm: clamp(1.12rem, 1rem + 0.5vw, 1.35rem);
+  --type-lead: clamp(1.15rem, 1.02rem + 0.6vw, 1.4rem);
+  --type-body-lg: clamp(1rem, 0.96rem + 0.22vw, 1.15rem);
+  --type-body-md: clamp(0.94rem, 0.9rem + 0.2vw, 1.06rem);
+  --type-body-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.95rem);
+  --type-label: clamp(0.78rem, 0.75rem + 0.1vw, 0.85rem);
+  --type-caption: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
+  --type-eyebrow: clamp(0.6875rem, 0.66rem + 0.1vw, 0.75rem);
 
   /* ------------------------------------------------------------------ *
-   * SPACING — section rhythm (bridged to `py-section-*` in config)     *
+   * SPACING — section rhythm (bridged to `py-section-*` in config).    *
+   * Generous vertical breathing room; sections should never feel       *
+   * crowded against each other.                                        *
    * ------------------------------------------------------------------ */
-  --section-xs: clamp(2.25rem, 4vw, 3.5rem);
-  --section-sm: clamp(3.5rem, 6vw, 5.5rem);
-  --section-md: clamp(4.5rem, 8vw, 7rem);
-  --section-lg: clamp(5.5rem, 10vw, 9rem);
-  --section-xl: clamp(7rem, 12vw, 11rem);
+  --section-xs: clamp(2.5rem, 5vw, 4.5rem);
+  --section-sm: clamp(3.5rem, 7vw, 7rem);
+  --section-md: clamp(4.5rem, 9vw, 9.5rem);
+  --section-lg: clamp(6rem, 11vw, 12rem);
+  --section-xl: clamp(7rem, 14vw, 15rem);
 
   /* ------------------------------------------------------------------ *
    * RADIUS — one scale. Semantic names map onto it (no bare values).   *
@@ -112,9 +119,41 @@
    * LAYOUT                                                            *
    * ------------------------------------------------------------------ */
   --app-header-height: 72px;
-  --page-gutter: clamp(1rem, 2.7vw, 2.5rem);
-  --page-gutter-compact: clamp(0.75rem, 2vw, 1.5rem);
-  --content-wide: 96rem;
+  --page-gutter: clamp(1.25rem, 3.2vw, 3rem);
+  --page-gutter-compact: clamp(1rem, 2.2vw, 1.75rem);
+  /* Contained editorial measure — content is never edge-to-edge on wide
+     screens. Text-heavy layouts use the narrower Container widths. */
+  --content-wide: 78rem;
+}
+
+/* ============================================================================
+   DARK TONE — apply `.tone-dark` (or [data-theme="dark"]) to any dark surface
+   (a <Section tone="dark">, the hero, a dark card). It re-points the semantic
+   text/surface/border tokens to their light-on-dark values, so every
+   descendant — including bare <p>/<h*> and any component using
+   text-[var(--app-*)] — becomes readable without per-element overrides.
+============================================================================ */
+
+.tone-dark,
+[data-theme='dark'] {
+  /* Surfaces on dark are translucent lifts so a panel/card reads above
+     whatever dark background it sits on. */
+  --app-surface: rgba(255, 255, 255, 0.045);
+  --app-surface-2: rgba(255, 255, 255, 0.07);
+  --app-surface-3: rgba(255, 255, 255, 0.1);
+  --app-canvas: rgba(255, 255, 255, 0.03);
+  --app-canvas-2: rgba(255, 255, 255, 0.05);
+  --app-canvas-3: rgba(255, 255, 255, 0.08);
+  --app-surface-solid: #12100c;
+
+  --app-ink: #f4efe4;
+  --app-text: #f4efe4;
+  --app-muted: #c0b7a7;
+  --app-subtle: #8f8676;
+  --app-border: rgba(255, 255, 255, 0.14);
+
+  /* On dark, the "accent for light backgrounds" flips to the lighter gold. */
+  --app-primary-dark: var(--app-primary-light);
 }
 
 html {
@@ -191,8 +230,8 @@ body {
   overflow-x: clip;
   background: var(--app-surface);
   color: var(--app-text);
-  font-size: 15.5px;
-  line-height: 1.6;
+  font-size: 16.5px;
+  line-height: 1.65;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -305,15 +344,19 @@ h6 {
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw, 4rem);
+  font-size: var(--type-display-sm);
 }
 
 h2 {
-  font-size: clamp(1.55rem, 2.6vw, 2.75rem);
+  font-size: var(--type-heading-lg);
 }
 
 h3 {
-  font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+  font-size: var(--type-heading-md);
+}
+
+h4 {
+  font-size: var(--type-heading-sm);
 }
 
 p,
@@ -324,7 +367,8 @@ li {
 }
 
 p {
-  font-size: clamp(0.92rem, 0.25vw + 0.85rem, 1rem);
+  font-size: var(--type-body-md);
+  line-height: 1.7;
 }
 
 a {
@@ -374,8 +418,8 @@ section[data-gsap='reveal'] {
 
 @media (max-width: 640px) {
   body {
-    font-size: 15px;
-    line-height: 1.55;
+    font-size: 16px;
+    line-height: 1.6;
   }
 }
 
@@ -405,15 +449,6 @@ body[data-scrolled='true'] .site-header {
   backdrop-filter: blur(24px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   box-shadow: 0 1px 24px rgba(0, 0, 0, 0.35);
-}
-
-/* The premium landing page uses one calm sans-serif display language.
-   Editorial serif remains available for quotations and long-form content. */
-.premium-home h2,
-.premium-home h3 {
-  font-family: var(--font-sans), sans-serif;
-  font-style: normal;
-  letter-spacing: -0.035em;
 }
 
 .site-header__inner {

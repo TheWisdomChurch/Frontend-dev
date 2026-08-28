@@ -68,7 +68,6 @@ function SimpleConfirmation() {
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
         description="Your order is confirmed and a receipt has been sent to your email."
-        compact
       />
 
       <Section tone="dark">

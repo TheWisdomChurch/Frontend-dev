@@ -6,13 +6,12 @@ import { Container, Panel, Section } from '@/shared/ui/layout';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[var(--app-dark)] text-white">
+    <div className="tone-dark min-h-screen bg-[var(--app-dark)] text-[var(--app-text)]">
       <SiteHero
         title="That page could not be found."
         subtitle="The route may have changed, the page may have moved, or the link may no longer exist."
         note="Use the links below to get back to the main church pages without guessing where to go next."
         chips={['Home', 'Events', 'Resources', 'Contact']}
-        compact
       />
 
       <Section tone="dark">

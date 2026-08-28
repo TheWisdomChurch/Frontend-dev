@@ -301,7 +301,6 @@ export default function SermonLibrary({
         eyebrow="Wisdom Church Media"
         title="Truth for every season."
         subtitle="Start with what matters to you. Discover relevant teachings, continue where you left off, and grow one message at a time."
-        compact
       />
       {selected && (
         <Section ref={playerRef} tone="dark" compact className="scroll-mt-20">

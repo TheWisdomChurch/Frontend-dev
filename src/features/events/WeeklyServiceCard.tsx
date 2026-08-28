@@ -82,7 +82,7 @@ export default function WeeklyServiceCard({
           <span>{location}</span>
         </p>
 
-        <PlanVisitTrigger className="mt-auto self-start border-[var(--app-border)] bg-transparent text-[var(--app-ink)] hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)]">
+        <PlanVisitTrigger variant="outline" className="mt-auto self-start">
           Plan a visit
         </PlanVisitTrigger>
       </article>

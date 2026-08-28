@@ -10,6 +10,7 @@ import { ArrowRight, Check, Loader2, MapPin, Mail, Phone } from 'lucide-react';
 
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/ui/Container';
+import { buttonClass } from '@/shared/ui/button';
 import { apiClient } from '@/lib/api';
 import { cn } from '@/lib/cn';
 
@@ -255,7 +256,7 @@ export default function Footer() {
                   type="submit"
                   disabled={subState === 'loading'}
                   aria-label="Subscribe"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary)] text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
+                  className={buttonClass('primary', 'sm', '!size-9 !px-0')}
                 >
                   {subState === 'loading' ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

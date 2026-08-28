@@ -30,7 +30,6 @@ export default function PastoralPage() {
         eyebrow="Pastoral Care"
         title="Care is always available here."
         subtitle="Prayer, confidential counseling, or booking a minister for your event — pick what you need below and we'll take it from there."
-        compact
       />
 
       <Suspense fallback={null}>

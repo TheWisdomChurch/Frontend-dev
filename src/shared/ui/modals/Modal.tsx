@@ -11,7 +11,7 @@ import {
 import { CheckCircle2, Clock, Loader2, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { H2, H3, BodySM } from '@/shared/text';
-import { Button } from '@/shared/ui/button';
+import { Button, buttonClass } from '@/shared/ui/button';
 import { useIsClient, useMediaQuery } from '@/hooks';
 
 // A drag past this distance, or a fast-enough flick, dismisses the sheet.
@@ -61,23 +61,26 @@ function isTopModal(id: string) {
 // Style tokens shared across all modal content
 // ---------------------------------------------------------------------------
 
+/**
+ * Field/label styles for modal forms. They reference --app-* tokens, so inside
+ * the modal panel (which carries `.tone-dark`) they render light-on-dark, and
+ * a `tone="light"` modal renders them dark-on-light — one definition, both.
+ */
 export const modalStyles = {
   sectionTitle:
-    'text-eyebrow font-extrabold uppercase tracking-[0.2em] text-[var(--app-primary)]',
+    'text-eyebrow font-extrabold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]',
   label:
-    'mb-2 block text-eyebrow font-bold uppercase tracking-[0.14em] text-white/58',
+    'mb-2 block text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-subtle)]',
   input:
-    'min-h-12 w-full rounded-input border border-white/10 bg-white/[0.055] px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:bg-white/[0.075] focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[var(--app-primary)]/40 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   select:
-    'min-h-12 w-full rounded-input border border-white/10 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none transition-[border-color,background-color,box-shadow] duration-200 hover:border-[var(--app-primary)]/40 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   textarea:
-    'min-h-[130px] w-full resize-y rounded-input border border-white/10 bg-white/[0.055] px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:bg-white/[0.075] focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-[130px] w-full resize-y rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm leading-7 text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[var(--app-primary)]/40 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
   errorText:
     'mt-2 rounded-md border border-[var(--status-error)]/25 bg-[var(--status-error)]/10 px-3 py-2 text-xs leading-5 text-[var(--status-error)]',
-  primaryButton:
-    'inline-flex min-h-12 w-full items-center justify-center rounded-button bg-[var(--app-primary)] px-6 text-sm font-extrabold text-[var(--app-ink)] shadow-[0_12px_30px_var(--app-primary-20)] transition duration-200 hover:-translate-y-0.5 hover:bg-[var(--app-primary-hover)] hover:shadow-[0_16px_36px_var(--app-primary-40)] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none',
-  ghostButton:
-    'inline-flex min-h-12 w-full items-center justify-center rounded-button border border-white/12 bg-white/[0.045] px-6 text-sm font-bold text-white/82 transition duration-200 hover:border-white/20 hover:bg-white/[0.085] hover:text-white disabled:cursor-not-allowed disabled:opacity-60',
+  primaryButton: buttonClass('primary', 'md', 'w-full'),
+  ghostButton: buttonClass('ghost', 'md', 'w-full'),
 };
 
 // ---------------------------------------------------------------------------
@@ -205,7 +208,7 @@ function ModalPanel({
     'relative isolate flex w-full min-w-0 flex-col overflow-hidden border shadow-[0_32px_110px_rgba(0,0,0,.68)]',
     tone === 'light'
       ? 'border-black/10 bg-[linear-gradient(155deg,var(--app-surface)_0%,var(--app-canvas)_100%)] text-[var(--app-ink)]'
-      : 'border-white/[0.11] bg-[linear-gradient(155deg,var(--app-dark-3)_0%,var(--app-dark-2)_48%,var(--app-dark)_100%)] text-white ring-1 ring-black/30',
+      : 'tone-dark border-white/[0.11] bg-[linear-gradient(155deg,var(--app-dark-3)_0%,var(--app-dark-2)_48%,var(--app-dark)_100%)] text-[var(--app-text)] ring-1 ring-black/30',
     dragEnabled
       ? 'max-h-[calc(100dvh-0.5rem)] rounded-t-[1.75rem] rounded-b-none'
       : 'max-h-[calc(100dvh-1rem)] rounded-[1.5rem] sm:max-h-[min(90dvh,880px)] sm:rounded-[2rem]',
@@ -284,9 +287,7 @@ function ModalPanel({
           <header
             className={cn(
               'relative flex min-w-0 items-start justify-between gap-4 border-b px-5 pb-5 pt-4 sm:gap-6 sm:px-8 sm:pb-6 sm:pt-7',
-              tone === 'light'
-                ? 'border-black/[0.07] bg-black/[0.012]'
-                : 'border-white/[0.08] bg-white/[0.022]',
+              'border-current/[0.08] bg-current/[0.02]',
               dragEnabled && 'sm:touch-auto'
             )}
           >
@@ -295,10 +296,7 @@ function ModalPanel({
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border shadow-inner sm:h-11 sm:w-11 sm:rounded-2xl [&_svg]:h-[1.125rem] [&_svg]:w-[1.125rem]',
-                    tone === 'light'
-                      ? 'border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-dark)]'
-                      : 'border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-light)]'
+                    'mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-dark)] shadow-inner sm:h-11 sm:w-11 sm:rounded-2xl [&_svg]:h-[1.125rem] [&_svg]:w-[1.125rem]'
                   )}
                 >
                   {headerIcon || <Sparkles />}
@@ -309,8 +307,7 @@ function ModalPanel({
                   <h2
                     id={titleId}
                     className={cn(
-                      'break-words font-headline text-[clamp(1.4rem,6vw,2rem)] font-normal leading-[1.12] tracking-[-0.02em]',
-                      tone === 'light' ? 'text-[var(--app-ink)]' : 'text-white'
+                      'break-words font-headline text-[clamp(1.4rem,6vw,2rem)] font-semibold leading-[1.12] tracking-[-0.02em] text-[var(--app-text)]'
                     )}
                   >
                     {title}
@@ -321,10 +318,7 @@ function ModalPanel({
                   <p
                     id={subtitleId}
                     className={cn(
-                      'mt-2.5 max-w-xl break-words font-ui text-xs leading-5 sm:text-sm sm:leading-6',
-                      tone === 'light'
-                        ? 'text-[var(--app-ink)]/55'
-                        : 'text-white/52'
+                      'mt-2.5 max-w-xl break-words font-ui text-xs leading-5 sm:text-sm sm:leading-6 text-[var(--app-muted)]'
                     )}
                   >
                     {subtitle}
@@ -342,9 +336,7 @@ function ModalPanel({
                 aria-label="Close modal"
                 className={cn(
                   'grid h-10 w-10 flex-none place-items-center rounded-full border transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/15 disabled:cursor-not-allowed disabled:opacity-50',
-                  tone === 'light'
-                    ? 'border-black/10 bg-black/[0.025] text-[var(--app-ink)]/55 hover:rotate-3 hover:bg-[var(--app-ink)] hover:text-white'
-                    : 'border-white/10 bg-white/[0.045] text-white/55 hover:rotate-3 hover:border-white/18 hover:bg-white/[0.1] hover:text-white'
+                  'border-current/15 bg-current/[0.04] text-current/60 hover:rotate-3 hover:border-current/30 hover:bg-current/[0.1] hover:text-current'
                 )}
               >
                 <X className="h-4 w-4" />

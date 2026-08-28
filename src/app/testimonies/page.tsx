@@ -137,7 +137,6 @@ export default function TestimoniesPage() {
           eyebrow="Testimonies"
           title="Stories of faith, healing, and change."
           subtitle="Real accounts from the Wisdom Church community — God still moves."
-          compact
         />
 
         {/* ── 2. Featured testimony — dark ─────────────────── */}

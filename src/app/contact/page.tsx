@@ -196,7 +196,6 @@ function ContactPageContent() {
         eyebrow="Get in touch"
         title="We'd love to hear from you."
         subtitle="Plan a visit, request prayer, or send us a message — we'll get back to you quickly."
-        compact
       />
 
       <Section tone="canvas">
@@ -317,7 +316,7 @@ function ContactPageContent() {
 
             <div data-gsap="reveal">
               <Panel>
-                <div className="bg-[var(--app-dark)] px-7 py-7 sm:px-8 sm:py-8">
+                <div className="tone-dark bg-[var(--app-dark)] px-7 py-7 sm:px-8 sm:py-8">
                   <SectionHeader
                     eyebrow="Message us"
                     title="Send us a message."

@@ -3,19 +3,27 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { Users } from 'lucide-react';
 
-import { cn } from '@/lib/cn';
+import {
+  buttonClass,
+  type ButtonVariant,
+  type ButtonSize,
+} from '@/shared/ui/button';
 import { requestCommunityJoin } from './communityJoinEvent';
 
 type Props = {
   children?: ReactNode;
   className?: string;
   icon?: boolean;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'>;
 
 export default function CommunityJoinTrigger({
   children = 'Join our community',
   className,
   icon = true,
+  variant = 'outline',
+  size = 'md',
   onClick,
   ...buttonProps
 }: Props) {
@@ -27,10 +35,7 @@ export default function CommunityJoinTrigger({
         onClick?.(event);
         if (!event.defaultPrevented) requestCommunityJoin();
       }}
-      className={cn(
-        'inline-flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-full border border-black/25 px-5 py-3 text-center font-ui text-sm font-bold leading-5 transition hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/25',
-        className
-      )}
+      className={buttonClass(variant, size, className)}
     >
       {icon ? <Users className="h-4 w-4 shrink-0" /> : null}
       <span className="min-w-0 break-words">{children}</span>

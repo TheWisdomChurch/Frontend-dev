@@ -56,7 +56,6 @@ export default function UpcomingPage() {
         eyebrow="Upcoming Events"
         title="What's next at Wisdom Church."
         subtitle="Special gatherings, conferences, and programs coming up — plan ahead."
-        compact
       />
 
       <Section tone="canvas">

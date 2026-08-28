@@ -24,6 +24,7 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
 import { Container, SectionHeader, Section } from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 
@@ -298,7 +299,7 @@ export default function ResourceSection() {
 
               <Link
                 href="/resources/sermons"
-                className="mt-9 inline-flex h-12 items-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--app-primary-light)]"
+                className={buttonClass('primary', 'md', 'mt-9')}
               >
                 Explore sermons <ArrowRight className="h-4 w-4" />
               </Link>

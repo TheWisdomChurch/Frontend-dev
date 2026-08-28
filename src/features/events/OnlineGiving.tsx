@@ -107,20 +107,20 @@ export default function OnlineGiving() {
                 </cite>
               </Panel>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <button
                   type="button"
                   onClick={handlePrimaryGive}
                   className={buttonClass('primary')}
                 >
-                  Give Online <ArrowRight className="ml-2 h-4 w-4" />
+                  Give Online <ArrowRight className="h-4 w-4" />
                 </button>
                 <button
                   type="button"
                   onClick={handleContactCall}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button border border-white/15 px-5 font-ui text-label font-bold text-white/72 transition duration-300 hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+                  className={buttonClass('outline')}
                 >
-                  <Phone className="h-3.5 w-3.5" />
+                  <Phone className="h-4 w-4" />
                   Other ways to give
                 </button>
               </div>
@@ -228,7 +228,7 @@ export default function OnlineGiving() {
                       actionLabel: 'Got it',
                     })
                   }
-                  className="inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--app-primary-light)] active:scale-[0.98]"
+                  className={buttonClass('primary', 'md', 'self-start')}
                 >
                   Give Online
                 </button>

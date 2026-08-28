@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
+import { buttonClass } from '@/shared/ui/button';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import * as ZodResolvers from '@hookform/resolvers/zod';
@@ -443,7 +444,7 @@ export default function JoinWorkforce() {
                 onClick={() => openFor(dept)}
                 whileTap={{ scale: 0.985 }}
                 transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                className={`group relative flex min-h-[176px] flex-col justify-between overflow-hidden bg-[var(--app-dark-2)] p-4 text-left transition-colors duration-300 hover:bg-[var(--app-dark-3)] sm:min-h-[220px] sm:p-6 lg:min-h-[245px] ${departmentSpanPattern[index % departmentSpanPattern.length]}`}
+                className={`tone-dark group relative flex min-h-[176px] flex-col justify-between overflow-hidden bg-[var(--app-dark-2)] p-4 text-left transition-colors duration-300 hover:bg-[var(--app-dark-3)] sm:min-h-[220px] sm:p-6 lg:min-h-[245px] ${departmentSpanPattern[index % departmentSpanPattern.length]}`}
               >
                 <span
                   className="pointer-events-none absolute inset-0 bg-[var(--app-primary-10)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -478,7 +479,7 @@ export default function JoinWorkforce() {
           <button
             type="button"
             onClick={openGeneric}
-            className="group inline-flex h-11 items-center gap-2 rounded-button border border-white/18 bg-transparent px-6 font-ui text-label font-semibold text-white/55 transition-all duration-200 hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/6 hover:text-[var(--app-primary)] active:scale-[0.98]"
+            className={buttonClass('outline')}
           >
             Not sure which team? Apply anyway
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />

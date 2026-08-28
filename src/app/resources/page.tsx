@@ -163,7 +163,6 @@ export default function ResourcesPage() {
         subtitle="Everything you need in one place."
         note="Live streams, sermons, events, publications, store, and pastoral care — curated for your growth."
         chips={['Live', 'Sermons', 'Events', 'Store', 'Books', 'Care']}
-        compact
       />
 
       <Section tone="dark">

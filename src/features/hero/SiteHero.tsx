@@ -9,48 +9,23 @@ import { Container } from '@/shared/ui/Container';
 
 export type SiteHeroProps = {
   title: string;
+  /** Split the headline across two lines; the second can take the gold accent. */
   titleLines?: readonly [string, string];
   highlightSecondLine?: boolean;
   eyebrow?: string;
   subtitle?: string;
+  /** Secondary supporting line, shown smaller under the subtitle. */
   description?: string;
   note?: string;
   chips?: string[];
   actions?: ReactNode;
   backgroundImage?: string | StaticImageData;
   imagePositionClassName?: string;
+  /** `home` = tall, lower-third text block, scroll cue. `page` = compact. */
   size?: 'page' | 'home';
   align?: 'left' | 'center';
   priority?: boolean;
-  /** Legacy inputs retained for callers; neither changes visual architecture. */
-  compact?: boolean;
-  showButtons?: boolean;
-  primaryButtonText?: string;
-  secondaryButtonText?: string;
 };
-
-function balanceTitle(title: string): string[] {
-  const words = title.trim().split(/\s+/).filter(Boolean);
-  if (words.length < 4 || title.length <= 24) return [title];
-
-  let bestIndex = 1;
-  let smallestDifference = Number.POSITIVE_INFINITY;
-
-  for (let index = 1; index < words.length; index += 1) {
-    const firstLength = words.slice(0, index).join(' ').length;
-    const secondLength = words.slice(index).join(' ').length;
-    const difference = Math.abs(firstLength - secondLength);
-    if (difference < smallestDifference) {
-      smallestDifference = difference;
-      bestIndex = index;
-    }
-  }
-
-  return [
-    words.slice(0, bestIndex).join(' '),
-    words.slice(bestIndex).join(' '),
-  ];
-}
 
 export default function SiteHero({
   title,
@@ -67,22 +42,14 @@ export default function SiteHero({
   size = 'page',
   align = 'center',
 }: SiteHeroProps) {
-  const supportingCopy = subtitle ?? description ?? note;
-  const resolvedTitleLines = titleLines ?? balanceTitle(title);
-  const longestTitleLine = Math.max(
-    ...resolvedTitleLines.map(line => line.length)
-  );
-  const titleSizeClass =
-    longestTitleLine > 30
-      ? 'text-[clamp(1.45rem,4.7vw,4.6rem)]'
-      : longestTitleLine > 22
-        ? 'text-[clamp(1.65rem,5.5vw,5.35rem)]'
-        : 'text-[clamp(2.15rem,6.4vw,6.35rem)]';
+  const isHome = size === 'home';
+  const lines = titleLines ?? [title];
+  const centered = align === 'center';
 
   return (
     <section
       data-site-hero
-      className="relative isolate overflow-hidden bg-[var(--app-dark)] text-white"
+      className="tone-dark relative isolate flex flex-col overflow-hidden bg-[var(--app-dark)] text-white"
     >
       <Image
         src={backgroundImage}
@@ -97,46 +64,53 @@ export default function SiteHero({
           imagePositionClassName
         )}
       />
-      <div data-hero-overlay className="absolute inset-0 -z-10 bg-black/60" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/30 to-transparent" />
+      {/* One restrained scrim — darker toward the base so text always holds. */}
+      <div
+        data-hero-overlay
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-black/30 via-black/40 to-black/70"
+      />
 
-      <Container>
+      <Container className="flex flex-1 flex-col">
         <div
           data-hero-content
           className={cn(
-            'flex min-h-[78svh] w-full min-w-0 flex-col justify-center pb-section-sm pt-[calc(var(--app-header-height)+var(--section-xs))] sm:min-h-[86svh] lg:min-h-[92svh]',
-            size === 'page' &&
-              'min-h-[62svh] pb-section-xs sm:min-h-[68svh] lg:min-h-[72svh]',
-            align === 'center'
-              ? 'mx-auto max-w-6xl items-center text-center'
-              : 'max-w-3xl items-start text-left'
+            'flex w-full min-w-0 flex-1 flex-col',
+            isHome
+              ? 'min-h-[100svh] justify-end pb-[12svh] pt-[calc(var(--app-header-height)+var(--section-xs))] sm:pb-[14svh]'
+              : 'min-h-[60svh] justify-end pb-section-sm pt-[calc(var(--app-header-height)+var(--section-sm))] sm:min-h-[68svh]',
+            centered
+              ? 'mx-auto max-w-4xl items-center text-center'
+              : 'max-w-2xl items-start text-left'
           )}
         >
           {eyebrow ? (
             <p
               data-hero-item
-              className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-light)]"
+              className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.24em] text-[var(--app-primary-light)]"
             >
               {eyebrow}
             </p>
           ) : null}
+
           <h1
             className={cn(
-              'mt-5 w-full max-w-full font-ui font-medium leading-[0.98] tracking-[-0.045em] !text-white',
-              titleSizeClass
+              'w-full max-w-full font-ui font-black leading-[0.96] tracking-[-0.03em] text-white drop-shadow-xl [text-wrap:balance]',
+              isHome
+                ? 'text-[clamp(2.35rem,8.5vw,5.5rem)]'
+                : 'text-[clamp(2rem,6.5vw,3.75rem)]'
             )}
           >
-            {resolvedTitleLines.map((line, index) => (
+            {lines.map((line, index) => (
               <span
                 key={`${index}-${line}`}
-                className="block overflow-hidden pb-[0.08em]"
+                className="block overflow-hidden pb-[0.06em]"
               >
                 <span
                   data-hero-title-line
                   className={cn(
-                    'block whitespace-normal',
+                    'block',
                     index === 1 && highlightSecondLine
-                      ? 'font-normal text-[var(--app-primary-light)]'
+                      ? 'text-[var(--app-primary-light)]'
                       : 'text-white'
                   )}
                 >
@@ -145,52 +119,91 @@ export default function SiteHero({
               </span>
             ))}
           </h1>
-          {supportingCopy ? (
+
+          {subtitle ? (
             <p
               data-hero-item
-              className="mt-6 w-full max-w-2xl font-ui text-lead leading-relaxed text-white/75"
+              className={cn(
+                'mt-7 w-full font-ui text-lead leading-[1.6] text-white/85',
+                centered ? 'max-w-2xl' : 'max-w-xl'
+              )}
             >
-              {supportingCopy}
+              {subtitle}
             </p>
           ) : null}
-          {description && subtitle ? (
+
+          {description ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-md leading-loose text-white/60"
+              className="mt-3 max-w-2xl font-ui text-body-md leading-relaxed text-white/60"
             >
               {description}
             </p>
           ) : null}
-          {note && (subtitle || description) ? (
+
+          {note ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-md leading-loose text-white/60"
+              className="mt-3 max-w-2xl font-ui text-body-sm leading-relaxed text-white/55"
             >
               {note}
             </p>
           ) : null}
+
           {chips?.length ? (
-            <div data-hero-item className="mt-6 flex flex-wrap gap-2">
+            <div
+              data-hero-item
+              className={cn(
+                'mt-7 flex flex-wrap gap-2.5',
+                centered && 'justify-center'
+              )}
+            >
               {chips.map(chip => (
                 <span
                   key={chip}
-                  className="rounded-badge border border-white/20 px-3 py-1.5 font-ui text-label font-semibold text-white/70"
+                  className="rounded-badge border border-white/25 px-3.5 py-1.5 font-ui text-label font-semibold text-white/75"
                 >
                   {chip}
                 </span>
               ))}
             </div>
           ) : null}
+
           {actions ? (
             <div
               data-hero-item
-              className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap"
+              className={cn(
+                'mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap',
+                centered && 'sm:justify-center'
+              )}
             >
               {actions}
             </div>
           ) : null}
         </div>
       </Container>
+
+      {isHome ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center motion-reduce:hidden"
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-white/70 motion-safe:animate-bounce">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </span>
+        </div>
+      ) : null}
     </section>
   );
 }
