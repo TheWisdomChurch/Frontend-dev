@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Flex } from '@/shared/ui/Flex';
 import { H2, H3, H4, BaseText, Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { CONTACT_INFO } from '@/shared/constants/contactInfo';
 import { storeClient } from '@/lib/api/storeClient';
 import {
@@ -813,7 +813,7 @@ const OrderConfirmation = () => {
             <Button
               variant="primary"
               size="lg"
-              curvature="full"
+
               onClick={() => router.push('/')}
               className="w-full"
             >

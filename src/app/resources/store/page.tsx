@@ -29,7 +29,7 @@ const ProductModal = dynamic(
   { ssr: false }
 );
 import { BodyLG, SmallText, Caption, Eyebrow } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import CartSidebar from '@/features/store/Store/CartSidebar';
 import ProductCard from '@/features/store/Store/ProductCard';
 import type { Product } from '@/domain/store/types';
@@ -213,7 +213,7 @@ function StorePageContent() {
         type="button"
         variant="ghost"
         size="icon"
-        curvature="full"
+
         onClick={() => dispatch(toggleCart())}
         className="fixed bottom-[max(var(--page-gutter),env(safe-area-inset-bottom))] right-[var(--page-gutter)] z-50 h-14 w-14 bg-[var(--app-primary)] text-black shadow-xl hover:-translate-y-1 hover:scale-105 sm:h-16 sm:w-16"
         aria-label="Open cart"
@@ -352,7 +352,7 @@ function StorePageContent() {
                   key={category.value}
                   type="button"
                   variant={active ? 'primary' : 'ghost'}
-                  curvature="full"
+
                   onClick={() => handleCategoryClick(category.value)}
                   className={`shrink-0 px-4 py-2.5 min-h-0 h-auto text-sm font-bold ${
                     active
@@ -408,7 +408,7 @@ function StorePageContent() {
                   onClick={resetFilters}
                   variant="primary"
                   size="lg"
-                  curvature="full"
+
                   elevated
                   className="mt-6 font-bold"
                 >
@@ -487,7 +487,7 @@ function StorePageContent() {
                     type="submit"
                     variant="primary"
                     size="lg"
-                    curvature="full"
+
                     elevated
                     disabled={isSubmittingEmail || !email}
                     className="h-12 px-6 font-bold transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Modal';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { useIsClient } from '@/hooks';
 import {
   DEFAULT_CONSENT,
@@ -283,7 +283,7 @@ export default function CookieConsentBanner() {
             <Button
               variant="ghost"
               size="sm"
-              curvature="md"
+
               className="h-11 border border-white/12 font-ui text-sm text-white/70"
               onClick={() => apply({ analytics: false, marketing: false })}
             >
@@ -292,7 +292,7 @@ export default function CookieConsentBanner() {
             <Button
               variant="primary"
               size="sm"
-              curvature="md"
+
               className="h-11 font-ui text-sm font-bold"
               onClick={() =>
                 apply({

@@ -22,8 +22,8 @@ import {
   EditorialLink,
   EditorialSection,
   EditorialSplit,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 export default function PremiumHome() {
   return (
@@ -48,12 +48,12 @@ export default function PremiumHome() {
               href={SOCIAL_LINKS.youtube}
               target="_blank"
               rel="noreferrer"
-              className={editorialActionClass.primary}
+              className={buttonClass('primary')}
             >
               <Play className="mr-2 h-4 w-4 fill-current" />{' '}
               {HOME_COPY.actions.watchLive}
             </a>
-            <PlanVisitTrigger className={editorialActionClass.outline}>
+            <PlanVisitTrigger className={buttonClass('outline')}>
               {HOME_COPY.actions.planVisit}
             </PlanVisitTrigger>
           </>
@@ -76,7 +76,7 @@ export default function PremiumHome() {
                 </EditorialLink>
                 <CommunityJoinTrigger
                   icon={false}
-                  className={editorialActionClass.outline}
+                  className={buttonClass('outline')}
                 >
                   {HOME_COPY.actions.joinCommunity}
                 </CommunityJoinTrigger>
@@ -190,7 +190,7 @@ export default function PremiumHome() {
                 <TakeMeToChurchButton />
                 <PlanVisitTrigger
                   icon={false}
-                  className={editorialActionClass.outline}
+                  className={buttonClass('outline')}
                 >
                   {HOME_COPY.actions.planFirstVisit}
                 </PlanVisitTrigger>

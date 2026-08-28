@@ -18,7 +18,7 @@ import {
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import { Container } from '@/shared/ui/Container';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { Caption } from '@/shared/text';
 import { apiClient } from '@/lib/api';
 import {

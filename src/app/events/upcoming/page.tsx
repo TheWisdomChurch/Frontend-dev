@@ -19,9 +19,9 @@ import {
   EditorialEmptyState,
   EditorialHeader,
   EditorialSection,
-  editorialActionClass,
   editorialInteractiveClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 export default function UpcomingPage() {
   const [events, setEvents] = useState<EventPublic[]>([]);
@@ -90,10 +90,7 @@ export default function UpcomingPage() {
                 title="Nothing scheduled yet."
                 description={`Check back soon. In the meantime, join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time}, and for ${SERVICE_INFO.dailyPrayer.label} ${SERVICE_INFO.dailyPrayer.daysShort} at ${SERVICE_INFO.dailyPrayer.time}.`}
                 action={
-                  <Link
-                    href="/events/weekly"
-                    className={editorialActionClass.dark}
-                  >
+                  <Link href="/events/weekly" className={buttonClass('dark')}>
                     See weekly services
                   </Link>
                 }

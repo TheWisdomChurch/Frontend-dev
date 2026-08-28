@@ -9,8 +9,8 @@ import {
   EditorialContainer,
   EditorialPage,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 export type MinistryHeading = { lead: string; accent: string; tail?: string };
 export type MinistryActivity = { title: string; description: string };
@@ -307,16 +307,10 @@ export default function MinistryPageTemplate({
               {cta.body}
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href={cta.primaryHref}
-                className={editorialActionClass.primary}
-              >
+              <Link href={cta.primaryHref} className={buttonClass('primary')}>
                 {cta.primaryLabel} <Arrow />
               </Link>
-              <Link
-                href={cta.secondaryHref}
-                className={editorialActionClass.outline}
-              >
+              <Link href={cta.secondaryHref} className={buttonClass('outline')}>
                 {cta.secondaryLabel}
               </Link>
             </div>

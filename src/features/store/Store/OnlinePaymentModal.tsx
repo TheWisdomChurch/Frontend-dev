@@ -2,7 +2,7 @@
 
 import { AlertCircle, Building, Truck } from 'lucide-react';
 import { BaseModal } from '@/shared/ui/modals/Modal';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { H3, BodySM, Caption } from '@/shared/text';
 
 interface OnlinePaymentModalProps {

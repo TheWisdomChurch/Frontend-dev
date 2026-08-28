@@ -8,8 +8,8 @@ import {
   EditorialHeader,
   EditorialLink,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = {
   title: 'Publications',
@@ -65,7 +65,7 @@ export default function PublicationPage() {
                 href="https://wa.me/2347069995333"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 <MessageCircle className="h-3.5 w-3.5" />
                 Request via WhatsApp

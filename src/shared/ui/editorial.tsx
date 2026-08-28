@@ -10,6 +10,7 @@ import { forwardRef } from 'react';
 import { cn } from '@/lib/cn';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container } from '@/shared/ui/Container';
+import { buttonClass } from '@/shared/ui/button';
 
 /* ============================================================================
    EDITORIAL SYSTEM — the page/section composition primitives, their tone and
@@ -26,14 +27,6 @@ export const editorialToneClass: Record<EditorialTone, string> = {
   dark: 'bg-[var(--app-dark)] text-white',
   brand: 'bg-[var(--app-primary)] text-[var(--app-ink)]',
 };
-
-export const editorialActionClass = {
-  primary:
-    'inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)] transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)]',
-  dark: 'inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-dark)] px-7 font-ui text-label font-bold uppercase tracking-widest text-white transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-dark)]',
-  outline:
-    'inline-flex min-h-12 items-center justify-center rounded-button border border-current/35 bg-transparent px-7 font-ui text-label font-bold uppercase tracking-widest text-current transition hover:-translate-y-0.5 hover:border-current/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-} as const;
 
 export const editorialFieldClass =
   'w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-subtle)] outline-none transition focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[var(--app-primary)]/15';
@@ -563,7 +556,7 @@ export function EditorialLink({
       className={cn(
         variant === 'text'
           ? 'font-ui text-body-sm font-semibold text-[var(--app-primary-dark)] underline decoration-current/35 underline-offset-4 transition hover:text-[var(--app-primary)]'
-          : editorialActionClass[variant],
+          : buttonClass(variant),
         className
       )}
       {...props}

@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useAppDispatch } from '@/shared/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
 import { Flex } from '@/shared/ui/Flex';
 import { cn } from '@/lib/cn';
@@ -351,7 +351,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                 type="button"
                 variant="ghost"
                 size="icon"
-                curvature="full"
+
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
                 disabled={quantity <= 1}
                 aria-label="Decrease quantity"
@@ -375,7 +375,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                 type="button"
                 variant="ghost"
                 size="icon"
-                curvature="full"
+
                 onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
                 disabled={quantity >= product.stock}
                 aria-label="Increase quantity"
@@ -387,9 +387,13 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
           </Flex>
 
           <Button
-            variant={justAdded ? 'success' : 'primary'}
+            variant="primary"
             size="md"
-            className="w-full"
+            className={
+              justAdded
+                ? 'w-full !bg-[var(--status-success)] !text-white'
+                : 'w-full'
+            }
             onClick={handleAddToCart}
             disabled={soldOut}
             leftIcon={

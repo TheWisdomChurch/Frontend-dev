@@ -25,8 +25,8 @@ import {
   EditorialPanel,
   EditorialPage,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 const nextSteps = [
   {
@@ -106,7 +106,7 @@ function SimpleConfirmation() {
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
                   <Link
                     href="/resources/store"
-                    className={`${editorialActionClass.primary} w-full gap-2 sm:w-auto`}
+                    className={`${buttonClass('primary')} w-full gap-2 sm:w-auto`}
                   >
                     <ShoppingBag className="h-5 w-5" />
                     Continue Shopping
@@ -114,7 +114,7 @@ function SimpleConfirmation() {
 
                   <Link
                     href="/"
-                    className={`${editorialActionClass.outline} w-full gap-2 text-[var(--app-primary)] sm:w-auto`}
+                    className={`${buttonClass('outline')} w-full gap-2 text-[var(--app-primary)] sm:w-auto`}
                   >
                     <Home className="h-5 w-5" />
                     Back to Home

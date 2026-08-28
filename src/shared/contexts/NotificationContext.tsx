@@ -9,7 +9,7 @@ import React, {
   useEffect,
 } from 'react';
 import gsap from 'gsap';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 
 export interface Notification {
   id: string;

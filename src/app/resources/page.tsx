@@ -16,7 +16,7 @@ import {
   Video,
 } from 'lucide-react';
 
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import SiteHero from '@/features/hero/SiteHero';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';

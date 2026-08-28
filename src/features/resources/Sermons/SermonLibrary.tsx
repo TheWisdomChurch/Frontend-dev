@@ -27,9 +27,9 @@ import {
   EditorialEmptyState,
   EditorialPanel,
   EditorialSection,
-  editorialActionClass,
   editorialFieldClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 /** Sermon titles arrive as uploaded to YouTube — entity-encoded and often
  * "{Title} | {Church Name} | {Date}". Every user-facing heading in this
@@ -339,7 +339,7 @@ export default function SermonLibrary({
                     href={selected.url}
                     target="_blank"
                     rel="noreferrer"
-                    className={editorialActionClass.primary}
+                    className={buttonClass('primary')}
                   >
                     Watch on YouTube <ArrowRight className="h-4 w-4" />
                   </a>
@@ -347,7 +347,7 @@ export default function SermonLibrary({
                     <button
                       type="button"
                       onClick={() => play(recommended[0])}
-                      className={editorialActionClass.outline}
+                      className={buttonClass('outline')}
                     >
                       Play next
                     </button>
@@ -410,7 +410,7 @@ export default function SermonLibrary({
                     </p>
                     <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                       <a
-                        className={editorialActionClass.primary}
+                        className={buttonClass('primary')}
                         href={SOCIAL_LINKS.youtube}
                         target="_blank"
                         rel="noreferrer"
@@ -418,7 +418,7 @@ export default function SermonLibrary({
                         Explore all messages <ArrowRight className="h-4 w-4" />
                       </a>
                       <a
-                        className={editorialActionClass.outline}
+                        className={buttonClass('outline')}
                         href={`${SOCIAL_LINKS.youtube}/streams`}
                         target="_blank"
                         rel="noreferrer"
@@ -631,7 +631,7 @@ export default function SermonLibrary({
                     <button
                       type="button"
                       onClick={reset}
-                      className={editorialActionClass.dark}
+                      className={buttonClass('dark')}
                     >
                       Show everything
                     </button>
@@ -679,7 +679,7 @@ export default function SermonLibrary({
                 href={SOCIAL_LINKS.youtube}
                 target="_blank"
                 rel="noreferrer"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 Subscribe <ArrowRight className="h-4 w-4" />
               </a>

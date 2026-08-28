@@ -10,7 +10,7 @@ import {
   User,
   CheckCircle2,
 } from 'lucide-react';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import { EditorialContainer, EditorialSection } from '@/shared/ui/editorial';
 import { apiClient } from '@/lib/api';

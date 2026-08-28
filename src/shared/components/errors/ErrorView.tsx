@@ -3,7 +3,8 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
-import { EditorialPanel, editorialActionClass } from '@/shared/ui/editorial';
+import { EditorialPanel } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 export interface ErrorViewProps {
   error?: Error & { digest?: string };
@@ -67,13 +68,13 @@ export function ErrorView({
             <button
               type="button"
               onClick={onRetry ?? (() => window.location.reload())}
-              className={editorialActionClass.primary}
+              className={buttonClass('primary')}
             >
               <RefreshCw className="h-4 w-4" aria-hidden="true" />
               {retryLabel}
             </button>
           )}
-          <Link href={homeHref} className={editorialActionClass.outline}>
+          <Link href={homeHref} className={buttonClass('outline')}>
             <Home className="h-4 w-4" aria-hidden="true" />
             {homeLabel}
           </Link>

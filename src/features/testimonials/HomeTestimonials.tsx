@@ -10,8 +10,8 @@ import {
   EditorialEmptyState,
   EditorialHeader,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 import {
   staggerContainer,
   staggerItem,
@@ -195,7 +195,7 @@ export default function HomeTestimonials() {
               action={
                 <Link
                   href="/forms/share-testimony"
-                  className={editorialActionClass.primary}
+                  className={buttonClass('primary')}
                 >
                   Share your story <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

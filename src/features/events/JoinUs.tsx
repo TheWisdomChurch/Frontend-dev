@@ -20,7 +20,7 @@ import {
   Video,
 } from 'lucide-react';
 
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import { BodySM, Caption } from '@/shared/text';
@@ -555,7 +555,7 @@ export default function JoinWorkforce() {
               onClick={() => setModalStep('form')}
               variant="primary"
               size="md"
-              curvature="sm"
+
               rightIcon={<ArrowRight />}
               className="h-12 w-full font-semibold"
             >
@@ -716,7 +716,7 @@ export default function JoinWorkforce() {
                 type="submit"
                 variant="primary"
                 size="md"
-                curvature="sm"
+
                 loading={submitting}
                 disabled={submitting}
                 rightIcon={!submitting && <ArrowRight />}

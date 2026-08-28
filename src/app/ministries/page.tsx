@@ -13,8 +13,8 @@ import {
   EditorialHeader,
   EditorialRail,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Ministries — Find Your Place',
@@ -106,15 +106,12 @@ export default function MinistriesPage() {
         chips={['Belong', 'Grow', 'Serve']}
         actions={
           <>
-            <Link
-              href="#find-a-ministry"
-              className={editorialActionClass.primary}
-            >
+            <Link href="#find-a-ministry" className={buttonClass('primary')}>
               Find a ministry <Arrow />
             </Link>
             <Link
               href="/contact?topic=connect"
-              className={editorialActionClass.outline}
+              className={buttonClass('outline')}
             >
               Help me choose <Arrow />
             </Link>
@@ -246,11 +243,11 @@ export default function MinistriesPage() {
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <Link
                 href="/contact?topic=connect"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 Help me connect <Arrow />
               </Link>
-              <Link href="/pastoral" className={editorialActionClass.outline}>
+              <Link href="/pastoral" className={buttonClass('outline')}>
                 Prayer &amp; pastoral care <Arrow />
               </Link>
             </div>

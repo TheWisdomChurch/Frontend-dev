@@ -17,8 +17,8 @@ import {
   EditorialEmptyState,
   EditorialHeader,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 import { staggerContainer, staggerItem } from '@/shared/ui/motion';
 
 /* ── Types ──────────────────────────────────────────────── */
@@ -306,7 +306,7 @@ function EmptyState({ category }: { category: Category }) {
       action={
         <Link
           href={category === 'program' ? '/events' : '/resources'}
-          className={editorialActionClass.outline}
+          className={buttonClass('outline')}
         >
           {category === 'program' ? 'View all events' : 'Go to resources'}{' '}
           <Arrow />

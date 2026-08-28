@@ -36,10 +36,10 @@ import {
   EditorialLink,
   EditorialPanel,
   EditorialSection,
-  editorialActionClass,
   editorialFieldClass,
   editorialLabelClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 type ContactFormData = {
   firstName: string;
@@ -470,7 +470,7 @@ function ContactPageContent() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className={editorialActionClass.dark}
+                      className={buttonClass('dark')}
                     >
                       {submitting ? 'Sending...' : 'Send message'}
                       {!submitting && <Arrow />}

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, PictureInPicture, X } from 'lucide-react';
 import { Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 
 export interface YouTubePlayerController {
   playVideo: () => void;

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useAppSelector, useAppDispatch } from '@/shared/utils/hooks/redux';
 import { clearCart } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { Flex } from '@/shared/ui/Flex';
 import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
 import { storeClient } from '@/lib/api/storeClient';
@@ -918,7 +918,7 @@ const CheckoutForm = () => {
           type="submit"
           variant="primary"
           size="lg"
-          curvature="full"
+
           elevated={true}
           disabled={!isFormValid || isSubmitting}
           className="w-full transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"

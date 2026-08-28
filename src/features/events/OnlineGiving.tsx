@@ -19,8 +19,8 @@ import {
   EditorialHeader,
   EditorialPanel,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 import {
   staggerContainer,
   staggerItem,
@@ -116,7 +116,7 @@ export default function OnlineGiving() {
                 <button
                   type="button"
                   onClick={handlePrimaryGive}
-                  className={editorialActionClass.primary}
+                  className={buttonClass('primary')}
                 >
                   Give Online <ArrowRight className="ml-2 h-4 w-4" />
                 </button>

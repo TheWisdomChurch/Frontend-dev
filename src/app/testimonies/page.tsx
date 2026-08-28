@@ -18,8 +18,8 @@ import {
   EditorialPage,
   EditorialPanel,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -172,7 +172,7 @@ export default function TestimoniesPage() {
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.outline}
+                className={buttonClass('outline')}
               >
                 Share your story <Arrow />
               </a>
@@ -201,7 +201,7 @@ export default function TestimoniesPage() {
                       href={shareUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={editorialActionClass.dark}
+                      className={buttonClass('dark')}
                     >
                       Share your story
                     </a>
@@ -276,7 +276,7 @@ export default function TestimoniesPage() {
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 Submit a testimony <Arrow />
               </a>

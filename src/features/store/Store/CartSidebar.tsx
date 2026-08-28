@@ -11,7 +11,7 @@ import {
   clearCart,
 } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { BaseText, LightText } from '@/shared/text';
 import { Flex } from '@/shared/ui/Flex';
 
@@ -212,7 +212,7 @@ const CartSidebar = () => {
             <Button
               variant="primary"
               size="lg"
-              curvature="full"
+
               elevated={true}
               onClick={handleCheckout}
               className="w-full transition-all duration-300 hover:scale-105"
@@ -222,7 +222,7 @@ const CartSidebar = () => {
             <Button
               variant="outline"
               size="md"
-              curvature="full"
+
               onClick={() => dispatch(clearCart())}
               className="w-full text-white hover:bg-white/10"
             >

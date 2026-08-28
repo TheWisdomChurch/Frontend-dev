@@ -11,7 +11,7 @@ import {
 import { CheckCircle2, Clock, Loader2, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { H2, H3, BodySM } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { useIsClient, useMediaQuery } from '@/hooks';
 
 // A drag past this distance, or a fast-enough flick, dismisses the sheet.

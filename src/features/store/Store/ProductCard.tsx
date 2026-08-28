@@ -2,7 +2,7 @@
 
 import { memo, type MouseEvent } from 'react';
 import { ShoppingBag } from 'lucide-react';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { BodyLG, BodySM, SmallText, Caption, Eyebrow } from '@/shared/text';
 import { Media } from '@/shared/ui/Media';
 import type { Product } from '@/domain/store/types';
@@ -123,7 +123,7 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
         <Button
           variant="primary"
           size="md"
-          curvature="full"
+
           elevated
           leftIcon={<ShoppingBag className="h-4 w-4" />}
           onClick={() => onQuickView(product)}

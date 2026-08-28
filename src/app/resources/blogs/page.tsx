@@ -12,8 +12,8 @@ import {
   EditorialLink,
   EditorialPanel,
   EditorialSection,
-  editorialActionClass,
 } from '@/shared/ui/editorial';
+import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = {
   title: 'Blog & Devotionals',
@@ -46,7 +46,7 @@ export default function BlogPage() {
                 href={SOCIAL_LINKS.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 <Play className="h-3.5 w-3.5 fill-[var(--app-ink)]" />
                 Watch our messages

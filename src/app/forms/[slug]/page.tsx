@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { H2, H3, H4, BodySM, Caption, Eyebrow } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import apiClient, { isApiError } from '@/lib/api';
 import type {
   EventPublic,
@@ -1313,7 +1313,7 @@ export default function PublicFormPage() {
                     <Button
                       type="submit"
                       variant="primary"
-                      curvature="full"
+
                       disabled={submitting}
                       className="w-full sm:w-auto"
                     >
@@ -1349,7 +1349,7 @@ export default function PublicFormPage() {
                   <Button
                     type="button"
                     variant="primary"
-                    curvature="full"
+
                     onClick={() => router.push(returnPath)}
                     className="w-full sm:w-auto"
                   >

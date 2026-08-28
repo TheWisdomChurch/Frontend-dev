@@ -7,7 +7,7 @@ import { Check, Copy, ShieldCheck } from 'lucide-react';
 
 import { BaseModal, modalStyles } from './Modal';
 import { H3, H4, BodySM, Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import type { GivingModalProps } from '@/lib/types';
 
 export default function GivingModal({
