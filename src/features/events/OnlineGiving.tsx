@@ -214,24 +214,16 @@ export default function OnlineGiving() {
                     Online giving is being prepared.
                   </h3>
                   <p className="mt-4 max-w-lg font-ui text-body-md leading-loose text-white/60">
-                    Our giving portal is being set up. You can still reach us
-                    for the available ways to give today.
+                    Our giving portal is being set up. In the meantime, reach
+                    out and we&rsquo;ll walk you through the ways to give today.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    open({
-                      title: 'Coming soon',
-                      message:
-                        'Our online giving portal is being set up. Please check back.',
-                      actionLabel: 'Got it',
-                    })
-                  }
-                  className={buttonClass('primary', 'md', 'self-start')}
+                <Link
+                  href="/contact"
+                  className={buttonClass('outline', 'md', 'self-start')}
                 >
-                  Give Online
-                </button>
+                  Contact us
+                </Link>
               </Panel>
             )}
           </div>
