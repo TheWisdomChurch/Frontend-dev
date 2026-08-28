@@ -1,39 +1,20 @@
 /**
- * Text Components Index
- * Typography and text-related components
+ * Text components — one small set built on a single BaseText.
  */
 
 export { BaseText } from './baseText';
 export type { BaseTextProps } from './baseText';
 
-export { BricolageText, WorkSansText, PlayfairText } from './FontText';
-
 export {
-  H1,
   H2,
   H3,
   H4,
-  H5,
-  H6,
-  HeroText,
-  BodyXL,
   BodyLG,
   BodyMD,
   BodySM,
-  P,
   SmallText,
-  ExtraSmallText,
   Caption,
   Eyebrow,
 } from './Semantictext';
 
-export {
-  LightText,
-  RegularText,
-  MediumText,
-  SemiBoldText,
-  PlayfairRegular,
-  PlayfairBold,
-  PlayfairExtraBold,
-  PlayfairItalic,
-} from './weightText';
+export { LightText, RegularText, MediumText } from './weightText';
