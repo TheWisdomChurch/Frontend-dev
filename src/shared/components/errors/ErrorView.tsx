@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
-import { EditorialPanel } from '@/shared/ui/editorial';
+import { Panel } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 export interface ErrorViewProps {
@@ -39,10 +39,7 @@ export function ErrorView({
 
   return (
     <main className="relative grid min-h-[70svh] place-items-center overflow-hidden bg-[var(--app-dark)] px-6 py-section-md text-center text-white">
-      <EditorialPanel
-        tone="dark"
-        className="relative w-full max-w-2xl p-8 sm:p-12"
-      >
+      <Panel tone="dark" className="relative w-full max-w-2xl p-8 sm:p-12">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
           <AlertTriangle className="h-8 w-8" aria-hidden="true" />
         </div>
@@ -79,7 +76,7 @@ export function ErrorView({
             {homeLabel}
           </Link>
         </div>
-      </EditorialPanel>
+      </Panel>
     </main>
   );
 }

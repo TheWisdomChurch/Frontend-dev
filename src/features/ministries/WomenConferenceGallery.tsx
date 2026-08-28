@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { EditorialImage } from '@/shared/ui/editorial';
+import { Figure } from '@/shared/ui/layout';
 import { cn } from '@/lib/cn';
 
 type GalleryImage = { src: string; alt: string };
@@ -17,7 +17,7 @@ export default function WomenConferenceGallery({
 
   return (
     <div>
-      <EditorialImage
+      <Figure
         src={active.src}
         alt={active.alt}
         fill
@@ -45,7 +45,7 @@ export default function WomenConferenceGallery({
                 : 'border-transparent opacity-60 hover:opacity-100'
             )}
           >
-            <EditorialImage
+            <Figure
               src={image.src}
               alt=""
               fill

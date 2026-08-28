@@ -12,13 +12,13 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import Arrow from '@/shared/ui/icons/Arrow';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialPage,
-  EditorialPanel,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Page,
+  Panel,
+  Section,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 /* ── Types ──────────────────────────────────────────────── */
@@ -124,7 +124,7 @@ export default function TestimoniesPage() {
 
   return (
     <>
-      <EditorialPage>
+      <Page>
         <JsonLd
           data={buildBreadcrumbSchema([
             { name: 'Home', path: '/' },
@@ -142,8 +142,8 @@ export default function TestimoniesPage() {
 
         {/* ── 2. Featured testimony — dark ─────────────────── */}
         {!loading && featured && (
-          <EditorialSection tone="dark">
-            <EditorialContainer className="text-center">
+          <Section tone="dark">
+            <Container className="text-center">
               <OpenQuote className="text-display-lg text-[var(--app-primary)]/30 lg:text-display-xl" />
               <p className="mx-auto mt-2 max-w-2xl font-headline text-heading-sm font-normal leading-[1.65] text-white sm:text-heading-md lg:text-heading-md">
                 {featured.quote}
@@ -155,16 +155,16 @@ export default function TestimoniesPage() {
                 </p>
                 <div className="h-px w-8 bg-[var(--app-primary)]/45" />
               </div>
-            </EditorialContainer>
-          </EditorialSection>
+            </Container>
+          </Section>
         )}
 
         {/* ── 3. Testimony grid — canvas ───────────────────── */}
-        <EditorialSection tone="canvas">
-          <EditorialContainer>
+        <Section tone="canvas">
+          <Container>
             {/* Section header */}
             <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Community stories"
                 title="What God has done in our community."
               />
@@ -193,7 +193,7 @@ export default function TestimoniesPage() {
             {/* Empty */}
             {!loading && visible.length === 0 && (
               <div>
-                <EditorialEmptyState
+                <SectionEmpty
                   title="Stories are coming."
                   description="Approved testimonies will appear here. Be the first to share what God has done in your life."
                   action={
@@ -233,7 +233,7 @@ export default function TestimoniesPage() {
                       delay={i * 0.04}
                       className={spanClass}
                     >
-                      <EditorialPanel className="flex h-full flex-col p-6 lg:p-7">
+                      <Panel className="flex h-full flex-col p-6 lg:p-7">
                         {/* Quote mark */}
                         <OpenQuote className="mb-1 text-heading-lg text-[var(--app-primary)]/35" />
                         {/* Quote text */}
@@ -252,20 +252,20 @@ export default function TestimoniesPage() {
                             Wisdom Church
                           </p>
                         </div>
-                      </EditorialPanel>
+                      </Panel>
                     </ScrollFadeIn>
                   );
                 })}
               </div>
             )}
-          </EditorialContainer>
-        </EditorialSection>
+          </Container>
+        </Section>
 
         {/* ── 4. CTA — dark ──────────────────────────────────── */}
-        <EditorialSection tone="dark">
-          <EditorialContainer>
+        <Section tone="dark">
+          <Container>
             <div className="flex flex-col items-center gap-7 text-center">
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Share your story"
                 title="If God has done something in your life,"
                 accent="someone needs to hear it."
@@ -281,9 +281,9 @@ export default function TestimoniesPage() {
                 Submit a testimony <Arrow />
               </a>
             </div>
-          </EditorialContainer>
-        </EditorialSection>
-      </EditorialPage>
+          </Container>
+        </Section>
+      </Page>
 
       <SuccessModal
         isOpen={showSuccess}

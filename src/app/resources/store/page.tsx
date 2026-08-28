@@ -38,13 +38,13 @@ import SiteHero from '@/features/hero/SiteHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
 import { useApiQuery } from '@/hooks/useApiQuery';
 import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialPanel,
-  EditorialPage,
-  EditorialSection,
-  editorialFieldClass,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionHeader,
+  Panel,
+  Page,
+  Section,
+  fieldClass,
+} from '@/shared/ui/layout';
 
 const fetchProducts = (signal: AbortSignal) => storeClient.listProducts(signal);
 
@@ -199,7 +199,7 @@ function StorePageContent() {
   };
 
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
         title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
@@ -227,11 +227,11 @@ function StorePageContent() {
         )}
       </Button>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer className="space-y-10">
+      <Section tone="dark">
+        <Container className="space-y-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Wisdom Church Store"
                 title="Faith-inspired essentials for everyday life."
                 description="Browse clothing, accessories, and ministry utilities designed to carry a message of faith into everyday life."
@@ -258,7 +258,7 @@ function StorePageContent() {
             </div>
           </div>
 
-          <EditorialPanel
+          <Panel
             tone="dark"
             className="sticky top-3 z-30 p-3 backdrop-blur-xl sm:p-4"
           >
@@ -341,7 +341,7 @@ function StorePageContent() {
                 </Button>
               </div>
             )}
-          </EditorialPanel>
+          </Panel>
 
           <div className="flex gap-2 overflow-x-auto pb-1">
             {categories.map(category => {
@@ -366,13 +366,13 @@ function StorePageContent() {
               );
             })}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow={`${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`}
               title={activeCategoryName}
               size="sm"
@@ -394,7 +394,7 @@ function StorePageContent() {
                 ))}
               </div>
             ) : filteredProducts.length === 0 ? (
-              <EditorialPanel className="mx-auto flex max-w-xl flex-col items-center justify-center p-10 text-center">
+              <Panel className="mx-auto flex max-w-xl flex-col items-center justify-center p-10 text-center">
                 <ShoppingBag className="h-14 w-14 text-[var(--app-subtle)]" />
                 <h3 className="mt-5 font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                   No products found
@@ -414,7 +414,7 @@ function StorePageContent() {
                 >
                   View All Products
                 </Button>
-              </EditorialPanel>
+              </Panel>
             ) : (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {filteredProducts.map(product => (
@@ -427,12 +427,12 @@ function StorePageContent() {
               </div>
             )}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
-          <EditorialPanel
+      <Section tone="dark">
+        <Container>
+          <Panel
             tone="dark"
             className="mx-auto max-w-3xl p-6 text-center sm:p-8 lg:p-10"
           >
@@ -440,7 +440,7 @@ function StorePageContent() {
               <Tag className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Stay connected"
               title="Never miss our offers."
               description="Get exclusive discounts, new arrivals, and faith-inspired deals in your inbox. Join now and get 10% off instantly."
@@ -479,7 +479,7 @@ function StorePageContent() {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="your@email.com"
                       required
-                      className={`${editorialFieldClass} h-12 bg-white/[0.06] pl-12 text-white placeholder:text-white/40`}
+                      className={`${fieldClass} h-12 bg-white/[0.06] pl-12 text-white placeholder:text-white/40`}
                     />
                   </label>
 
@@ -514,9 +514,9 @@ function StorePageContent() {
                 No spam · Unsubscribe anytime · 100% private
               </Caption>
             </div>
-          </EditorialPanel>
-        </EditorialContainer>
-      </EditorialSection>
+          </Panel>
+        </Container>
+      </Section>
 
       <ProductModal
         key={selectedProduct?.id ?? 'none'}
@@ -526,7 +526,7 @@ function StorePageContent() {
       />
 
       <CartSidebar />
-    </EditorialPage>
+    </Page>
   );
 }
 

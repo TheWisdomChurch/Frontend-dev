@@ -15,19 +15,19 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialImage,
-  EditorialLink,
-  EditorialSection,
-  EditorialSplit,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  Figure,
+  CtaLink,
+  Section,
+  Split,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 export default function PremiumHome() {
   return (
-    <EditorialPage tone="surface">
+    <Page tone="surface">
       <SiteHero
         size="home"
         align="center"
@@ -60,20 +60,20 @@ export default function PremiumHome() {
         }
       />
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit>
+      <Section>
+        <Container>
+          <Split>
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow={HOME_COPY.welcome.eyebrow}
                 title={HOME_COPY.welcome.title}
                 accent={HOME_COPY.welcome.accent}
                 description={HOME_COPY.welcome.description}
               />
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <EditorialLink href="/about" variant="dark">
+                <CtaLink href="/about" variant="dark">
                   {HOME_COPY.actions.discoverStory}
-                </EditorialLink>
+                </CtaLink>
                 <CommunityJoinTrigger
                   icon={false}
                   className={buttonClass('outline')}
@@ -82,7 +82,7 @@ export default function PremiumHome() {
                 </CommunityJoinTrigger>
               </div>
             </div>
-            <EditorialImage
+            <Figure
               parallax
               src={HOME_IMAGES.welcome.src}
               alt={HOME_IMAGES.welcome.alt}
@@ -92,13 +92,13 @@ export default function PremiumHome() {
               className="aspect-[4/3] sm:aspect-[16/11]"
               imageClassName={HOME_IMAGES.welcome.position}
             />
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark" className="bg-[var(--app-dark-2)]">
-        <EditorialContainer>
-          <EditorialHeader
+      <Section tone="dark" className="bg-[var(--app-dark-2)]">
+        <Container>
+          <SectionHeader
             eyebrow={HOME_COPY.identity.eyebrow}
             title={HOME_COPY.identity.title}
             accent={HOME_COPY.identity.accent}
@@ -150,12 +150,12 @@ export default function PremiumHome() {
               </article>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit reverse>
+      <Section>
+        <Container>
+          <Split reverse>
             <div className="relative aspect-[4/3] overflow-hidden rounded-image bg-[var(--app-surface-2)] sm:aspect-[16/11]">
               <Image
                 src={HOME_IMAGES.service.desktopSrc}
@@ -168,7 +168,7 @@ export default function PremiumHome() {
               />
             </div>
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow={HOME_COPY.service.eyebrow}
                 title={HOME_COPY.service.title}
                 accent={HOME_COPY.service.accent}
@@ -196,14 +196,14 @@ export default function PremiumHome() {
                 </PlanVisitTrigger>
               </div>
             </div>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
-          <EditorialSplit>
-            <EditorialImage
+      <Section tone="canvas">
+        <Container>
+          <Split>
+            <Figure
               parallax
               src={HOME_IMAGES.pastor.src}
               alt={HOME_IMAGES.pastor.alt}
@@ -213,25 +213,25 @@ export default function PremiumHome() {
               imageClassName="object-top"
             />
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow={HOME_COPY.pastor.eyebrow}
                 title={HOME_COPY.pastor.title}
                 accent={HOME_COPY.pastor.accent}
                 description={HOME_COPY.pastor.description}
               />
-              <EditorialLink href="/leadership" variant="dark" className="mt-8">
+              <CtaLink href="/leadership" variant="dark" className="mt-8">
                 {HOME_COPY.actions.meetLeadership}
-              </EditorialLink>
+              </CtaLink>
             </div>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit reverse>
+      <Section>
+        <Container>
+          <Split reverse>
             <div className="grid grid-cols-2 gap-3">
-              <EditorialImage
+              <Figure
                 src={HOME_COMMUNITY_GALLERY[0].src}
                 alt={HOME_COMMUNITY_GALLERY[0].alt}
                 fill
@@ -241,7 +241,7 @@ export default function PremiumHome() {
                 imageClassName={HOME_COMMUNITY_GALLERY[0].position}
               />
               <div className="grid gap-3 pt-10">
-                <EditorialImage
+                <Figure
                   src={HOME_COMMUNITY_GALLERY[1].src}
                   alt={HOME_COMMUNITY_GALLERY[1].alt}
                   fill
@@ -250,7 +250,7 @@ export default function PremiumHome() {
                   className="aspect-square"
                   imageClassName={HOME_COMMUNITY_GALLERY[1].position}
                 />
-                <EditorialImage
+                <Figure
                   src={HOME_COMMUNITY_GALLERY[2].src}
                   alt={HOME_COMMUNITY_GALLERY[2].alt}
                   fill
@@ -262,19 +262,19 @@ export default function PremiumHome() {
               </div>
             </div>
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow={HOME_COPY.community.eyebrow}
                 title={HOME_COPY.community.title}
                 accent={HOME_COPY.community.accent}
                 description={HOME_COPY.community.description}
               />
-              <EditorialLink href="/contact" variant="dark" className="mt-8">
+              <CtaLink href="/contact" variant="dark" className="mt-8">
                 <Users className="mr-2 h-4 w-4" /> {HOME_COPY.actions.connect}
-              </EditorialLink>
+              </CtaLink>
             </div>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+          </Split>
+        </Container>
+      </Section>
+    </Page>
   );
 }

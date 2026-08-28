@@ -10,13 +10,13 @@ import CheckoutForm from '@/features/store/Store/checkoutForm';
 import SiteHero from '@/features/hero/SiteHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialPage,
-  EditorialPanel,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Page,
+  Panel,
+  Section,
+} from '@/shared/ui/layout';
 
 function CheckoutPageContent() {
   const router = useRouter();
@@ -32,7 +32,7 @@ function CheckoutPageContent() {
 
   if (items.length === 0) {
     return (
-      <EditorialPage tone="dark">
+      <Page tone="dark">
         <SiteHero
           title="Checkout"
           subtitle="Complete your order securely."
@@ -40,9 +40,9 @@ function CheckoutPageContent() {
           compact
         />
 
-        <EditorialSection tone="dark">
-          <EditorialContainer>
-            <EditorialEmptyState
+        <Section tone="dark">
+          <Container>
+            <SectionEmpty
               className="checkout-section mx-auto max-w-xl"
               title="Your cart is empty"
               description="Add some resources from the store before proceeding to checkout."
@@ -57,14 +57,14 @@ function CheckoutPageContent() {
                 </button>
               }
             />
-          </EditorialContainer>
-        </EditorialSection>
-      </EditorialPage>
+          </Container>
+        </Section>
+      </Page>
     );
   }
 
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
         title="Checkout"
         subtitle="Complete your order securely."
@@ -72,9 +72,9 @@ function CheckoutPageContent() {
         compact
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
-          <EditorialHeader
+      <Section tone="dark">
+        <Container>
+          <SectionHeader
             eyebrow="Secure checkout"
             title="Complete your order with confidence."
             description="Confirm your details and complete your purchase securely."
@@ -82,15 +82,12 @@ function CheckoutPageContent() {
             className="checkout-section mx-auto mb-10 max-w-3xl text-center"
           />
 
-          <EditorialPanel
-            tone="dark"
-            className="checkout-section p-4 sm:p-6 lg:p-8"
-          >
+          <Panel tone="dark" className="checkout-section p-4 sm:p-6 lg:p-8">
             <CheckoutForm />
-          </EditorialPanel>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+          </Panel>
+        </Container>
+      </Section>
+    </Page>
   );
 }
 

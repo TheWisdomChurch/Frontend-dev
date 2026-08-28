@@ -23,18 +23,18 @@ import {
 import type { CountryCode } from 'libphonenumber-js';
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialNotice,
-  EditorialPage,
-  EditorialPanel,
-  EditorialSection,
-  editorialChoiceClass,
-  editorialErrorClass,
-  editorialFieldClass,
-  editorialHelpClass,
-  editorialLabelClass,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionHeader,
+  Notice,
+  Page,
+  Panel,
+  Section,
+  choiceClass,
+  fieldErrorClass,
+  fieldClass,
+  fieldHelpClass,
+  fieldLabelClass,
+} from '@/shared/ui/layout';
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -55,11 +55,11 @@ const MONTH_OPTIONS = [
 
 const fieldShellClass = 'border-t border-[var(--app-border)] py-5';
 
-const fieldBaseClass = `min-h-12 ${editorialFieldClass}`;
+const fieldBaseClass = `min-h-12 ${fieldClass}`;
 
-const fieldSelectClass = `min-h-12 ${editorialFieldClass}`;
+const fieldSelectClass = `min-h-12 ${fieldClass}`;
 
-const labelClass = editorialLabelClass;
+const labelClass = fieldLabelClass;
 
 function splitE164(
   value: string
@@ -722,7 +722,7 @@ export default function PublicFormPage() {
 
     const Error = () =>
       errorMessage ? (
-        <BodySM className={editorialErrorClass}>{errorMessage}</BodySM>
+        <BodySM className={fieldErrorClass}>{errorMessage}</BodySM>
       ) : null;
 
     if (field.type === 'textarea') {
@@ -749,7 +749,7 @@ export default function PublicFormPage() {
             />
             <div className="flex flex-wrap items-center justify-between gap-2">
               {typeof maxWords === 'number' ? (
-                <Caption className={editorialHelpClass}>
+                <Caption className={fieldHelpClass}>
                   {wordCount}/{maxWords} words
                 </Caption>
               ) : (
@@ -807,7 +807,7 @@ export default function PublicFormPage() {
 
             <div className="grid gap-2 sm:grid-cols-2">
               {field.options?.map(option => (
-                <label key={option.value} className={editorialChoiceClass}>
+                <label key={option.value} className={choiceClass}>
                   <input
                     type="radio"
                     name={field.key}
@@ -845,7 +845,7 @@ export default function PublicFormPage() {
 
             <div className="grid gap-2 sm:grid-cols-2">
               {field.options.map(option => (
-                <label key={option.value} className={editorialChoiceClass}>
+                <label key={option.value} className={choiceClass}>
                   <input
                     type="checkbox"
                     checked={currentValues.includes(option.value)}
@@ -910,11 +910,11 @@ export default function PublicFormPage() {
                 handleChange(field.key, event.target.files?.[0] || null)
               }
             />
-            <Caption className={editorialHelpClass}>
+            <Caption className={fieldHelpClass}>
               JPEG, PNG, or WebP. Maximum file size is 5MB.
             </Caption>
             {selectedFile ? (
-              <Caption className={editorialHelpClass}>
+              <Caption className={fieldHelpClass}>
                 Selected: {selectedFile.name}
               </Caption>
             ) : null}
@@ -964,7 +964,7 @@ export default function PublicFormPage() {
               required={field.required}
             />
 
-            <Caption className={editorialHelpClass}>
+            <Caption className={fieldHelpClass}>
               Use your country code and active phone number.
             </Caption>
           </label>
@@ -1029,7 +1029,7 @@ export default function PublicFormPage() {
               </select>
             </div>
 
-            <Caption className={editorialHelpClass}>
+            <Caption className={fieldHelpClass}>
               Stored as DD-MM format.
             </Caption>
             <Error />
@@ -1056,32 +1056,30 @@ export default function PublicFormPage() {
   };
 
   return (
-    <EditorialPage>
+    <Page>
       {showHeroCopy ? (
-        <EditorialSection compact tone="canvas">
-          <EditorialContainer className="relative z-10">
-            <EditorialHeader
+        <Section compact tone="canvas">
+          <Container className="relative z-10">
+            <SectionHeader
               eyebrow="Public form"
               title={presentation.title}
               description={presentation.subtitle}
               size="sm"
             />
-          </EditorialContainer>
-        </EditorialSection>
+          </Container>
+        </Section>
       ) : null}
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer className="relative z-10">
+      <Section tone="canvas">
+        <Container className="relative z-10">
           <div>
-            {loading ? <EditorialNotice>Loading form…</EditorialNotice> : null}
+            {loading ? <Notice>Loading form…</Notice> : null}
 
-            {!loading && error ? (
-              <EditorialNotice status="error">{error}</EditorialNotice>
-            ) : null}
+            {!loading && error ? <Notice status="error">{error}</Notice> : null}
 
             {!loading && form && !submitted ? (
               <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]">
-                <EditorialPanel className="h-fit p-5 lg:sticky lg:top-24">
+                <Panel className="h-fit p-5 lg:sticky lg:top-24">
                   {!showHeroCopy ? (
                     <div>
                       <Eyebrow className="text-[var(--app-primary)]">
@@ -1111,12 +1109,10 @@ export default function PublicFormPage() {
                   )}
 
                   {presentation.headerNote ? (
-                    <EditorialNotice className="mt-5">
-                      {presentation.headerNote}
-                    </EditorialNotice>
+                    <Notice className="mt-5">{presentation.headerNote}</Notice>
                   ) : null}
 
-                  <EditorialNotice status="brand" className="mt-5">
+                  <Notice status="brand" className="mt-5">
                     <Eyebrow className="text-[var(--app-primary)]">
                       Form overview
                     </Eyebrow>
@@ -1124,8 +1120,8 @@ export default function PublicFormPage() {
                       {visibleFields.length} visible field
                       {visibleFields.length === 1 ? '' : 's'} to complete.
                     </BodySM>
-                  </EditorialNotice>
-                </EditorialPanel>
+                  </Notice>
+                </Panel>
 
                 <form
                   onSubmit={handleSubmit}
@@ -1133,7 +1129,7 @@ export default function PublicFormPage() {
                 >
                   {presentation.detailItems.length > 0 ||
                   presentation.sections.length > 0 ? (
-                    <EditorialPanel className="mb-6 space-y-4 bg-[var(--app-canvas)] p-4 sm:p-5">
+                    <Panel className="mb-6 space-y-4 bg-[var(--app-canvas)] p-4 sm:p-5">
                       {presentation.detailItems.length > 0 ? (
                         <div className="grid gap-3 sm:grid-cols-2">
                           {presentation.detailItems.map(
@@ -1217,7 +1213,7 @@ export default function PublicFormPage() {
                           </section>
                         )
                       )}
-                    </EditorialPanel>
+                    </Panel>
                   ) : null}
 
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -1294,19 +1290,19 @@ export default function PublicFormPage() {
                       </span>
                     </label>
                     {consentError ? (
-                      <p className={`mt-2 ${editorialErrorClass}`} role="alert">
+                      <p className={`mt-2 ${fieldErrorClass}`} role="alert">
                         {consentError}
                       </p>
                     ) : null}
-                    <p className={`mt-3 ${editorialHelpClass}`}>
+                    <p className={`mt-3 ${fieldHelpClass}`}>
                       Privacy notice version {consent.version}
                     </p>
                   </section>
 
                   {error ? (
-                    <EditorialNotice status="error" className="mt-6">
+                    <Notice status="error" className="mt-6">
                       {error}
-                    </EditorialNotice>
+                    </Notice>
                   ) : null}
 
                   <div className="mt-7 flex flex-col gap-4 border-t border-[var(--app-border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -1337,7 +1333,7 @@ export default function PublicFormPage() {
               forceBottomSheet
               maxWidth="max-w-lg"
             >
-              <EditorialNotice status="success" className="min-w-0 p-4 sm:p-5">
+              <Notice status="success" className="min-w-0 p-4 sm:p-5">
                 <BodySM className="text-[var(--app-ink)]">
                   {presentation.successMessage}
                 </BodySM>
@@ -1363,11 +1359,11 @@ export default function PublicFormPage() {
                     {returnPath}
                   </Link>
                 </div>
-              </EditorialNotice>
+              </Notice>
             </BaseModal>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

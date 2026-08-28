@@ -6,14 +6,14 @@ import WomenConferenceGallery from '@/features/ministries/WomenConferenceGallery
 import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialImage,
-  EditorialLink,
-  EditorialSection,
-  EditorialSplit,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  Figure,
+  CtaLink,
+  Section,
+  Split,
+} from '@/shared/ui/layout';
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Women's Ministry",
@@ -23,7 +23,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function WomenMinistryPage() {
   return (
-    <EditorialPage tone="surface">
+    <Page tone="surface">
       <SiteHero
         eyebrow={content.hero.eyebrow}
         title={content.hero.title}
@@ -31,22 +31,22 @@ export default function WomenMinistryPage() {
         backgroundImage={content.hero.image}
         priority
         actions={
-          <EditorialLink href="/contact">
+          <CtaLink href="/contact">
             Join the community <ArrowRight className="ml-2 h-4 w-4" />
-          </EditorialLink>
+          </CtaLink>
         }
       />
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit className="lg:grid-cols-[0.88fr_1.12fr]">
-            <EditorialHeader
+      <Section>
+        <Container>
+          <Split className="lg:grid-cols-[0.88fr_1.12fr]">
+            <SectionHeader
               eyebrow={content.introduction.label}
               title={content.introduction.title}
               description={content.introduction.body}
             />
             <div data-gsap="reveal">
-              <EditorialImage
+              <Figure
                 src={content.introduction.image.src}
                 alt={content.introduction.image.alt}
                 fill
@@ -55,14 +55,14 @@ export default function WomenMinistryPage() {
                 imageClassName="object-center"
               />
             </div>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="mb-12 max-w-3xl lg:mb-16">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="What guides us"
               title="Rooted in Christ. Prepared for every sphere."
               tone="dark"
@@ -87,14 +87,14 @@ export default function WomenMinistryPage() {
               </article>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit reverse className="lg:grid-cols-[0.9fr_1.1fr]">
+      <Section>
+        <Container>
+          <Split reverse className="lg:grid-cols-[0.9fr_1.1fr]">
             <div data-gsap="reveal" className="mx-auto w-full max-w-xl lg:mx-0">
-              <EditorialImage
+              <Figure
                 src={content.headConvener.image.src}
                 alt={content.headConvener.image.alt}
                 fill
@@ -103,21 +103,18 @@ export default function WomenMinistryPage() {
                 imageClassName="object-[50%_22%]"
               />
             </div>
-            <EditorialHeader
+            <SectionHeader
               eyebrow={content.headConvener.label}
               title={content.headConvener.title}
               description={content.headConvener.body}
             />
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
-          <EditorialHeader
-            eyebrow="The journey"
-            title="Grow. Lead. Flourish."
-          />
+      <Section tone="canvas">
+        <Container>
+          <SectionHeader eyebrow="The journey" title="Grow. Lead. Flourish." />
           <div className="mt-12 grid overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] md:grid-cols-3">
             {content.focus.map(item => (
               <article
@@ -138,40 +135,40 @@ export default function WomenMinistryPage() {
               </article>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit>
-            <EditorialHeader
+      <Section>
+        <Container>
+          <Split>
+            <SectionHeader
               eyebrow={content.conference.eyebrow}
               title={content.conference.title}
               description={content.conference.description}
             />
             <WomenConferenceGallery images={content.conference.images} />
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="brand">
-        <EditorialContainer className="text-center">
-          <EditorialHeader
+      <Section tone="brand">
+        <Container className="text-center">
+          <SectionHeader
             eyebrow={content.invitation.label}
             title={content.invitation.title}
             description={content.invitation.body}
             className="mx-auto max-w-4xl [&_p]:mx-auto"
           />
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <EditorialLink href="/contact" variant="dark">
+            <CtaLink href="/contact" variant="dark">
               Join the community
-            </EditorialLink>
-            <EditorialLink href="/events" variant="outline">
+            </CtaLink>
+            <CtaLink href="/events" variant="outline">
               View upcoming gatherings
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

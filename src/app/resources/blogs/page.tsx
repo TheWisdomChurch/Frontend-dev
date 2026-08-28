@@ -6,13 +6,13 @@ import { BlogSubscribeForm } from './BlogSubscribeForm';
 import SiteHero from '@/features/hero/SiteHero';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialPanel,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Panel,
+  Section,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = {
@@ -24,17 +24,17 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
         eyebrow="Blog & Devotionals"
         title="Insights, reflections, and devotionals from the church."
         subtitle="Written content to encourage, teach, and equip you between Sundays."
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Coming soon"
               title="We are preparing devotionals and articles for you."
               description="Our team is working on written content—devotionals, sermon notes, and reflections—that will live here. Check back soon."
@@ -52,16 +52,13 @@ export default function BlogPage() {
                 Watch our messages
               </a>
 
-              <EditorialLink href="/resources/sermons" variant="outline">
+              <CtaLink href="/resources/sermons" variant="outline">
                 Browse sermons <ArrowRight className="h-3.5 w-3.5" />
-              </EditorialLink>
+              </CtaLink>
             </div>
           </div>
 
-          <EditorialPanel
-            tone="dark"
-            className="mx-auto mt-16 max-w-xl p-8 text-center"
-          >
+          <Panel tone="dark" className="mx-auto mt-16 max-w-xl p-8 text-center">
             <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
               Get notified
             </p>
@@ -72,13 +69,10 @@ export default function BlogPage() {
             <div className="mt-6 flex justify-center">
               <BlogSubscribeForm />
             </div>
-          </EditorialPanel>
+          </Panel>
 
           {/* WhatsApp update strip */}
-          <EditorialPanel
-            tone="dark"
-            className="mx-auto mt-5 max-w-xl p-6 text-center"
-          >
+          <Panel tone="dark" className="mx-auto mt-5 max-w-xl p-6 text-center">
             <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
               Or join our community
             </p>
@@ -94,9 +88,9 @@ export default function BlogPage() {
             >
               Join WhatsApp community
             </a>
-          </EditorialPanel>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+          </Panel>
+        </Container>
+      </Section>
+    </Page>
   );
 }

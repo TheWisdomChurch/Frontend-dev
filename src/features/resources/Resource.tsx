@@ -23,11 +23,7 @@ import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
-import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, SectionHeader, Section } from '@/shared/ui/layout';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 
@@ -110,7 +106,7 @@ function ResourceCarousel() {
     <div>
       {/* Header */}
       <div className="mb-8 flex items-end justify-between gap-4">
-        <EditorialHeader
+        <SectionHeader
           eyebrow="Explore"
           title="You can do"
           accent="more"
@@ -247,12 +243,12 @@ export default function ResourceSection() {
     : null;
 
   return (
-    <EditorialSection ref={sectionRef} id="resources" tone="surface" flush>
+    <Section ref={sectionRef} id="resources" tone="surface" flush>
       <div className="relative overflow-hidden bg-[var(--app-dark)]">
-        <EditorialContainer className="relative py-section-sm">
+        <Container className="relative py-section-sm">
           <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 xl:gap-20">
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Latest Message"
                 title="Hear the"
                 accent="Word."
@@ -362,12 +358,12 @@ export default function ResourceSection() {
               )}
             </div>
           </div>
-        </EditorialContainer>
+        </Container>
       </div>
 
-      <EditorialContainer className="py-section-sm">
+      <Container className="py-section-sm">
         <ResourceCarousel />
-      </EditorialContainer>
-    </EditorialSection>
+      </Container>
+    </Section>
   );
 }

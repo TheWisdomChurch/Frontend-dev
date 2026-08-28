@@ -2,11 +2,7 @@ import type { Metadata } from 'next';
 
 import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
-import {
-  EditorialDocument,
-  EditorialPage,
-  type EditorialDocumentSection,
-} from '@/shared/ui/editorial';
+import { DocumentLayout, Page, type DocumentSection } from '@/shared/ui/layout';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Privacy Policy',
@@ -15,7 +11,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/privacy',
 });
 
-const sections: readonly EditorialDocumentSection[] = [
+const sections: readonly DocumentSection[] = [
   {
     id: 'collect',
     title: 'Information we collect',
@@ -80,14 +76,14 @@ const relatedPolicies = [
 
 export default function PrivacyPage() {
   return (
-    <EditorialPage>
+    <Page>
       <SiteHero
         eyebrow="Legal · Privacy"
         title="Privacy Policy"
         subtitle="We handle your information with care and respect. This policy explains what we collect, why we collect it, and how we protect it—in plain language."
         note="Last updated: July 2026"
       />
-      <EditorialDocument sections={sections} navigation={relatedPolicies} />
-    </EditorialPage>
+      <DocumentLayout sections={sections} navigation={relatedPolicies} />
+    </Page>
   );
 }

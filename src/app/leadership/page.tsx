@@ -11,13 +11,13 @@ import {
   initials,
 } from '@/features/leadership/LeadershipCards';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialLink,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionEmpty,
+  SectionHeader,
+  CtaLink,
+  Section,
+} from '@/shared/ui/layout';
 
 // Approved leadership is CMS-managed content. Render it per request so a
 // production build cannot freeze an empty or outdated directory indefinitely.
@@ -34,7 +34,7 @@ const BOARD_ROLES: LeadershipRole[] = ['deacon', 'deaconess'];
 
 function EmptyState({ dark }: { dark?: boolean }) {
   return (
-    <EditorialEmptyState
+    <SectionEmpty
       title="Leadership listings coming soon."
       description="Our leadership directory will be published here shortly."
       tone={dark ? 'dark' : 'light'}
@@ -53,7 +53,7 @@ export default async function LeadershipPage() {
   const board = leaders.filter(l => BOARD_ROLES.includes(l.role));
 
   return (
-    <EditorialPage>
+    <Page>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -82,23 +82,23 @@ export default async function LeadershipPage() {
         compact
       />
 
-      <EditorialSection tone="dark" compact>
-        <EditorialContainer>
-          <EditorialHeader
+      <Section tone="dark" compact>
+        <Container>
+          <SectionHeader
             eyebrow="Pastoral leadership"
             title="Shepherds of the"
             accent="Word and community."
             tone="dark"
           />
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* ── 3. Senior portrait panels ────────────────────────── */}
       {seniorTeam.length === 0 ? (
         <div className="relative bg-[var(--app-dark)] px-6 py-10 lg:px-10">
-          <EditorialContainer>
+          <Container>
             <EmptyState dark />
-          </EditorialContainer>
+          </Container>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2">
@@ -131,13 +131,13 @@ export default async function LeadershipPage() {
 
       {/* ── 4. Board header — canvas ─────────────────────────── */}
       {board.length > 0 && (
-        <EditorialSection tone="canvas">
-          <EditorialContainer>
-            <EditorialHeader
+        <Section tone="canvas">
+          <Container>
+            <SectionHeader
               eyebrow="Board of leaders"
               title="Deacons & Deaconesses."
             />
-          </EditorialContainer>
+          </Container>
 
           {/* Name list — editorial rows */}
           <div className="divide-y divide-[var(--app-ink)]/8 border-t border-[var(--app-ink)]/8">
@@ -146,7 +146,7 @@ export default async function LeadershipPage() {
                 <div
                   className={`${i % 2 === 0 ? 'bg-[var(--app-canvas)]' : 'bg-[var(--app-canvas-2)]'}`}
                 >
-                  <EditorialContainer>
+                  <Container>
                     <div className="grid items-center gap-3 py-6 sm:grid-cols-[1fr_auto] sm:gap-10">
                       <div className="flex items-center gap-5">
                         {/* Initials badge */}
@@ -168,33 +168,33 @@ export default async function LeadershipPage() {
                         {ROLE_LABEL[leader.role]}
                       </span>
                     </div>
-                  </EditorialContainer>
+                  </Container>
                 </div>
               </ScrollFadeIn>
             ))}
           </div>
 
           <div className="pb-12 lg:pb-16" />
-        </EditorialSection>
+        </Section>
       )}
 
       {/* ── 5. CTA ───────────────────────────────────────────── */}
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Serve with us"
               title="Leadership is an invitation,"
               accent="not just a title."
               description="If you feel called to serve the church in a meaningful way, we would love to have a conversation with you."
               tone="dark"
             />
-            <EditorialLink href="/contact" variant="outline" className="mt-8">
+            <CtaLink href="/contact" variant="outline" className="mt-8">
               Get in touch
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

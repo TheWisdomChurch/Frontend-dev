@@ -13,11 +13,11 @@ import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
 import Arrow from '@/shared/ui/icons/Arrow';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Section,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 import { staggerContainer, staggerItem } from '@/shared/ui/motion';
 
@@ -292,7 +292,7 @@ function PortraitCard({
 
 function EmptyState({ category }: { category: Category }) {
   return (
-    <EditorialEmptyState
+    <SectionEmpty
       title={
         category === 'program'
           ? 'No programs scheduled right now.'
@@ -433,11 +433,11 @@ export default function EventsShowcase() {
   const onlyFeatured = !!featured && rest.length === 0;
 
   return (
-    <EditorialSection tone="surface" className="min-w-0 overflow-hidden">
-      <EditorialContainer>
+    <Section tone="surface" className="min-w-0 overflow-hidden">
+      <Container>
         {/* ── Section header ──────────────────────────────── */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <EditorialHeader
+          <SectionHeader
             eyebrow="Events & Programs"
             title="What's"
             accent="happening"
@@ -557,7 +557,7 @@ export default function EventsShowcase() {
             See all events <Arrow />
           </Link>
         </div>
-      </EditorialContainer>
+      </Container>
 
       {/* Reel modal */}
       {reelModal && (
@@ -587,6 +587,6 @@ export default function EventsShowcase() {
           )}
         </BaseModal>
       )}
-    </EditorialSection>
+    </Section>
   );
 }

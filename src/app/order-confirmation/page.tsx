@@ -20,12 +20,12 @@ import OrderConfirmation from '@/features/store/Store/orderDetails';
 import SiteHero from '@/features/hero/SiteHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
 import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialPanel,
-  EditorialPage,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionHeader,
+  Panel,
+  Page,
+  Section,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 const nextSteps = [
@@ -63,7 +63,7 @@ function SimpleConfirmation() {
   }, []);
 
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
@@ -71,16 +71,16 @@ function SimpleConfirmation() {
         compact
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
-          <EditorialPanel tone="dark" className="mx-auto max-w-5xl">
+      <Section tone="dark">
+        <Container>
+          <Panel tone="dark" className="mx-auto max-w-5xl">
             <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
               <div className="confirmation-animate border-b border-white/10 p-6 text-center sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10 text-green-500">
                   <CheckCircle2 className="h-12 w-12" />
                 </div>
 
-                <EditorialHeader
+                <SectionHeader
                   eyebrow="Purchase complete"
                   title="Order confirmed."
                   tone="dark"
@@ -176,10 +176,10 @@ function SimpleConfirmation() {
                 </div>
               </div>
             </div>
-          </EditorialPanel>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+          </Panel>
+        </Container>
+      </Section>
+    </Page>
   );
 }
 

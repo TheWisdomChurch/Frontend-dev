@@ -5,11 +5,7 @@ import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { cn } from '@/lib/cn';
-import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, Page, Section } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 export type MinistryHeading = { lead: string; accent: string; tail?: string };
@@ -93,7 +89,7 @@ export default function MinistryPageTemplate({
   const { hero, conference, mission, activities, extra, values, cta } = config;
 
   return (
-    <EditorialPage>
+    <Page>
       {/* ── Hero ─────────────────────────────────────────────── */}
       <SiteHero
         eyebrow={hero.eyebrow}
@@ -104,8 +100,8 @@ export default function MinistryPageTemplate({
 
       {/* ── Conference (optional) — dark ─────────────────────── */}
       {conference ? (
-        <EditorialSection tone="dark">
-          <EditorialContainer>
+        <Section tone="dark">
+          <Container>
             <ScrollFadeIn className="pt-14 lg:pt-18">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
@@ -141,13 +137,13 @@ export default function MinistryPageTemplate({
                 </div>
               </div>
             </ScrollFadeIn>
-          </EditorialContainer>
-        </EditorialSection>
+          </Container>
+        </Section>
       ) : null}
 
       {/* ── Mission ──────────────────────────────────────────── */}
-      <EditorialSection tone={mission.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
+      <Section tone={mission.dark ? 'dark' : 'canvas'}>
+        <Container>
           <ScrollFadeIn>
             <Eyebrow>Our mission</Eyebrow>
             <Heading
@@ -167,12 +163,12 @@ export default function MinistryPageTemplate({
               {mission.body}
             </p>
           </ScrollFadeIn>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* ── What we do ───────────────────────────────────────── */}
-      <EditorialSection tone={activities.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
+      <Section tone={activities.dark ? 'dark' : 'canvas'}>
+        <Container>
           <ScrollFadeIn className="pt-16 lg:pt-20">
             <Eyebrow>What we do</Eyebrow>
             <Heading
@@ -218,15 +214,15 @@ export default function MinistryPageTemplate({
               </ScrollFadeIn>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* ── Extra (optional page-specific section) ───────────── */}
       {extra}
 
       {/* ── Core values ──────────────────────────────────────── */}
-      <EditorialSection tone={values.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
+      <Section tone={values.dark ? 'dark' : 'canvas'}>
+        <Container>
           <ScrollFadeIn>
             <div
               className={cn(
@@ -277,12 +273,12 @@ export default function MinistryPageTemplate({
               </ScrollFadeIn>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <EditorialSection tone={cta.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
+      <Section tone={cta.dark ? 'dark' : 'canvas'}>
+        <Container>
           <div className="flex flex-col items-center gap-7 text-center">
             <Eyebrow>{cta.eyebrow ?? 'Join the ministry'}</Eyebrow>
             <Heading
@@ -315,8 +311,8 @@ export default function MinistryPageTemplate({
               </Link>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

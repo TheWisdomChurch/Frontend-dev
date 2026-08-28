@@ -9,12 +9,7 @@ import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { getEventTimestamp as getTimestamp } from '@/shared/utils/eventDate';
-import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialEmptyState,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, Page, SectionEmpty, Section } from '@/shared/ui/layout';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = [
@@ -114,7 +109,7 @@ export default function CalendarPage() {
   );
 
   return (
-    <EditorialPage>
+    <Page>
       <SiteHero
         eyebrow="Church Calendar"
         title="Every event, every month."
@@ -122,8 +117,8 @@ export default function CalendarPage() {
         compact
       />
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           {/* Month navigation */}
           <ScrollFadeIn className="mb-10 flex items-center justify-between">
             <button
@@ -306,7 +301,7 @@ export default function CalendarPage() {
 
           {!loading && monthEvents.length === 0 && (
             <div className="mt-10">
-              <EditorialEmptyState
+              <SectionEmpty
                 title={`No events scheduled for ${MONTHS[viewMonth]}.`}
                 description="Navigate to another month or view all upcoming events."
                 action={
@@ -330,8 +325,8 @@ export default function CalendarPage() {
               </p>
             </div>
           )}
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

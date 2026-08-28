@@ -24,11 +24,7 @@ import { Button } from '@/shared/ui/button';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import { BodySM, Caption } from '@/shared/text';
-import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, SectionHeader, Section } from '@/shared/ui/layout';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import { isValidNationalPhone, PHONE_COUNTRIES } from '@/lib/validation/phone';
@@ -365,7 +361,7 @@ export default function JoinWorkforce() {
   });
 
   return (
-    <EditorialSection tone="dark" flush className="overflow-hidden">
+    <Section tone="dark" flush className="overflow-hidden">
       {/* ── Banner ───────────────────────────────────────────── */}
       {/* TODO: was a photo banner (Dept_1) — source image is missing from
           the repo; needs a real photo re-uploaded to shared/assets. */}
@@ -374,9 +370,9 @@ export default function JoinWorkforce() {
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
         </div>
 
-        <EditorialContainer className="relative py-section-xs">
+        <Container className="relative py-section-xs">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Join the workforce"
               title="Serve with"
               accent="excellence."
@@ -412,13 +408,13 @@ export default function JoinWorkforce() {
               </div>
             ))}
           </div>
-        </EditorialContainer>
+        </Container>
       </div>
 
       {/* ── Department index ──────────────────────────────────── */}
-      <EditorialContainer className="relative py-section-xs">
+      <Container className="relative py-section-xs">
         <div className="mb-8 grid gap-5 border-b border-white/10 pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
-          <EditorialHeader
+          <SectionHeader
             eyebrow="Serve at Wisdom Church"
             title="Bring your gift."
             accent="Build with us."
@@ -491,7 +487,7 @@ export default function JoinWorkforce() {
             No experience required — just a willing heart.
           </p>
         </div>
-      </EditorialContainer>
+      </Container>
 
       {/* ── Department detail + application modal ─────────────────── */}
       <BaseModal
@@ -728,6 +724,6 @@ export default function JoinWorkforce() {
           </div>
         )}
       </BaseModal>
-    </EditorialSection>
+    </Section>
   );
 }

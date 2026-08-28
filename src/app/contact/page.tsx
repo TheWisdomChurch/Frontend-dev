@@ -30,15 +30,15 @@ import {
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialPanel,
-  EditorialSection,
-  editorialFieldClass,
-  editorialLabelClass,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Panel,
+  Section,
+  fieldClass,
+  fieldLabelClass,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 type ContactFormData = {
@@ -77,8 +77,8 @@ const initialFormData: ContactFormData = {
   isAnonymous: false,
 };
 
-const inputCls = editorialFieldClass;
-const labelCls = editorialLabelClass;
+const inputCls = fieldClass;
+const labelCls = fieldLabelClass;
 
 function ContactPageContent() {
   const searchParams = useSearchParams();
@@ -184,7 +184,7 @@ function ContactPageContent() {
   };
 
   return (
-    <EditorialPage>
+    <Page>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -199,8 +199,8 @@ function ContactPageContent() {
         compact
       />
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="grid gap-8 md:gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16 xl:gap-20">
             <div data-gsap="reveal">
               <aside className="space-y-10 lg:sticky lg:top-28 lg:h-fit">
@@ -316,9 +316,9 @@ function ContactPageContent() {
             </div>
 
             <div data-gsap="reveal">
-              <EditorialPanel>
+              <Panel>
                 <div className="bg-[var(--app-dark)] px-7 py-7 sm:px-8 sm:py-8">
-                  <EditorialHeader
+                  <SectionHeader
                     eyebrow="Message us"
                     title="Send us a message."
                     description="We respond within 24 hours on weekdays."
@@ -507,25 +507,25 @@ function ContactPageContent() {
                     </div>
                   )}
                 </form>
-              </EditorialPanel>
+              </Panel>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection compact tone="surface">
-        <EditorialContainer>
+      <Section compact tone="surface">
+        <Container>
           <div className="flex flex-col gap-1.5 py-7 sm:flex-row sm:items-center sm:justify-between sm:py-6">
             <p className="font-ui text-label font-semibold text-[var(--app-ink)]/60">
               {SERVICE_INFO.venue.full}
             </p>
-            <EditorialLink href="/events/weekly" variant="dark">
+            <CtaLink href="/events/weekly" variant="dark">
               See service times
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }
 

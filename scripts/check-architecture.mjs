@@ -70,7 +70,7 @@ const sourceFiles = filesBelow(join(root, 'src')).filter(file =>
   /\.(?:ts|tsx)$/.test(file)
 );
 
-const editorialFeatureFiles = new Set([
+const layoutFeatureFiles = new Set([
   'src/features/Conversations.tsx',
   'src/features/events/EventsShowcase.tsx',
   'src/features/events/JoinUs.tsx',
@@ -82,7 +82,7 @@ const editorialFeatureFiles = new Set([
 ]);
 
 const publicPresentationFiles = new Set([
-  ...editorialFeatureFiles,
+  ...layoutFeatureFiles,
   'src/features/PremiumHome.tsx',
   'src/app/resources/blogs/BlogSubscribeForm.tsx',
 ]);
@@ -99,15 +99,15 @@ for (const file of sourceFiles) {
     violations.push(`${displayPath}: empty source files are not allowed`);
   }
 
-  if (editorialFeatureFiles.has(displayPath)) {
+  if (layoutFeatureFiles.has(displayPath)) {
     if (/from\s+['"]@\/shared\/layout['"]/.test(source)) {
       violations.push(
-        `${displayPath}: public-facing feature sections must compose the editorial system, not legacy layout primitives`
+        `${displayPath}: feature sections must compose @/shared/ui/layout, not the removed @/shared/layout`
       );
     }
     if (/SectionGlow|GridBackground/.test(source)) {
       violations.push(
-        `${displayPath}: public-facing feature sections must not restore retired glow/grid decoration`
+        `${displayPath}: feature sections must not restore retired glow/grid decoration`
       );
     }
   }
@@ -197,21 +197,22 @@ for (const file of sourceFiles) {
     if (/\/page\.tsx$/.test(displayPath)) {
       if (/<main\b/.test(source)) {
         violations.push(
-          `${displayPath}: route page shells must use EditorialPage instead of handwritten main elements`
+          `${displayPath}: route page shells must use the <Page> layout primitive instead of handwritten <main> elements`
         );
       }
       if (
-        /EditorialSection/.test(source) &&
-        !/EditorialPage/.test(source) &&
+        /\bSection\b/.test(source) &&
+        /@\/shared\/ui\/layout/.test(source) &&
+        !/\bPage\b/.test(source) &&
         !/MinistryPageTemplate/.test(source)
       ) {
         violations.push(
-          `${displayPath}: routes composing editorial sections must declare an EditorialPage shell`
+          `${displayPath}: routes composing layout <Section>s must declare a <Page> shell`
         );
       }
       if (/from\s+['"]@\/shared\/layout['"]/.test(source)) {
         violations.push(
-          `${displayPath}: route pages must use the editorial page system instead of the legacy shared layout primitives`
+          `${displayPath}: route pages must use @/shared/ui/layout, not the removed @/shared/layout`
         );
       }
       if (/SectionGlow|GridBackground/.test(source)) {

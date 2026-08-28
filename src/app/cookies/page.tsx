@@ -2,11 +2,7 @@ import type { Metadata } from 'next';
 
 import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
-import {
-  EditorialDocument,
-  EditorialPage,
-  type EditorialDocumentSection,
-} from '@/shared/ui/editorial';
+import { DocumentLayout, Page, type DocumentSection } from '@/shared/ui/layout';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Cookies & Privacy',
@@ -15,7 +11,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/cookies',
 });
 
-const sections: readonly EditorialDocumentSection[] = [
+const sections: readonly DocumentSection[] = [
   {
     id: 'overview',
     title: 'Overview',
@@ -78,14 +74,14 @@ const relatedPolicies = [
 
 export default function CookiesPage() {
   return (
-    <EditorialPage>
+    <Page>
       <SiteHero
         eyebrow="Legal · Cookies"
         title="Cookies & Privacy"
         subtitle="We use only the cookies this site needs—no advertising trackers, marketing pixels, or profiling."
         note="Last updated: July 2026"
       />
-      <EditorialDocument sections={sections} navigation={relatedPolicies} />
-    </EditorialPage>
+      <DocumentLayout sections={sections} navigation={relatedPolicies} />
+    </Page>
   );
 }

@@ -15,13 +15,13 @@ import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialSection,
-  EditorialSplit,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Section,
+  Split,
+} from '@/shared/ui/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 
 export const dynamic = 'force-dynamic';
@@ -70,7 +70,7 @@ export default async function AboutPage() {
     .slice(0, 2);
 
   return (
-    <EditorialPage tone="surface">
+    <Page tone="surface">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -101,8 +101,8 @@ export default async function AboutPage() {
         }
       />
 
-      <EditorialSection compact tone="canvas">
-        <EditorialContainer>
+      <Section compact tone="canvas">
+        <Container>
           <div className="grid gap-px overflow-hidden rounded-card bg-[var(--app-border)] sm:grid-cols-3">
             {serviceDetails.map(item => {
               const Icon = item.icon;
@@ -124,12 +124,12 @@ export default async function AboutPage() {
               );
             })}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialHeader
+      <Section>
+        <Container>
+          <SectionHeader
             eyebrow={content.message.label}
             title={content.message.title}
             description="Good news that establishes believers in faith and equips them to manifest the life of Christ wherever they go."
@@ -145,18 +145,18 @@ export default async function AboutPage() {
               </span>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="grid gap-px overflow-hidden rounded-card bg-[var(--app-border)] lg:grid-cols-2">
             {[content.vision, content.mission].map(item => (
               <div
                 key={item.label}
                 className="bg-[var(--app-canvas)] p-8 sm:p-12 lg:p-16"
               >
-                <EditorialHeader
+                <SectionHeader
                   eyebrow={item.label}
                   title={item.title}
                   description={item.body}
@@ -165,12 +165,12 @@ export default async function AboutPage() {
               </div>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
-          <EditorialHeader
+      <Section tone="dark">
+        <Container>
+          <SectionHeader
             eyebrow="What shapes us"
             title="Five pillars. One way of life."
             tone="dark"
@@ -189,14 +189,14 @@ export default async function AboutPage() {
               </ScrollFadeIn>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit>
+      <Section>
+        <Container>
+          <Split>
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="What it means to belong"
                 title="This is The Wisdom Church."
                 description={content.declaration}
@@ -230,29 +230,25 @@ export default async function AboutPage() {
                 );
               })}
             </div>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Pastoral leadership"
               title="Serving God’s people with the Word, prayer, and love."
               tone="dark"
               className="max-w-3xl"
             />
-            <EditorialLink
-              href="/leadership"
-              variant="outline"
-              className="shrink-0"
-            >
+            <CtaLink href="/leadership" variant="outline" className="shrink-0">
               Meet our leaders <ArrowRight className="ml-2 h-4 w-4" />
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
       {leaders.length ? (
         <div className="grid lg:grid-cols-2">
           <CanvasCard leader={leaders[0]} />
@@ -260,9 +256,9 @@ export default async function AboutPage() {
         </div>
       ) : null}
 
-      <EditorialSection tone="brand">
-        <EditorialContainer className="text-center">
-          <EditorialHeader
+      <Section tone="brand">
+        <Container className="text-center">
+          <SectionHeader
             eyebrow="There is a place for you"
             title="Come worship Jesus with us this Sunday."
             className="mx-auto max-w-4xl"
@@ -271,12 +267,12 @@ export default async function AboutPage() {
             <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-dark)] px-7 font-ui text-label font-bold uppercase tracking-widest text-white">
               Plan your visit
             </PlanVisitTrigger>
-            <EditorialLink href="/ministries" variant="outline">
+            <CtaLink href="/ministries" variant="outline">
               Explore ministries
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

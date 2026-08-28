@@ -5,11 +5,7 @@ import MinistryPageTemplate, {
 } from '@/features/ministries/MinistryPageTemplate';
 import { buildPageMetadata } from '@/lib/seo';
 import ChildrenGallery from './ChildrenGallery';
-import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, SectionHeader, Section } from '@/shared/ui/layout';
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Children's Ministry",
@@ -19,9 +15,9 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 const gallerySection = (
-  <EditorialSection tone="dark">
-    <EditorialContainer>
-      <EditorialHeader
+  <Section tone="dark">
+    <Container>
+      <SectionHeader
         eyebrow="Life in our ministry"
         title="A glimpse of what Sunday looks like"
         accent="for your child."
@@ -30,8 +26,8 @@ const gallerySection = (
       <div className="pb-14 pt-8 lg:pb-18 lg:pt-10">
         <ChildrenGallery />
       </div>
-    </EditorialContainer>
-  </EditorialSection>
+    </Container>
+  </Section>
 );
 
 const config: MinistryPageConfig = {

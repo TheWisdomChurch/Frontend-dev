@@ -14,13 +14,13 @@ import {
   getEventTimestamp as getTimestamp,
 } from '@/shared/utils/eventDate';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialSection,
-  editorialInteractiveClass,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionEmpty,
+  SectionHeader,
+  Section,
+  interactiveCardClass,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 export default function UpcomingPage() {
@@ -51,7 +51,7 @@ export default function UpcomingPage() {
   }, []);
 
   return (
-    <EditorialPage>
+    <Page>
       <SiteHero
         eyebrow="Upcoming Events"
         title="What's next at Wisdom Church."
@@ -59,10 +59,10 @@ export default function UpcomingPage() {
         compact
       />
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <ScrollFadeIn className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Coming up"
               title="Upcoming events & programs."
             />
@@ -86,7 +86,7 @@ export default function UpcomingPage() {
 
           {!loading && events.length === 0 && (
             <div>
-              <EditorialEmptyState
+              <SectionEmpty
                 title="Nothing scheduled yet."
                 description={`Check back soon. In the meantime, join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time}, and for ${SERVICE_INFO.dailyPrayer.label} ${SERVICE_INFO.dailyPrayer.daysShort} at ${SERVICE_INFO.dailyPrayer.time}.`}
                 action={
@@ -109,7 +109,7 @@ export default function UpcomingPage() {
                 return (
                   <ScrollFadeIn key={event.id} delay={i * 0.04}>
                     <article
-                      className={`group grid items-start gap-6 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:grid-cols-[120px_1fr_auto] lg:gap-10 ${editorialInteractiveClass}`}
+                      className={`group grid items-start gap-6 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:grid-cols-[120px_1fr_auto] lg:gap-10 ${interactiveCardClass}`}
                     >
                       {/* Date column */}
                       <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
@@ -159,8 +159,8 @@ export default function UpcomingPage() {
               })}
             </div>
           )}
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

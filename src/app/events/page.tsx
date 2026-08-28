@@ -27,14 +27,14 @@ import {
   isUpcomingEvent as isUpcoming,
 } from '@/shared/utils/eventDate';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialPanel,
-  EditorialSection,
-  editorialInteractiveClass,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Panel,
+  Section,
+  interactiveCardClass,
+} from '@/shared/ui/layout';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
@@ -76,7 +76,7 @@ function EventCard({ event }: { event: EventPublic }) {
 
   return (
     <article
-      className={`group flex h-full flex-col overflow-hidden rounded-card border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] ${editorialInteractiveClass}`}
+      className={`group flex h-full flex-col overflow-hidden rounded-card border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] ${interactiveCardClass}`}
     >
       {/* Image / date block */}
       <div className="relative aspect-video overflow-hidden bg-[var(--app-dark-2)]">
@@ -161,7 +161,7 @@ function EventCard({ event }: { event: EventPublic }) {
 function EmptyState() {
   return (
     <ScrollFadeIn>
-      <EditorialPanel
+      <Panel
         tone="dark"
         interactive
         className="group flex flex-col items-center gap-5 p-6 text-center hover:bg-white/[0.05] sm:p-10 lg:p-12"
@@ -177,7 +177,7 @@ function EmptyState() {
           Worship and Daily Prayer, Monday through Friday.
         </p>
         <PlanVisitTrigger className="mt-1">Plan a visit</PlanVisitTrigger>
-      </EditorialPanel>
+      </Panel>
     </ScrollFadeIn>
   );
 }
@@ -193,7 +193,7 @@ export default async function EventsPage() {
     .sort((a, b) => getTimestamp(a) - getTimestamp(b));
 
   return (
-    <EditorialPage>
+    <Page>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -215,8 +215,8 @@ export default async function EventsPage() {
       />
 
       {/* ── 1.5 Sub-nav — other ways to browse events ────────── */}
-      <EditorialSection compact tone="canvas">
-        <EditorialContainer>
+      <Section compact tone="canvas">
+        <Container>
           <nav
             aria-label="Events sections"
             className="flex flex-wrap gap-2 py-5"
@@ -262,14 +262,14 @@ export default async function EventsPage() {
               );
             })}
           </nav>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* ── 2. Weekly rhythm — canvas, always present ────────── */}
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <ScrollFadeIn>
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Weekly rhythm"
               title="We gather every week."
               accent="Come as you are."
@@ -283,7 +283,7 @@ export default async function EventsPage() {
               return (
                 <ScrollFadeIn key={svc.day} delay={i * 0.09} className="h-full">
                   <div
-                    className={`group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:p-8 ${editorialInteractiveClass}`}
+                    className={`group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:p-8 ${interactiveCardClass}`}
                   >
                     {/* Day + time */}
                     <div className="flex items-start justify-between gap-4">
@@ -330,15 +330,15 @@ export default async function EventsPage() {
               );
             })}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           {/* Header */}
           <ScrollFadeIn className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Upcoming events"
               title="Special gatherings & programs."
               tone="dark"
@@ -364,12 +364,12 @@ export default async function EventsPage() {
               ))}
             </div>
           )}
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* ── 4. CTA strip ─────────────────────────────────────── */}
-      <EditorialSection compact tone="dark" className="bg-[var(--app-dark-2)]">
-        <EditorialContainer>
+      <Section compact tone="dark" className="bg-[var(--app-dark-2)]">
+        <Container>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-ui text-heading-sm font-semibold text-white">
@@ -379,12 +379,12 @@ export default async function EventsPage() {
                 Our team is happy to help — reach out any time.
               </p>
             </div>
-            <EditorialLink href="/contact" variant="outline">
+            <CtaLink href="/contact" variant="outline">
               Contact us <Arrow />
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

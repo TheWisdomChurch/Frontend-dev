@@ -14,12 +14,7 @@ const GivingModal = dynamic(() => import('@/shared/ui/modals/GivingModal'), {
 import { handleContactCall } from '@/shared/utils/functionUtils/contactUtils';
 import apiClient from '@/lib/api';
 import type { GivingOption } from '@/lib/types';
-import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialPanel,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, SectionHeader, Panel, Section } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 import {
   staggerContainer,
@@ -83,18 +78,18 @@ export default function OnlineGiving() {
 
   return (
     <>
-      <EditorialSection tone="dark" className="bg-[var(--app-dark-2)]">
-        <EditorialContainer>
+      <Section tone="dark" className="bg-[var(--app-dark-2)]">
+        <Container>
           <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:gap-14 xl:gap-20">
             <div className="max-w-xl lg:sticky lg:top-28">
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Give with purpose"
                 title="Your generosity"
                 accent="builds the church."
                 tone="dark"
               />
 
-              <EditorialPanel
+              <Panel
                 tone="dark"
                 reveal
                 className="mt-8 border-white/12 bg-white/[0.035] p-6 sm:p-7"
@@ -110,7 +105,7 @@ export default function OnlineGiving() {
                 <cite className="mt-5 block border-t border-white/10 pt-4 font-ui text-caption not-italic font-bold uppercase tracking-[0.16em] text-white/50">
                   2 Corinthians 9:7
                 </cite>
-              </EditorialPanel>
+              </Panel>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <button
@@ -206,7 +201,7 @@ export default function OnlineGiving() {
                 ))}
               </motion.div>
             ) : (
-              <EditorialPanel
+              <Panel
                 tone="dark"
                 reveal
                 className="flex min-h-[19rem] flex-col justify-between border-white/12 bg-white/[0.025] p-6 sm:min-h-[22rem] sm:p-8"
@@ -237,7 +232,7 @@ export default function OnlineGiving() {
                 >
                   Give Online
                 </button>
-              </EditorialPanel>
+              </Panel>
             )}
           </div>
           <Link
@@ -247,8 +242,8 @@ export default function OnlineGiving() {
             Need help with giving? Contact us{' '}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {selected && (
         <GivingModal

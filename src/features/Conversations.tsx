@@ -6,11 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
-import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, SectionHeader, Section } from '@/shared/ui/layout';
 import { staggerViewport } from '@/shared/ui/motion';
 
 const slides = [
@@ -51,10 +47,10 @@ export default function Conversations() {
   }, [move, reduceMotion]);
 
   return (
-    <EditorialSection tone="canvas" className="overflow-hidden">
-      <EditorialContainer>
+    <Section tone="canvas" className="overflow-hidden">
+      <Container>
         <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16 xl:gap-20">
-          <EditorialHeader
+          <SectionHeader
             eyebrow="Conversations"
             title="Real people. Real faith."
             accent="Real stories."
@@ -137,7 +133,7 @@ export default function Conversations() {
             </div>
           </motion.div>
         </div>
-      </EditorialContainer>
-    </EditorialSection>
+      </Container>
+    </Section>
   );
 }

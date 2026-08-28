@@ -6,11 +6,11 @@ import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Section,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 import {
   staggerContainer,
@@ -155,15 +155,15 @@ export default function HomeTestimonials() {
   const q = quotes[current];
 
   return (
-    <EditorialSection tone="muted">
-      <EditorialContainer>
+    <Section tone="muted">
+      <Container>
         <div
           className="grid gap-8 md:gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-6 xl:gap-x-20"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Intro column */}
-          <EditorialHeader
+          <SectionHeader
             eyebrow="Testimonies"
             title="Real stories,"
             accent="real breakthroughs."
@@ -188,7 +188,7 @@ export default function HomeTestimonials() {
               </div>
             </div>
           ) : !q ? (
-            <EditorialEmptyState
+            <SectionEmpty
               title="Testimonies coming soon."
               description="Be the first to share your story."
               className="lg:col-start-2 lg:row-start-1 lg:row-span-2"
@@ -343,7 +343,7 @@ export default function HomeTestimonials() {
             </motion.div>
           ) : null}
         </div>
-      </EditorialContainer>
-    </EditorialSection>
+      </Container>
+    </Section>
   );
 }

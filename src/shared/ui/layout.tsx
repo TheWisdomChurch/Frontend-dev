@@ -13,14 +13,16 @@ import { Container } from '@/shared/ui/Container';
 import { buttonClass } from '@/shared/ui/button';
 
 /* ============================================================================
-   EDITORIAL SYSTEM — the page/section composition primitives, their tone and
+   LAYOUT SYSTEM — the page/section composition primitives, their tone and
    style recipes, and the one JS-facing colour map. One module.
 ============================================================================ */
 
-export type EditorialTone = 'surface' | 'canvas' | 'muted' | 'dark' | 'brand';
-export type EditorialWidth = 'narrow' | 'content' | 'wide';
+export { Container } from '@/shared/ui/Container';
+export type { ContainerWidth } from '@/shared/ui/Container';
 
-export const editorialToneClass: Record<EditorialTone, string> = {
+export type SectionTone = 'surface' | 'canvas' | 'muted' | 'dark' | 'brand';
+
+export const sectionToneClass: Record<SectionTone, string> = {
   surface: 'bg-[var(--app-surface)] text-[var(--app-ink)]',
   canvas: 'bg-[var(--app-canvas)] text-[var(--app-ink)]',
   muted: 'bg-[var(--app-canvas-2)] text-[var(--app-ink)]',
@@ -28,29 +30,29 @@ export const editorialToneClass: Record<EditorialTone, string> = {
   brand: 'bg-[var(--app-primary)] text-[var(--app-ink)]',
 };
 
-export const editorialFieldClass =
+export const fieldClass =
   'w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-subtle)] outline-none transition focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[var(--app-primary)]/15';
 
-export const editorialLabelClass =
+export const fieldLabelClass =
   'block font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-subtle)]';
 
-export const editorialChoiceClass =
+export const choiceClass =
   'flex min-h-11 items-center gap-3 rounded-input border border-[var(--app-border)] bg-[var(--app-canvas)] px-3 py-2 font-ui text-body-sm text-[var(--app-muted)] transition hover:border-[var(--app-primary)] hover:bg-[var(--app-surface)]';
 
-export const editorialHelpClass =
+export const fieldHelpClass =
   'font-ui text-caption leading-relaxed text-[var(--app-subtle)]';
 
-export const editorialErrorClass =
+export const fieldErrorClass =
   'font-ui text-body-sm font-semibold text-[var(--status-error)]';
 
-export const editorialInteractiveClass =
+export const interactiveCardClass =
   'group/card transform-gpu transition-[transform,border-color,box-shadow,background-color] duration-500 ease-out motion-safe:hover:-translate-y-1.5 hover:border-[var(--app-primary)]/45 hover:shadow-2xl hover:shadow-black/10 focus-within:border-[var(--app-primary)]/55 focus-within:shadow-xl motion-reduce:transform-none motion-reduce:transition-none';
 
 /**
  * JS-facing colour map for third-party APIs that cannot read CSS custom
  * properties (e.g. Google Maps markers). App UI uses the --app-* variables.
  */
-export const editorialColorToken = {
+export const jsColorToken = {
   brand: '#c9961a',
   white: '#ffffff',
   success: '#22c55e',
@@ -59,23 +61,23 @@ export const editorialColorToken = {
   info: '#3b82f6',
 } as const;
 
-export function EditorialPage({
+export function Page({
   children,
   tone = 'canvas',
   className,
 }: {
   children: ReactNode;
-  tone?: EditorialTone;
+  tone?: SectionTone;
   className?: string;
 }) {
   return (
-    <main className={cn('min-h-screen', editorialToneClass[tone], className)}>
+    <main className={cn('min-h-screen', sectionToneClass[tone], className)}>
       {children}
     </main>
   );
 }
 
-export function EditorialNotice({
+export function Notice({
   children,
   status = 'neutral',
   className,
@@ -104,14 +106,14 @@ export function EditorialNotice({
   );
 }
 
-export const EditorialSection = forwardRef<
+export const Section = forwardRef<
   HTMLElement,
   ComponentPropsWithoutRef<'section'> & {
-    tone?: EditorialTone;
+    tone?: SectionTone;
     compact?: boolean;
     flush?: boolean;
   }
->(function EditorialSection(
+>(function Section(
   {
     tone = 'surface',
     compact = false,
@@ -128,7 +130,7 @@ export const EditorialSection = forwardRef<
       className={cn(
         'relative overflow-hidden border-b border-current/10',
         !flush && (compact ? 'py-section-xs' : 'py-section-sm'),
-        editorialToneClass[tone],
+        sectionToneClass[tone],
         className
       )}
       {...props}
@@ -138,23 +140,7 @@ export const EditorialSection = forwardRef<
   );
 });
 
-export function EditorialContainer({
-  children,
-  className,
-  width = 'wide',
-}: {
-  children: ReactNode;
-  className?: string;
-  width?: EditorialWidth;
-}) {
-  return (
-    <Container width={width} className={className}>
-      {children}
-    </Container>
-  );
-}
-
-export function EditorialStack({
+export function Stack({
   children,
   gap = 'md',
   className,
@@ -179,7 +165,7 @@ export function EditorialStack({
   );
 }
 
-export function EditorialActions({
+export function Actions({
   children,
   align = 'start',
   className,
@@ -202,7 +188,7 @@ export function EditorialActions({
   );
 }
 
-export type EditorialDocumentSection = {
+export type DocumentSection = {
   id: string;
   title: string;
   body?: string;
@@ -210,25 +196,25 @@ export type EditorialDocumentSection = {
   links?: readonly { href: string; label: string }[];
 };
 
-export function EditorialDocument({
+export function DocumentLayout({
   sections,
   navigation,
   navigationLabel = 'Sections',
 }: {
-  sections: readonly EditorialDocumentSection[];
+  sections: readonly DocumentSection[];
   navigation?: readonly { href: string; label: string }[];
   navigationLabel?: string;
 }) {
   return (
-    <EditorialSection tone="canvas">
-      <EditorialContainer width="content">
+    <Section tone="canvas">
+      <Container width="content">
         <div className="grid gap-8 md:gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
           <aside className="hidden lg:block">
             <nav
               className="sticky top-24"
               aria-label={`${navigationLabel} table of contents`}
             >
-              <p className={editorialLabelClass}>{navigationLabel}</p>
+              <p className={fieldLabelClass}>{navigationLabel}</p>
               <ul className="mt-4 space-y-1.5">
                 {sections.map(section => (
                   <li key={section.id}>
@@ -292,28 +278,24 @@ export function EditorialDocument({
                   </ul>
                 ) : null}
                 {section.links?.length ? (
-                  <EditorialActions className="mt-5">
+                  <Actions className="mt-5">
                     {section.links.map(item => (
-                      <EditorialLink
-                        key={item.href}
-                        href={item.href}
-                        variant="text"
-                      >
+                      <CtaLink key={item.href} href={item.href} variant="text">
                         {item.label}
-                      </EditorialLink>
+                      </CtaLink>
                     ))}
-                  </EditorialActions>
+                  </Actions>
                 ) : null}
               </section>
             ))}
           </article>
         </div>
-      </EditorialContainer>
-    </EditorialSection>
+      </Container>
+    </Section>
   );
 }
 
-export function EditorialPanel({
+export function Panel({
   children,
   tone = 'light',
   interactive = false,
@@ -332,7 +314,7 @@ export function EditorialPanel({
         tone === 'dark'
           ? 'border-white/12 bg-white/[0.035] text-white'
           : 'border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-ink)]',
-        interactive && editorialInteractiveClass,
+        interactive && interactiveCardClass,
         className
       )}
       data-gsap={reveal ? 'reveal' : undefined}
@@ -343,7 +325,7 @@ export function EditorialPanel({
   );
 }
 
-export function EditorialSplit({
+export function Split({
   children,
   reverse = false,
   className,
@@ -366,7 +348,7 @@ export function EditorialSplit({
   );
 }
 
-export function EditorialRail({
+export function CardRail({
   children,
   columns = 3,
   className,
@@ -397,7 +379,7 @@ export function EditorialRail({
   );
 }
 
-export function EditorialHeader({
+export function SectionHeader({
   eyebrow,
   title,
   accent,
@@ -460,7 +442,7 @@ export function EditorialHeader({
   );
 }
 
-export function EditorialImage({
+export function Figure({
   alt,
   className,
   imageClassName,
@@ -492,7 +474,7 @@ export function EditorialImage({
   );
 }
 
-export function EditorialEmptyState({
+export function SectionEmpty({
   title,
   description,
   action,
@@ -543,7 +525,7 @@ export function EditorialEmptyState({
   );
 }
 
-export function EditorialLink({
+export function CtaLink({
   variant = 'primary',
   className,
   children,

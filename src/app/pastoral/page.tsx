@@ -5,12 +5,12 @@ import PastoralCareForm from '@/shared/ui/forms/eventsForm/PastoralCare';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Section,
+} from '@/shared/ui/layout';
 
 // Metadata for this route lives in pastoral/layout.tsx — a single source
 // of truth for title/description/canonical/OG/twitter instead of two
@@ -18,7 +18,7 @@ import {
 
 export default function PastoralPage() {
   return (
-    <EditorialPage>
+    <Page>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -37,10 +37,10 @@ export default function PastoralPage() {
         <PastoralCareForm />
       </Suspense>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="grid gap-10 lg:grid-cols-2 lg:items-end lg:gap-20">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Handled with care"
               title="Everything you share is treated with discretion."
             />
@@ -53,13 +53,13 @@ export default function PastoralPage() {
               </p>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Prefer to reach us directly?"
               title="You do not have to carry this"
               accent="alone."
@@ -67,14 +67,14 @@ export default function PastoralPage() {
               tone="dark"
             />
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <EditorialLink href="/contact">Contact us</EditorialLink>
-              <EditorialLink href="/events/weekly" variant="outline">
+              <CtaLink href="/contact">Contact us</CtaLink>
+              <CtaLink href="/events/weekly" variant="outline">
                 View service times
-              </EditorialLink>
+              </CtaLink>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

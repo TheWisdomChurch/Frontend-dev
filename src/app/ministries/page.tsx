@@ -8,12 +8,12 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialRail,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CardRail,
+  Section,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = buildPageMetadata({
@@ -88,7 +88,7 @@ const pathway = [
 
 export default function MinistriesPage() {
   return (
-    <EditorialPage className="overflow-hidden">
+    <Page className="overflow-hidden">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -119,10 +119,10 @@ export default function MinistriesPage() {
         }
       />
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end lg:gap-16">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="More than a Sunday crowd"
               title="We grow best when we walk with others."
             />
@@ -134,17 +134,17 @@ export default function MinistriesPage() {
               </p>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection
+      <Section
         id="find-a-ministry"
         tone="canvas"
         className="scroll-mt-24 bg-[var(--app-canvas-2)]"
       >
-        <EditorialContainer>
+        <Container>
           <div className="mb-10 flex flex-col gap-4 sm:mb-12 lg:flex-row lg:items-end lg:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Find your community"
               title="Explore our ministries"
             />
@@ -154,7 +154,7 @@ export default function MinistriesPage() {
             </p>
           </div>
 
-          <EditorialRail columns={3} className="gap-5">
+          <CardRail columns={3} className="gap-5">
             {ministries.map(ministry => {
               return (
                 <div key={ministry.title}>
@@ -197,13 +197,13 @@ export default function MinistriesPage() {
                 </div>
               );
             })}
-          </EditorialRail>
-        </EditorialContainer>
-      </EditorialSection>
+          </CardRail>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialHeader
+      <Section>
+        <Container>
+          <SectionHeader
             eyebrow="Your next step"
             title="A simple path from visiting to belonging."
           />
@@ -221,11 +221,11 @@ export default function MinistriesPage() {
               </div>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -252,8 +252,8 @@ export default function MinistriesPage() {
               </Link>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

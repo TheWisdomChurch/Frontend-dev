@@ -23,12 +23,12 @@ import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntit
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 import YouTubePlayer from './YoutubePlayer';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialPanel,
-  EditorialSection,
-  editorialFieldClass,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  Panel,
+  Section,
+  fieldClass,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 /** Sermon titles arrive as uploaded to YouTube — entity-encoded and often
@@ -304,13 +304,8 @@ export default function SermonLibrary({
         compact
       />
       {selected && (
-        <EditorialSection
-          ref={playerRef}
-          tone="dark"
-          compact
-          className="scroll-mt-20"
-        >
-          <EditorialContainer>
+        <Section ref={playerRef} tone="dark" compact className="scroll-mt-20">
+          <Container>
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(290px,.7fr)] lg:items-center">
               <YouTubePlayer
                 key={selected.id}
@@ -355,14 +350,14 @@ export default function SermonLibrary({
                 </div>
               </div>
             </div>
-          </EditorialContainer>
-        </EditorialSection>
+          </Container>
+        </Section>
       )}
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           {unavailable && (
-            <EditorialPanel tone="dark" role="status">
+            <Panel tone="dark" role="status">
               <div className="grid lg:min-h-[620px] lg:grid-cols-[1.05fr_.95fr]">
                 <div className="relative min-h-[330px] overflow-hidden sm:min-h-[430px] lg:min-h-full">
                   <Media
@@ -464,7 +459,7 @@ export default function SermonLibrary({
                   </div>
                 </div>
               </div>
-            </EditorialPanel>
+            </Panel>
           )}
           {!unavailable && source === 'legacy' && (
             <p className="mb-6 font-ui text-xs text-black/45">
@@ -525,7 +520,7 @@ export default function SermonLibrary({
                   {results.length} available
                 </p>
               </div>
-              <EditorialPanel className="mt-7 p-3">
+              <Panel className="mt-7 p-3">
                 <div className="flex gap-2">
                   <label className="relative min-w-0 flex-1">
                     <span className="sr-only">Search the sermon library</span>
@@ -539,7 +534,7 @@ export default function SermonLibrary({
                         setVisible(12);
                       }}
                       placeholder="Search a topic, title or speaker"
-                      className={`${editorialFieldClass} h-12 pl-10 pr-10`}
+                      className={`${fieldClass} h-12 pl-10 pr-10`}
                     />
                     {query && (
                       <button
@@ -573,7 +568,7 @@ export default function SermonLibrary({
                       aria-label="Filter by series"
                       value={series}
                       onChange={event => setSeries(event.target.value)}
-                      className={`${editorialFieldClass} h-11`}
+                      className={`${fieldClass} h-11`}
                     >
                       <option value="all">Every series</option>
                       {seriesOptions.map(item => (
@@ -586,7 +581,7 @@ export default function SermonLibrary({
                       aria-label="Filter by speaker"
                       value={speaker}
                       onChange={event => setSpeaker(event.target.value)}
-                      className={`${editorialFieldClass} h-11`}
+                      className={`${fieldClass} h-11`}
                     >
                       <option value="all">Every speaker</option>
                       {speakerOptions.map(item => (
@@ -599,7 +594,7 @@ export default function SermonLibrary({
                       aria-label="Sort library"
                       value={sort}
                       onChange={event => setSort(event.target.value as Sort)}
-                      className={`${editorialFieldClass} h-11`}
+                      className={`${fieldClass} h-11`}
                     >
                       <option value="recommended">Recommended</option>
                       <option value="newest">Newest</option>
@@ -607,7 +602,7 @@ export default function SermonLibrary({
                     </select>
                   </div>
                 )}
-              </EditorialPanel>
+              </Panel>
               {activeFilters && (
                 <div className="mt-4 flex items-center justify-between">
                   <p className="font-ui text-xs text-black/45">
@@ -623,7 +618,7 @@ export default function SermonLibrary({
                 </div>
               )}
               {!results.length ? (
-                <EditorialEmptyState
+                <SectionEmpty
                   className="mt-8"
                   title="Let’s find another path"
                   description="No message matches all those choices. Clear the filters to see the full library."
@@ -662,7 +657,7 @@ export default function SermonLibrary({
             </section>
           )}
           {!unavailable && (
-            <EditorialPanel
+            <Panel
               tone="dark"
               className="mt-16 grid gap-4 p-7 sm:grid-cols-[1fr_auto] sm:items-center sm:p-10"
             >
@@ -683,10 +678,10 @@ export default function SermonLibrary({
               >
                 Subscribe <ArrowRight className="h-4 w-4" />
               </a>
-            </EditorialPanel>
+            </Panel>
           )}
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
     </>
   );
 }

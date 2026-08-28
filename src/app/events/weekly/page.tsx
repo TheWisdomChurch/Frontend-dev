@@ -8,12 +8,12 @@ import Arrow from '@/shared/ui/icons/Arrow';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import WeeklyServiceCard from '@/features/events/WeeklyServiceCard';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Section,
+} from '@/shared/ui/layout';
 
 // Metadata fields a route doesn't set are inherited from the parent layout,
 // not reset — without its own `alternates`, this page was silently
@@ -78,7 +78,7 @@ const RECURRING_SCHEMAS = [
 
 export default function WeeklyPage() {
   return (
-    <EditorialPage>
+    <Page>
       {RECURRING_SCHEMAS.map((schema, i) => (
         <JsonLd key={i} data={schema} />
       ))}
@@ -91,8 +91,8 @@ export default function WeeklyPage() {
       />
 
       {/* Service panels */}
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="grid gap-4 md:grid-cols-2">
             {services.map((service, index) => (
               <WeeklyServiceCard
@@ -104,14 +104,14 @@ export default function WeeklyPage() {
               />
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       {/* CTA dark */}
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="flex flex-col items-center gap-7 text-center">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="First time?"
               title="Walk in. You belong here."
               description="No pressure, no expectations—just come and experience the community. Our welcome team will be right there when you arrive."
@@ -124,13 +124,13 @@ export default function WeeklyPage() {
               >
                 Let us know you're coming <Arrow />
               </PlanVisitTrigger>
-              <EditorialLink href="/events" variant="outline">
+              <CtaLink href="/events" variant="outline">
                 See all events
-              </EditorialLink>
+              </CtaLink>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

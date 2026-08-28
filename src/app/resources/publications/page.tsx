@@ -3,12 +3,12 @@ import { ArrowRight, Download, MessageCircle } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Section,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = {
@@ -43,17 +43,17 @@ const available = [
 
 export default function PublicationPage() {
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
         eyebrow="Publications"
         title="Resources to help you grow between services."
         subtitle="Sermon notes, study guides, and devotional materials from The Wisdom Church."
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="In development"
               title="A digital resource library is on the way."
               description="We are building a proper resource section where you will be able to download sermon notes, study guides, and devotional materials. Until then, reach out directly and we will get you what you need."
@@ -71,10 +71,10 @@ export default function PublicationPage() {
                 Request via WhatsApp
               </a>
 
-              <EditorialLink href="/contact" variant="outline">
+              <CtaLink href="/contact" variant="outline">
                 Contact us
                 <ArrowRight className="h-3.5 w-3.5" />
-              </EditorialLink>
+              </CtaLink>
             </div>
           </div>
 
@@ -114,8 +114,8 @@ export default function PublicationPage() {
               ))}
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

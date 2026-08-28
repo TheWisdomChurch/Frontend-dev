@@ -26,15 +26,15 @@ import { buildBreadcrumbSchema } from '@/lib/seo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialPanel,
-  EditorialPage,
-  EditorialRail,
-  EditorialSection,
-  editorialFieldClass,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Panel,
+  Page,
+  CardRail,
+  Section,
+  fieldClass,
+} from '@/shared/ui/layout';
 
 type Category =
   'all' | 'media' | 'live' | 'events' | 'store' | 'care' | 'books';
@@ -150,7 +150,7 @@ export default function ResourcesPage() {
   };
 
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -166,11 +166,11 @@ export default function ResourcesPage() {
         compact
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer className="space-y-10">
+      <Section tone="dark">
+        <Container className="space-y-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Resources & growth"
                 title="Explore every ministry resource from one clean hub."
                 description="Find sermons, live services, events, publications, store links, and care pathways without confusion."
@@ -183,7 +183,7 @@ export default function ResourcesPage() {
             </div>
           </div>
 
-          <EditorialRail columns={3} itemWidth="compact" className="gap-4">
+          <CardRail columns={3} itemWidth="compact" className="gap-4">
             {quickActions.map(item => {
               const Icon = item.icon;
 
@@ -215,15 +215,15 @@ export default function ResourcesPage() {
                 </Link>
               );
             })}
-          </EditorialRail>
-        </EditorialContainer>
-      </EditorialSection>
+          </CardRail>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="grid gap-6 lg:grid-cols-[minmax(16rem,19rem)_minmax(0,1fr)]">
             <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-              <EditorialPanel className="p-5">
+              <Panel className="p-5">
                 <H2 className="text-xl font-semibold leading-tight text-[var(--app-ink)]">
                   Resource library
                 </H2>
@@ -253,9 +253,9 @@ export default function ResourcesPage() {
                     );
                   })}
                 </div>
-              </EditorialPanel>
+              </Panel>
 
-              <EditorialPanel className="p-5">
+              <Panel className="p-5">
                 <label className="relative block">
                   <span className="sr-only">Search resources</span>
                   <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
@@ -263,7 +263,7 @@ export default function ResourcesPage() {
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     placeholder="Search resources..."
-                    className={`${editorialFieldClass} h-12 pl-11`}
+                    className={`${fieldClass} h-12 pl-11`}
                   />
                 </label>
 
@@ -271,7 +271,7 @@ export default function ResourcesPage() {
                   Showing {filteredResources.length} result
                   {filteredResources.length === 1 ? '' : 's'}
                 </Caption>
-              </EditorialPanel>
+              </Panel>
             </aside>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -337,7 +337,7 @@ export default function ResourcesPage() {
               })}
 
               {filteredResources.length === 0 && (
-                <EditorialEmptyState
+                <SectionEmpty
                   className="sm:col-span-2"
                   title="No resources found"
                   description="Try another category or clear your search term."
@@ -345,8 +345,8 @@ export default function ResourcesPage() {
               )}
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       <BaseModal
         isOpen={showLiveModal}
@@ -407,6 +407,6 @@ export default function ResourcesPage() {
           </Caption>
         </div>
       </BaseModal>
-    </EditorialPage>
+    </Page>
   );
 }

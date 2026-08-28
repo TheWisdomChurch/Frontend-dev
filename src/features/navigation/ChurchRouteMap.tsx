@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 
 import type { Coordinates } from '@/domain/navigation/directions';
-import { editorialColorToken } from '@/shared/ui/editorial';
+import { jsColorToken } from '@/shared/ui/layout';
 
 let configuredKey: string | undefined;
 
@@ -65,7 +65,7 @@ export default function ChurchRouteMap({
           new google.maps.Polyline({
             map,
             path,
-            strokeColor: editorialColorToken.brand,
+            strokeColor: jsColorToken.brand,
             strokeOpacity: 1,
             strokeWeight: 6,
           })
@@ -78,7 +78,7 @@ export default function ChurchRouteMap({
             title: 'Your location',
             label: {
               text: 'A',
-              color: editorialColorToken.white,
+              color: jsColorToken.white,
               fontWeight: '700',
             },
           })
@@ -90,7 +90,7 @@ export default function ChurchRouteMap({
             title: 'The Wisdom Church',
             label: {
               text: 'W',
-              color: editorialColorToken.white,
+              color: jsColorToken.white,
               fontWeight: '700',
             },
           })

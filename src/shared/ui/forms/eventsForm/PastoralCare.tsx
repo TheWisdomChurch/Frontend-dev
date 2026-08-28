@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { BaseModal } from '@/shared/ui/modals/Modal';
-import { EditorialContainer, EditorialSection } from '@/shared/ui/editorial';
+import { Container, Section } from '@/shared/ui/layout';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import {
@@ -402,11 +402,8 @@ const PastoralCareForm = () => {
   const successCopy = SUCCESS_COPY[intent];
 
   return (
-    <EditorialSection
-      tone="dark"
-      className="overflow-hidden border-b border-white/8"
-    >
-      <EditorialContainer>
+    <Section tone="dark" className="overflow-hidden border-b border-white/8">
+      <Container>
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
@@ -847,7 +844,7 @@ const PastoralCareForm = () => {
             </form>
           )}
         </div>
-      </EditorialContainer>
+      </Container>
 
       <BaseModal
         isOpen={showSuccess}
@@ -867,7 +864,7 @@ const PastoralCareForm = () => {
           </p>
         </div>
       </BaseModal>
-    </EditorialSection>
+    </Section>
   );
 };
 

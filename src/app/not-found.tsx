@@ -2,11 +2,7 @@
 import { Compass, Home } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
-import {
-  EditorialContainer,
-  EditorialPanel,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, Panel, Section } from '@/shared/ui/layout';
 
 export default function NotFound() {
   return (
@@ -19,10 +15,10 @@ export default function NotFound() {
         compact
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="grid gap-4 md:grid-cols-2">
-            <EditorialPanel
+            <Panel
               tone="dark"
               className="p-6 transition hover:border-[var(--app-primary)]/40"
             >
@@ -36,9 +32,9 @@ export default function NotFound() {
                   section you need.
                 </p>
               </Link>
-            </EditorialPanel>
+            </Panel>
 
-            <EditorialPanel
+            <Panel
               tone="dark"
               className="p-6 transition hover:border-[var(--app-primary)]/40"
             >
@@ -52,10 +48,10 @@ export default function NotFound() {
                   need the right route quickly.
                 </p>
               </Link>
-            </EditorialPanel>
+            </Panel>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
     </div>
   );
 }
