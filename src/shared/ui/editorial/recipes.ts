@@ -10,12 +10,6 @@ export const editorialToneClass: Record<EditorialTone, string> = {
   brand: 'bg-[var(--app-primary)] text-[var(--app-ink)]',
 };
 
-export const editorialWidthClass: Record<EditorialWidth, string> = {
-  narrow: 'max-w-3xl',
-  content: 'max-w-5xl',
-  wide: 'max-w-[var(--content-wide)]',
-};
-
 export const editorialActionClass = {
   primary:
     'inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)] transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)]',

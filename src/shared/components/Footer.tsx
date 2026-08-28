@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, Loader2, MapPin, Mail, Phone } from 'lucide-react';
 
 import { WisdomeHouseLogo } from '@/shared/assets';
-import { Container } from '@/shared/layout';
+import { Container } from '@/shared/ui/Container';
 import { apiClient } from '@/lib/api';
 import { cn } from '@/lib/cn';
 
@@ -143,7 +143,7 @@ export default function Footer() {
         }}
       />
 
-      <Container size="xl" className="py-section-md">
+      <Container className="py-section-md">
         {/* Brand + link columns share one grid so column count always
             divides evenly (1 → 3 → 4), instead of a leftover half-empty
             column at tablet widths. */}

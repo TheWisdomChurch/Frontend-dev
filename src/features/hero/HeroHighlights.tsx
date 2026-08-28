@@ -17,7 +17,7 @@ import {
 
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
-import { Container } from '@/shared/layout';
+import { Container } from '@/shared/ui/Container';
 import { Button } from '@/shared/utils/buttons';
 import { Caption } from '@/shared/text';
 import { apiClient } from '@/lib/api';
@@ -329,7 +329,7 @@ export default function HeroHighlights({
       {/* ── Editorial belief strip ────────────────────────────── */}
       {!modalOnly ? (
         <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-          <Container size="xl">
+          <Container>
             <motion.div
               variants={staggerContainer}
               initial="hidden"

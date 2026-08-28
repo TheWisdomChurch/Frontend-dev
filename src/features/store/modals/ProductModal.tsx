@@ -18,7 +18,7 @@ import { useAppDispatch } from '@/shared/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
 import { Button } from '@/shared/utils/buttons';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
-import { FlexboxLayout } from '@/shared/layout';
+import { Flex } from '@/shared/ui/Flex';
 import { cn } from '@/lib/cn';
 import { BaseModal } from '@/shared/ui/modals/Base';
 import { Media } from '@/shared/ui/Media';
@@ -356,7 +356,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
             </div>
           )}
 
-          <FlexboxLayout justify="between" align="center" className="gap-3">
+          <Flex justify="between" align="center" className="gap-3">
             <Caption className="text-[var(--color-text-secondary)]">
               Quantity
             </Caption>
@@ -398,7 +398,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-          </FlexboxLayout>
+          </Flex>
 
           <Button
             variant={justAdded ? 'success' : 'primary'}

@@ -6,7 +6,7 @@ import { useAppSelector, useAppDispatch } from '@/shared/utils/hooks/redux';
 import { clearCart } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/utils/buttons';
-import { FlexboxLayout } from '@/shared/layout';
+import { Flex } from '@/shared/ui/Flex';
 import { H3, H4, BaseText, SmallText, Caption } from '@/shared/text';
 import { storeClient } from '@/lib/api/storeClient';
 import {
@@ -322,7 +322,7 @@ const CheckoutForm = () => {
     <div className="max-w-4xl mx-auto">
       {/* Order ID Display */}
       <div className="rounded-2xl p-4 mb-6 shadow-lg border bg-white/[0.04] border-white/[0.14]">
-        <FlexboxLayout justify="between" align="center">
+        <Flex justify="between" align="center">
           <div>
             <Caption className="text-sm mb-1 text-white/60">
               Order Reference
@@ -342,7 +342,7 @@ const CheckoutForm = () => {
               #ORDER-REF
             </BaseText>
           </div>
-        </FlexboxLayout>
+        </Flex>
       </div>
 
       {showOnlinePaymentModal && (
@@ -476,7 +476,7 @@ const CheckoutForm = () => {
                       Coming soon
                     </span>
                   )}
-                  <FlexboxLayout align="center" gap="sm" className="mb-2">
+                  <Flex align="center" gap="sm" className="mb-2">
                     <div
                       className="w-10 h-10 rounded-full flex items-center justify-center"
                       // eslint-disable-next-line no-restricted-syntax
@@ -491,7 +491,7 @@ const CheckoutForm = () => {
                     <SmallText weight="bold" className="text-base">
                       {method.title}
                     </SmallText>
-                  </FlexboxLayout>
+                  </Flex>
                   <Caption className="text-sm mb-2">
                     {method.description}
                   </Caption>
@@ -547,7 +547,7 @@ const CheckoutForm = () => {
                   </div>
 
                   <div className="p-4 rounded-xl mt-2 bg-yellow-500/[0.06] border border-yellow-500/25">
-                    <FlexboxLayout align="center" gap="sm" className="mb-2">
+                    <Flex align="center" gap="sm" className="mb-2">
                       <AlertCircle className="w-4 h-4 text-yellow-500" />
                       <Caption
                         weight="semibold"
@@ -555,7 +555,7 @@ const CheckoutForm = () => {
                       >
                         Important Instructions
                       </Caption>
-                    </FlexboxLayout>
+                    </Flex>
                     <ul className="space-y-2 text-sm text-white/60">
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-3 h-3 mt-0.5 flex-shrink-0 text-green-500" />
@@ -717,36 +717,36 @@ const CheckoutForm = () => {
                 Pay on Delivery Details
               </H4>
               <div className="space-y-3">
-                <FlexboxLayout align="center" gap="sm">
+                <Flex align="center" gap="sm">
                   <CheckCircle className="w-5 h-5 text-green-500" />
                   <Caption>
                     You can pay with <strong>cash</strong> or{' '}
                     <strong>card</strong> when your order arrives
                   </Caption>
-                </FlexboxLayout>
-                <FlexboxLayout align="center" gap="sm">
+                </Flex>
+                <Flex align="center" gap="sm">
                   <CheckCircle className="w-5 h-5 text-green-500" />
                   <Caption>
                     Our delivery agent will bring a POS machine for card
                     payments
                   </Caption>
-                </FlexboxLayout>
-                <FlexboxLayout align="center" gap="sm">
+                </Flex>
+                <Flex align="center" gap="sm">
                   <CheckCircle className="w-5 h-5 text-green-500" />
                   <Caption>
                     Delivery within 3-5 business days in Lagos, 7-10 days
                     elsewhere
                   </Caption>
-                </FlexboxLayout>
+                </Flex>
 
                 <div className="mt-4 rounded-xl bg-yellow-900/20 p-4">
-                  <FlexboxLayout align="center" gap="sm">
+                  <Flex align="center" gap="sm">
                     <Banknote className="w-4 h-4 text-yellow-500" />
                     <Caption weight="semibold" className="text-yellow-500">
                       Delivery Fee: NGN {deliveryFee.toLocaleString()} added to
                       your total
                     </Caption>
-                  </FlexboxLayout>
+                  </Flex>
                 </div>
               </div>
             </div>
@@ -841,7 +841,7 @@ const CheckoutForm = () => {
             </div>
 
             {items.map(item => (
-              <FlexboxLayout key={item.id} justify="between" align="center">
+              <Flex key={item.id} justify="between" align="center">
                 <div className="flex-1">
                   <BaseText weight="semibold" className="text-white">
                     {item.name}
@@ -858,27 +858,27 @@ const CheckoutForm = () => {
                     item.quantity
                   ).toLocaleString()}
                 </BaseText>
-              </FlexboxLayout>
+              </Flex>
             ))}
 
             <div className="space-y-3 border-t border-white/[0.14] pt-4">
-              <FlexboxLayout justify="between">
+              <Flex justify="between">
                 <Caption className="text-white/60">Subtotal</Caption>
                 <BaseText weight="semibold">
                   NGN {total.toLocaleString()}
                 </BaseText>
-              </FlexboxLayout>
+              </Flex>
 
               {formData.paymentMethod === 'delivery' && (
-                <FlexboxLayout justify="between">
+                <Flex justify="between">
                   <Caption className="text-white/60">Delivery Fee</Caption>
                   <BaseText weight="semibold">
                     NGN {deliveryFee.toLocaleString()}
                   </BaseText>
-                </FlexboxLayout>
+                </Flex>
               )}
 
-              <FlexboxLayout
+              <Flex
                 justify="between"
                 className="pt-3 border-t border-white/[0.14]"
               >
@@ -898,19 +898,19 @@ const CheckoutForm = () => {
                     </Caption>
                   )}
                 </div>
-              </FlexboxLayout>
+              </Flex>
             </div>
           </div>
         </div>
 
         {formErrors.submit && (
           <div className="rounded-card border border-[var(--status-error)]/40 bg-[var(--status-error)]/10 p-4">
-            <FlexboxLayout align="center" gap="sm">
+            <Flex align="center" gap="sm">
               <AlertCircle className="h-5 w-5 text-[var(--status-error)]" />
               <Caption className="text-[var(--status-error)]">
                 {formErrors.submit}
               </Caption>
-            </FlexboxLayout>
+            </Flex>
           </div>
         )}
 
@@ -924,10 +924,10 @@ const CheckoutForm = () => {
           className="w-full transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           {isSubmitting ? (
-            <FlexboxLayout align="center" gap="sm">
+            <Flex align="center" gap="sm">
               <Loader2 className="w-5 h-5 animate-spin" />
               Confirming Your Order...
-            </FlexboxLayout>
+            </Flex>
           ) : (
             `Confirm Order - NGN ${grandTotal.toLocaleString()}`
           )}

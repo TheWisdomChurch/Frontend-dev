@@ -9,11 +9,6 @@
 export * from './ui';
 
 // ============================================
-// Layout Components (Page Structure)
-// ============================================
-export * from './layout';
-
-// ============================================
 // Provider Components (Context & Setup)
 // ============================================
 export * from './providers';

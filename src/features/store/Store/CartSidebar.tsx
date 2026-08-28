@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/utils/buttons';
 import { BaseText, LightText } from '@/shared/text';
-import { FlexboxLayout } from '@/shared/layout';
+import { Flex } from '@/shared/ui/Flex';
 
 const CartSidebar = () => {
   const router = useRouter();
@@ -74,7 +74,7 @@ const CartSidebar = () => {
       >
         {/* Header */}
         <div className="border-b border-white/[0.12] p-6">
-          <FlexboxLayout justify="between" align="center">
+          <Flex justify="between" align="center">
             <BaseText
               fontFamily="bricolage"
               weight="bold"
@@ -92,13 +92,13 @@ const CartSidebar = () => {
             >
               <X className="h-5 w-5" />
             </Button>
-          </FlexboxLayout>
+          </Flex>
         </div>
 
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-6">
           {items.length === 0 ? (
-            <FlexboxLayout
+            <Flex
               direction="column"
               justify="center"
               align="center"
@@ -112,7 +112,7 @@ const CartSidebar = () => {
               <LightText className="text-white/60">
                 Add some items to get started
               </LightText>
-            </FlexboxLayout>
+            </Flex>
           ) : (
             <div className="space-y-4">
               {items.map(item => (
@@ -120,7 +120,7 @@ const CartSidebar = () => {
                   key={item.id}
                   className="space-y-3 rounded-2xl bg-white/[0.04] p-4"
                 >
-                  <FlexboxLayout justify="between" align="start">
+                  <Flex justify="between" align="start">
                     <div className="flex-1">
                       <BaseText
                         weight="semibold"
@@ -149,10 +149,10 @@ const CartSidebar = () => {
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                  </FlexboxLayout>
+                  </Flex>
 
-                  <FlexboxLayout justify="between" align="center">
-                    <FlexboxLayout align="center" gap="sm">
+                  <Flex justify="between" align="center">
+                    <Flex align="center" gap="sm">
                       <Button
                         type="button"
                         variant="ghost"
@@ -183,7 +183,7 @@ const CartSidebar = () => {
                       >
                         <Plus className="h-3 w-3" />
                       </Button>
-                    </FlexboxLayout>
+                    </Flex>
 
                     <BaseText weight="bold" className="text-lg text-white">
                       ₦
@@ -192,7 +192,7 @@ const CartSidebar = () => {
                         item.quantity
                       ).toLocaleString()}
                     </BaseText>
-                  </FlexboxLayout>
+                  </Flex>
                 </div>
               ))}
             </div>
@@ -202,7 +202,7 @@ const CartSidebar = () => {
         {/* Footer */}
         {items.length > 0 && (
           <div className="space-y-4 border-t border-white/[0.12] p-6">
-            <FlexboxLayout justify="between" align="center">
+            <Flex justify="between" align="center">
               <BaseText weight="semibold" className="text-xl text-white">
                 Total:
               </BaseText>
@@ -212,7 +212,7 @@ const CartSidebar = () => {
               >
                 ₦{total.toLocaleString()}
               </BaseText>
-            </FlexboxLayout>
+            </Flex>
             <Button
               variant="primary"
               size="lg"

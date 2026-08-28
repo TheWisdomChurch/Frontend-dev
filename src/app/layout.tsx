@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 
-import '@/app/globals.css';
+import '@/app/globals.scss';
 
 import { dmSans, playfair } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';

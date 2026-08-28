@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 import { lader } from '@/shared/assets';
 import { IMAGE_QUALITY } from '@/shared/constants';
-import { Container } from '@/shared/layout';
+import { Container } from '@/shared/ui/Container';
 
 export type SiteHeroProps = {
   title: string;
@@ -100,7 +100,7 @@ export default function SiteHero({
       <div data-hero-overlay className="absolute inset-0 -z-10 bg-black/60" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/30 to-transparent" />
 
-      <Container size="xl">
+      <Container>
         <div
           data-hero-content
           className={cn(

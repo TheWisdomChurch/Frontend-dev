@@ -9,13 +9,12 @@ import { forwardRef } from 'react';
 
 import { cn } from '@/lib/cn';
 import { IMAGE_QUALITY } from '@/shared/constants';
-import { Container } from '@/shared/layout';
+import { Container } from '@/shared/ui/Container';
 import {
   editorialActionClass,
   editorialInteractiveClass,
   editorialLabelClass,
   editorialToneClass,
-  editorialWidthClass,
   type EditorialTone,
   type EditorialWidth,
 } from './recipes';
@@ -109,7 +108,7 @@ export function EditorialContainer({
   width?: EditorialWidth;
 }) {
   return (
-    <Container size="xl" className={cn(editorialWidthClass[width], className)}>
+    <Container width={width} className={className}>
       {children}
     </Container>
   );
