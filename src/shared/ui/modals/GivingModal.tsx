@@ -139,7 +139,7 @@ export default function GivingModal({
                           }
                           className={`h-10 w-10 flex-none rounded-full transition ${
                             isCopied
-                              ? 'bg-emerald-400/15 text-emerald-300'
+                              ? 'bg-[var(--status-success)]/15 text-[var(--status-success)]'
                               : 'bg-[var(--app-primary)]/10 text-[var(--app-primary)] hover:bg-[var(--app-primary)]/20'
                           }`}
                           aria-label={
@@ -160,7 +160,7 @@ export default function GivingModal({
                       {isCopied ? (
                         <Caption
                           weight="semibold"
-                          className="mt-2 text-emerald-300"
+                          className="mt-2 text-[var(--status-success)]"
                         >
                           Account number copied.
                         </Caption>

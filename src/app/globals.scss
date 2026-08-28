@@ -15,8 +15,6 @@
    * TYPEFACE  (font files are loaded in src/shared/fonts/fonts.ts)     *
    * ------------------------------------------------------------------ */
   --font-sans: var(--font-product-sans);
-  /* transitional alias — remove once components use --font-sans */
-  --font-bricolage: var(--font-sans);
 
   /* ------------------------------------------------------------------ *
    * COLOUR                                                            *
@@ -290,7 +288,7 @@ h6 {
 
 h1,
 h2 {
-  font-family: var(--font-playfair), 'Georgia', serif;
+  font-family: var(--font-sans), sans-serif;
   font-weight: 700;
   letter-spacing: -0.015em;
   line-height: 1.15;
@@ -300,7 +298,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-bricolage), sans-serif;
+  font-family: var(--font-sans), sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -449,7 +447,7 @@ body[data-scrolled='true'] .site-header {
    Editorial serif remains available for quotations and long-form content. */
 .premium-home h2,
 .premium-home h3 {
-  font-family: var(--font-product-sans), 'Inter', sans-serif;
+  font-family: var(--font-sans), sans-serif;
   font-style: normal;
   letter-spacing: -0.035em;
 }
@@ -479,7 +477,7 @@ body[data-scrolled='true'] .site-header {
   align-items: center;
   height: 36px;
   padding: 0 0.9rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.76rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -786,7 +784,7 @@ body.nav-open {
 }
 
 .nav-overlay__close-label {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -835,7 +833,7 @@ body.nav-open {
 }
 
 .nav-footer__label {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.55rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -845,7 +843,7 @@ body.nav-open {
 }
 
 .nav-footer__time {
-  font-family: var(--font-playfair, serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.95rem;
   font-weight: 400;
   color: #ffffff;
@@ -853,7 +851,7 @@ body.nav-open {
 }
 
 .nav-footer__venue {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.35);
   margin-bottom: 0.55rem;
@@ -861,7 +859,7 @@ body.nav-open {
 
 .nav-footer__cta {
   display: inline-block;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.68rem;
   font-weight: 600;
   color: var(--app-primary, #c9961a);
@@ -881,7 +879,7 @@ body.nav-open {
 }
 
 .nav-footer__social-link {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
@@ -912,7 +910,7 @@ body.nav-open {
 }
 
 .nav-item__link {
-  font-family: var(--font-playfair, serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: clamp(2.1rem, 4.5vw, 3.6rem);
   font-weight: 400;
   line-height: 1;
@@ -964,7 +962,7 @@ body.nav-open {
 
 .nav-item__sub {
   margin: 0.45rem 0 0;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.78rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.32);
@@ -1004,7 +1002,7 @@ body.nav-open {
 
 .nav-panel__eyebrow {
   margin: 0 0 0.55rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -1014,7 +1012,7 @@ body.nav-open {
 
 .nav-panel__title {
   margin: 0 0 0.3rem;
-  font-family: var(--font-playfair, serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 1.3rem;
   font-weight: 400;
   line-height: 1.2;
@@ -1023,7 +1021,7 @@ body.nav-open {
 
 .nav-panel__detail {
   margin: 0 0 0.2rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -1031,7 +1029,7 @@ body.nav-open {
 .nav-panel__cta {
   display: inline-flex;
   margin-top: 0.8rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--app-primary, #c9961a);
@@ -1066,7 +1064,7 @@ body.nav-open {
 
 .nav-socials__label {
   margin: 0 0 0.65rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -1081,7 +1079,7 @@ body.nav-open {
 }
 
 .nav-socials__link {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.38);
   text-decoration: none;

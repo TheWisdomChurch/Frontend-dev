@@ -16,18 +16,11 @@ export default {
         Array.from({ length: 101 }, (_, i) => [i, (i / 100).toString()])
       ),
       fontFamily: {
+        // One typeface. `ui` / `headline` / `body` are kept as aliases so
+        // existing `font-*` utilities keep working — they all resolve to the
+        // single app sans.
         sans: [
-          'var(--font-product-sans)',
-          'Inter',
-          'SF Pro Text',
-          'Segoe UI',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
-        ],
-        serif: ['var(--font-playfair)', 'serif'],
-        body: [
-          'var(--font-product-sans)',
+          'var(--font-sans)',
           'Inter',
           'SF Pro Text',
           'Segoe UI',
@@ -36,7 +29,7 @@ export default {
           'sans-serif',
         ],
         ui: [
-          'var(--font-product-sans)',
+          'var(--font-sans)',
           'Inter',
           'SF Pro Text',
           'Segoe UI',
@@ -45,10 +38,22 @@ export default {
           'sans-serif',
         ],
         headline: [
-          'var(--font-playfair)',
-          'Georgia',
-          'Times New Roman',
-          'serif',
+          'var(--font-sans)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        body: [
+          'var(--font-sans)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
         ],
         code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
