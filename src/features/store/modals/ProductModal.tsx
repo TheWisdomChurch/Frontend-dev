@@ -20,7 +20,7 @@ import { Button } from '@/shared/utils/buttons';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
 import { Flex } from '@/shared/ui/Flex';
 import { cn } from '@/lib/cn';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import { Media } from '@/shared/ui/Media';
 import type { Product } from '@/domain/store/types';
 

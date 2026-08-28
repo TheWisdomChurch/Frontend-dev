@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import { Button } from '@/shared/utils/buttons';
 import { useIsClient } from '@/hooks';
 import {

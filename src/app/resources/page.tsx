@@ -24,7 +24,7 @@ import { resourceLinks } from '@/lib/data';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import {
   EditorialContainer,
   EditorialEmptyState,

@@ -21,7 +21,7 @@ import {
   PHONE_COUNTRIES,
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import {
   EditorialContainer,
   EditorialHeader,

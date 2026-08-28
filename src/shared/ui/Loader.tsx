@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from '@/lib/safe-motion';
+import { motion } from 'framer-motion';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { WisdomeHouseLogo } from '@/shared/assets';
 

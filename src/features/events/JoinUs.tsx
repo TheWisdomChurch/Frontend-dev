@@ -22,7 +22,7 @@ import {
 
 import { Button } from '@/shared/utils/buttons';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import { BodySM, Caption } from '@/shared/text';
 import {
   EditorialContainer,

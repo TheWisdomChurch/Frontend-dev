@@ -5,7 +5,7 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import { useCallback, useState } from 'react';
 import { Check, Copy, ShieldCheck } from 'lucide-react';
 
-import { BaseModal, modalStyles } from './Base';
+import { BaseModal, modalStyles } from './Modal';
 import { H3, H4, BodySM, Caption } from '@/shared/text';
 import { Button } from '@/shared/utils/buttons';
 import type { GivingModalProps } from '@/lib/types';

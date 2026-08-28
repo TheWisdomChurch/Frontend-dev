@@ -18,7 +18,7 @@ import { cn } from '@/lib/cn';
 import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import ChurchRouteMap from './ChurchRouteMap';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 
 type NavigationState = 'idle' | 'locating' | 'preview' | 'recovery';
 type LocationFailure = 'permission_denied' | 'timeout' | 'position_unavailable';

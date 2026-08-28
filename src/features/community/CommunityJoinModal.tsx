@@ -19,7 +19,7 @@ import {
 } from '@/lib/validation/phone';
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { PhoneNumberField } from '@/shared/ui/forms';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import { Button } from '@/shared/utils/buttons';
 import { COMMUNITY_JOIN_EVENT } from './communityJoinEvent';
 

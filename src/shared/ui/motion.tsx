@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import type { HTMLMotionProps } from 'framer-motion';
-import { motion } from '@/lib/safe-motion';
+import { motion } from 'framer-motion';
 
 /* ── Motion tokens — the one easing curve, duration, distance, and stagger
       scale for every animation in the app. ───────────────────────────────── */
