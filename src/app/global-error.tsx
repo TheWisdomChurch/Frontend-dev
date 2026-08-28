@@ -1,6 +1,6 @@
 'use client';
 
-import '@/app/globals.scss';
+import '@/app/globals.css';
 import { ErrorView } from '@/shared/components/errors/ErrorView';
 
 export default function GlobalError({

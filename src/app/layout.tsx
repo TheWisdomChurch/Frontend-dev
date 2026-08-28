@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 
-import '@/app/globals.scss';
+import '@/app/globals.css';
 
 import { dmSans, playfair } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
@@ -92,7 +92,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: 'var(--app-surface)',
+  themeColor: 'white',
 };
 
 // Production analytics must never initialize while developing locally. Apart

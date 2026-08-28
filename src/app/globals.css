@@ -1,42 +1,54 @@
-@use '../styles/index';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   DESIGN TOKENS — the single source of truth for the whole app.
+   One name per value. Four orthogonal groups: colour/surface, type scale,
+   spacing rhythm, status. Nothing else in the codebase may define design
+   values — components consume these via Tailwind arbitrary values
+   (`bg-[var(--app-surface)]`) or the utilities wired up in tailwind.config.ts.
+============================================================================= */
 
 :root {
-  /* Semantic typography aliases. Existing components can migrate without
-     creating competing font systems. */
-  --font-bricolage: var(--font-product-sans);
-  --app-header-height: 72px;
-  --app-radius: 18px;
+  /* ------------------------------------------------------------------ *
+   * TYPEFACE  (font files are loaded in src/shared/fonts/fonts.ts)     *
+   * ------------------------------------------------------------------ */
+  --font-sans: var(--font-product-sans);
+  /* transitional alias — remove once components use --font-sans */
+  --font-bricolage: var(--font-sans);
 
-  /* Responsive layout rhythm. These are the only page-level gutter and
-     section-spacing sources; components consume them through layout recipes. */
-  --page-gutter: clamp(1rem, 2.7vw, 2.5rem);
-  --page-gutter-compact: clamp(0.75rem, 2vw, 1.5rem);
-  --content-wide: 96rem;
+  /* ------------------------------------------------------------------ *
+   * COLOUR                                                            *
+   * ------------------------------------------------------------------ */
 
-  /* Surfaces — clean white */
+  /* Light surfaces (page → sunk → raised) */
   --app-surface: #ffffff;
   --app-surface-2: #f5f5f5;
   --app-surface-3: #ebebeb;
-
-  /* Canvas — warm off-white (editorial light sections) */
   --app-canvas: #faf9f7;
   --app-canvas-2: #f2f0ec;
   --app-canvas-3: #e8e5e0;
+
+  /* Dark surfaces (intentional dark sections: hero, CTA, feature panels) */
+  --app-dark: #07060a;
+  --app-dark-2: #0e0c0a;
+  --app-dark-3: #17140f;
+  --app-dark-input: #1a1814;
+
+  /* Ink / neutral extremes */
   --app-ink: #0d0a06;
-
-  /* Mid-tones (section variety) */
   --app-neutral: #1c1a17;
-  --app-neutral-2: #252219;
 
-  /* Typography */
+  /* Text */
   --app-text: #0d0b08;
   --app-muted: #5c5849;
   --app-subtle: #8a8278;
 
-  /* Borders */
+  /* Line */
   --app-border: rgba(0, 0, 0, 0.1);
 
-  /* Primary — gold */
+  /* Brand — gold. -10/-20/-40 are the same hue at 10/20/40% alpha. */
   --app-primary: #c9961a;
   --app-primary-light: #e8b44a;
   --app-primary-dark: #a0740c;
@@ -45,60 +57,10 @@
   --app-primary-20: rgba(201, 150, 26, 0.2);
   --app-primary-40: rgba(201, 150, 26, 0.4);
 
-  /* Brand-partner colors */
+  /* Partner brands */
   --app-whatsapp: #25d366;
   --app-youtube: #cc0000;
   --app-youtube-hover: #aa0000;
-
-  /* Base corner radius consumed by Tailwind's rounded-lg/md/sm utilities */
-  --radius: 0.875rem;
-
-  /* Dark surface tokens — used in hero sections, feature panels, cards */
-  --app-dark: #07060a;
-  --app-dark-2: #0e0c0a;
-  --app-dark-3: #17140f;
-  --app-dark-input: #1a1814;
-
-  /* Display type scale */
-  --type-display-xl: clamp(4rem, 9vw, 7.5rem);
-  --type-display-lg: clamp(3rem, 6vw, 5.5rem);
-  --type-display-md: clamp(2.25rem, 4vw, 3.75rem);
-  --type-display-sm: clamp(1.75rem, 3vw, 2.75rem);
-  --type-lead: clamp(1.05rem, 1.5vw, 1.25rem);
-
-  /* Heading scale — section/card-level, below display */
-  --type-heading-lg: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
-  --type-heading-md: clamp(1.25rem, 1rem + 1vw, 1.65rem);
-  --type-heading-sm: clamp(1.05rem, 0.94rem + 0.5vw, 1.3rem);
-
-  /* Body scale */
-  --type-body-lg: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
-  --type-body-md: clamp(0.85rem, 0.82rem + 0.15vw, 0.92rem);
-  --type-body-sm: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
-
-  /* Micro scale — labels, captions, eyebrows */
-  --type-label: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
-  --type-caption: clamp(0.68rem, 0.66rem + 0.08vw, 0.72rem);
-  --type-eyebrow: clamp(0.58rem, 0.57rem + 0.05vw, 0.64rem);
-
-  /* Section spacing scale */
-  --section-xs: clamp(2.25rem, 4vw, 3.5rem);
-  --section-sm: clamp(3.5rem, 6vw, 5.5rem);
-  --section-md: clamp(4.5rem, 8vw, 7rem);
-  --section-lg: clamp(5.5rem, 10vw, 9rem);
-  --section-xl: clamp(7rem, 12vw, 11rem);
-
-  /* Refined border radii */
-  --radius-card: 0.875rem;
-  --radius-button: 0.5rem;
-  --radius-input: 0.75rem;
-  --radius-badge: 0.25rem;
-  --radius-image: 0.875rem;
-
-  /* Legacy radius scale (keep for compat) */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 0.875rem;
 
   /* Status */
   --status-success: #22c55e;
@@ -106,9 +68,55 @@
   --status-error: #ef4444;
   --status-info: #3b82f6;
 
-  /* Overlays */
-  --overlay-light: rgba(255, 255, 255, 0.06);
-  --overlay-dark: rgba(0, 0, 0, 0.6);
+  /* ------------------------------------------------------------------ *
+   * TYPE SCALE  (bridged to Tailwind `text-*` utilities in config)     *
+   * ------------------------------------------------------------------ */
+  --type-display-xl: clamp(4rem, 9vw, 7.5rem);
+  --type-display-lg: clamp(3rem, 6vw, 5.5rem);
+  --type-display-md: clamp(2.25rem, 4vw, 3.75rem);
+  --type-display-sm: clamp(1.75rem, 3vw, 2.75rem);
+  --type-heading-lg: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
+  --type-heading-md: clamp(1.25rem, 1rem + 1vw, 1.65rem);
+  --type-heading-sm: clamp(1.05rem, 0.94rem + 0.5vw, 1.3rem);
+  --type-lead: clamp(1.05rem, 1.5vw, 1.25rem);
+  --type-body-lg: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
+  --type-body-md: clamp(0.85rem, 0.82rem + 0.15vw, 0.92rem);
+  --type-body-sm: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
+  --type-label: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
+  --type-caption: clamp(0.68rem, 0.66rem + 0.08vw, 0.72rem);
+  --type-eyebrow: clamp(0.58rem, 0.57rem + 0.05vw, 0.64rem);
+
+  /* ------------------------------------------------------------------ *
+   * SPACING — section rhythm (bridged to `py-section-*` in config)     *
+   * ------------------------------------------------------------------ */
+  --section-xs: clamp(2.25rem, 4vw, 3.5rem);
+  --section-sm: clamp(3.5rem, 6vw, 5.5rem);
+  --section-md: clamp(4.5rem, 8vw, 7rem);
+  --section-lg: clamp(5.5rem, 10vw, 9rem);
+  --section-xl: clamp(7rem, 12vw, 11rem);
+
+  /* ------------------------------------------------------------------ *
+   * RADIUS — one scale. Semantic names map onto it (no bare values).   *
+   * ------------------------------------------------------------------ */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+
+  --radius: var(--radius-lg); /* Tailwind rounded-lg/md/sm base */
+  --radius-badge: var(--radius-xs);
+  --radius-button: 0.5rem; /* sits between sm and md; kept until <Button> lands */
+  --radius-input: 0.75rem; /* sits between md and lg; kept until <Field> lands */
+  --radius-card: var(--radius-lg);
+  --radius-image: var(--radius-lg);
+
+  /* ------------------------------------------------------------------ *
+   * LAYOUT                                                            *
+   * ------------------------------------------------------------------ */
+  --app-header-height: 72px;
+  --page-gutter: clamp(1rem, 2.7vw, 2.5rem);
+  --page-gutter-compact: clamp(0.75rem, 2vw, 1.5rem);
+  --content-wide: 96rem;
 }
 
 html {
@@ -460,12 +468,12 @@ section[data-gsap='reveal'] {
   }
 }
 
-// Fluid safety net for raw Tailwind display-size utilities (text-4xl and up).
-// Applied unconditionally (not gated behind a max-width query) so a
-// hardcoded text-6xl+ heading can't silently render at its full fixed rem
-// size in the 641–1024px tablet/narrow-laptop gap that a mobile-only
-// override would miss — each clamp() interpolates smoothly from a
-// mobile-safe minimum up to Tailwind's original size as the viewport grows.
+/* Fluid safety net for raw Tailwind display-size utilities (text-4xl and up).
+   Applied unconditionally (not gated behind a max-width query) so a
+   hardcoded text-6xl+ heading can't silently render at its full fixed rem
+   size in the 641-1024px tablet/narrow-laptop gap that a mobile-only
+   override would miss — each clamp() interpolates smoothly from a
+   mobile-safe minimum up to Tailwind's original size as the viewport grows. */
 .text-9xl {
   font-size: clamp(2.4rem, 9vw, 8rem) !important;
   line-height: 1.05 !important;
@@ -1314,64 +1322,6 @@ body.nav-open {
 }
 
 /* =========================
-   PAGE GLOW PATTERNS
-========================= */
-
-.page-glow {
-  background:
-    radial-gradient(
-      circle at 18% 10%,
-      rgba(201, 150, 26, 0.08),
-      transparent 28%
-    ),
-    radial-gradient(circle at 90% 18%, rgba(0, 0, 0, 0.03), transparent 30%);
-}
-
-.page-glow-alt {
-  background:
-    radial-gradient(
-      circle at 20% 12%,
-      rgba(201, 150, 26, 0.08),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgba(201, 150, 26, 0.05),
-      transparent 32%
-    );
-}
-
-.page-glow-warm {
-  background:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(201, 150, 26, 0.1),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 85% 80%,
-      rgba(201, 150, 26, 0.06),
-      transparent 35%
-    ),
-    linear-gradient(
-      180deg,
-      var(--app-dark) 0%,
-      var(--app-dark-2) 50%,
-      var(--app-dark) 100%
-    );
-}
-
-.page-glow-center {
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(201, 150, 26, 0.08),
-      transparent 40%
-    ),
-    radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.03), transparent 30%);
-}
-
-/* =========================
    CARD UTILITIES
    Light-surface variants
 ========================= */
@@ -1642,62 +1592,62 @@ body.nav-open {
   overflow: hidden;
   display: block;
   width: 100%;
+}
 
-  img,
-  video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
+.img-container img,
+.img-container video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Fill parent with cover — use on a Next.js <Image fill> wrapper */
 .img-fill {
   position: relative;
   overflow: hidden;
+}
 
-  > img,
-  > span > img {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover;
-    object-position: center;
-  }
+.img-fill > img,
+.img-fill > span > img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Fill parent with contain — shows full image, no cropping, bg fills gaps */
 .img-fill-contain {
   position: relative;
   overflow: hidden;
+}
 
-  > img,
-  > span > img {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain;
-    object-position: center;
-  }
+.img-fill-contain > img,
+.img-fill-contain > span > img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  object-position: center;
 }
 
 /* Natural ratio — image at its own aspect ratio, width 100%, height auto */
 .img-natural {
   display: block;
   width: 100%;
+}
 
-  img,
-  video {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-  }
+.img-natural img,
+.img-natural video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
 }
 
 /* Common aspect ratios */
