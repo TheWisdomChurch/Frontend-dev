@@ -1157,24 +1157,6 @@ body.nav-open {
   }
 }
 
-/* =========================
-   HERO TEXT INLINE ACCENTS
-   Consumed by heroTextUtil.tsx to colour spans inside a hero <h1>.
-========================= */
-
-.hero-text-highlight {
-  color: var(--app-primary);
-  font-size: inherit;
-  line-height: inherit;
-  text-shadow: 0 0 20px rgba(201, 150, 26, 0.4);
-}
-
-.hero-text-white-inherit {
-  color: #ffffff;
-  font-size: inherit;
-  line-height: inherit;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -320,7 +320,7 @@ const OrderConfirmation = () => {
           <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-900/30">
             <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <H2 fontFamily="bricolage" className="text-green-500" weight="bold">
+          <H2 className="text-green-500" weight="bold">
             Order Confirmed!
           </H2>
           <Caption className="text-lg text-white/55">

@@ -19,10 +19,7 @@ import {
   EditorialSection,
   editorialActionClass,
 } from '@/shared/ui/editorial';
-import {
-  staggerContainer,
-  staggerItem,
-} from '@/shared/ui/motion/staggerReveal';
+import { staggerContainer, staggerItem } from '@/shared/ui/motion';
 
 /* ── Types ──────────────────────────────────────────────── */
 

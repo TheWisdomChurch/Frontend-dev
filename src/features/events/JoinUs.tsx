@@ -37,7 +37,7 @@ import {
   staggerContainer,
   staggerItem,
   staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+} from '@/shared/ui/motion';
 
 /* ─── Why serve ────────────────────────────────────────────────────── */
 

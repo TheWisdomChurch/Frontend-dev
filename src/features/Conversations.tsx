@@ -11,7 +11,7 @@ import {
   EditorialHeader,
   EditorialSection,
 } from '@/shared/ui/editorial';
-import { staggerViewport } from '@/shared/ui/motion/staggerReveal';
+import { staggerViewport } from '@/shared/ui/motion';
 
 const slides = [
   {

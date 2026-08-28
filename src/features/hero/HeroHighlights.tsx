@@ -25,7 +25,7 @@ import {
   staggerContainer,
   staggerItem,
   staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+} from '@/shared/ui/motion';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import {

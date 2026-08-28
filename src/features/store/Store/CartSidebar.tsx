@@ -75,11 +75,7 @@ const CartSidebar = () => {
         {/* Header */}
         <div className="border-b border-white/[0.12] p-6">
           <Flex justify="between" align="center">
-            <BaseText
-              fontFamily="bricolage"
-              weight="bold"
-              className="text-2xl text-white"
-            >
+            <BaseText weight="bold" className="text-2xl text-white">
               Your Cart ({itemCount})
             </BaseText>
             <Button

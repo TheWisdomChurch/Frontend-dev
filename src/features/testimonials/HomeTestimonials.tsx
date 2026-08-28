@@ -16,7 +16,7 @@ import {
   staggerContainer,
   staggerItem,
   staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+} from '@/shared/ui/motion';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 

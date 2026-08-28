@@ -25,7 +25,7 @@ import {
   staggerContainer,
   staggerItem,
   staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+} from '@/shared/ui/motion';
 
 export default function OnlineGiving() {
   const { open } = useServiceUnavailable();

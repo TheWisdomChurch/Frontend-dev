@@ -4,7 +4,6 @@
  */
 
 // Hero utilities
-export { renderTitle, renderSubtitle } from './heroTextUtil';
 
 // Button utilities
 export * from './buttons';
