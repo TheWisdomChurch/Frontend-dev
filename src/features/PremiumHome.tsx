@@ -111,7 +111,7 @@ export default function PremiumHome() {
                 tabIndex={0}
                 data-gsap="reveal"
                 aria-labelledby={`belief-${index}`}
-                className={`group relative isolate min-h-[22rem] overflow-hidden rounded-image bg-white/5 outline-none ring-[var(--app-primary)] transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-dark-2)] sm:min-h-0 ${belief.layoutClass} lg:h-[clamp(25rem,34vw,38rem)]`}
+                className={`group relative isolate min-h-[22rem] overflow-hidden rounded-image bg-[var(--app-surface)] outline-none ring-[var(--app-primary)] transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-dark-2)] sm:min-h-0 ${belief.layoutClass} lg:h-[clamp(25rem,34vw,38rem)]`}
               >
                 <div
                   data-parallax-global={belief.parallaxDepth}
@@ -138,7 +138,7 @@ export default function PremiumHome() {
                     >
                       {belief.title}
                     </h3>
-                    <p className="mt-3 max-w-md font-ui text-body-md leading-relaxed text-white/72">
+                    <p className="mt-3 max-w-md font-ui text-body-md leading-relaxed text-[var(--app-muted)]">
                       {belief.body}
                     </p>
                   </div>

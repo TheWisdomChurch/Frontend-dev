@@ -219,9 +219,9 @@ type ModalValues = z.infer<typeof modalSchema>;
 /* ─── Field styles ────────────────────────────────────────────────── */
 
 const mInput =
-  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
 const mSelect =
-  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -366,7 +366,7 @@ export default function JoinWorkforce() {
       {/* ── Banner ───────────────────────────────────────────── */}
       {/* TODO: was a photo banner (Dept_1) — source image is missing from
           the repo; needs a real photo re-uploaded to shared/assets. */}
-      <div className="relative overflow-hidden border-b border-white/8">
+      <div className="relative overflow-hidden border-b border-[var(--app-border)]">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
         </div>
@@ -391,18 +391,18 @@ export default function JoinWorkforce() {
           </div>
 
           {/* ── Why serve ─────────────────────────────────────── */}
-          <div className="-mx-5 mt-9 flex snap-x snap-mandatory gap-3 overflow-x-auto border-t border-white/10 px-5 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pt-9 sm:gap-8">
+          <div className="-mx-5 mt-9 flex snap-x snap-mandatory gap-3 overflow-x-auto border-t border-[var(--app-border)] px-5 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pt-9 sm:gap-8">
             {valuePillars.map(pillar => (
               <div
                 key={pillar.title}
-                className="flex min-w-[76vw] snap-center items-start gap-3.5 border border-white/10 bg-white/[0.035] p-4 sm:min-w-0 sm:border-0 sm:bg-transparent sm:p-0"
+                className="flex min-w-[76vw] snap-center items-start gap-3.5 border border-[var(--app-border)] bg-white/[0.035] p-4 sm:min-w-0 sm:border-0 sm:bg-transparent sm:p-0"
               >
                 <pillar.icon className="mt-0.5 h-[1.15rem] w-[1.15rem] flex-none text-[var(--app-primary)]" />
                 <div>
                   <p className="font-ui text-body-sm font-bold text-white">
                     {pillar.title}
                   </p>
-                  <p className="mt-1 font-ui text-label leading-[1.6] text-white/50">
+                  <p className="mt-1 font-ui text-label leading-[1.6] text-[var(--app-subtle)]">
                     {pillar.body}
                   </p>
                 </div>
@@ -414,7 +414,7 @@ export default function JoinWorkforce() {
 
       {/* ── Department index ──────────────────────────────────── */}
       <Container className="relative py-section-xs">
-        <div className="mb-8 grid gap-5 border-b border-white/10 pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
+        <div className="mb-8 grid gap-5 border-b border-[var(--app-border)] pb-7 sm:mb-10 sm:grid-cols-[1fr_auto] sm:items-end sm:pb-9">
           <SectionHeader
             eyebrow="Serve at Wisdom Church"
             title="Bring your gift."
@@ -422,7 +422,7 @@ export default function JoinWorkforce() {
             tone="dark"
             size="sm"
           />
-          <p className="max-w-sm font-ui text-sm leading-6 text-white/45 sm:text-right">
+          <p className="max-w-sm font-ui text-sm leading-6 text-[var(--app-subtle)] sm:text-right">
             Whatever your experience, there is room to grow, contribute and
             serve alongside others.
           </p>
@@ -432,7 +432,7 @@ export default function JoinWorkforce() {
           initial="hidden"
           whileInView="show"
           viewport={staggerViewport}
-          className="grid grid-cols-2 gap-px overflow-hidden border border-white/12 bg-white/12 lg:grid-cols-12"
+          className="grid grid-cols-2 gap-px overflow-hidden border border-[var(--app-border)] bg-white/12 lg:grid-cols-12"
         >
           {departments.map((dept, index) => {
             const Icon = dept.icon;
@@ -451,10 +451,10 @@ export default function JoinWorkforce() {
                   aria-hidden="true"
                 />
                 <div className="relative flex items-start justify-between gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center border border-white/12 bg-white/[0.035] transition duration-300 group-hover:border-[var(--app-primary)]/45 group-hover:bg-[var(--app-primary)]/10 sm:h-12 sm:w-12">
+                  <div className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] bg-white/[0.035] transition duration-300 group-hover:border-[var(--app-primary)]/45 group-hover:bg-[var(--app-primary)]/10 sm:h-12 sm:w-12">
                     <Icon className="h-[1.1rem] w-[1.1rem] text-[var(--app-primary)] sm:h-5 sm:w-5" />
                   </div>
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/12 text-white/35 transition duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black sm:h-10 sm:w-10">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--app-border)] text-[var(--app-subtle)] transition duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black sm:h-10 sm:w-10">
                     <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </span>
                 </div>
@@ -465,7 +465,7 @@ export default function JoinWorkforce() {
                   <p className="max-w-[14rem] font-ui text-base font-bold leading-5 text-white sm:text-xl sm:leading-6">
                     {dept.title}
                   </p>
-                  <p className="mt-2 line-clamp-2 font-ui text-[11px] leading-[1.55] text-white/45 sm:max-w-sm sm:text-sm sm:leading-6">
+                  <p className="mt-2 line-clamp-2 font-ui text-[11px] leading-[1.55] text-[var(--app-subtle)] sm:max-w-sm sm:text-sm sm:leading-6">
                     {dept.description}
                   </p>
                 </div>
@@ -484,7 +484,7 @@ export default function JoinWorkforce() {
             Not sure which team? Apply anyway
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
-          <p className="font-ui text-label text-white/35">
+          <p className="font-ui text-label text-[var(--app-subtle)]">
             No experience required — just a willing heart.
           </p>
         </div>
@@ -527,17 +527,17 @@ export default function JoinWorkforce() {
               </p>
             </div>
 
-            <p className="font-ui text-body-md leading-[1.85] text-white/70">
+            <p className="font-ui text-body-md leading-[1.85] text-[var(--app-muted)]">
               {selectedDept.detail}
             </p>
 
-            <div className="border border-white/10 bg-white/[0.035] p-5">
+            <div className="border border-[var(--app-border)] bg-white/[0.035] p-5">
               <Eyebrow className="mb-3.5">What you'll do</Eyebrow>
               <ul className="space-y-2.5">
                 {selectedDept.responsibilities.map(r => (
                   <li key={r} className="flex items-start gap-2.5">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-[var(--app-primary)]" />
-                    <span className="font-ui text-body-sm leading-[1.7] text-white/65">
+                    <span className="font-ui text-body-sm leading-[1.7] text-[var(--app-muted)]">
                       {r}
                     </span>
                   </li>
@@ -566,7 +566,7 @@ export default function JoinWorkforce() {
               <button
                 type="button"
                 onClick={() => setModalStep('detail')}
-                className="inline-flex items-center gap-1.5 font-ui text-label font-semibold text-white/45 transition hover:text-white/75"
+                className="inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-subtle)] transition hover:text-[var(--app-muted)]"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
                 Back to {selectedDept.title}
@@ -644,8 +644,11 @@ export default function JoinWorkforce() {
               </div>
 
               {/* Marital status */}
-              <div className="border border-white/10 bg-white/[0.04] p-4">
-                <BodySM weight="semibold" className="mb-3 text-white/70">
+              <div className="border border-[var(--app-border)] bg-white/[0.04] p-4">
+                <BodySM
+                  weight="semibold"
+                  className="mb-3 text-[var(--app-muted)]"
+                >
                   Marital status
                 </BodySM>
                 <div className="grid grid-cols-2 gap-2">
@@ -655,7 +658,7 @@ export default function JoinWorkforce() {
                       className={`flex cursor-pointer items-center justify-center border px-3 py-2.5 font-ui text-body-sm font-semibold transition ${
                         marriedValue === value
                           ? 'border-[var(--app-primary)]/50 bg-[var(--app-primary)]/10 text-white'
-                          : 'border-white/10 bg-black/20 text-white/55 hover:border-white/20 hover:text-white/75'
+                          : 'border-[var(--app-border)] bg-black/20 text-[var(--app-muted)] hover:border-[var(--app-border)] hover:text-[var(--app-muted)]'
                       }`}
                     >
                       <input
@@ -700,8 +703,8 @@ export default function JoinWorkforce() {
               </div>
 
               {/* What happens next */}
-              <div className="border border-white/8 bg-white/[0.025] px-4 py-3">
-                <Caption className="text-white/38">
+              <div className="border border-[var(--app-border)] bg-white/[0.025] px-4 py-3">
+                <Caption className="text-[var(--app-subtle)]">
                   After submitting, our team will review your application and
                   follow up within 3–5 days.
                 </Caption>

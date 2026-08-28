@@ -173,14 +173,14 @@ export default async function AboutPage() {
             title="Five pillars. One way of life."
             tone="dark"
           />
-          <div className="mt-12 border-y border-white/15">
+          <div className="mt-12 border-y border-[var(--app-border)]">
             {content.pillars.map((pillar, index) => (
               <ScrollFadeIn key={pillar.title} delay={index * 0.04}>
-                <article className="grid gap-4 border-b border-white/15 py-8 last:border-b-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10 lg:py-10">
+                <article className="grid gap-4 border-b border-[var(--app-border)] py-8 last:border-b-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10 lg:py-10">
                   <h3 className="font-ui text-heading-lg font-semibold !text-white">
                     {pillar.title}
                   </h3>
-                  <p className="max-w-2xl font-ui text-body-md leading-loose text-white/65">
+                  <p className="max-w-2xl font-ui text-body-md leading-loose text-[var(--app-muted)]">
                     {pillar.body}
                   </p>
                 </article>

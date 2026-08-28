@@ -150,32 +150,34 @@ function FeaturedCard({
           >
             {slide.title}
           </p>
-          <p className="mt-3 line-clamp-3 font-ui text-body-sm leading-[1.8] text-white/68">
+          <p className="mt-3 line-clamp-3 font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
             {slide.description}
           </p>
         </div>
 
         <div className="mt-6 space-y-2">
           {slide.date !== 'Date TBA' && (
-            <p className="font-ui text-caption font-semibold uppercase tracking-[0.14em] text-white/40">
+            <p className="font-ui text-caption font-semibold uppercase tracking-[0.14em] text-[var(--app-subtle)]">
               {slide.date}
             </p>
           )}
           {slide.location && (
-            <p className="font-ui text-label text-white/35">{slide.location}</p>
+            <p className="font-ui text-label text-[var(--app-subtle)]">
+              {slide.location}
+            </p>
           )}
           {/* CTA — Link for navigable cards, plain styled span for reel (whole card is clickable) */}
           {slide.href && !isReel && (
             <Link
               href={slide.href}
-              className="mt-4 inline-flex items-center gap-2 rounded-button border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              className="mt-4 inline-flex items-center gap-2 rounded-button border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-muted)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               {slide.cta} <Arrow />
             </Link>
           )}
           {isReel && (
-            <span className="mt-4 inline-flex items-center gap-2 rounded-button border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60">
+            <span className="mt-4 inline-flex items-center gap-2 rounded-button border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-muted)]">
               {slide.cta} <Arrow />
             </span>
           )}
@@ -579,8 +581,8 @@ export default function EventsShowcase() {
             </video>
           ) : (
             <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 bg-[var(--app-dark-2)]">
-              <Play className="h-10 w-10 text-white/45" />
-              <p className="font-ui text-body-sm text-white/45">
+              <Play className="h-10 w-10 text-[var(--app-subtle)]" />
+              <p className="font-ui text-body-sm text-[var(--app-subtle)]">
                 This reel&apos;s video isn&apos;t available right now.
               </p>
             </div>

@@ -298,6 +298,7 @@ export default function SermonLibrary({
   return (
     <>
       <SiteHero
+        backgroundImage="/Picflow/DSC00082 copy.webp"
         eyebrow="Wisdom Church Media"
         title="Truth for every season."
         subtitle="Start with what matters to you. Discover relevant teachings, continue where you left off, and grow one message at a time."
@@ -319,12 +320,12 @@ export default function SermonLibrary({
                 <h1 className="mt-4 font-ui text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl">
                   {displayTitle(selected.title)}
                 </h1>
-                <p className="mt-4 font-ui text-sm text-white/50">
+                <p className="mt-4 font-ui text-sm text-[var(--app-subtle)]">
                   {selected.preacher} · {date(selected.publishedAt)} ·{' '}
                   {selected.duration}
                 </p>
                 {selected.description && (
-                  <p className="mt-5 line-clamp-4 font-ui text-sm leading-7 text-white/55">
+                  <p className="mt-5 line-clamp-4 font-ui text-sm leading-7 text-[var(--app-muted)]">
                     {selected.description}
                   </p>
                 )}
@@ -377,7 +378,7 @@ export default function SermonLibrary({
                       <Play className="ml-1 h-7 w-7 fill-current sm:h-8 sm:w-8" />
                     </span>
                   </a>
-                  <div className="absolute bottom-5 left-5 rounded-full border border-white/20 bg-black/35 px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-[.2em] text-white backdrop-blur-md sm:bottom-7 sm:left-7">
+                  <div className="absolute bottom-5 left-5 rounded-full border border-[var(--app-border)] bg-black/35 px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-[.2em] text-white backdrop-blur-md sm:bottom-7 sm:left-7">
                     Official media channel
                   </div>
                 </div>
@@ -385,7 +386,7 @@ export default function SermonLibrary({
                 <div className="relative flex flex-col justify-center p-7 sm:p-10 lg:p-12 xl:p-16">
                   <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
                   <div className="relative">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[.06] px-3 py-1.5 font-ui text-[10px] font-bold uppercase tracking-[.2em] text-[var(--app-primary)]">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/[.06] px-3 py-1.5 font-ui text-[10px] font-bold uppercase tracking-[.2em] text-[var(--app-primary)]">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--app-primary)]" />{' '}
                       Media library online
                     </div>
@@ -396,7 +397,7 @@ export default function SermonLibrary({
                         One trusted channel.
                       </em>
                     </h2>
-                    <p className="mt-5 max-w-md font-ui text-sm leading-7 text-white/58 sm:text-base">
+                    <p className="mt-5 max-w-md font-ui text-sm leading-7 text-[var(--app-muted)] sm:text-base">
                       The in-page catalogue is reconnecting, but your journey
                       does not stop here. Watch recent services, teaching
                       series, prayer moments, and conference messages directly
@@ -420,7 +421,7 @@ export default function SermonLibrary({
                         Watch live <Play className="h-4 w-4" />
                       </a>
                     </div>
-                    <div className="mt-9 grid gap-3 border-t border-white/10 pt-6 sm:grid-cols-2">
+                    <div className="mt-9 grid gap-3 border-t border-[var(--app-border)] pt-6 sm:grid-cols-2">
                       <a
                         href="/events/weekly"
                         className="group flex items-center gap-3 rounded-2xl bg-white/[.045] p-4 transition hover:bg-white/[.08]"
@@ -432,7 +433,7 @@ export default function SermonLibrary({
                           <span className="block font-ui text-xs font-bold text-white">
                             Join this Sunday
                           </span>
-                          <span className="mt-1 block font-ui text-[11px] text-white/40">
+                          <span className="mt-1 block font-ui text-[11px] text-[var(--app-subtle)]">
                             {SERVICE_INFO.sunday.time} ·{' '}
                             {SERVICE_INFO.venue.short}
                           </span>
@@ -449,7 +450,7 @@ export default function SermonLibrary({
                           <span className="block font-ui text-xs font-bold text-white">
                             More resources
                           </span>
-                          <span className="mt-1 block font-ui text-[11px] text-white/40">
+                          <span className="mt-1 block font-ui text-[11px] text-[var(--app-subtle)]">
                             Books, articles and growth tools
                           </span>
                         </span>

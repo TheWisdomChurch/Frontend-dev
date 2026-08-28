@@ -98,17 +98,17 @@ export default function OnlineGiving() {
               <Panel
                 tone="dark"
                 reveal
-                className="mt-8 border-white/12 bg-white/[0.035] p-6 sm:p-7"
+                className="mt-8 border-[var(--app-border)] bg-white/[0.035] p-6 sm:p-7"
               >
                 <Heart
                   aria-hidden="true"
                   className="h-5 w-5 text-[var(--app-primary)]"
                 />
-                <blockquote className="mt-5 font-ui text-body-lg italic leading-relaxed text-white/78">
+                <blockquote className="mt-5 font-ui text-body-lg italic leading-relaxed text-[var(--app-text)]">
                   &ldquo;As each has purposed in his heart, so let him give… God
                   loves a cheerful giver.&rdquo;
                 </blockquote>
-                <cite className="mt-5 block border-t border-white/10 pt-4 font-ui text-caption not-italic font-bold uppercase tracking-[0.16em] text-white/50">
+                <cite className="mt-5 block border-t border-[var(--app-border)] pt-4 font-ui text-caption not-italic font-bold uppercase tracking-[0.16em] text-[var(--app-subtle)]">
                   2 Corinthians 9:7
                 </cite>
               </Panel>
@@ -135,16 +135,16 @@ export default function OnlineGiving() {
             {/* Giving options */}
             {loading ? (
               <div
-                className="overflow-hidden rounded-card border border-white/12 bg-white/[0.025]"
+                className="overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.025]"
                 aria-hidden="true"
               >
-                <div className="border-b border-white/10 px-5 py-5 sm:px-7">
+                <div className="border-b border-[var(--app-border)] px-5 py-5 sm:px-7">
                   <span className="h-3 w-32 animate-pulse rounded bg-white/10" />
                 </div>
                 {[0, 1, 2].map(i => (
                   <div
                     key={i}
-                    className="grid grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/10 px-5 py-7 last:border-b-0 sm:gap-7 sm:px-7 sm:py-9"
+                    className="grid grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-[var(--app-border)] px-5 py-7 last:border-b-0 sm:gap-7 sm:px-7 sm:py-9"
                   >
                     <span className="h-3 w-4 animate-pulse rounded bg-white/10" />
                     <span className="flex flex-col gap-3">
@@ -161,16 +161,16 @@ export default function OnlineGiving() {
                 initial="hidden"
                 whileInView="show"
                 viewport={staggerViewport}
-                className="overflow-hidden rounded-card border border-white/12 bg-white/[0.025]"
+                className="overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.025]"
               >
-                <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-7">
+                <div className="flex items-center justify-between gap-4 border-b border-[var(--app-border)] px-5 py-5 sm:px-7">
                   <div>
                     <Eyebrow>Choose an option</Eyebrow>
-                    <p className="mt-1 font-ui text-body-sm text-white/52">
+                    <p className="mt-1 font-ui text-body-sm text-[var(--app-subtle)]">
                       Securely continue with your preferred method.
                     </p>
                   </div>
-                  <ShieldCheck className="h-5 w-5 shrink-0 text-white/45" />
+                  <ShieldCheck className="h-5 w-5 shrink-0 text-[var(--app-subtle)]" />
                 </div>
                 {givingOptions.slice(0, 3).map((opt, index) => (
                   <motion.button
@@ -180,7 +180,7 @@ export default function OnlineGiving() {
                     onClick={() => handleGive(opt)}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-                    className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-white/10 px-5 py-7 text-left transition-[background-color,transform] duration-300 hover:bg-white/[0.055] sm:gap-7 sm:px-7 sm:py-9"
+                    className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-[var(--app-border)] px-5 py-7 text-left transition-[background-color,transform] duration-300 hover:bg-white/[0.055] sm:gap-7 sm:px-7 sm:py-9"
                   >
                     <span className="pt-0.5 font-ui text-caption font-bold tracking-[0.16em] text-[var(--app-primary)]/75">
                       0{index + 1}
@@ -190,7 +190,7 @@ export default function OnlineGiving() {
                         {opt.title}
                       </span>
                       {opt.description ? (
-                        <span className="mt-2 block max-w-lg font-ui text-sm leading-6 text-white/45">
+                        <span className="mt-2 block max-w-lg font-ui text-sm leading-6 text-[var(--app-subtle)]">
                           {opt.description}
                         </span>
                       ) : null}
@@ -198,7 +198,7 @@ export default function OnlineGiving() {
                         Give now <ArrowRight className="h-3.5 w-3.5" />
                       </span>
                     </span>
-                    <span className="mt-1 hidden h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/55 transition duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black sm:flex">
+                    <span className="mt-1 hidden h-11 w-11 items-center justify-center rounded-full border border-[var(--app-border)] text-[var(--app-muted)] transition duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black sm:flex">
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </motion.button>
@@ -208,7 +208,7 @@ export default function OnlineGiving() {
               <Panel
                 tone="dark"
                 reveal
-                className="flex min-h-[19rem] flex-col justify-between border-white/12 bg-white/[0.025] p-6 sm:min-h-[22rem] sm:p-8"
+                className="flex min-h-[19rem] flex-col justify-between border-[var(--app-border)] bg-white/[0.025] p-6 sm:min-h-[22rem] sm:p-8"
               >
                 <div>
                   <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--app-primary-10)] text-[var(--app-primary)]">
@@ -217,7 +217,7 @@ export default function OnlineGiving() {
                   <h3 className="mt-7 font-ui text-heading-md font-semibold text-white">
                     Online giving is being prepared.
                   </h3>
-                  <p className="mt-4 max-w-lg font-ui text-body-md leading-loose text-white/60">
+                  <p className="mt-4 max-w-lg font-ui text-body-md leading-loose text-[var(--app-muted)]">
                     Our giving portal is being set up. In the meantime, reach
                     out and we&rsquo;ll walk you through the ways to give today.
                   </p>
@@ -233,7 +233,7 @@ export default function OnlineGiving() {
           </div>
           <Link
             href="/contact"
-            className="mt-8 inline-flex items-center gap-2 font-ui text-label font-semibold text-white/55 transition duration-300 hover:text-white"
+            className="mt-8 inline-flex items-center gap-2 font-ui text-label font-semibold text-[var(--app-muted)] transition duration-300 hover:text-white"
           >
             Need help with giving? Contact us{' '}
             <ArrowRight className="h-3.5 w-3.5" />

@@ -194,6 +194,7 @@ function ContactPageContent() {
       />
 
       <SiteHero
+        backgroundImage="/Picflow/DSC06712 copy.webp"
         eyebrow="Get in touch"
         title="We'd love to hear from you."
         subtitle="Plan a visit, request prayer, or send us a message — we'll get back to you quickly."

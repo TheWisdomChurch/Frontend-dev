@@ -77,7 +77,7 @@ export default function SiteHero({
             'flex w-full min-w-0 flex-1 flex-col',
             isHome
               ? 'min-h-[100svh] justify-end pb-[12svh] pt-[calc(var(--app-header-height)+var(--section-xs))] sm:pb-[14svh]'
-              : 'min-h-[60svh] justify-end pb-section-sm pt-[calc(var(--app-header-height)+var(--section-sm))] sm:min-h-[68svh]',
+              : 'min-h-[74svh] justify-end pb-[10svh] pt-[calc(var(--app-header-height)+var(--section-sm))] sm:min-h-[80svh] sm:pb-[11svh]',
             centered
               ? 'mx-auto max-w-4xl items-center text-center'
               : 'max-w-2xl items-start text-left'
@@ -124,7 +124,7 @@ export default function SiteHero({
             <p
               data-hero-item
               className={cn(
-                'mt-7 w-full font-ui text-lead leading-[1.6] text-white/85',
+                'mt-7 w-full font-ui text-lead leading-[1.6] text-[var(--app-text)]',
                 centered ? 'max-w-2xl' : 'max-w-xl'
               )}
             >
@@ -135,7 +135,7 @@ export default function SiteHero({
           {description ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-md leading-relaxed text-white/60"
+              className="mt-3 max-w-2xl font-ui text-body-md leading-relaxed text-[var(--app-muted)]"
             >
               {description}
             </p>
@@ -144,7 +144,7 @@ export default function SiteHero({
           {note ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-sm leading-relaxed text-white/55"
+              className="mt-3 max-w-2xl font-ui text-body-sm leading-relaxed text-[var(--app-muted)]"
             >
               {note}
             </p>
@@ -161,7 +161,7 @@ export default function SiteHero({
               {chips.map(chip => (
                 <span
                   key={chip}
-                  className="rounded-badge border border-white/25 px-3.5 py-1.5 font-ui text-label font-semibold text-white/75"
+                  className="rounded-badge border border-[var(--app-border)] px-3.5 py-1.5 font-ui text-label font-semibold text-[var(--app-muted)]"
                 >
                   {chip}
                 </span>
@@ -188,7 +188,7 @@ export default function SiteHero({
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center motion-reduce:hidden"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-white/70 motion-safe:animate-bounce">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-border)] text-[var(--app-muted)] motion-safe:animate-bounce">
             <svg
               width="14"
               height="14"

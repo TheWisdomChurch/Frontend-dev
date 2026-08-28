@@ -76,6 +76,7 @@ export default async function LeadershipPage() {
 
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <SiteHero
+        backgroundImage="/Picflow/menleaders.webp"
         eyebrow="Leadership"
         title="The people who shepherd this church."
         subtitle="Called, committed, and accountable — meet the team that serves the Wisdom Church community."

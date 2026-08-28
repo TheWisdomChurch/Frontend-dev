@@ -69,7 +69,7 @@ export default function WomenMinistryPage() {
               tone="dark"
             />
           </div>
-          <div className="grid gap-px overflow-hidden rounded-card border border-white/10 bg-white/15 lg:grid-cols-2">
+          <div className="grid gap-px overflow-hidden rounded-card border border-[var(--app-border)] bg-white/15 lg:grid-cols-2">
             {[content.vision, content.mission].map(item => (
               <article
                 key={item.label}
@@ -80,7 +80,7 @@ export default function WomenMinistryPage() {
                 <h3 className="mt-5 max-w-xl font-ui text-heading-lg font-medium leading-tight tracking-[-0.035em] !text-white sm:text-display-sm">
                   {item.title}
                 </h3>
-                <p className="mt-6 max-w-xl font-ui text-body-lg leading-loose text-white/70">
+                <p className="mt-6 max-w-xl font-ui text-body-lg leading-loose text-[var(--app-muted)]">
                   {item.body}
                 </p>
               </article>

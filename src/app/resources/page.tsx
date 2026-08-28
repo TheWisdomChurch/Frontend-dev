@@ -159,6 +159,7 @@ export default function ResourcesPage() {
       />
 
       <SiteHero
+        backgroundImage="/Picflow/DSC00082 copy.webp"
         title="Resource Center"
         subtitle="Everything you need in one place."
         note="Live streams, sermons, events, publications, store, and pastoral care — curated for your growth."
@@ -177,7 +178,7 @@ export default function ResourcesPage() {
               />
             </div>
 
-            <div className="rounded-full border border-white/10 bg-white/[0.045] px-4 py-2 text-sm text-white/60 backdrop-blur-xl">
+            <div className="rounded-full border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 text-sm text-[var(--app-muted)] backdrop-blur-xl">
               {filteredResources.length} resources available
             </div>
           </div>
@@ -190,7 +191,7 @@ export default function ResourcesPage() {
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="group relative block h-full min-h-[11rem] overflow-hidden rounded-card border border-white/12 bg-white/[0.035] p-6 transition duration-500 ease-out motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/40"
+                  className="group relative block h-full min-h-[11rem] overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.035] p-6 transition duration-500 ease-out motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/40"
                 >
                   <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
@@ -204,12 +205,12 @@ export default function ResourcesPage() {
                         {item.title}
                       </H3>
 
-                      <SmallText className="mt-2 block text-sm leading-6 text-white/58">
+                      <SmallText className="mt-2 block text-sm leading-6 text-[var(--app-muted)]">
                         {item.desc}
                       </SmallText>
                     </div>
 
-                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
+                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:translate-x-1 group-hover:text-white" />
                   </div>
                 </Link>
               );
@@ -257,7 +258,7 @@ export default function ResourcesPage() {
               <Panel className="p-5">
                 <label className="relative block">
                   <span className="sr-only">Search resources</span>
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
                   <input
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
@@ -317,7 +318,7 @@ export default function ResourcesPage() {
                             </div>
                           </div>
 
-                          <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
+                          <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:translate-x-1 group-hover:text-white" />
                         </div>
 
                         <BodyMD className="mt-4 line-clamp-4 text-sm leading-7 text-[var(--app-muted)]">
@@ -361,7 +362,7 @@ export default function ResourcesPage() {
               <Radio className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
-            <BodyMD className="mt-2 text-sm leading-7 text-white/62">
+            <BodyMD className="mt-2 text-sm leading-7 text-[var(--app-muted)]">
               Get alerts for every stream and access the full video library.
             </BodyMD>
           </div>
@@ -379,7 +380,7 @@ export default function ResourcesPage() {
           </Button>
 
           <form onSubmit={handleEmailSubmit} className="space-y-3">
-            <label className="block text-sm font-semibold text-white/80">
+            <label className="block text-sm font-semibold text-[var(--app-text)]">
               Or get email reminders
             </label>
 
@@ -389,7 +390,7 @@ export default function ResourcesPage() {
               onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+              className="h-12 w-full rounded-2xl border border-[var(--app-border)] bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
             />
 
             <Button
@@ -401,7 +402,7 @@ export default function ResourcesPage() {
             </Button>
           </form>
 
-          <Caption className="block text-center text-white/45">
+          <Caption className="block text-center text-[var(--app-subtle)]">
             We’ll email you before each live service starts.
           </Caption>
         </div>

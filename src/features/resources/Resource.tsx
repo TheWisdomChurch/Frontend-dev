@@ -184,7 +184,7 @@ function ResourceCarousel() {
                   <p className="mt-1.5 font-headline text-heading-sm font-normal leading-snug text-white">
                     {item.title}
                   </p>
-                  <p className="mt-1.5 font-ui text-label leading-[1.6] text-white/60">
+                  <p className="mt-1.5 font-ui text-label leading-[1.6] text-[var(--app-muted)]">
                     {item.desc}
                   </p>
                   <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
@@ -255,10 +255,10 @@ export default function ResourceSection() {
               />
 
               <div className="mt-8 flex flex-wrap gap-2.5">
-                <span className="rounded-badge border border-white/12 bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-white/68">
+                <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
                   {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
                 </span>
-                <span className="rounded-badge border border-white/12 bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-white/68">
+                <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
                   {SERVICE_INFO.dailyPrayer.label} ·{' '}
                   {SERVICE_INFO.dailyPrayer.time}
                 </span>
@@ -278,7 +278,7 @@ export default function ResourceSection() {
                     <h3 className="line-clamp-3 font-headline text-heading-lg font-semibold leading-tight !text-white">
                       {recentVideoTitle}
                     </h3>
-                    <p className="mt-3 font-ui text-body-sm text-white/52">
+                    <p className="mt-3 font-ui text-body-sm text-[var(--app-subtle)]">
                       The Wisdom Church
                     </p>
                   </>
@@ -287,7 +287,7 @@ export default function ResourceSection() {
                     <h3 className="font-headline text-heading-md font-semibold !text-white">
                       Message coming soon
                     </h3>
-                    <p className="mt-3 max-w-md font-ui text-body-sm leading-7 text-white/52">
+                    <p className="mt-3 max-w-md font-ui text-body-sm leading-7 text-[var(--app-subtle)]">
                       Our latest teaching will appear here as soon as it is
                       published.
                     </p>
@@ -305,12 +305,12 @@ export default function ResourceSection() {
 
             <div
               data-gsap="reveal"
-              className="relative aspect-video w-full overflow-hidden rounded-image border border-white/12 bg-white/[0.035] shadow-2xl shadow-black/30"
+              className="relative aspect-video w-full overflow-hidden rounded-image border border-[var(--app-border)] bg-white/[0.035] shadow-2xl shadow-black/30"
             >
               {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                   <Loader2 className="h-7 w-7 animate-spin text-[var(--app-primary)]" />
-                  <p className="font-ui text-label text-white/48">
+                  <p className="font-ui text-label text-[var(--app-subtle)]">
                     Preparing the latest message…
                   </p>
                 </div>
@@ -349,7 +349,7 @@ export default function ResourceSection() {
                   <p className="mt-6 font-headline text-heading-sm font-semibold !text-white">
                     Latest message coming soon
                   </p>
-                  <p className="mt-2 max-w-sm font-ui text-body-sm leading-7 text-white/48">
+                  <p className="mt-2 max-w-sm font-ui text-body-sm leading-7 text-[var(--app-subtle)]">
                     Explore previous sermons while the newest teaching is being
                     prepared.
                   </p>

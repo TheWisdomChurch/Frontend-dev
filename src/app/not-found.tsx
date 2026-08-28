@@ -8,6 +8,7 @@ export default function NotFound() {
   return (
     <div className="tone-dark min-h-screen bg-[var(--app-dark)] text-[var(--app-text)]">
       <SiteHero
+        backgroundImage="/Picflow/DSC00005 copy.webp"
         title="That page could not be found."
         subtitle="The route may have changed, the page may have moved, or the link may no longer exist."
         note="Use the links below to get back to the main church pages without guessing where to go next."

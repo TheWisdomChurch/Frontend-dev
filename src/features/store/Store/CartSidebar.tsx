@@ -71,7 +71,7 @@ const CartSidebar = () => {
 
       <div
         ref={sidebarRef}
-        className="fixed right-0 top-0 z-50 flex h-dvh w-full max-w-md flex-col border-l border-white/[0.12] bg-[var(--app-dark)] pb-[env(safe-area-inset-bottom)] shadow-2xl"
+        className="tone-dark fixed right-0 top-0 z-50 flex h-dvh w-full max-w-md flex-col border-l border-white/[0.12] bg-[var(--app-dark)] pb-[env(safe-area-inset-bottom)] shadow-2xl"
       >
         {/* Header */}
         <div className="border-b border-white/[0.12] p-6">
@@ -102,11 +102,11 @@ const CartSidebar = () => {
               gap="md"
               className="h-full text-center"
             >
-              <ShoppingBag className="h-16 w-16 text-white/60" />
+              <ShoppingBag className="h-16 w-16 text-[var(--app-muted)]" />
               <BaseText weight="semibold" className="text-xl text-white">
                 Your cart is empty
               </BaseText>
-              <LightText className="text-white/60">
+              <LightText className="text-[var(--app-muted)]">
                 Add some items to get started
               </LightText>
             </Flex>
@@ -125,7 +125,7 @@ const CartSidebar = () => {
                       >
                         {item.name}
                       </BaseText>
-                      <LightText className="text-sm text-white/60">
+                      <LightText className="text-sm text-[var(--app-muted)]">
                         {item.selectedSize} • {item.selectedColor}
                       </LightText>
                       <BaseText

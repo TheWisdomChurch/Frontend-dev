@@ -85,13 +85,13 @@ const ACTIONS = [
 ───────────────────────────────────────────────────────── */
 
 const inputClass =
-  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 const selectClass =
-  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
 
 const fieldLabelClass =
-  'font-ui text-caption font-bold uppercase tracking-[0.15em] text-white/45';
+  'font-ui text-caption font-bold uppercase tracking-[0.15em] text-[var(--app-subtle)]';
 
 /* ─────────────────────────────────────────────────────────
    Modal shell
@@ -416,11 +416,11 @@ export default function HeroHighlights({
                 </p>
                 <p className="mt-1 break-words font-headline text-lg leading-tight text-white sm:text-xl">
                   {SERVICE_INFO.sunday.time}{' '}
-                  <span className="font-ui text-xs text-white/45 sm:text-sm">
+                  <span className="font-ui text-xs text-[var(--app-subtle)] sm:text-sm">
                     {SERVICE_INFO.sunday.timezone}
                   </span>
                 </p>
-                <p className="mt-1.5 max-w-lg break-words font-ui text-xs leading-5 text-white/55">
+                <p className="mt-1.5 max-w-lg break-words font-ui text-xs leading-5 text-[var(--app-muted)]">
                   {SERVICE_INFO.venue.full}
                 </p>
               </div>
@@ -443,7 +443,7 @@ export default function HeroHighlights({
             />
             {!scheduleLoading && !scheduleVerified ? (
               <div className="mt-3 flex min-w-0 flex-col items-start gap-2 rounded-card border border-[var(--status-warning)]/20 bg-[var(--status-warning)]/[0.06] px-4 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
-                <p className="font-ui text-xs leading-5 text-white/70">
+                <p className="font-ui text-xs leading-5 text-[var(--app-muted)]">
                   Booking is paused until the live service calendar is verified.
                 </p>
                 <button
@@ -545,7 +545,7 @@ export default function HeroHighlights({
             />
           </label>
 
-          <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/8 bg-white/[0.025] p-3.5">
+          <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--app-border)] bg-white/[0.025] p-3.5">
             <input
               id="visit-reminder-opt-in"
               name="reminderOptIn"
@@ -559,7 +559,7 @@ export default function HeroHighlights({
               }
               className="mt-0.5 h-4 w-4 accent-[var(--app-primary)]"
             />
-            <span className="font-ui text-xs leading-5 text-white/50">
+            <span className="font-ui text-xs leading-5 text-[var(--app-subtle)]">
               Send me one reminder before this service. Your booking
               confirmation is transactional and will still be sent.
             </span>
@@ -574,10 +574,10 @@ export default function HeroHighlights({
             </p>
           ) : null}
 
-          <div className="min-w-0 rounded-2xl border border-white/8 bg-white/[0.025] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5 sm:p-5">
+          <div className="min-w-0 rounded-2xl border border-[var(--app-border)] bg-white/[0.025] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5 sm:p-5">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-success)]" />
-              <p className="min-w-0 break-words font-ui text-xs leading-5 text-white/45">
+              <p className="min-w-0 break-words font-ui text-xs leading-5 text-[var(--app-subtle)]">
                 We’ll email your confirmation, directions, and a reminder before
                 service.
               </p>
@@ -610,7 +610,7 @@ export default function HeroHighlights({
         icon={<Headphones />}
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
-          <div className="flex items-start gap-3 border border-white/10 bg-white/[0.03] p-4">
+          <div className="flex items-start gap-3 border border-[var(--app-border)] bg-white/[0.03] p-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
               <Headphones className="h-4 w-4" />
             </div>
@@ -618,7 +618,7 @@ export default function HeroHighlights({
               <p className="font-ui text-body-sm font-semibold text-white">
                 Service reminder
               </p>
-              <p className="mt-1 font-ui text-label leading-[1.6] text-white/50">
+              <p className="mt-1 font-ui text-label leading-[1.6] text-[var(--app-subtle)]">
                 We'll notify you before live service and direct you to the
                 active stream.
               </p>
@@ -661,7 +661,7 @@ export default function HeroHighlights({
               {submissionError}
             </p>
           ) : null}
-          <Caption className="text-center text-white/40">
+          <Caption className="text-center text-[var(--app-subtle)]">
             Service reminders only. No spam.
           </Caption>
         </form>
@@ -692,13 +692,13 @@ export default function HeroHighlights({
             <h2 className="mt-2 break-words font-headline text-2xl leading-tight text-white sm:text-3xl">
               We’re expecting you.
             </h2>
-            <p className="mx-auto mt-3 max-w-sm font-ui text-sm leading-6 text-white/55">
+            <p className="mx-auto mt-3 max-w-sm font-ui text-sm leading-6 text-[var(--app-muted)]">
               {visitConfirmation.reminderOptIn
                 ? 'Your confirmation is saved, the welcome team has been notified, and your reminder is scheduled.'
                 : 'Your confirmation is saved and the welcome team has been notified.'}
             </p>
-            <div className="mt-6 min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left sm:rounded-3xl sm:p-5">
-              <p className="break-words font-ui text-xs font-bold uppercase tracking-[0.12em] text-white/40 sm:tracking-[0.16em]">
+            <div className="mt-6 min-w-0 rounded-2xl border border-[var(--app-border)] bg-white/[0.04] p-4 text-left sm:rounded-3xl sm:p-5">
+              <p className="break-words font-ui text-xs font-bold uppercase tracking-[0.12em] text-[var(--app-subtle)] sm:tracking-[0.16em]">
                 {visitConfirmation.serviceType}
               </p>
               <p className="mt-2 break-words font-headline text-lg leading-snug text-white sm:text-xl">
@@ -710,12 +710,12 @@ export default function HeroHighlights({
                   timeZone: 'Africa/Lagos',
                 }).format(new Date(visitConfirmation.serviceAt))}
               </p>
-              <p className="mt-1 font-ui text-sm text-white/55">
+              <p className="mt-1 font-ui text-sm text-[var(--app-muted)]">
                 {SERVICE_INFO.sunday.time} {SERVICE_INFO.sunday.timezone} ·{' '}
                 {visitConfirmation.attendance}{' '}
                 {visitConfirmation.attendance === 1 ? 'guest' : 'guests'}
               </p>
-              <p className="mt-4 break-all border-t border-white/8 pt-4 font-mono text-[10px] uppercase tracking-[0.08em] text-white/35 sm:tracking-[0.12em]">
+              <p className="mt-4 break-all border-t border-[var(--app-border)] pt-4 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--app-subtle)] sm:tracking-[0.12em]">
                 Reference {visitConfirmation.id}
               </p>
             </div>
@@ -734,7 +734,7 @@ export default function HeroHighlights({
               <button
                 type="button"
                 onClick={() => setVisitConfirmation(null)}
-                className="min-h-12 rounded-full border border-white/12 px-5 font-ui text-sm font-bold text-white transition hover:bg-white/[0.06]"
+                className="min-h-12 rounded-full border border-[var(--app-border)] px-5 font-ui text-sm font-bold text-white transition hover:bg-white/[0.06]"
               >
                 Done
               </button>

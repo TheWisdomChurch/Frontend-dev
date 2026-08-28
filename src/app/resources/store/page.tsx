@@ -201,6 +201,7 @@ function StorePageContent() {
   return (
     <Page tone="dark">
       <SiteHero
+        backgroundImage="/Picflow/DSC06903 copy.webp"
         title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
         description="Discover our exclusive collection of merchandise designed to inspire and uplift. Each item carries a message of faith, hope, and wisdom for your daily journey."
@@ -247,12 +248,14 @@ function StorePageContent() {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="border-t border-white/15 p-4 text-center"
+                  className="border-t border-[var(--app-border)] p-4 text-center"
                 >
                   <BodyLG weight="bold" className="text-[var(--app-primary)]">
                     {value}
                   </BodyLG>
-                  <Eyebrow className="mt-1 text-white/42">{label}</Eyebrow>
+                  <Eyebrow className="mt-1 text-[var(--app-subtle)]">
+                    {label}
+                  </Eyebrow>
                 </div>
               ))}
             </div>
@@ -264,13 +267,13 @@ function StorePageContent() {
           >
             <div className="grid gap-3 lg:grid-cols-[1fr_280px_auto] lg:items-center">
               <label className="relative block">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
                 <input
                   type="text"
                   placeholder="Search products, scripture, gifts..."
                   value={filters.searchTerm}
                   onChange={e => handleSearch(e.target.value)}
-                  className="h-12 w-full rounded-input border border-white/12 bg-white/[0.06] pl-11 pr-11 font-ui text-body-sm text-white outline-none transition placeholder:text-white/35 focus:border-[var(--app-primary)]"
+                  className="h-12 w-full rounded-input border border-[var(--app-border)] bg-white/[0.06] pl-11 pr-11 font-ui text-body-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] focus:border-[var(--app-primary)]"
                 />
 
                 {filters.searchTerm && (
@@ -279,7 +282,7 @@ function StorePageContent() {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleSearch('')}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 min-h-0 h-auto w-auto p-0 text-white/45 hover:text-white"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 min-h-0 h-auto w-auto p-0 text-[var(--app-subtle)] hover:text-white"
                     aria-label="Clear search"
                   >
                     <X className="h-4 w-4" />
@@ -289,12 +292,12 @@ function StorePageContent() {
 
               <label className="relative block">
                 <span className="sr-only">Filter by category</span>
-                <Filter className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
+                <Filter className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
                 <select
                   value={filters.selectedCategory}
                   onChange={e => handleCategoryClick(e.target.value)}
                   aria-label="Filter by category"
-                  className="h-12 w-full appearance-none rounded-input border border-white/12 bg-[var(--app-dark-2)] pl-11 pr-10 font-ui text-body-sm text-white outline-none transition focus:border-[var(--app-primary)]"
+                  className="h-12 w-full appearance-none rounded-input border border-[var(--app-border)] bg-[var(--app-dark-2)] pl-11 pr-10 font-ui text-body-sm text-white outline-none transition focus:border-[var(--app-primary)]"
                 >
                   {categories.map(category => (
                     <option key={category.value} value={category.value}>
@@ -302,14 +305,14 @@ function StorePageContent() {
                     </option>
                   ))}
                 </select>
-                <SlidersHorizontal className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
+                <SlidersHorizontal className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
               </label>
 
               <Button
                 type="button"
                 variant="ghost"
                 onClick={resetFilters}
-                className="h-12 rounded-2xl border border-white/12 bg-white/[0.04] px-5 text-sm font-bold text-white/72 hover:bg-white/[0.08] hover:text-white"
+                className="h-12 rounded-2xl border border-[var(--app-border)] bg-white/[0.04] px-5 text-sm font-bold text-[var(--app-muted)] hover:bg-white/[0.08] hover:text-white"
               >
                 Reset
               </Button>
@@ -357,7 +360,7 @@ function StorePageContent() {
                   className={`shrink-0 px-4 py-2.5 min-h-0 h-auto text-sm font-bold ${
                     active
                       ? 'shadow-lg shadow-[var(--app-primary-10)]'
-                      : 'border border-white/12 bg-white/[0.045] text-white/64 hover:bg-white/[0.08] hover:text-white'
+                      : 'border border-[var(--app-border)] bg-white/[0.045] text-[var(--app-muted)] hover:bg-white/[0.08] hover:text-white'
                   }`}
                 >
                   {category.name}
@@ -460,7 +463,7 @@ function StorePageContent() {
                     You&apos;re In!
                   </SmallText>
                   <Caption
-                    className="mt-1.5 block text-white/62"
+                    className="mt-1.5 block text-[var(--app-muted)]"
                     useThemeColor={false}
                   >
                     Your 10% discount code is on its way.
@@ -472,14 +475,14 @@ function StorePageContent() {
                   className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row"
                 >
                   <label className="relative flex-1">
-                    <Mail className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                    <Mail className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--app-subtle)]" />
                     <input
                       type="email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       placeholder="your@email.com"
                       required
-                      className={`${fieldClass} h-12 bg-white/[0.06] pl-12 text-white placeholder:text-white/40`}
+                      className={`${fieldClass} h-12 bg-white/[0.06] pl-12 text-white placeholder:text-[var(--app-subtle)]`}
                     />
                   </label>
 
@@ -508,7 +511,7 @@ function StorePageContent() {
               )}
 
               <Caption
-                className="mt-5 block text-xs text-white/42"
+                className="mt-5 block text-xs text-[var(--app-subtle)]"
                 useThemeColor={false}
               >
                 No spam · Unsubscribe anytime · 100% private

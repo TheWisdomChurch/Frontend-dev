@@ -77,7 +77,7 @@ function EventCard({ event }: { event: EventPublic }) {
 
   return (
     <article
-      className={`group flex h-full flex-col overflow-hidden rounded-card border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] ${interactiveCardClass}`}
+      className={`group flex h-full flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.03] hover:bg-white/[0.05] ${interactiveCardClass}`}
     >
       {/* Image / date block */}
       <div className="relative aspect-video overflow-hidden bg-[var(--app-dark-2)]">
@@ -94,7 +94,7 @@ function EventCard({ event }: { event: EventPublic }) {
             <span className="font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
               {date.month}
             </span>
-            <span className="font-ui text-display-sm font-medium leading-none text-white/90">
+            <span className="font-ui text-display-sm font-medium leading-none text-[var(--app-text)]">
               {date.day}
             </span>
           </div>
@@ -121,19 +121,19 @@ function EventCard({ event }: { event: EventPublic }) {
         </h3>
 
         {event.description && (
-          <p className="font-ui text-body-sm leading-[1.8] text-white/65 line-clamp-2">
+          <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-muted)] line-clamp-2">
             {event.description}
           </p>
         )}
 
-        <div className="mt-auto space-y-1.5 border-t border-white/8 pt-4">
+        <div className="mt-auto space-y-1.5 border-t border-[var(--app-border)] pt-4">
           {time && (
-            <p className="font-ui text-label font-semibold text-white/55">
+            <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
               {date.full} · {time}
             </p>
           )}
           {event.location && (
-            <p className="font-ui text-label text-white/38 line-clamp-1">
+            <p className="font-ui text-label text-[var(--app-subtle)] line-clamp-1">
               {event.location}
             </p>
           )}
@@ -148,7 +148,7 @@ function EventCard({ event }: { event: EventPublic }) {
             <Arrow className="transition-transform group-hover/action:translate-x-1" />
           </a>
         ) : (
-          <span className="mt-2 inline-flex items-center gap-2 self-start rounded-button border border-white/12 px-5 py-2.5 font-ui text-label font-semibold text-white/35">
+          <span className="mt-2 inline-flex items-center gap-2 self-start rounded-button border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-subtle)]">
             Free entry
           </span>
         )}
@@ -173,7 +173,7 @@ function EmptyState() {
         <h3 className="font-ui text-heading-md font-semibold text-white">
           Events are on their way.
         </h3>
-        <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/65">
+        <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-muted)]">
           Nothing is scheduled right now. In the meantime, join us for Sunday
           Worship and Daily Prayer, Monday through Friday.
         </p>
@@ -209,6 +209,7 @@ export default async function EventsPage() {
         ))}
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <SiteHero
+        backgroundImage="/Picflow/DSC00039 copy.webp"
         eyebrow="Events & Programs"
         title="What's happening at Wisdom Church."
         subtitle="Weekly services, special gatherings, and everything in between."
@@ -348,7 +349,7 @@ export default async function EventsPage() {
               size="sm"
             />
             {events.length > 0 && (
-              <span className="inline-flex items-center gap-2 self-start rounded-badge border border-white/12 px-4 py-2 font-ui text-label font-semibold text-white/55 sm:self-auto">
+              <span className="inline-flex items-center gap-2 self-start rounded-badge border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)] sm:self-auto">
                 <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 {events.length} event{events.length !== 1 ? 's' : ''}
               </span>
@@ -378,7 +379,7 @@ export default async function EventsPage() {
               <p className="font-ui text-heading-sm font-semibold text-white">
                 Have a question about an event?
               </p>
-              <p className="mt-1 font-ui text-body-sm text-white/55">
+              <p className="mt-1 font-ui text-body-sm text-[var(--app-muted)]">
                 Our team is happy to help — reach out any time.
               </p>
             </div>

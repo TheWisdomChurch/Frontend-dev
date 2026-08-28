@@ -45,6 +45,7 @@ export default function PublicationPage() {
   return (
     <Page tone="dark">
       <SiteHero
+        backgroundImage="/Picflow/DSC00018 copy.webp"
         eyebrow="Publications"
         title="Resources to help you grow between services."
         subtitle="Sermon notes, study guides, and devotional materials from The Wisdom Church."
@@ -80,7 +81,7 @@ export default function PublicationPage() {
 
           {/* Available now cards */}
           <div className="mx-auto mt-16 max-w-3xl" data-gsap="reveal">
-            <p className="mb-5 font-ui text-caption font-bold uppercase tracking-[0.2em] text-white/45">
+            <p className="mb-5 font-ui text-caption font-bold uppercase tracking-[0.2em] text-[var(--app-subtle)]">
               Available now — request directly
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
@@ -94,7 +95,7 @@ export default function PublicationPage() {
                       ? 'noopener noreferrer'
                       : undefined
                   }
-                  className="group flex flex-col gap-3 rounded-card border border-white/8 bg-white/[0.025] p-5 transition hover:border-[var(--app-primary)]/25 hover:bg-white/[0.04]"
+                  className="group flex flex-col gap-3 rounded-card border border-[var(--app-border)] bg-white/[0.025] p-5 transition hover:border-[var(--app-primary)]/25 hover:bg-white/[0.04]"
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ transitionDelay: `${i * 40}ms` }}
                 >
@@ -103,7 +104,7 @@ export default function PublicationPage() {
                     <p className="font-ui text-body-sm font-semibold text-white">
                       {item.label}
                     </p>
-                    <p className="mt-1 font-ui text-label leading-[1.7] text-white/62">
+                    <p className="mt-1 font-ui text-label leading-[1.7] text-[var(--app-muted)]">
                       {item.detail}
                     </p>
                   </div>

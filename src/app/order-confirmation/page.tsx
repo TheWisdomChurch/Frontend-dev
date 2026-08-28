@@ -65,6 +65,7 @@ function SimpleConfirmation() {
   return (
     <Page tone="dark">
       <SiteHero
+        backgroundImage="/Picflow/DSC00090 copy.webp"
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
         description="Your order is confirmed and a receipt has been sent to your email."
@@ -74,7 +75,7 @@ function SimpleConfirmation() {
         <Container>
           <Panel tone="dark" className="mx-auto max-w-5xl">
             <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
-              <div className="confirmation-animate border-b border-white/10 p-6 text-center sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
+              <div className="confirmation-animate border-b border-[var(--app-border)] p-6 text-center sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10 text-green-500">
                   <CheckCircle2 className="h-12 w-12" />
                 </div>
@@ -87,7 +88,7 @@ function SimpleConfirmation() {
                 />
 
                 <LightText
-                  className="mt-4 block text-base leading-7 text-white/62"
+                  className="mt-4 block text-base leading-7 text-[var(--app-muted)]"
                   useThemeColor={false}
                 >
                   Thank you for your purchase. Your order has been successfully
@@ -95,7 +96,7 @@ function SimpleConfirmation() {
                 </LightText>
 
                 <BaseText
-                  className="mx-auto mt-4 block max-w-md text-sm leading-7 text-white/52"
+                  className="mx-auto mt-4 block max-w-md text-sm leading-7 text-[var(--app-subtle)]"
                   useThemeColor={false}
                 >
                   You will receive a confirmation email shortly with your order
@@ -122,7 +123,7 @@ function SimpleConfirmation() {
               </div>
 
               <div className="p-6 sm:p-8 lg:p-10">
-                <div className="confirmation-animate mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-white/65">
+                <div className="confirmation-animate mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/[0.06] px-3 py-1.5 text-[var(--app-muted)]">
                   <PackageCheck className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.22em]">
                     What happens next
@@ -136,7 +137,7 @@ function SimpleConfirmation() {
                     return (
                       <div
                         key={item.title}
-                        className="confirmation-animate border-t border-white/12 p-4"
+                        className="confirmation-animate border-t border-[var(--app-border)] p-4"
                         // eslint-disable-next-line no-restricted-syntax
                         style={{ transitionDelay: `${index * 60}ms` }}
                       >
@@ -149,7 +150,7 @@ function SimpleConfirmation() {
                             <BodySM weight="semibold" className="text-white">
                               {item.title}
                             </BodySM>
-                            <BodySM className="mt-1 text-white/55">
+                            <BodySM className="mt-1 text-[var(--app-muted)]">
                               {item.description}
                             </BodySM>
                           </div>
@@ -159,8 +160,8 @@ function SimpleConfirmation() {
                   })}
                 </div>
 
-                <div className="confirmation-animate mt-6 border-t border-white/12 p-4">
-                  <BodySM className="text-white/60">
+                <div className="confirmation-animate mt-6 border-t border-[var(--app-border)] p-4">
+                  <BodySM className="text-[var(--app-muted)]">
                     Need help with your order? Contact the church/store team
                     from the contact page and include your order information.
                   </BodySM>
