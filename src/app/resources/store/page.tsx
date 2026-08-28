@@ -114,14 +114,14 @@ function StorePageContent() {
 
     gsap.fromTo(
       productCards,
-      { opacity: 0, y: 24, scale: 0.98 },
+      { opacity: 0, y: 48, scale: 0.955 },
       {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: 0.45,
-        stagger: 0.055,
-        ease: 'power3.out',
+        duration: 0.85,
+        stagger: 0.08,
+        ease: 'expo.out',
       }
     );
   }, [filteredProducts]);
@@ -167,8 +167,8 @@ function StorePageContent() {
     if (productsRef.current) {
       gsap.fromTo(
         productsRef.current,
-        { opacity: 0.75, y: 10 },
-        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
+        { opacity: 0.55, y: 22, scale: 0.985 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'expo.out' }
       );
     }
   };

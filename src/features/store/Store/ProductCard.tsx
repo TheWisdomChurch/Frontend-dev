@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, type MouseEvent } from 'react';
+import { memo } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { BodyLG, BodySM, SmallText, Caption, Eyebrow } from '@/shared/text';
@@ -123,18 +123,12 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
         <Button
           variant="primary"
           size="md"
-
+          fullWidth
           elevated
           leftIcon={<ShoppingBag className="h-4 w-4" />}
           onClick={() => onQuickView(product)}
           disabled={soldOut}
-          className="mt-5 h-11 w-full font-bold transition hover:scale-[1.01]"
-          onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-            e.currentTarget.style.backgroundColor = 'var(--app-primary-dark)';
-          }}
-          onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-            e.currentTarget.style.backgroundColor = 'var(--app-primary)';
-          }}
+          className="mt-5"
         >
           {soldOut ? 'Out of Stock' : 'Add to Cart'}
         </Button>

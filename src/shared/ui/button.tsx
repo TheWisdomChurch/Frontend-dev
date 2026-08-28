@@ -14,21 +14,21 @@ export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 const base =
-  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-bold uppercase tracking-[0.14em] transition duration-200 ease-out outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5';
+  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] transition-[transform,background-color,border-color,box-shadow,color] duration-200 ease-out outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0';
 
 const sizeClass: Record<ButtonSize, string> = {
-  sm: 'min-h-9 px-4 text-eyebrow',
-  md: 'min-h-11 px-6 text-label',
-  lg: 'min-h-12 px-7 text-label',
+  sm: 'min-h-9 px-4 text-body-sm',
+  md: 'min-h-11 px-5 text-body-md',
+  lg: 'min-h-12 px-7 text-body-lg',
   icon: 'h-11 w-11 p-0',
 };
 
 const variantClass: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--app-primary)] text-[var(--app-ink)] hover:bg-[var(--app-primary-hover)]',
+    'bg-[var(--app-primary)] text-[var(--app-ink)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-md',
   dark: 'bg-[var(--app-dark)] text-white hover:bg-[var(--app-neutral)]',
   outline:
-    'border border-current/35 bg-transparent text-current hover:border-current/70 hover:bg-current/5',
+    'border border-current/30 bg-transparent text-current hover:border-current/60 hover:bg-current/[0.06]',
   ghost: 'bg-transparent text-current hover:bg-current/10',
 };
 

@@ -46,7 +46,7 @@ export const fieldErrorClass =
   'font-ui text-body-sm font-semibold text-[var(--status-error)]';
 
 export const interactiveCardClass =
-  'group/card transform-gpu transition-[transform,border-color,box-shadow,background-color] duration-500 ease-out motion-safe:hover:-translate-y-1.5 hover:border-[var(--app-primary)]/45 hover:shadow-2xl hover:shadow-black/10 focus-within:border-[var(--app-primary)]/55 focus-within:shadow-xl motion-reduce:transform-none motion-reduce:transition-none';
+  'group/card transform-gpu transition-[transform,border-color,box-shadow,background-color] duration-[450ms] ease-out motion-safe:hover:-translate-y-2 motion-safe:hover:scale-[1.012] hover:border-[var(--app-primary)]/50 hover:shadow-2xl hover:shadow-black/15 focus-within:border-[var(--app-primary)]/60 focus-within:shadow-xl motion-reduce:transform-none motion-reduce:transition-none';
 
 /**
  * JS-facing colour map for third-party APIs that cannot read CSS custom
@@ -410,19 +410,18 @@ export function SectionHeader({
       </p>
       <h2
         className={cn(
-          'mt-5 text-balance font-ui font-medium leading-[1.02] tracking-[-0.045em]',
+          'mt-5 text-balance font-ui font-medium leading-[1.03] tracking-[-0.04em] text-current',
           size === 'sm' && 'text-heading-lg sm:text-display-sm',
           size === 'md' && 'text-display-sm sm:text-display-md',
           size === 'lg' &&
-            'text-display-sm sm:text-display-md lg:text-display-lg',
-          tone === 'dark' ? '!text-white' : '!text-[var(--app-ink)]'
+            'text-display-sm sm:text-display-md lg:text-display-lg'
         )}
       >
         {title}
         {accent ? (
           <>
             {' '}
-            <span className="font-ui font-normal text-[var(--app-primary)]">
+            <span className="font-normal text-[var(--app-primary)]">
               {accent}
             </span>
           </>
@@ -454,7 +453,7 @@ export function Figure({
 }) {
   return (
     <div
-      data-parallax-global={parallax ? '0.12' : undefined}
+      data-parallax-global={parallax ? '0.18' : undefined}
       className={cn(
         'relative overflow-hidden rounded-image bg-[var(--app-surface-2)]',
         className
@@ -465,8 +464,8 @@ export function Figure({
         alt={alt}
         quality={IMAGE_QUALITY}
         className={cn(
-          'object-cover transition-transform duration-700 ease-out',
-          parallax && 'scale-[1.04]',
+          'object-cover transition-transform duration-[900ms] ease-out',
+          parallax && 'scale-[1.08]',
           imageClassName
         )}
       />

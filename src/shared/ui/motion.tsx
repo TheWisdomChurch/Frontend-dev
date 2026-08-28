@@ -5,26 +5,27 @@ import type { HTMLMotionProps } from 'framer-motion';
 import { motion } from 'framer-motion';
 
 /* ── Motion tokens — the one easing curve, duration, distance, and stagger
-      scale for every animation in the app. ───────────────────────────────── */
+      scale for every animation in the app. Tuned for an expressive entrance:
+      longer travel, a touch of scale, a slower settle. ───────────────────── */
 
-export const motionEase = [0.22, 1, 0.36, 1] as const;
+export const motionEase = [0.19, 1, 0.22, 1] as const;
 
 export const motionDuration = {
-  fast: 0.24,
-  base: 0.48,
-  slow: 0.72,
+  fast: 0.32,
+  base: 0.62,
+  slow: 0.92,
 } as const;
 
 export const motionDistance = {
-  subtle: 12,
-  base: 24,
-  expressive: 36,
+  subtle: 18,
+  base: 44,
+  expressive: 72,
 } as const;
 
 export const motionStagger = {
-  tight: 0.045,
-  base: 0.08,
-  relaxed: 0.12,
+  tight: 0.06,
+  base: 0.1,
+  relaxed: 0.15,
 } as const;
 
 /* ── Scroll-reveal cascade — a section wraps its content in `staggerContainer`
@@ -41,15 +42,16 @@ export const staggerContainer = {
 };
 
 export const staggerItem = {
-  hidden: { opacity: 0, y: 22 },
+  hidden: { opacity: 0, y: motionDistance.base, scale: 0.965 },
   show: {
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: { duration: motionDuration.slow, ease: motionEase },
   },
 };
 
-export const staggerViewport = { once: true, amount: 0.25 } as const;
+export const staggerViewport = { once: true, amount: 0.2 } as const;
 
 /* ── ScrollFadeIn — the single reveal primitive. ──────────────────────────── */
 
@@ -71,9 +73,9 @@ export function ScrollFadeIn({
 }: ScrollFadeInProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, amount: 0.22 }}
+      initial={{ opacity: 0, y, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once, amount: 0.2 }}
       transition={{ duration, delay, ease: motionEase }}
       suppressHydrationWarning
       {...props}

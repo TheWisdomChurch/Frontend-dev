@@ -58,11 +58,24 @@ export default {
         code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontWeight: {
+        // The design runs a lighter "bold" (600) than the browser default so
+        // headings in the sturdy grotesque don't read as heavy. The ladder
+        // stays monotonic — extrabold/black sit above it, not below.
         bold: '600',
-        extrabold: '800',
-        black: '700',
+        extrabold: '700',
+        black: '800',
       },
       fontSize: {
+        // Fluid overrides for Tailwind's large display sizes so a bare
+        // `text-6xl` (or `sm:text-5xl`) interpolates smoothly instead of
+        // snapping to a fixed rem that overflows narrow viewports. These
+        // replace the old `!important` clamp block in globals.scss.
+        '4xl': ['clamp(1.55rem, 3vw, 2.25rem)', { lineHeight: '1.12' }],
+        '5xl': ['clamp(1.8rem, 4vw, 3rem)', { lineHeight: '1.08' }],
+        '6xl': ['clamp(2rem, 5vw, 3.75rem)', { lineHeight: '1.05' }],
+        '7xl': ['clamp(2rem, 6vw, 4.5rem)', { lineHeight: '1.05' }],
+        '8xl': ['clamp(2.2rem, 7vw, 6rem)', { lineHeight: '1.05' }],
+        '9xl': ['clamp(2.4rem, 9vw, 8rem)', { lineHeight: '1.05' }],
         'display-xl': 'var(--type-display-xl)',
         'display-lg': 'var(--type-display-lg)',
         'display-md': 'var(--type-display-md)',

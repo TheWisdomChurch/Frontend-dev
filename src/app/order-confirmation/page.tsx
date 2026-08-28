@@ -50,14 +50,14 @@ function SimpleConfirmation() {
   useEffect(() => {
     gsap.fromTo(
       '.confirmation-animate',
-      { opacity: 0, y: 22, scale: 0.98 },
+      { opacity: 0, y: 44, scale: 0.955 },
       {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: 0.65,
-        stagger: 0.08,
-        ease: 'power3.out',
+        duration: 0.9,
+        stagger: 0.11,
+        ease: 'expo.out',
       }
     );
   }, []);

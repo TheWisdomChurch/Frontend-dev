@@ -27,18 +27,19 @@ const CartSidebar = () => {
   useEffect(() => {
     if (sidebarRef.current && overlayRef.current) {
       if (isCartOpen) {
-        gsap.to(overlayRef.current, { opacity: 1, duration: 0.3 });
+        gsap.to(overlayRef.current, { opacity: 1, duration: 0.35 });
         gsap.fromTo(
           sidebarRef.current,
-          { x: 400, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
+          { x: 460, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.62, ease: 'expo.out' }
         );
       } else {
         gsap.to(overlayRef.current, { opacity: 0, duration: 0.3 });
         gsap.to(sidebarRef.current, {
-          x: 400,
+          x: 460,
           opacity: 0,
-          duration: 0.3,
+          duration: 0.34,
+          ease: 'power2.in',
         });
       }
     }

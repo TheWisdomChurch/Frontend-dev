@@ -81,10 +81,10 @@ export default function GlobalScrollEffects() {
         '(min-width: 768px) and (max-width: 1024px)'
       ).matches;
 
-      const revealDistance = isMobile ? 16 : isTablet ? 22 : 28;
-      const revealDuration = isMobile ? 0.42 : isTablet ? 0.55 : 0.68;
-      const revealStagger = isMobile ? 0.035 : isTablet ? 0.05 : 0.065;
-      const parallaxScale = isTablet ? 0.5 : 1;
+      const revealDistance = isMobile ? 28 : isTablet ? 40 : 56;
+      const revealDuration = isMobile ? 0.66 : isTablet ? 0.82 : 0.95;
+      const revealStagger = isMobile ? 0.06 : isTablet ? 0.08 : 0.11;
+      const parallaxScale = isTablet ? 0.6 : 1.35;
 
       ctx = gsap.context(() => {
         const hero = root.querySelector<HTMLElement>('[data-site-hero]');
@@ -110,40 +110,42 @@ export default function GlobalScrollEffects() {
           if (media) {
             heroTimeline.fromTo(
               media,
-              { scale: isMobile ? 1.035 : 1.075 },
-              { scale: 1, duration: isMobile ? 1.1 : 1.55, ease: 'power2.out' },
+              { scale: isMobile ? 1.06 : 1.12 },
+              { scale: 1, duration: isMobile ? 1.4 : 1.9, ease: 'power2.out' },
               0
             );
           }
           if (overlay) {
             heroTimeline.fromTo(
               overlay,
-              { opacity: 0.35 },
-              { opacity: 1, duration: 1.1 },
+              { opacity: 0.25 },
+              { opacity: 1, duration: 1.3 },
               0
             );
           }
           heroTimeline.fromTo(
             titleLines,
-            { yPercent: 112, autoAlpha: 0 },
+            { yPercent: 118, autoAlpha: 0 },
             {
               yPercent: 0,
               autoAlpha: 1,
-              duration: isMobile ? 0.72 : 0.95,
-              stagger: 0.1,
+              duration: isMobile ? 0.9 : 1.15,
+              stagger: 0.12,
+              ease: 'expo.out',
             },
-            0.18
+            0.2
           );
           heroTimeline.fromTo(
             items,
-            { y: isMobile ? 14 : 20, autoAlpha: 0 },
+            { y: isMobile ? 22 : 34, autoAlpha: 0 },
             {
               y: 0,
               autoAlpha: 1,
-              duration: 0.68,
-              stagger: 0.08,
+              duration: 0.9,
+              stagger: 0.1,
+              ease: 'expo.out',
             },
-            0.34
+            0.42
           );
         }
 
@@ -151,18 +153,20 @@ export default function GlobalScrollEffects() {
           gsap.set(revealTargets, {
             autoAlpha: 0,
             y: revealDistance,
+            scale: 0.965,
             willChange: 'transform, opacity',
           });
 
           ScrollTrigger.batch(revealTargets, {
-            start: isMobile ? 'top 94%' : 'top 88%',
+            start: isMobile ? 'top 92%' : 'top 86%',
             once: true,
             onEnter: (batch: Element[]) => {
               gsap.to(batch, {
                 autoAlpha: 1,
                 y: 0,
+                scale: 1,
                 duration: revealDuration,
-                ease: 'power3.out',
+                ease: 'expo.out',
                 stagger: revealStagger,
                 overwrite: 'auto',
                 clearProps: 'transform,opacity,visibility,will-change',
@@ -179,17 +183,17 @@ export default function GlobalScrollEffects() {
         if (!reduceMotion && !isMobile && parallaxTargets.length > 0) {
           parallaxTargets.forEach(node => {
             const rawDepth = Number(node.dataset.parallaxGlobal ?? 0.14);
-            const depth = clamp(rawDepth * parallaxScale, 0.02, 0.32);
+            const depth = clamp(rawDepth * parallaxScale, 0.02, 0.42);
 
             gsap.to(node, {
-              yPercent: depth * 38,
+              yPercent: depth * 58,
               ease: 'none',
               force3D: true,
               scrollTrigger: {
                 trigger: node,
                 start: 'top bottom',
                 end: 'bottom top',
-                scrub: 0.65,
+                scrub: 0.8,
               },
             });
           });

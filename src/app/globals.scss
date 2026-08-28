@@ -289,9 +289,9 @@ h6 {
 h1,
 h2 {
   font-family: var(--font-sans), sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
 }
 
 h3,
@@ -301,7 +301,7 @@ h6 {
   font-family: var(--font-sans), sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 h1 {
@@ -370,42 +370,6 @@ video {
 
 section[data-gsap='reveal'] {
   transform-origin: center top;
-}
-
-/* Fluid safety net for raw Tailwind display-size utilities (text-4xl and up).
-   Applied unconditionally (not gated behind a max-width query) so a
-   hardcoded text-6xl+ heading can't silently render at its full fixed rem
-   size in the 641-1024px tablet/narrow-laptop gap that a mobile-only
-   override would miss — each clamp() interpolates smoothly from a
-   mobile-safe minimum up to Tailwind's original size as the viewport grows. */
-.text-9xl {
-  font-size: clamp(2.4rem, 9vw, 8rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-8xl {
-  font-size: clamp(2.2rem, 7vw, 6rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-7xl {
-  font-size: clamp(2rem, 6vw, 4.5rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-6xl {
-  font-size: clamp(2rem, 5vw, 3.75rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-5xl {
-  font-size: clamp(1.8rem, 4vw, 3rem) !important;
-  line-height: 1.08 !important;
-}
-
-.text-4xl {
-  font-size: clamp(1.55rem, 3vw, 2.25rem) !important;
-  line-height: 1.12 !important;
 }
 
 @media (max-width: 640px) {
