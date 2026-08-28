@@ -216,7 +216,7 @@ function PortraitCard({
     <div
       {...interactiveProps}
       className={[
-        'group flex h-full overflow-hidden border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
+        'group flex h-full overflow-hidden border border-[var(--app-border)] bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
         wide ? 'flex-col sm:flex-row lg:flex-col' : 'flex-col',
         onClick ? 'cursor-pointer' : '',
       ].join(' ')}
@@ -224,7 +224,7 @@ function PortraitCard({
       {/* Image */}
       <div
         className={[
-          'relative shrink-0 overflow-hidden bg-[var(--app-ink)]/8',
+          'relative shrink-0 overflow-hidden bg-[var(--app-canvas-2)]',
           wide
             ? 'aspect-[16/10] sm:aspect-auto sm:w-2/5 lg:aspect-[4/5] lg:w-full'
             : 'aspect-[4/5]',
@@ -233,7 +233,7 @@ function PortraitCard({
         <Media
           src={slide.imageUrl}
           alt={slide.title}
-          frameClassName="bg-[var(--app-ink)]/8"
+          frameClassName="bg-[var(--app-canvas-2)]"
           sizes={
             wide
               ? '(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 22vw'
@@ -264,7 +264,7 @@ function PortraitCard({
           {slide.title}
         </p>
         {slide.location && (
-          <p className="font-ui text-label text-[var(--app-ink)]/60">
+          <p className="font-ui text-label text-[var(--app-muted)]">
             {slide.location}
           </p>
         )}
@@ -272,14 +272,14 @@ function PortraitCard({
         {slide.href && !isReel && (
           <Link
             href={slide.href}
-            className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-ink)]/14 px-4 py-2 pt-2 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+            className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-border)] px-4 py-2 pt-2 font-ui text-label font-semibold text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             {slide.cta} <Arrow />
           </Link>
         )}
         {isReel && (
-          <span className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/55">
+          <span className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold text-[var(--app-subtle)]">
             {slide.cta} <Arrow />
           </span>
         )}
@@ -321,11 +321,11 @@ function EmptyState({ category }: { category: Category }) {
 function Skeleton() {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-      <div className="aspect-[16/10] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] sm:col-span-2 sm:aspect-[2/1] lg:col-span-1 lg:aspect-auto lg:min-h-[360px]" />
+      <div className="aspect-[16/10] animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)] sm:col-span-2 sm:aspect-[2/1] lg:col-span-1 lg:aspect-auto lg:min-h-[360px]" />
       {[0, 1, 2].map(i => (
         <div
           key={i}
-          className="aspect-[4/5] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
+          className="aspect-[4/5] animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
         />
       ))}
     </div>
@@ -449,7 +449,7 @@ export default function EventsShowcase() {
             <div
               role="tablist"
               aria-label="Event content category"
-              className="flex shrink-0 gap-0 overflow-x-auto border border-[var(--app-ink)]/10"
+              className="flex shrink-0 gap-0 overflow-x-auto border border-[var(--app-border)]"
             >
               {(Object.keys(CATEGORY_LABELS) as Category[]).map(cat => (
                 <button
@@ -462,7 +462,7 @@ export default function EventsShowcase() {
                     'px-4 py-2.5 font-ui text-label font-semibold transition duration-150',
                     category === cat
                       ? 'bg-[var(--app-ink)] text-white'
-                      : 'text-[var(--app-ink)]/45 hover:bg-[var(--app-canvas-2)] hover:text-[var(--app-ink)]/70',
+                      : 'text-[var(--app-subtle)] hover:bg-[var(--app-canvas-2)] hover:text-[var(--app-muted)]',
                   ].join(' ')}
                 >
                   {CATEGORY_LABELS[cat]}
@@ -472,7 +472,7 @@ export default function EventsShowcase() {
 
             <Link
               href="/events"
-              className="hidden items-center gap-1.5 rounded-button border border-[var(--app-ink)]/14 px-4 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
+              className="hidden items-center gap-1.5 rounded-button border border-[var(--app-border)] px-4 py-2.5 font-ui text-label font-semibold text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
             >
               See all <Arrow />
             </Link>
@@ -552,7 +552,7 @@ export default function EventsShowcase() {
         <div className="mt-8 sm:hidden">
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 rounded-button border border-[var(--app-ink)]/14 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+            className="inline-flex items-center gap-2 rounded-button border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
           >
             See all events <Arrow />
           </Link>

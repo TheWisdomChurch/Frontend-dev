@@ -23,7 +23,7 @@ import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
-import { Container, SectionHeader, Section } from '@/shared/ui/layout';
+import { Container, Eyebrow, Section, SectionHeader } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
@@ -124,7 +124,7 @@ function ResourceCarousel() {
             whileHover={canPrev ? { scale: 1.08 } : undefined}
             whileTap={canPrev ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[var(--app-primary)]/45 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
           </motion.button>
@@ -136,7 +136,7 @@ function ResourceCarousel() {
             whileHover={canNext ? { scale: 1.08 } : undefined}
             whileTap={canNext ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[var(--app-primary)]/45 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
           </motion.button>
@@ -180,9 +180,7 @@ function ResourceCarousel() {
 
                 {/* Content */}
                 <div className="relative z-10 p-6">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                    {item.label}
-                  </p>
+                  <Eyebrow>{item.label}</Eyebrow>
                   <p className="mt-1.5 font-headline text-heading-sm font-normal leading-snug text-white">
                     {item.title}
                   </p>

@@ -71,23 +71,23 @@
 
   /* ------------------------------------------------------------------ *
    * TYPE SCALE  (bridged to Tailwind `text-*` utilities in config)     *
-   * Tuned for editorial legibility: body sits at 15–18px, the display  *
-   * ladder is generous but restrained.                                 *
+   * Compact editorial scale: body ~15–16px, headings restrained. Buttons  *
+   * keep their own size scale in button.tsx.                             *
    * ------------------------------------------------------------------ */
-  --type-display-xl: clamp(3.25rem, 7vw, 6rem);
-  --type-display-lg: clamp(2.75rem, 5.5vw, 4.75rem);
-  --type-display-md: clamp(2.25rem, 4vw, 3.5rem);
-  --type-display-sm: clamp(1.85rem, 3vw, 2.6rem);
-  --type-heading-lg: clamp(1.55rem, 1.2rem + 1.5vw, 2.15rem);
-  --type-heading-md: clamp(1.3rem, 1.1rem + 0.9vw, 1.7rem);
-  --type-heading-sm: clamp(1.12rem, 1rem + 0.5vw, 1.35rem);
-  --type-lead: clamp(1.15rem, 1.02rem + 0.6vw, 1.4rem);
-  --type-body-lg: clamp(1rem, 0.96rem + 0.22vw, 1.15rem);
-  --type-body-md: clamp(0.94rem, 0.9rem + 0.2vw, 1.06rem);
-  --type-body-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.95rem);
-  --type-label: clamp(0.78rem, 0.75rem + 0.1vw, 0.85rem);
-  --type-caption: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
-  --type-eyebrow: clamp(0.6875rem, 0.66rem + 0.1vw, 0.75rem);
+  --type-display-xl: clamp(2.75rem, 6vw, 5rem);
+  --type-display-lg: clamp(2.4rem, 4.6vw, 3.9rem);
+  --type-display-md: clamp(1.95rem, 3.2vw, 2.9rem);
+  --type-display-sm: clamp(1.6rem, 2.4vw, 2.2rem);
+  --type-heading-lg: clamp(1.35rem, 1.15rem + 1vw, 1.8rem);
+  --type-heading-md: clamp(1.18rem, 1.05rem + 0.65vw, 1.45rem);
+  --type-heading-sm: clamp(1.05rem, 0.98rem + 0.32vw, 1.2rem);
+  --type-lead: clamp(1rem, 0.95rem + 0.35vw, 1.18rem);
+  --type-body-lg: clamp(0.9375rem, 0.92rem + 0.15vw, 1rem);
+  --type-body-md: clamp(0.9rem, 0.88rem + 0.12vw, 0.9688rem);
+  --type-body-sm: clamp(0.8438rem, 0.83rem + 0.08vw, 0.9rem);
+  --type-label: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
+  --type-caption: clamp(0.7188rem, 0.7rem + 0.06vw, 0.775rem);
+  --type-eyebrow: clamp(0.6563rem, 0.64rem + 0.08vw, 0.7188rem);
 
   /* ------------------------------------------------------------------ *
    * SPACING — section rhythm (bridged to `py-section-*` in config).    *
@@ -230,8 +230,8 @@ body {
   overflow-x: clip;
   background: var(--app-surface);
   color: var(--app-text);
-  font-size: 16.5px;
-  line-height: 1.65;
+  font-size: 15.5px;
+  line-height: 1.62;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -418,8 +418,8 @@ section[data-gsap='reveal'] {
 
 @media (max-width: 640px) {
   body {
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.55;
   }
 }
 

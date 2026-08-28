@@ -31,11 +31,12 @@ import {
 import type { CountryCode } from 'libphonenumber-js';
 import {
   Container,
-  Page,
-  SectionHeader,
   CtaLink,
+  Eyebrow,
+  Page,
   Panel,
   Section,
+  SectionHeader,
   fieldClass,
   fieldLabelClass,
 } from '@/shared/ui/layout';
@@ -207,14 +208,12 @@ function ContactPageContent() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2.5">
                     <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-                      Visit us
-                    </p>
+                    <Eyebrow>Visit us</Eyebrow>
                   </div>
                   <p className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-ink)]">
                     {SERVICE_INFO.venue.name}
                   </p>
-                  <div className="space-y-1 font-ui text-body-sm leading-[1.7] text-[var(--app-ink)]/70">
+                  <div className="space-y-1 font-ui text-body-sm leading-[1.7] text-[var(--app-muted)]">
                     <p>{SERVICE_INFO.venue.streetAddress}</p>
                     <p>
                       {SERVICE_INFO.venue.locality},{' '}
@@ -224,10 +223,10 @@ function ContactPageContent() {
                     </p>
                   </div>
                   <div className="pt-1 space-y-0.5">
-                    <p className="font-ui text-label font-semibold text-[var(--app-ink)]/70">
+                    <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
                       {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
                     </p>
-                    <p className="font-ui text-label font-semibold text-[var(--app-ink)]/70">
+                    <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
                       {SERVICE_INFO.dailyPrayer.label} ·{' '}
                       {SERVICE_INFO.dailyPrayer.time}
                     </p>
@@ -235,15 +234,13 @@ function ContactPageContent() {
                 </div>
 
                 {/* Divider */}
-                <div className="h-px bg-[var(--app-ink)]/8" />
+                <div className="h-px bg-[var(--app-canvas-2)]" />
 
                 {/* Phone */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-2.5">
                     <Phone className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-                      Call us
-                    </p>
+                    <Eyebrow>Call us</Eyebrow>
                   </div>
                   <a
                     href="https://wa.me/2347069995333"
@@ -254,21 +251,19 @@ function ContactPageContent() {
                     +234 706 999 5333
                     <ArrowUpRight className="h-3.5 w-3.5 opacity-40 transition group-hover:opacity-100" />
                   </a>
-                  <p className="font-ui text-label text-[var(--app-ink)]/45">
+                  <p className="font-ui text-label text-[var(--app-subtle)]">
                     Open on WhatsApp
                   </p>
                 </div>
 
                 {/* Divider */}
-                <div className="h-px bg-[var(--app-ink)]/8" />
+                <div className="h-px bg-[var(--app-canvas-2)]" />
 
                 {/* Email */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-2.5">
                     <Mail className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-                      Email us
-                    </p>
+                    <Eyebrow>Email us</Eyebrow>
                   </div>
                   <a
                     href={`mailto:${CONTACT_INFO.email}`}
@@ -280,13 +275,11 @@ function ContactPageContent() {
                 </div>
 
                 {/* Divider */}
-                <div className="h-px bg-[var(--app-ink)]/8" />
+                <div className="h-px bg-[var(--app-canvas-2)]" />
 
                 {/* Social */}
                 <div className="space-y-4">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-ink)]/60">
-                    Follow us
-                  </p>
+                  <Eyebrow>Follow us</Eyebrow>
                   <div className="flex flex-col gap-3">
                     {socialLinks.map(s => (
                       <a
@@ -296,14 +289,14 @@ function ContactPageContent() {
                         rel="noopener noreferrer"
                         className="group inline-flex items-center gap-3 transition"
                       >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-card border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] text-[var(--app-ink)]/50 transition group-hover:border-[var(--app-primary)]/30 group-hover:text-[var(--app-primary)]">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-card border border-[var(--app-border)] bg-[var(--app-canvas-2)] text-[var(--app-subtle)] transition group-hover:border-[var(--app-primary)]/30 group-hover:text-[var(--app-primary)]">
                           <s.icon className="h-3.5 w-3.5" />
                         </span>
                         <span className="flex flex-col">
                           <span className="font-ui text-body-sm font-semibold text-[var(--app-ink)]">
                             {s.platform}
                           </span>
-                          <span className="font-ui text-label text-[var(--app-ink)]/60">
+                          <span className="font-ui text-label text-[var(--app-muted)]">
                             {s.handle}
                           </span>
                         </span>
@@ -329,10 +322,10 @@ function ContactPageContent() {
                 <form
                   id="contact-form"
                   onSubmit={handleSubmit}
-                  className="space-y-0 divide-y divide-[var(--app-ink)]/6"
+                  className="space-y-0 divide-y divide-[var(--app-border)]"
                 >
                   {/* Name row */}
-                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/6">
+                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-border)]">
                     <label className="block px-7 py-5 sm:px-8">
                       <span className={labelCls}>First name</span>
                       <input
@@ -362,7 +355,7 @@ function ContactPageContent() {
                   </div>
 
                   {/* Contact row */}
-                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/6">
+                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-border)]">
                     <label className="block px-7 py-5 sm:px-8">
                       <span className={labelCls}>Email address</span>
                       <input
@@ -379,7 +372,7 @@ function ContactPageContent() {
                     <div className="block px-7 py-5 sm:px-8">
                       <span className={labelCls}>
                         Phone{' '}
-                        <span className="normal-case font-normal tracking-normal text-[var(--app-ink)]/60">
+                        <span className="normal-case font-normal tracking-normal text-[var(--app-muted)]">
                           (optional)
                         </span>
                       </span>
@@ -447,7 +440,7 @@ function ContactPageContent() {
                       />
                     </label>
                     {isPrayerRequest && (
-                      <label className="mt-3 flex items-center gap-2.5 font-ui text-body-sm text-[var(--app-ink)]/70">
+                      <label className="mt-3 flex items-center gap-2.5 font-ui text-body-sm text-[var(--app-muted)]">
                         <input
                           type="checkbox"
                           checked={formData.isAnonymous}
@@ -457,7 +450,7 @@ function ContactPageContent() {
                               isAnonymous: e.target.checked,
                             }))
                           }
-                          className="h-4 w-4 rounded border-[var(--app-ink)]/20 accent-[var(--app-primary)]"
+                          className="h-4 w-4 rounded border-[var(--app-border)] accent-[var(--app-primary)]"
                         />
                         Keep my request anonymous to the prayer team
                       </label>
@@ -474,7 +467,7 @@ function ContactPageContent() {
                       {submitting ? 'Sending...' : 'Send message'}
                       {!submitting && <Arrow />}
                     </button>
-                    <Caption className="text-[var(--app-ink)]/60">
+                    <Caption className="text-[var(--app-muted)]">
                       For pastoral care, visit our{' '}
                       <Link
                         href="/pastoral"
@@ -515,7 +508,7 @@ function ContactPageContent() {
       <Section compact tone="surface">
         <Container>
           <div className="flex flex-col gap-1.5 py-7 sm:flex-row sm:items-center sm:justify-between sm:py-6">
-            <p className="font-ui text-label font-semibold text-[var(--app-ink)]/60">
+            <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
               {SERVICE_INFO.venue.full}
             </p>
             <CtaLink href="/events/weekly" variant="dark">

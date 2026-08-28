@@ -15,10 +15,11 @@ import {
 } from '@/shared/utils/eventDate';
 import {
   Container,
+  Eyebrow,
   Page,
+  Section,
   SectionEmpty,
   SectionHeader,
-  Section,
   interactiveCardClass,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
@@ -66,7 +67,7 @@ export default function UpcomingPage() {
               title="Upcoming events & programs."
             />
             {!loading && events.length > 0 && (
-              <span className="inline-flex self-start items-center border border-[var(--app-ink)]/12 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/45 sm:self-auto">
+              <span className="inline-flex self-start items-center border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold text-[var(--app-subtle)] sm:self-auto">
                 {events.length} upcoming
               </span>
             )}
@@ -77,7 +78,7 @@ export default function UpcomingPage() {
               {[0, 1, 2].map(i => (
                 <div
                   key={i}
-                  className="h-24 animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
+                  className="h-24 animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
                 />
               ))}
             </div>
@@ -115,9 +116,7 @@ export default function UpcomingPage() {
                         <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)]">
                           {date.day}
                         </p>
-                        <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-                          {date.month}
-                        </p>
+                        <Eyebrow>{date.month}</Eyebrow>
                       </div>
 
                       {/* Content */}
@@ -126,12 +125,12 @@ export default function UpcomingPage() {
                           {event.title}
                         </h3>
                         {event.description && (
-                          <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/68 line-clamp-2">
+                          <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-muted)] line-clamp-2">
                             {event.description}
                           </p>
                         )}
                         {event.location && (
-                          <p className="font-ui text-label text-[var(--app-ink)]/60">
+                          <p className="font-ui text-label text-[var(--app-muted)]">
                             {event.location}
                           </p>
                         )}
@@ -147,7 +146,7 @@ export default function UpcomingPage() {
                             Register <Arrow />
                           </a>
                         ) : (
-                          <span className="inline-flex items-center border border-[var(--app-ink)]/10 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/60">
+                          <span className="inline-flex items-center border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-muted)]">
                             Free entry
                           </span>
                         )}

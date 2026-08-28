@@ -8,11 +8,12 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import {
-  Container,
-  Page,
-  SectionHeader,
   CardRail,
+  Container,
+  Eyebrow,
+  Page,
   Section,
+  SectionHeader,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
@@ -126,7 +127,7 @@ export default function MinistriesPage() {
               title="We grow best when we walk with others."
             />
             <div className="border-l-2 border-[var(--app-primary)]/55 pl-5 sm:pl-7">
-              <p className="max-w-2xl font-ui text-body-md leading-[1.85] text-[var(--app-ink)]/75">
+              <p className="max-w-2xl font-ui text-body-md leading-[1.85] text-[var(--app-muted)]">
                 Ministry is where church becomes personal. It is where names are
                 remembered, prayers are shared, disciples are formed, and every
                 generation finds room to flourish in Christ.
@@ -147,7 +148,7 @@ export default function MinistriesPage() {
               eyebrow="Find your community"
               title="Explore our ministries"
             />
-            <p className="max-w-md font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/65">
+            <p className="max-w-md font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
               Choose a ministry to learn what happens, who it serves, and how to
               join. You do not need to have everything figured out first.
             </p>
@@ -175,9 +176,7 @@ export default function MinistriesPage() {
                     </div>
                     <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end p-6 sm:p-8">
                       <div>
-                        <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-                          {ministry.label}
-                        </p>
+                        <Eyebrow>{ministry.label}</Eyebrow>
                         <h3 className="mt-3 font-ui text-heading-md font-semibold leading-tight text-white sm:text-heading-lg">
                           {ministry.title}
                         </h3>
@@ -206,14 +205,14 @@ export default function MinistriesPage() {
             eyebrow="Your next step"
             title="A simple path from visiting to belonging."
           />
-          <div className="mt-10 grid border-y border-[var(--app-ink)]/10 md:grid-cols-3 md:divide-x md:divide-[var(--app-ink)]/10">
+          <div className="mt-10 grid border-y border-[var(--app-border)] md:grid-cols-3 md:divide-x md:divide-[var(--app-border)]">
             {pathway.map(step => (
               <div key={step.title} data-gsap="reveal">
-                <article className="border-b border-[var(--app-ink)]/10 py-8 last:border-b-0 md:min-h-[270px] md:border-b-0 md:px-8 lg:px-10 lg:py-10">
+                <article className="border-b border-[var(--app-border)] py-8 last:border-b-0 md:min-h-[270px] md:border-b-0 md:px-8 lg:px-10 lg:py-10">
                   <h3 className="font-ui text-heading-md font-semibold text-[var(--app-ink)]">
                     {step.title}
                   </h3>
-                  <p className="mt-4 font-ui text-body-sm leading-[1.85] text-[var(--app-ink)]/68">
+                  <p className="mt-4 font-ui text-body-sm leading-[1.85] text-[var(--app-muted)]">
                     {step.body}
                   </p>
                 </article>
@@ -227,9 +226,7 @@ export default function MinistriesPage() {
         <Container>
           <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                We will help you connect
-              </p>
+              <Eyebrow>We will help you connect</Eyebrow>
               <h2 className="mt-4 max-w-2xl font-ui text-heading-md font-medium leading-[1.05] tracking-[-0.04em] text-white sm:text-heading-lg lg:text-display-sm">
                 Not sure where you belong yet?
               </h2>

@@ -14,7 +14,13 @@ const GivingModal = dynamic(() => import('@/shared/ui/modals/GivingModal'), {
 import { handleContactCall } from '@/shared/utils/functionUtils/contactUtils';
 import apiClient from '@/lib/api';
 import type { GivingOption } from '@/lib/types';
-import { Container, SectionHeader, Panel, Section } from '@/shared/ui/layout';
+import {
+  Container,
+  Eyebrow,
+  Panel,
+  Section,
+  SectionHeader,
+} from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 import {
   staggerContainer,
@@ -159,9 +165,7 @@ export default function OnlineGiving() {
               >
                 <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-7">
                   <div>
-                    <p className="font-ui text-label font-bold uppercase tracking-[0.16em] text-[var(--app-primary)]">
-                      Choose an option
-                    </p>
+                    <Eyebrow>Choose an option</Eyebrow>
                     <p className="mt-1 font-ui text-body-sm text-white/52">
                       Securely continue with your preferred method.
                     </p>

@@ -19,7 +19,7 @@ export type ButtonVariant = 'primary' | 'solid' | 'dark' | 'outline' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 const base =
-  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] outline-none transition-[transform,background-color,border-color,box-shadow,color] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985]';
+  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] outline-none transition-[transform,background-color,border-color,box-shadow,color] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.97]';
 
 const sizeClass: Record<ButtonSize, string> = {
   sm: 'min-h-9 px-4 text-body-sm',
@@ -29,20 +29,21 @@ const sizeClass: Record<ButtonSize, string> = {
 };
 
 const solid =
-  'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm hover:bg-[var(--app-ink)]/90 hover:shadow-lg hover:shadow-black/20';
+  'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm hover:bg-[var(--app-ink)]/88 hover:shadow-lg hover:shadow-black/25 active:shadow-sm';
 
 const variantClass: Record<ButtonVariant, string> = {
+  // Fill state; hover brightens + adds a gold glow, active dims it back.
   primary:
-    'bg-[var(--app-primary)] text-[var(--app-dark)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-lg hover:shadow-[var(--app-primary)]/30',
+    'bg-[var(--app-primary)] text-[var(--app-dark)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-lg hover:shadow-[var(--app-primary)]/35 active:bg-[var(--app-primary)] active:shadow-sm',
   solid,
   // Back-compat alias — `dark` is the same high-contrast solid button.
   dark: solid,
-  // Always shows a hairline; hover firms it up and adds a wash.
+  // Gold hairline at rest; hover fills the border and washes the surface gold.
   outline:
-    'border border-current/35 bg-transparent text-current hover:border-current hover:bg-current/[0.08] hover:shadow-sm',
-  // No background at rest; a border appears on hover along with a faint wash.
+    'border border-[var(--app-primary)]/55 bg-transparent text-current hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)]/[0.1] hover:text-[var(--app-primary-dark)] hover:shadow-sm active:bg-[var(--app-primary)]/[0.16]',
+  // No background at rest; a gold border + wash appears on hover.
   ghost:
-    'border border-transparent bg-transparent text-current hover:border-current/30 hover:bg-current/[0.07]',
+    'border border-transparent bg-transparent text-current hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/[0.08] hover:text-[var(--app-primary-dark)] active:bg-[var(--app-primary)]/[0.14]',
 };
 
 export function buttonClass(

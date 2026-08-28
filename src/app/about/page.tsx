@@ -16,10 +16,11 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import {
   Container,
-  Page,
-  SectionHeader,
   CtaLink,
+  Eyebrow,
+  Page,
   Section,
+  SectionHeader,
   Split,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
@@ -112,9 +113,7 @@ export default async function AboutPage() {
                 >
                   <Icon className="h-5 w-5 shrink-0 text-[var(--app-primary-dark)]" />
                   <div>
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-widest text-[var(--app-subtle)]">
-                      {item.label}
-                    </p>
+                    <Eyebrow>{item.label}</Eyebrow>
                     <p className="mt-1 font-headline text-heading-sm">
                       {item.value}
                     </p>
@@ -221,7 +220,7 @@ export default async function AboutPage() {
                       <h3 className="mt-4 font-headline text-heading-sm font-semibold">
                         {item.title}
                       </h3>
-                      <p className="mt-3 font-ui text-body-sm leading-loose text-[var(--app-ink)]/65">
+                      <p className="mt-3 font-ui text-body-sm leading-loose text-[var(--app-muted)]">
                         {item.body}
                       </p>
                     </article>

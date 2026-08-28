@@ -13,11 +13,12 @@ import { buildBreadcrumbSchema } from '@/lib/seo';
 import Arrow from '@/shared/ui/icons/Arrow';
 import {
   Container,
-  SectionEmpty,
-  SectionHeader,
+  Eyebrow,
   Page,
   Panel,
   Section,
+  SectionEmpty,
+  SectionHeader,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
@@ -149,9 +150,9 @@ export default function TestimoniesPage() {
               </p>
               <div className="mx-auto mt-8 flex items-center justify-center gap-4">
                 <div className="h-px w-8 bg-[var(--app-primary)]/45" />
-                <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
+                <Eyebrow>
                   {featured.isAnonymous ? 'Anonymous member' : featured.name}
-                </p>
+                </Eyebrow>
                 <div className="h-px w-8 bg-[var(--app-primary)]/45" />
               </div>
             </Container>
@@ -183,7 +184,7 @@ export default function TestimoniesPage() {
                 {[0, 1, 2].map(i => (
                   <div
                     key={i}
-                    className="h-48 animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
+                    className="h-48 animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
                   />
                 ))}
               </div>
@@ -240,14 +241,14 @@ export default function TestimoniesPage() {
                           {testimony.quote}
                         </p>
                         {/* Attribution */}
-                        <div className="mt-5 border-t border-[var(--app-ink)]/8 pt-4">
+                        <div className="mt-5 border-t border-[var(--app-border)] pt-4">
                           <div className="h-[1.5px] w-5 bg-[var(--app-primary)]/45" />
-                          <p className="mt-3 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/55">
+                          <Eyebrow className="mt-3">
                             {testimony.isAnonymous
                               ? 'Anonymous member'
                               : testimony.name}
-                          </p>
-                          <p className="mt-0.5 font-ui text-caption text-[var(--app-ink)]/60">
+                          </Eyebrow>
+                          <p className="mt-0.5 font-ui text-caption text-[var(--app-muted)]">
                             Wisdom Church
                           </p>
                         </div>

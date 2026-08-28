@@ -329,14 +329,14 @@ export default function HeroHighlights({
     <>
       {/* ── Editorial belief strip ────────────────────────────── */}
       {!modalOnly ? (
-        <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
+        <section className="overflow-hidden min-w-0 border-t border-[var(--app-border)] bg-[var(--app-canvas)]">
           <Container>
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="show"
               viewport={staggerViewport}
-              className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+              className="grid grid-cols-1 divide-y divide-[var(--app-border)] sm:grid-cols-3 sm:divide-x sm:divide-y-0"
             >
               {ACTIONS.map(action => {
                 const Icon = action.icon;
@@ -362,7 +362,7 @@ export default function HeroHighlights({
                           className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[var(--app-primary)]/0 blur-lg transition-colors duration-300 group-hover:bg-[var(--app-primary)]/20"
                         />
                         <Icon
-                          className="h-4 w-4 text-[var(--app-ink)]/60 transition duration-200 group-hover:text-[var(--app-primary)]"
+                          className="h-4 w-4 text-[var(--app-muted)] transition duration-200 group-hover:text-[var(--app-primary)]"
                           aria-hidden="true"
                         />
                       </span>
@@ -376,7 +376,7 @@ export default function HeroHighlights({
                       <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
                         {action.label}
                       </p>
-                      <p className="mt-1 font-ui text-label text-[var(--app-ink)]/50">
+                      <p className="mt-1 font-ui text-label text-[var(--app-subtle)]">
                         {action.sub}
                       </p>
                     </div>

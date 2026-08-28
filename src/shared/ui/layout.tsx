@@ -167,6 +167,26 @@ export function Stack({
   );
 }
 
+/** The one eyebrow / kicker label — a small uppercase brand-gold line above a
+ *  heading. `SectionHeader` renders the same treatment inline. */
+export function Eyebrow({
+  children,
+  className,
+  ...props
+}: ComponentPropsWithoutRef<'p'>) {
+  return (
+    <p
+      className={cn(
+        'font-ui text-eyebrow font-semibold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </p>
+  );
+}
+
 export function Actions({
   children,
   align = 'start',
@@ -384,30 +404,42 @@ export function SectionHeader({
   title,
   accent,
   description,
+  as: Heading = 'h2',
   tone = 'light',
   size = 'md',
+  align = 'left',
   className,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: ReactNode;
   accent?: ReactNode;
   description?: string;
+  /** Element tag for the title — h2 for section headings, h3 for sub-blocks. */
+  as?: 'h2' | 'h3';
   tone?: 'light' | 'dark';
   size?: 'sm' | 'md' | 'lg';
+  align?: 'left' | 'center';
   className?: string;
 }) {
   return (
     <header
-      className={cn(tone === 'dark' && 'tone-dark', className)}
+      className={cn(
+        tone === 'dark' && 'tone-dark',
+        align === 'center' && 'flex flex-col items-center text-center',
+        className
+      )}
       data-gsap="reveal"
     >
-      <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
-        {eyebrow}
-      </p>
-      <h2
+      {eyebrow ? (
+        <p className="font-ui text-eyebrow font-semibold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
+          {eyebrow}
+        </p>
+      ) : null}
+      <Heading
         className={cn(
-          'mt-4 text-balance font-ui font-semibold leading-[1.08] tracking-[-0.03em] text-current',
-          size === 'sm' && 'text-heading-lg sm:text-heading-lg',
+          'text-balance font-ui font-semibold leading-[1.1] tracking-[-0.025em] text-current',
+          eyebrow && 'mt-3.5',
+          size === 'sm' && 'text-heading-md sm:text-heading-lg',
           size === 'md' && 'text-heading-lg sm:text-display-sm',
           size === 'lg' && 'text-display-sm sm:text-display-md'
         )}
@@ -421,9 +453,14 @@ export function SectionHeader({
             </span>
           </>
         ) : null}
-      </h2>
+      </Heading>
       {description ? (
-        <p className="mt-6 max-w-[46ch] font-ui text-body-lg leading-[1.75] text-[var(--app-muted)]">
+        <p
+          className={cn(
+            'mt-4 max-w-[48ch] font-ui text-body-md font-normal leading-[1.7] text-[var(--app-muted)]',
+            align === 'center' && 'mx-auto'
+          )}
+        >
           {description}
         </p>
       ) : null}

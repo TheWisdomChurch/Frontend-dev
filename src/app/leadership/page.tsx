@@ -139,7 +139,7 @@ export default async function LeadershipPage() {
           </Container>
 
           {/* Name list — editorial rows */}
-          <div className="divide-y divide-[var(--app-ink)]/8 border-t border-[var(--app-ink)]/8">
+          <div className="divide-y divide-[var(--app-border)] border-t border-[var(--app-border)]">
             {board.map((leader, i) => (
               <ScrollFadeIn key={leader.id} delay={i * 0.035}>
                 <div
@@ -149,7 +149,7 @@ export default async function LeadershipPage() {
                     <div className="grid items-center gap-3 py-6 sm:grid-cols-[1fr_auto] sm:gap-10">
                       <div className="flex items-center gap-5">
                         {/* Initials badge */}
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] font-ui text-label font-bold text-[var(--app-ink)]/60">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-border)] bg-[var(--app-canvas-2)] font-ui text-label font-bold text-[var(--app-muted)]">
                           {initials(leader.firstName, leader.lastName)}
                         </div>
                         <div>
@@ -157,13 +157,13 @@ export default async function LeadershipPage() {
                             {leader.firstName} {leader.lastName}
                           </p>
                           {leader.bio && (
-                            <p className="mt-0.5 font-ui text-label text-[var(--app-ink)]/55 line-clamp-1">
+                            <p className="mt-0.5 font-ui text-label text-[var(--app-subtle)] line-clamp-1">
                               {leader.bio}
                             </p>
                           )}
                         </div>
                       </div>
-                      <span className="self-start border border-[var(--app-ink)]/10 px-3 py-1 font-ui text-eyebrow uppercase tracking-[0.14em] text-[var(--app-ink)]/60 sm:self-auto">
+                      <span className="self-start border border-[var(--app-border)] px-3 py-1 font-ui text-eyebrow uppercase tracking-[0.14em] text-[var(--app-muted)] sm:self-auto">
                         {ROLE_LABEL[leader.role]}
                       </span>
                     </div>

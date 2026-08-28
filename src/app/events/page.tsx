@@ -309,10 +309,10 @@ export default async function EventsPage() {
                       <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                         {svc.name}
                       </p>
-                      <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/65">
+                      <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
                         {svc.description}
                       </p>
-                      <p className="flex items-start gap-2 font-ui text-label leading-relaxed text-[var(--app-ink)]/55">
+                      <p className="flex items-start gap-2 font-ui text-label leading-relaxed text-[var(--app-subtle)]">
                         <MapPin
                           className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
                           aria-hidden="true"

@@ -44,7 +44,7 @@ export default function PastoralPage() {
               title="Everything you share is treated with discretion."
             />
             <div className="border-t border-[var(--app-border)] pt-6">
-              <p className="max-w-2xl font-ui text-body-lg leading-loose text-[var(--app-ink)]/70">
+              <p className="max-w-2xl font-ui text-body-lg leading-loose text-[var(--app-muted)]">
                 Pastoral care works best when people can speak openly. Sensitive
                 matters are handled by our pastoral team with maturity,
                 confidentiality, and respect for the person involved. You will

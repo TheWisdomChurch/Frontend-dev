@@ -7,11 +7,12 @@ import SiteHero from '@/features/hero/SiteHero';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import {
   Container,
-  Page,
-  SectionHeader,
   CtaLink,
+  Eyebrow,
+  Page,
   Panel,
   Section,
+  SectionHeader,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
@@ -59,9 +60,7 @@ export default function BlogPage() {
           </div>
 
           <Panel tone="dark" className="mx-auto mt-16 max-w-xl p-8 text-center">
-            <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-              Get notified
-            </p>
+            <Eyebrow>Get notified</Eyebrow>
             <p className="mt-2 font-ui text-body-sm text-white/70">
               Be the first to know when devotionals and articles go live. Drop
               your email below.
@@ -73,9 +72,7 @@ export default function BlogPage() {
 
           {/* WhatsApp update strip */}
           <Panel tone="dark" className="mx-auto mt-5 max-w-xl p-6 text-center">
-            <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-              Or join our community
-            </p>
+            <Eyebrow>Or join our community</Eyebrow>
             <p className="mt-2 font-ui text-body-sm text-white/65">
               Get devotionals, sermon notes, and church updates directly via
               WhatsApp.

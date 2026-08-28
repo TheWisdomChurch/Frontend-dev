@@ -25,7 +25,7 @@ import { Button } from '@/shared/ui/button';
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
 import { BaseModal } from '@/shared/ui/modals/Modal';
 import { BodySM, Caption } from '@/shared/text';
-import { Container, SectionHeader, Section } from '@/shared/ui/layout';
+import { Container, Eyebrow, Section, SectionHeader } from '@/shared/ui/layout';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import { isValidNationalPhone, PHONE_COUNTRIES } from '@/lib/validation/phone';
@@ -532,9 +532,7 @@ export default function JoinWorkforce() {
             </p>
 
             <div className="border border-white/10 bg-white/[0.035] p-5">
-              <p className="mb-3.5 font-ui text-label font-bold uppercase tracking-[0.16em] text-white/40">
-                What you'll do
-              </p>
+              <Eyebrow className="mb-3.5">What you'll do</Eyebrow>
               <ul className="space-y-2.5">
                 {selectedDept.responsibilities.map(r => (
                   <li key={r} className="flex items-start gap-2.5">

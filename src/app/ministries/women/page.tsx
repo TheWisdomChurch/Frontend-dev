@@ -7,11 +7,12 @@ import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
 import {
   Container,
-  Page,
-  SectionHeader,
-  Figure,
   CtaLink,
+  Eyebrow,
+  Figure,
+  Page,
   Section,
+  SectionHeader,
   Split,
 } from '@/shared/ui/layout';
 
@@ -75,9 +76,7 @@ export default function WomenMinistryPage() {
                 data-gsap="reveal"
                 className="tone-dark bg-[var(--app-dark)] p-8 sm:p-12 lg:p-16"
               >
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                  {item.label}
-                </p>
+                <Eyebrow>{item.label}</Eyebrow>
                 <h3 className="mt-5 max-w-xl font-ui text-heading-lg font-medium leading-tight tracking-[-0.035em] !text-white sm:text-display-sm">
                   {item.title}
                 </h3>
@@ -129,7 +128,7 @@ export default function WomenMinistryPage() {
                 <h3 className="font-ui text-heading-lg font-medium tracking-[-0.03em]">
                   {item.title}
                 </h3>
-                <p className="mt-5 max-w-sm font-ui text-body-md leading-loose text-[var(--app-ink)]/65">
+                <p className="mt-5 max-w-sm font-ui text-body-md leading-loose text-[var(--app-muted)]">
                   {item.body}
                 </p>
               </article>
