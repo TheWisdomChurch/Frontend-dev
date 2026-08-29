@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
 import MinistryGallery from '@/features/ministries/MinistryGallery';
+import { VideoEmbed } from '@/shared/ui/VideoEmbed';
 import {
   Container,
   CtaLink,
@@ -67,6 +68,14 @@ export type MinistryContent = {
     description: string;
     images: readonly MinistryImage[];
   };
+  /** "Missed the last conference? Watch and be blessed" — a replay embed. */
+  conferenceVideo?: {
+    eyebrow: string;
+    title: string;
+    description?: string;
+    youtubeSrc: string;
+    youtubeTitle: string;
+  };
   invitation: {
     label: string;
     title: string;
@@ -95,6 +104,7 @@ export default function MinistryPageTemplate({
     focus,
     activities,
     conference,
+    conferenceVideo,
     invitation,
   } = content;
 
@@ -271,6 +281,29 @@ export default function MinistryPageTemplate({
               />
               <MinistryGallery images={conference.images} />
             </Split>
+          </Container>
+        </Section>
+      ) : null}
+
+      {/* ── Conference replay (optional) ─────────────────────── */}
+      {conferenceVideo ? (
+        <Section tone="dark">
+          <Container>
+            <div className="mb-10 max-w-3xl">
+              <SectionHeader
+                eyebrow={conferenceVideo.eyebrow}
+                title={conferenceVideo.title}
+                description={conferenceVideo.description}
+                tone="dark"
+                size="sm"
+              />
+            </div>
+            <div data-gsap="reveal">
+              <VideoEmbed
+                src={conferenceVideo.youtubeSrc}
+                title={conferenceVideo.youtubeTitle}
+              />
+            </div>
           </Container>
         </Section>
       ) : null}

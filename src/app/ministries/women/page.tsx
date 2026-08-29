@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 import { WOMEN_MINISTRY_CONTENT as content } from '@/content/womenMinistry';
 import MinistryGallery from '@/features/ministries/MinistryGallery';
+import { VideoEmbed } from '@/shared/ui/VideoEmbed';
 import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -147,6 +148,26 @@ export default function WomenMinistryPage() {
             />
             <MinistryGallery images={content.conference.images} />
           </Split>
+        </Container>
+      </Section>
+
+      <Section tone="dark">
+        <Container>
+          <div className="mb-10 max-w-3xl">
+            <SectionHeader
+              eyebrow={content.conferenceVideo.eyebrow}
+              title={content.conferenceVideo.title}
+              description={content.conferenceVideo.description}
+              tone="dark"
+              size="sm"
+            />
+          </div>
+          <div data-gsap="reveal">
+            <VideoEmbed
+              src={content.conferenceVideo.youtubeSrc}
+              title={content.conferenceVideo.youtubeTitle}
+            />
+          </div>
         </Container>
       </Section>
 

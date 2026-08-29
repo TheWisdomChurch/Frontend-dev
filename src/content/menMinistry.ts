@@ -111,6 +111,14 @@ export const MEN_MINISTRY_CONTENT: MinistryContent = {
       },
     ],
   },
+  conferenceVideo: {
+    eyebrow: 'Did you miss it?',
+    title: 'Missed the last conference? Watch and be blessed.',
+    description:
+      'The full session from our last gathering — the Word, worship, and honest brotherhood.',
+    youtubeSrc: 'https://www.youtube.com/embed/eSAvP3h0ASY',
+    youtubeTitle: "Wisdom Church Men's Conference",
+  },
   invitation: {
     label: 'Step into a brotherhood built to last',
     title: 'Grow in conviction. Lead with character. Serve with strength.',

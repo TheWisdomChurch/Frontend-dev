@@ -72,6 +72,14 @@ export const WOMEN_MINISTRY_CONTENT = {
       },
     ],
   },
+  conferenceVideo: {
+    eyebrow: 'Did you miss it?',
+    title: 'Missed Flourish? Watch and be blessed.',
+    description:
+      'The full session from our last women’s conference — teaching, worship, and faith-filled connection.',
+    youtubeSrc: 'https://www.youtube.com/embed/St-kiKLelUU',
+    youtubeTitle: "Flourish — Wisdom Church Women's Conference 2025",
+  },
   invitation: {
     label: 'There is room for you',
     title: 'Grow with us. Lead with courage. Flourish in Christ.',
