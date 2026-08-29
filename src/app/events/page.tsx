@@ -15,6 +15,7 @@ import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { Media } from '@/shared/ui/Media';
+import { EventCalendarStrip } from '@/features/events/EventCalendarStrip';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
@@ -25,7 +26,10 @@ import {
   formatEventDateParts as formatDate,
   formatEventTime as formatTime,
   getEventTimestamp as getTimestamp,
+  getRelativeEventLabel,
+  groupEventsByHorizon,
   isUpcomingEvent as isUpcoming,
+  type EventHorizon,
 } from '@/shared/utils/eventDate';
 import {
   Container,
@@ -136,6 +140,33 @@ function DatePlate({ date, large }: { date: DateParts; large?: boolean }) {
   );
 }
 
+function RelativeBadge({
+  event,
+  onImage = false,
+}: {
+  event: EventPublic;
+  onImage?: boolean;
+}) {
+  const label = getRelativeEventLabel(event);
+  if (!label) return null;
+  const live = label === 'Happening now';
+  return (
+    <span
+      className={cn(
+        'inline-flex w-fit items-center gap-1.5 rounded-badge px-2.5 py-0.5 font-ui text-eyebrow font-bold uppercase tracking-[0.14em]',
+        onImage
+          ? 'bg-[var(--app-primary)] text-[var(--app-ink)]'
+          : 'border border-[var(--app-primary)]/40 bg-[var(--app-primary)]/10 text-[var(--app-primary-dark)]'
+      )}
+    >
+      {live ? (
+        <span className="h-1.5 w-1.5 rounded-full bg-current motion-safe:animate-pulse" />
+      ) : null}
+      {label}
+    </span>
+  );
+}
+
 function EventMeta({ event }: { event: EventPublic }) {
   const date = formatDate(event);
   const time = formatTime(event);
@@ -159,6 +190,7 @@ function EventFeature({ event }: { event: EventPublic }) {
   const href = registerHref(event);
   const image = event.bannerUrl ?? event.imageUrl ?? null;
   const date = formatDate(event);
+  const relative = getRelativeEventLabel(event);
 
   return (
     <article className="group grid overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] lg:grid-cols-[1.15fr_1fr]">
@@ -175,7 +207,7 @@ function EventFeature({ event }: { event: EventPublic }) {
         )}
         <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-badge bg-[var(--app-primary)] px-3 py-1 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]">
           <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-          Next up
+          {relative ?? 'Next up'}
         </span>
       </div>
 
@@ -240,6 +272,7 @@ function EventCard({ event }: { event: EventPublic }) {
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
+        <RelativeBadge event={event} />
         <h3 className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-text)] line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary-dark)]">
           {event.title}
         </h3>
@@ -301,6 +334,12 @@ function EmptyState() {
   );
 }
 
+const HORIZON_META: { key: EventHorizon; label: string }[] = [
+  { key: 'week', label: 'This week' },
+  { key: 'month', label: 'This month' },
+  { key: 'later', label: 'On the horizon' },
+];
+
 /* ── Page ───────────────────────────────────────────────── */
 
 export default async function EventsPage() {
@@ -312,6 +351,7 @@ export default async function EventsPage() {
     .sort((a, b) => getTimestamp(a) - getTimestamp(b));
 
   const [featured, ...rest] = events;
+  const groups = groupEventsByHorizon(rest);
 
   return (
     <Page>
@@ -459,22 +499,57 @@ export default async function EventsPage() {
               <EmptyState />
             </ScrollFadeIn>
           ) : (
-            <div className="space-y-8">
+            <div className="space-y-10">
               {featured ? (
                 <ScrollFadeIn>
                   <EventFeature event={featured} />
                 </ScrollFadeIn>
               ) : null}
 
-              {rest.length > 0 ? (
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {rest.map((event, i) => (
-                    <ScrollFadeIn key={event.id} delay={i * 0.05}>
-                      <EventCard event={event} />
-                    </ScrollFadeIn>
-                  ))}
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:gap-12">
+                <ScrollFadeIn className="lg:sticky lg:top-28 lg:self-start">
+                  <EventCalendarStrip events={rawEvents} />
+                </ScrollFadeIn>
+
+                <div className="space-y-10">
+                  {rest.length === 0 ? (
+                    <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
+                      That&apos;s the only thing on the calendar right now.{' '}
+                      <Link
+                        href="/events/calendar"
+                        className="text-[var(--app-primary-dark)] underline underline-offset-2"
+                      >
+                        Browse the full calendar
+                      </Link>{' '}
+                      for the months ahead.
+                    </p>
+                  ) : (
+                    HORIZON_META.map(({ key, label }) => {
+                      const items = groups[key];
+                      if (items.length === 0) return null;
+                      return (
+                        <div key={key}>
+                          <div className="flex items-baseline gap-3 border-b border-[var(--app-border)] pb-3">
+                            <h3 className="font-ui text-heading-sm font-semibold text-[var(--app-text)]">
+                              {label}
+                            </h3>
+                            <span className="font-ui text-label font-semibold text-[var(--app-subtle)]">
+                              {items.length}
+                            </span>
+                          </div>
+                          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                            {items.map((event, i) => (
+                              <ScrollFadeIn key={event.id} delay={i * 0.04}>
+                                <EventCard event={event} />
+                              </ScrollFadeIn>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
-              ) : null}
+              </div>
             </div>
           )}
         </Container>

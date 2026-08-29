@@ -139,14 +139,15 @@ export default function MinistriesPage() {
 
       <Section
         id="find-a-ministry"
-        tone="canvas"
-        className="scroll-mt-24 bg-[var(--app-canvas-2)]"
+        tone="dark"
+        className="scroll-mt-24 bg-[linear-gradient(180deg,var(--app-dark-2),var(--app-dark))]"
       >
         <Container>
-          <div className="mb-10 flex flex-col gap-4 sm:mb-12 lg:flex-row lg:items-end lg:justify-between">
+          <div className="mb-12 flex flex-col gap-4 sm:mb-14 lg:flex-row lg:items-end lg:justify-between">
             <SectionHeader
               eyebrow="Find your community"
               title="Explore our ministries"
+              tone="dark"
             />
             <p className="max-w-md font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
               Choose a ministry to learn what happens, who it serves, and how to
@@ -155,46 +156,52 @@ export default function MinistriesPage() {
           </div>
 
           <CardRail columns={3} className="gap-5">
-            {ministries.map(ministry => {
-              return (
-                <div key={ministry.title}>
-                  <Link
-                    href={ministry.href}
-                    aria-label={`Explore ${ministry.title}`}
-                    className="group relative block min-h-[380px] overflow-hidden rounded-image bg-[var(--app-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 sm:min-h-[440px] lg:min-h-[500px]"
-                  >
-                    <div className="absolute inset-0 overflow-hidden">
-                      <Image
-                        src={ministry.image}
-                        alt=""
-                        fill
-                        quality={IMAGE_QUALITY}
-                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                        className={`object-cover ${ministry.position} transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.035]`}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-black/10 transition-colors duration-500 group-hover:from-black/45" />
+            {ministries.map(ministry => (
+              <div key={ministry.title} data-gsap="reveal">
+                <Link
+                  href={ministry.href}
+                  aria-label={`Explore ${ministry.title}`}
+                  className="group relative flex min-h-[24rem] flex-col overflow-hidden rounded-image bg-[var(--app-dark)] ring-1 ring-inset ring-[var(--app-border)] transition-[transform,box-shadow,ring-color] duration-500 ease-out will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-dark)] motion-safe:hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/40 hover:ring-[var(--app-primary)]/40 sm:min-h-[28rem] lg:min-h-[32rem]"
+                >
+                  {/* Image */}
+                  <Image
+                    src={ministry.image}
+                    alt=""
+                    fill
+                    quality={IMAGE_QUALITY}
+                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                    className={`object-cover ${ministry.position} transition-transform duration-[900ms] ease-out motion-safe:group-hover:scale-[1.05] motion-reduce:transition-none`}
+                  />
+
+                  {/* Linear dark gradients — top scrim for the header, deeper
+                      bottom scrim that grows on hover to seat the description. */}
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-[linear-gradient(to_bottom,var(--app-dark),transparent)] opacity-90" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-[linear-gradient(to_top,var(--app-dark),transparent)] opacity-95 transition-[height] duration-700 ease-out group-hover:h-[78%]" />
+
+                  {/* Content — header pinned top, detail + CTA at the bottom */}
+                  <div className="relative flex flex-1 flex-col justify-between gap-8 p-6 sm:p-7 lg:p-8">
+                    <div>
+                      <p className="font-ui text-eyebrow font-semibold uppercase tracking-[0.22em] text-[var(--app-primary-light)]">
+                        {ministry.label}
+                      </p>
+                      <h3 className="mt-3.5 font-ui text-heading-lg font-semibold leading-tight text-white sm:text-display-sm">
+                        {ministry.title}
+                      </h3>
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end p-6 sm:p-8">
-                      <div>
-                        <Eyebrow>{ministry.label}</Eyebrow>
-                        <h3 className="mt-3 font-ui text-heading-md font-semibold leading-tight text-white sm:text-heading-lg">
-                          {ministry.title}
-                        </h3>
-                        <div>
-                          <p className="mt-3 max-w-lg font-ui text-body-sm leading-[1.75] text-white/78">
-                            {ministry.description}
-                          </p>
-                          <span className="mt-6 inline-flex items-center gap-2 self-start font-ui text-label font-bold uppercase tracking-[0.12em] text-white">
-                            Learn more
-                            <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
-                          </span>
-                        </div>
-                      </div>
+
+                    <div>
+                      <p className="max-w-sm font-ui text-body-sm leading-[1.8] text-white/80 transition-all duration-500 ease-out motion-reduce:transition-none md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus-visible:translate-y-0 md:group-focus-visible:opacity-100">
+                        {ministry.description}
+                      </p>
+                      <span className="mt-5 inline-flex items-center gap-2 font-ui text-label font-bold uppercase tracking-[0.14em] text-white">
+                        Learn more
+                        <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1.5" />
+                      </span>
                     </div>
-                  </Link>
-                </div>
-              );
-            })}
+                  </div>
+                </Link>
+              </div>
+            ))}
           </CardRail>
         </Container>
       </Section>
