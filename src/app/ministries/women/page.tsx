@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ArrowRight } from 'lucide-react';
 
 import { WOMEN_MINISTRY_CONTENT as content } from '@/content/womenMinistry';
-import WomenConferenceGallery from '@/features/ministries/WomenConferenceGallery';
+import MinistryGallery from '@/features/ministries/MinistryGallery';
 import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -145,7 +145,7 @@ export default function WomenMinistryPage() {
               title={content.conference.title}
               description={content.conference.description}
             />
-            <WomenConferenceGallery images={content.conference.images} />
+            <MinistryGallery images={content.conference.images} />
           </Split>
         </Container>
       </Section>

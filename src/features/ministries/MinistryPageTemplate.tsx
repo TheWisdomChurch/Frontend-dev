@@ -1,53 +1,75 @@
 import type { ReactNode } from 'react';
-import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
-import { ScrollFadeIn } from '@/shared/ui/motion';
-import Arrow from '@/shared/ui/icons/Arrow';
-import { Container, Page, Section, SectionHeader } from '@/shared/ui/layout';
-import { buttonClass } from '@/shared/ui/button';
+import MinistryGallery from '@/features/ministries/MinistryGallery';
+import {
+  Container,
+  CtaLink,
+  Eyebrow,
+  Figure,
+  Page,
+  Section,
+  SectionHeader,
+  Split,
+} from '@/shared/ui/layout';
 
-export type MinistryHeading = { lead: string; accent: string; tail?: string };
-export type MinistryActivity = { title: string; description: string };
-export type MinistryValue = { title: string; body: string };
+/* ============================================================================
+   Every ministry page is composed from this one template so /ministries/women,
+   /men, /youth, /children and /outreach share a single architecture. Sections
+   with no data yet (leader, activities, conference) are simply omitted until
+   the details land — the page still reads as complete.
+============================================================================ */
 
-export type MinistryPageConfig = {
+export type MinistryImage = { src: string; alt: string };
+
+export type MinistryContent = {
   hero: {
     eyebrow: string;
     title: string;
-    subtitle: string;
-    backgroundImage?: string;
+    description: string;
+    image?: string;
+  };
+  primaryCta: { label: string; href: string };
+  introduction: {
+    label: string;
+    title: string;
+    body: string;
+    image: MinistryImage;
+  };
+  /** Vision + mission (or any pair of guiding statements). */
+  pillars: {
+    eyebrow: string;
+    title: string;
+    items: readonly { label: string; title: string; body: string }[];
+  };
+  /** The person who carries the ministry — convener, lead, coordinator. */
+  leader?: {
+    label: string;
+    title: string;
+    body: string;
+    image: MinistryImage;
+  };
+  focus: {
+    eyebrow: string;
+    title: string;
+    items: readonly { title: string; body: string }[];
+  };
+  /** Optional deeper "what we do" list — kept for ministries that have it. */
+  activities?: {
+    eyebrow: string;
+    title: string;
+    items: readonly { title: string; description: string }[];
   };
   conference?: {
     eyebrow: string;
-    heading: MinistryHeading;
+    title: string;
     description: string;
-    youtubeSrc: string;
-    youtubeTitle: string;
-    ctaLabel: string;
+    images: readonly MinistryImage[];
   };
-  mission: {
-    dark: boolean;
-    heading: MinistryHeading;
-    body: string;
-  };
-  activities: {
-    dark: boolean;
-    heading: MinistryHeading;
-    items: readonly MinistryActivity[];
-  };
-  /** Slot for a page-specific section (e.g. children's ministry gallery). */
-  extra?: ReactNode;
-  values: {
-    dark: boolean;
-    eyebrow?: string;
-    heading: MinistryHeading;
-    items: readonly MinistryValue[];
-  };
-  cta: {
-    dark: boolean;
-    eyebrow?: string;
-    heading: MinistryHeading;
+  invitation: {
+    label: string;
+    title: string;
     body: string;
     primaryLabel: string;
     primaryHref: string;
@@ -56,163 +78,223 @@ export type MinistryPageConfig = {
   };
 };
 
-/** Compose `{ lead, accent, tail }` into the ReactNode a SectionHeader title expects. */
-function heading(h: MinistryHeading): ReactNode {
-  return (
-    <>
-      {h.lead}
-      <span className="font-normal text-[var(--app-primary)]">{h.accent}</span>
-      {h.tail}
-    </>
-  );
-}
-
 export default function MinistryPageTemplate({
-  config,
+  content,
+  extra,
 }: {
-  config: MinistryPageConfig;
+  content: MinistryContent;
+  /** Slot for a page-specific section (e.g. the children's photo carousel). */
+  extra?: ReactNode;
 }) {
-  const { hero, conference, mission, activities, extra, values, cta } = config;
+  const {
+    hero,
+    primaryCta,
+    introduction,
+    pillars,
+    leader,
+    focus,
+    activities,
+    conference,
+    invitation,
+  } = content;
 
   return (
-    <Page>
+    <Page tone="surface">
       <SiteHero
         eyebrow={hero.eyebrow}
         title={hero.title}
-        subtitle={hero.subtitle}
-        backgroundImage={hero.backgroundImage}
+        subtitle={hero.description}
+        backgroundImage={hero.image}
+        priority
+        actions={
+          <CtaLink href={primaryCta.href}>
+            {primaryCta.label} <ArrowRight className="ml-2 h-4 w-4" />
+          </CtaLink>
+        }
       />
 
-      {conference ? (
-        <Section tone="dark">
-          <Container>
-            <ScrollFadeIn>
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                <SectionHeader
-                  eyebrow={conference.eyebrow}
-                  title={heading(conference.heading)}
-                  description={conference.description}
-                  size="sm"
-                />
-                <Link
-                  href="/contact"
-                  className={buttonClass(
-                    'outline',
-                    'md',
-                    'self-start lg:self-auto'
-                  )}
-                >
-                  {conference.ctaLabel} <Arrow />
-                </Link>
-              </div>
-            </ScrollFadeIn>
+      {/* ── Introduction ─────────────────────────────────────── */}
+      <Section>
+        <Container>
+          <Split className="lg:grid-cols-[0.88fr_1.12fr]">
+            <SectionHeader
+              eyebrow={introduction.label}
+              title={introduction.title}
+              description={introduction.body}
+              size="sm"
+            />
+            <div data-gsap="reveal">
+              <Figure
+                src={introduction.image.src}
+                alt={introduction.image.alt}
+                fill
+                sizes="(max-width: 1023px) 100vw, 56vw"
+                className="aspect-[4/3] sm:aspect-[16/10]"
+                imageClassName="object-center"
+              />
+            </div>
+          </Split>
+        </Container>
+      </Section>
 
-            <ScrollFadeIn delay={0.1}>
-              <div className="relative mt-12 aspect-video w-full overflow-hidden rounded-image border border-current/10">
-                <iframe
-                  src={conference.youtubeSrc}
-                  title={conference.youtubeTitle}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full border-0"
+      {/* ── Vision + Mission ─────────────────────────────────── */}
+      <Section tone="dark">
+        <Container>
+          <div className="mb-12 max-w-3xl lg:mb-16">
+            <SectionHeader
+              eyebrow={pillars.eyebrow}
+              title={pillars.title}
+              tone="dark"
+              size="sm"
+            />
+          </div>
+          <div className="grid gap-px overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-border)] lg:grid-cols-2">
+            {pillars.items.map(item => (
+              <article
+                key={item.label}
+                data-gsap="reveal"
+                className="tone-dark bg-[var(--app-dark)] p-8 sm:p-12 lg:p-14"
+              >
+                <Eyebrow>{item.label}</Eyebrow>
+                <h3 className="mt-4 max-w-xl font-ui text-heading-md font-semibold leading-tight tracking-[-0.02em] text-[var(--app-text)] sm:text-heading-lg">
+                  {item.title}
+                </h3>
+                <p className="mt-5 max-w-xl font-ui text-body-md leading-loose text-[var(--app-muted)]">
+                  {item.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* ── Leader ───────────────────────────────────────────── */}
+      {leader ? (
+        <Section>
+          <Container>
+            <Split reverse className="lg:grid-cols-[0.9fr_1.1fr]">
+              <div
+                data-gsap="reveal"
+                className="mx-auto w-full max-w-xl lg:mx-0"
+              >
+                <Figure
+                  src={leader.image.src}
+                  alt={leader.image.alt}
+                  fill
+                  sizes="(max-width: 1023px) 100vw, 45vw"
+                  className="aspect-[4/5]"
+                  imageClassName="object-[50%_22%]"
                 />
               </div>
-            </ScrollFadeIn>
+              <SectionHeader
+                eyebrow={leader.label}
+                title={leader.title}
+                description={leader.body}
+                size="sm"
+              />
+            </Split>
           </Container>
         </Section>
       ) : null}
 
-      <Section tone={mission.dark ? 'dark' : 'canvas'}>
+      {/* ── Focus / the journey ──────────────────────────────── */}
+      <Section tone="canvas">
         <Container>
-          <ScrollFadeIn>
-            <SectionHeader
-              eyebrow="Our mission"
-              title={heading(mission.heading)}
-              description={mission.body}
-              size="sm"
-            />
-          </ScrollFadeIn>
+          <SectionHeader
+            eyebrow={focus.eyebrow}
+            title={focus.title}
+            size="sm"
+          />
+          <div className="mt-12 grid overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] md:grid-cols-3">
+            {focus.items.map(item => (
+              <article
+                key={item.title}
+                data-gsap="reveal"
+                className="min-h-56 border-b border-[var(--app-border)] p-8 last:border-b-0 sm:p-10 md:border-b-0 md:border-r md:last:border-r-0"
+              >
+                <span
+                  className="mb-8 block h-px w-12 bg-[var(--app-primary)]"
+                  aria-hidden="true"
+                />
+                <h3 className="font-ui text-heading-md font-semibold tracking-[-0.02em] text-[var(--app-ink)]">
+                  {item.title}
+                </h3>
+                <p className="mt-4 max-w-sm font-ui text-body-sm leading-loose text-[var(--app-muted)]">
+                  {item.body}
+                </p>
+              </article>
+            ))}
+          </div>
         </Container>
       </Section>
 
-      <Section tone={activities.dark ? 'dark' : 'canvas'}>
-        <Container>
-          <ScrollFadeIn>
+      {/* ── What we do (optional) ────────────────────────────── */}
+      {activities ? (
+        <Section>
+          <Container>
             <SectionHeader
-              eyebrow="What we do"
-              title={heading(activities.heading)}
+              eyebrow={activities.eyebrow}
+              title={activities.title}
               size="sm"
             />
-          </ScrollFadeIn>
-
-          <div className="mt-12 grid grid-cols-1 gap-x-12 sm:grid-cols-2">
-            {activities.items.map((item, i) => (
-              <ScrollFadeIn key={item.title} delay={i * 0.07}>
-                <div className="border-t border-current/10 py-8">
+            <div className="mt-10 grid grid-cols-1 gap-x-12 sm:grid-cols-2">
+              {activities.items.map(item => (
+                <div
+                  key={item.title}
+                  data-gsap="reveal"
+                  className="border-t border-[var(--app-border)] py-8"
+                >
                   <div className="mb-4 h-[1.5px] w-6 bg-[var(--app-primary)]/50" />
-                  <h3 className="font-ui text-heading-sm font-semibold text-current">
+                  <h3 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                     {item.title}
                   </h3>
                   <p className="mt-3 font-ui text-body-sm leading-[1.9] text-[var(--app-muted)]">
                     {item.description}
                   </p>
                 </div>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </Container>
-      </Section>
+              ))}
+            </div>
+          </Container>
+        </Section>
+      ) : null}
+
+      {/* ── Conference gallery (optional) ────────────────────── */}
+      {conference ? (
+        <Section tone="canvas">
+          <Container>
+            <Split>
+              <SectionHeader
+                eyebrow={conference.eyebrow}
+                title={conference.title}
+                description={conference.description}
+                size="sm"
+              />
+              <MinistryGallery images={conference.images} />
+            </Split>
+          </Container>
+        </Section>
+      ) : null}
 
       {extra}
 
-      <Section tone={values.dark ? 'dark' : 'canvas'}>
-        <Container>
-          <ScrollFadeIn>
-            <SectionHeader
-              eyebrow={values.eyebrow ?? 'What shapes us'}
-              title={heading(values.heading)}
-              size="sm"
-              className="border-b border-current/10 pb-8 sm:pb-10"
-            />
-          </ScrollFadeIn>
-
-          <div className="grid grid-cols-1 divide-y divide-current/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            {values.items.map((v, i) => (
-              <ScrollFadeIn key={v.title} delay={i * 0.08}>
-                <div className="flex flex-col py-8 sm:px-6 lg:px-8 lg:py-10">
-                  <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
-                  <h3 className="font-ui text-heading-md font-medium leading-tight tracking-[-0.02em] text-current">
-                    {v.title}
-                  </h3>
-                  <p className="mt-4 font-ui text-body-sm leading-[1.9] text-[var(--app-muted)]">
-                    {v.body}
-                  </p>
-                </div>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </Container>
-      </Section>
-
-      <Section tone={cta.dark ? 'dark' : 'canvas'}>
-        <Container>
-          <div className="flex flex-col items-center gap-7 text-center">
-            <SectionHeader
-              eyebrow={cta.eyebrow ?? 'Join the ministry'}
-              title={heading(cta.heading)}
-              description={cta.body}
-              size="sm"
-              align="center"
-            />
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link href={cta.primaryHref} className={buttonClass('primary')}>
-                {cta.primaryLabel} <Arrow />
-              </Link>
-              <Link href={cta.secondaryHref} className={buttonClass('outline')}>
-                {cta.secondaryLabel}
-              </Link>
-            </div>
+      {/* ── Invitation ───────────────────────────────────────── */}
+      <Section tone="brand">
+        <Container className="text-center">
+          <SectionHeader
+            eyebrow={invitation.label}
+            title={invitation.title}
+            description={invitation.body}
+            size="sm"
+            align="center"
+            className="mx-auto max-w-3xl [&_p]:mx-auto"
+          />
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <CtaLink href={invitation.primaryHref} variant="dark">
+              {invitation.primaryLabel}
+            </CtaLink>
+            <CtaLink href={invitation.secondaryHref} variant="outline">
+              {invitation.secondaryLabel}
+            </CtaLink>
           </div>
         </Container>
       </Section>

@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn';
 
 type GalleryImage = { src: string; alt: string };
 
-export default function WomenConferenceGallery({
+export default function MinistryGallery({
   images,
 }: {
   images: readonly GalleryImage[];
