@@ -30,11 +30,12 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Ministries',
     href: '/ministries',
     children: [
-      { label: 'Children', href: '/ministries/children' },
+      { label: 'Prayer', href: '/ministries/prayer' },
       { label: 'Youth', href: '/ministries/youth' },
       { label: "Men's", href: '/ministries/men' },
       { label: "Women's", href: '/ministries/women' },
-      { label: 'Outreach', href: '/ministries/outreach' },
+      { label: 'Evangelism', href: '/ministries/outreach' },
+      { label: 'Children', href: '/ministries/children' },
     ],
   },
   {

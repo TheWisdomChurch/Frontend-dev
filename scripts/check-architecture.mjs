@@ -20,6 +20,7 @@ const requiredPublicPages = [
   'src/app/ministries/children/page.tsx',
   'src/app/ministries/men/page.tsx',
   'src/app/ministries/outreach/page.tsx',
+  'src/app/ministries/prayer/page.tsx',
   'src/app/ministries/women/page.tsx',
   'src/app/ministries/youth/page.tsx',
   'src/app/pastoral/page.tsx',

@@ -25,21 +25,21 @@ export const metadata: Metadata = buildPageMetadata({
 
 const ministries = [
   {
+    title: 'Prayer Ministry',
+    label: 'The engine room',
+    description:
+      'A community giving itself to prayer — interceding for the church, the city, and one another, and keeping the altar burning.',
+    href: '/ministries/prayer',
+    image: '/Picflow/DSC06712 copy.webp',
+    position: 'object-top',
+  },
+  {
     title: 'Youth Ministry',
     label: 'Teenagers & young adults',
     description:
       'A Christ-centred community where a new generation is grounded in Scripture, prayer, purpose, and godly friendships.',
     href: '/ministries/youth',
     image: '/Picflow/DSC00006 copy.webp',
-    position: 'object-top',
-  },
-  {
-    title: "Women's Ministry",
-    label: 'Women in every season',
-    description:
-      'Women growing together in the Word, prayer, fellowship, and the grace to live faithfully in every season.',
-    href: '/ministries/women',
-    image: '/Picflow/DSC00054 copy.webp',
     position: 'object-top',
   },
   {
@@ -52,21 +52,30 @@ const ministries = [
     position: 'object-top',
   },
   {
+    title: "Women's Ministry",
+    label: 'Women in every season',
+    description:
+      'Women growing together in the Word, prayer, fellowship, and the grace to live faithfully in every season.',
+    href: '/ministries/women',
+    image: '/Picflow/DSC00054 copy.webp',
+    position: 'object-top',
+  },
+  {
+    title: 'Evangelism',
+    label: 'The good news, beyond our walls',
+    description:
+      'Sharing the gospel with clarity and courage, and expressing the love of Christ through practical care in our communities.',
+    href: '/ministries/outreach',
+    image: '/Picflow/DSC00019 copy.webp',
+    position: 'object-top',
+  },
+  {
     title: "Children's Ministry",
     label: 'Nursery to pre-teens',
     description:
       'A safe, joyful place where children are known, cared for, and taught the truth of God’s Word at their level.',
     href: '/ministries/children',
     image: '/Picflow/DSC00123 copy.webp',
-    position: 'object-top',
-  },
-  {
-    title: 'Outreach & Missions',
-    label: 'Faith beyond our walls',
-    description:
-      'Serving our neighbours, sharing the gospel, and expressing the love of Christ through practical care.',
-    href: '/ministries/outreach',
-    image: '/Picflow/DSC00019 copy.webp',
     position: 'object-top',
   },
 ] as const;

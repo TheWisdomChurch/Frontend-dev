@@ -1,17 +1,17 @@
 import type { MinistryContent } from '@/features/ministries/MinistryPageTemplate';
 
-// NOTE: images are from the church library; swap for outreach-specific photos
+// NOTE: images are from the church library; swap for evangelism-specific photos
 // as they land.
 
-export const OUTREACH_MINISTRY_CONTENT: MinistryContent = {
+export const EVANGELISM_MINISTRY_CONTENT: MinistryContent = {
   hero: {
-    eyebrow: 'Outreach & Missions',
-    title: 'Taking the church beyond the walls.',
+    eyebrow: 'Evangelism',
+    title: 'Taking the good news beyond the walls.',
     description:
-      'Practical expressions of compassion, service, and gospel witness in the communities around us.',
+      'Sharing the gospel with clarity and courage, and expressing the love of Christ through practical care in the communities around us.',
     image: '/Picflow/DSC00007 copy.webp',
   },
-  primaryCta: { label: 'Join outreach', href: '/contact' },
+  primaryCta: { label: 'Join the evangelism team', href: '/contact' },
   introduction: {
     label: 'Faith beyond our walls',
     title: 'The compassion of Christ and the wisdom to serve people well.',
@@ -38,12 +38,12 @@ export const OUTREACH_MINISTRY_CONTENT: MinistryContent = {
     ],
   },
   leader: {
-    label: 'Outreach Lead',
-    title: 'Helping the church serve its neighbours with consistency.',
-    body: 'Our team plans, prepares, and carries out outreach with humility and care — so that every initiative treats people with dignity and reflects Christ clearly.',
+    label: 'Evangelism Lead',
+    title: 'Helping the church witness to its city with consistency.',
+    body: 'Our team plans, prepares, and carries out evangelism and outreach with humility and care — so that every initiative treats people with dignity and points clearly to Christ.',
     image: {
       src: '/Picflow/DSC00009 copy.webp',
-      alt: 'An outreach ministry leader at The Wisdom Church',
+      alt: 'An evangelism ministry leader at The Wisdom Church',
     },
   },
   focus: {
@@ -92,9 +92,9 @@ export const OUTREACH_MINISTRY_CONTENT: MinistryContent = {
   },
   invitation: {
     label: 'Get involved',
-    title: 'Ready to serve beyond the walls?',
-    body: 'Reach out and we will connect you to the next outreach initiative or community service opportunity.',
-    primaryLabel: 'Join outreach',
+    title: 'Ready to carry the good news beyond the walls?',
+    body: 'Reach out and we will connect you to the next evangelism or community outreach opportunity.',
+    primaryLabel: 'Join the evangelism team',
     primaryHref: '/contact',
     secondaryLabel: 'See weekly services',
     secondaryHref: '/events/weekly',

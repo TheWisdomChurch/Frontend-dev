@@ -7,6 +7,7 @@ import {
   HOME_COPY,
   HOME_IMAGES,
 } from '@/features/home/content';
+import { CellFellowshipCta } from '@/features/community/CellFellowshipCta';
 import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
@@ -277,6 +278,44 @@ export default function PremiumHome() {
               </CtaLink>
             </div>
           </Split>
+        </Container>
+      </Section>
+
+      <Section tone="dark">
+        <Container>
+          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+            <SectionHeader
+              eyebrow={HOME_COPY.cellFellowship.eyebrow}
+              title={HOME_COPY.cellFellowship.title}
+              accent={HOME_COPY.cellFellowship.accent}
+              description={HOME_COPY.cellFellowship.description}
+              tone="dark"
+            />
+            <div className="shrink-0">
+              <CellFellowshipCta label="Join a Cell Fellowship" />
+            </div>
+          </div>
+
+          <div className="mt-12 grid gap-px overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-border)] sm:mt-14 sm:grid-cols-3">
+            {HOME_COPY.cellFellowship.points.map(point => (
+              <article
+                key={point.title}
+                data-gsap="reveal"
+                className="tone-dark bg-[var(--app-dark)] p-6 sm:p-8"
+              >
+                <span
+                  className="block h-[1.5px] w-8 bg-[var(--app-primary)]/60"
+                  aria-hidden="true"
+                />
+                <h3 className="mt-4 font-ui text-heading-sm font-semibold text-[var(--app-text)]">
+                  {point.title}
+                </h3>
+                <p className="mt-2 font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
+                  {point.body}
+                </p>
+              </article>
+            ))}
+          </div>
         </Container>
       </Section>
     </Page>

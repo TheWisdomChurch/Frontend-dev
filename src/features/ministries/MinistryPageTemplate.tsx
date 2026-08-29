@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CalendarClock } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
 import MinistryGallery from '@/features/ministries/MinistryGallery';
+import { NotifyCta } from '@/features/notifications/NotifyCta';
 import { VideoEmbed } from '@/shared/ui/VideoEmbed';
 import {
   Container,
@@ -39,6 +40,13 @@ export type MinistryContent = {
     title: string;
     body: string;
     image: MinistryImage;
+    /**
+     * Aspect of the image frame. Defaults to a landscape `3/2`; pass a
+     * portrait ratio (e.g. `aspect-[4/5]`) when the photo is a portrait so it
+     * fills the frame instead of being side-cropped.
+     */
+    imageFrameClassName?: string;
+    imagePositionClassName?: string;
   };
   /** Vision + mission (or any pair of guiding statements). */
   pillars: {
@@ -70,13 +78,25 @@ export type MinistryContent = {
     description: string;
     images: readonly MinistryImage[];
   };
-  /** "Missed the last conference? Watch and be blessed" — a replay embed. */
+  /**
+   * A flagship gathering — its schedule, a call to join, and (optionally) the
+   * replay of the last one. "Missed it? Watch and be blessed."
+   */
   conferenceVideo?: {
     eyebrow: string;
     title: string;
     description?: string;
-    youtubeSrc: string;
-    youtubeTitle: string;
+    /** e.g. "Every third Saturday". */
+    schedule?: string;
+    ctaLabel?: string;
+    /** A plain link CTA. Ignored when `notifySignup` is set. */
+    ctaHref?: string;
+    /** Open the "notify me" modal (name / phone / email → backend) instead. */
+    notifySignup?: boolean;
+    notifyBlurb?: string;
+    notifySource?: string;
+    youtubeSrc?: string;
+    youtubeTitle?: string;
   };
   invitation: {
     label: string;
@@ -142,8 +162,13 @@ export default function MinistryPageTemplate({
                 alt={introduction.image.alt}
                 fill
                 sizes="(max-width: 1023px) 100vw, 56vw"
-                className="aspect-[4/3] sm:aspect-[3/2]"
-                imageClassName="object-center"
+                className={
+                  introduction.imageFrameClassName ??
+                  'aspect-[4/3] sm:aspect-[3/2]'
+                }
+                imageClassName={
+                  introduction.imagePositionClassName ?? 'object-center'
+                }
               />
             </div>
           </Split>
@@ -288,7 +313,7 @@ export default function MinistryPageTemplate({
         </Section>
       ) : null}
 
-      {/* ── Conference replay (optional) ─────────────────────── */}
+      {/* ── Flagship gathering + replay (optional) ───────────── */}
       {conferenceVideo ? (
         <Section tone="dark">
           <Container>
@@ -300,13 +325,49 @@ export default function MinistryPageTemplate({
                 tone="dark"
                 size="sm"
               />
+              {conferenceVideo.schedule ? (
+                <p className="mt-5 inline-flex items-center gap-2 rounded-badge border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 py-1.5 font-ui text-label font-semibold text-[var(--app-muted)]">
+                  <CalendarClock
+                    className="h-4 w-4 text-[var(--app-primary)]"
+                    aria-hidden="true"
+                  />
+                  {conferenceVideo.schedule}
+                </p>
+              ) : null}
+              {conferenceVideo.ctaLabel ? (
+                <div className="mt-6">
+                  {conferenceVideo.notifySignup ? (
+                    <NotifyCta
+                      label={conferenceVideo.ctaLabel}
+                      heading={`Get notified about ${conferenceVideo.eyebrow}`}
+                      blurb={
+                        conferenceVideo.notifyBlurb ??
+                        'Leave your details and we will let you know before the next gathering.'
+                      }
+                      source={
+                        conferenceVideo.notifySource ??
+                        conferenceVideo.eyebrow
+                          .toLowerCase()
+                          .replace(/\s+/g, '-')
+                      }
+                    />
+                  ) : conferenceVideo.ctaHref ? (
+                    <CtaLink href={conferenceVideo.ctaHref}>
+                      {conferenceVideo.ctaLabel}{' '}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </CtaLink>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
-            <div data-gsap="reveal">
-              <VideoEmbed
-                src={conferenceVideo.youtubeSrc}
-                title={conferenceVideo.youtubeTitle}
-              />
-            </div>
+            {conferenceVideo.youtubeSrc ? (
+              <div data-gsap="reveal">
+                <VideoEmbed
+                  src={conferenceVideo.youtubeSrc}
+                  title={conferenceVideo.youtubeTitle ?? conferenceVideo.title}
+                />
+              </div>
+            ) : null}
           </Container>
         </Section>
       ) : null}

@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
 
 import MinistryPageTemplate from '@/features/ministries/MinistryPageTemplate';
-import { OUTREACH_MINISTRY_CONTENT as content } from '@/content/outreachMinistry';
+import { EVANGELISM_MINISTRY_CONTENT as content } from '@/content/evangelismMinistry';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Outreach & Missions',
+  title: 'Evangelism',
   description:
-    "Practical expressions of God's love through service, evangelism, and community development. Part of The Wisdom Church, Lagos.",
+    'Sharing the gospel with clarity and courage, and serving our city with practical care. Part of The Wisdom Church, Lagos.',
   path: '/ministries/outreach',
 });
 
-export default function OutreachPage() {
+export default function EvangelismMinistryPage() {
   return <MinistryPageTemplate content={content} />;
 }

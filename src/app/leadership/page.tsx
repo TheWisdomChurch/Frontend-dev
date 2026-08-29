@@ -44,9 +44,10 @@ function EmptyState({ dark }: { dark?: boolean }) {
 /* ── Page ───────────────────────────────────────────────── */
 
 export default async function LeadershipPage() {
-  // Preserve transport failures for the route error boundary. Treating a
-  // 429/5xx as [] made approved records look as though they were unpublished.
-  const leaders = await apiClient.listLeadership();
+  // The directory is CMS-managed and often empty in non-production. A transport
+  // failure (API unreachable, cold start, rate limit) should fall back to the
+  // "coming soon" empty state rather than crash the route to its error page.
+  const leaders = await apiClient.listLeadership().catch(() => []);
 
   const seniorTeam = leaders.filter(l => SENIOR_ROLES.includes(l.role));
   const board = leaders.filter(l => BOARD_ROLES.includes(l.role));

@@ -835,7 +835,12 @@ export const apiClient = {
     return normalizeTestimonial(unwrapData<unknown>(res));
   },
 
-  async subscribe(payload: { name?: string; email: string }) {
+  async subscribe(payload: {
+    name?: string;
+    email: string;
+    phone?: string;
+    source?: string;
+  }) {
     return request<unknown>('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify(payload),
