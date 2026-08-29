@@ -47,10 +47,13 @@ export function Media({
 }: MediaProps) {
   const sourceKey = typeof src === 'string' ? src : src?.src;
   // CMS / form-uploaded images are served from storage hosts we can't
-  // enumerate ahead of time in next.config. Skip the optimizer for any
-  // absolute remote URL so the image always renders; local bundled assets
-  // (hero art, Picflow) keep full optimization.
-  const isRemote = typeof src === 'string' && /^(https?:)?\/\//i.test(src);
+  // enumerate ahead of time in next.config, and leadership-form uploads can
+  // even arrive as inline `data:`/`blob:` URIs. The Next optimizer rejects
+  // data URIs outright and 400s on unlisted hosts, so skip it for anything
+  // that isn't a local bundled asset — those (hero art, Picflow) keep full
+  // optimization.
+  const isRemote =
+    typeof src === 'string' && /^(https?:|blob:|data:|\/\/)/i.test(src);
   const [failedSource, setFailedSource] = useState<string>();
   const [loadedSource, setLoadedSource] = useState<string>();
   const failed = failedSource === sourceKey;

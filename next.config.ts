@@ -24,7 +24,10 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.ytimg.com', pathname: '/**' },
       // Supabase storage — admin-uploaded media (homepage ads, etc.)
       { protocol: 'https', hostname: '*.supabase.co', pathname: '/**' },
-      // Cloud storage — add your CDN/S3 hostname here if images are served from one
+      // AWS S3 — leadership photos and other admin uploads. Covers virtual-hosted
+      // (`bucket.s3.region.amazonaws.com`) and path-style (`s3.region.amazonaws.com`)
+      // URLs. Tighten to the exact bucket host if you want a narrower rule.
+      { protocol: 'https', hostname: '**.amazonaws.com', pathname: '/**' },
     ],
     qualities: [85],
     formats: ['image/webp', 'image/avif'],
@@ -89,7 +92,7 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       `script-src ${scriptSrc}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://wisdomchurchhq.org https://api.wisdomchurchhq.org https://*.ytimg.com https://*.supabase.co https://www.facebook.com",
+      "img-src 'self' data: blob: https://wisdomchurchhq.org https://api.wisdomchurchhq.org https://*.amazonaws.com https://*.ytimg.com https://*.supabase.co https://www.facebook.com",
       "font-src 'self' data:",
       "connect-src 'self' https://analytics.ahrefs.com https://www.google-analytics.com https://www.facebook.com https://cloudflareinsights.com",
       "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com",
