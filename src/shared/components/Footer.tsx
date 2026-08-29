@@ -1,13 +1,13 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
+import { ArrowRight, Check, Loader2, Mail, MapPin, Phone } from 'lucide-react';
+
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
-import { useState } from 'react';
-import { ArrowRight, Check, Loader2, MapPin, Mail, Phone } from 'lucide-react';
-
 import { WisdomeHouseLogo } from '@/shared/assets';
 import { Container } from '@/shared/ui/Container';
 import { buttonClass } from '@/shared/ui/button';
@@ -34,7 +34,10 @@ const Ig = () => (
 const Yt = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
     <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
-    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#040404" />
+    <polygon
+      points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"
+      fill="var(--app-dark)"
+    />
   </svg>
 );
 const Fb = () => (
@@ -63,30 +66,20 @@ const CONNECT = [
 ];
 
 const SOCIALS = [
-  {
-    href: SOCIAL_LINKS.instagram,
-    label: 'Instagram',
-    Icon: Ig,
-  },
-  {
-    href: SOCIAL_LINKS.youtube,
-    label: 'YouTube',
-    Icon: Yt,
-  },
+  { href: SOCIAL_LINKS.instagram, label: 'Instagram', Icon: Ig },
+  { href: SOCIAL_LINKS.youtube, label: 'YouTube', Icon: Yt },
   { href: SOCIAL_LINKS.facebook, label: 'Facebook', Icon: Fb },
 ];
 
-/* ── Column header ─────────────────────────────────────── */
+/* ── Small parts ──────────────────────────────────────── */
 
 function ColHead({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+    <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
       {children}
     </p>
   );
 }
-
-/* ── Link list ─────────────────────────────────────────── */
 
 function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
   return (
@@ -96,7 +89,7 @@ function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
           <Link
             href={l.href}
             prefetch={false}
-            className="group inline-flex items-center gap-1.5 rounded font-ui text-body-sm text-white/60 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
+            className="group inline-flex items-center gap-1.5 rounded font-ui text-body-sm text-[var(--app-muted)] transition hover:text-[var(--app-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
           >
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
               {l.label}
@@ -133,31 +126,87 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-white/[0.07] bg-[var(--app-dark)]">
-      {/* ── Gold top accent line ─────────────────────────── */}
-      <div
-        className="h-[2px] w-full"
-        // eslint-disable-next-line no-restricted-syntax
-        style={{
-          background:
-            'linear-gradient(90deg, transparent, var(--app-primary) 40%, transparent)',
-        }}
-      />
+    <footer className="tone-dark border-t border-[var(--app-border)] bg-[var(--app-dark)] text-[var(--app-text)]">
+      <div className="h-px w-full bg-[linear-gradient(90deg,transparent,var(--app-primary),transparent)]" />
 
       <Container className="py-section-md">
-        {/* Brand + link columns share one grid so column count always
-            divides evenly (1 → 3 → 4), instead of a leftover half-empty
-            column at tablet widths. */}
-        <div className="grid gap-x-10 gap-y-14 sm:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr] lg:gap-14 xl:gap-20">
-          {/* Brand ───────────────────────────────────────── */}
-          <div className="sm:col-span-3 lg:col-span-1">
+        {/* ── Newsletter band ─────────────────────────────── */}
+        <div className="grid gap-8 border-b border-[var(--app-border)] pb-12 lg:grid-cols-[1fr_minmax(0,26rem)] lg:items-end lg:gap-16">
+          <div>
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
+              Stay in the loop
+            </p>
+            <h2 className="mt-3 max-w-md font-ui text-heading-md font-semibold leading-snug text-[var(--app-text)] sm:text-heading-lg">
+              Weekly encouragement, straight to your inbox.
+            </h2>
+          </div>
+
+          <form onSubmit={handleSubscribe}>
+            <div
+              className={cn(
+                'flex items-center gap-1 rounded-input border bg-[var(--app-surface)] py-1 pl-4 pr-1 transition',
+                subState === 'err'
+                  ? 'border-[var(--status-error)]/50'
+                  : 'border-[var(--app-border)] focus-within:border-[var(--app-primary)]/50 focus-within:bg-[var(--app-surface-2)]'
+              )}
+            >
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Your email"
+                aria-label="Email address"
+                disabled={subState === 'loading'}
+                className="h-10 min-w-0 flex-1 bg-transparent font-ui text-body-sm text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)]"
+              />
+              <button
+                type="submit"
+                disabled={subState === 'loading'}
+                aria-label="Subscribe"
+                className={buttonClass('primary', 'sm', '!size-10 !px-0')}
+              >
+                {subState === 'loading' ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : subState === 'done' ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <ArrowRight className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            <p
+              className="mt-2 min-h-[1.25rem] font-ui text-caption"
+              aria-live="polite"
+            >
+              {subState === 'done' ? (
+                <span className="text-[var(--status-success)]">
+                  Subscribed — thank you!
+                </span>
+              ) : subState === 'err' ? (
+                <span className="text-[var(--status-error)]">
+                  Something went wrong — please try again.
+                </span>
+              ) : (
+                <span className="text-[var(--app-subtle)]">
+                  Weekly reminders and church updates. Unsubscribe any time.
+                </span>
+              )}
+            </p>
+          </form>
+        </div>
+
+        {/* ── Columns ─────────────────────────────────────── */}
+        <div className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-14">
+          {/* Brand */}
+          <div className="sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
               prefetch={false}
               className="mb-6 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
               aria-label="The Wisdom Church — home"
             >
-              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.05]">
+              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-button border border-[var(--app-border)] bg-[var(--app-surface)]">
                 <Image
                   quality={IMAGE_QUALITY}
                   src={WisdomeHouseLogo}
@@ -167,157 +216,104 @@ export default function Footer() {
                   className="object-contain p-1"
                 />
               </span>
-              <div className="flex flex-col leading-none">
-                <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.25em] text-[var(--app-primary)]">
+              <span className="flex flex-col leading-none">
+                <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.25em] text-[var(--app-primary-dark)]">
                   The
                 </span>
-                <span className="font-headline text-heading-sm font-semibold leading-none text-white">
+                <span className="font-ui text-heading-sm font-semibold leading-none text-[var(--app-text)]">
                   Wisdom Church
                 </span>
-              </div>
+              </span>
             </Link>
 
-            <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-white/60">
-              A Spirit-filled community raised to carry God's glory — equipping
-              every believer with the Word, prayer, and purpose.
+            <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-muted)]">
+              A Spirit-filled community raised to carry God&apos;s glory —
+              equipping every believer with the Word, prayer, and purpose.
             </p>
 
-            <div className="mt-6 space-y-2">
-              <p className="font-ui text-label font-semibold text-white/75">
-                {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
+            <div className="mt-6 space-y-1.5">
+              <p className="font-ui text-label font-semibold text-[var(--app-text)]">
+                {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}{' '}
+                {SERVICE_INFO.sunday.timezone}
               </p>
-              <p className="font-ui text-label font-semibold text-white/75">
+              <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
                 {SERVICE_INFO.dailyPrayer.label} ·{' '}
+                {SERVICE_INFO.dailyPrayer.daysShort} at{' '}
                 {SERVICE_INFO.dailyPrayer.time}
               </p>
             </div>
-
-            <div className="mt-5 space-y-2 font-body text-body-sm text-[color-mix(in_srgb,white_52%,transparent)]">
-              <p className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
-                {SERVICE_INFO.venue.full}
-              </p>
-              <a
-                href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`}
-                className="flex items-center gap-2 transition hover:text-white/80"
-              >
-                <Phone className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
-                {CONTACT_INFO.phone}
-              </a>
-              <a
-                href={`mailto:${CONTACT_INFO.email}`}
-                className="flex items-center gap-2 transition hover:text-white/80"
-              >
-                <Mail className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary)]/60" />
-                {CONTACT_INFO.email}
-              </a>
-            </div>
           </div>
 
-          {/* Explore ─────────────────────────────────────── */}
+          {/* Explore */}
           <div>
             <ColHead>Explore</ColHead>
             <FooterLinks links={EXPLORE} />
           </div>
 
-          {/* Connect ─────────────────────────────────────── */}
+          {/* Connect */}
           <div>
             <ColHead>Connect</ColHead>
             <FooterLinks links={CONNECT} />
           </div>
 
-          {/* Newsletter + Socials ────────────────────────── */}
+          {/* Reach us */}
           <div>
-            <ColHead>Stay Connected</ColHead>
-
-            <form onSubmit={handleSubscribe} className="mb-8">
-              <p className="mb-3 font-body text-label text-white/50">
-                Get weekly reminders and updates.
+            <ColHead>Reach us</ColHead>
+            <div className="space-y-3 font-ui text-body-sm text-[var(--app-muted)]">
+              <p className="flex items-start gap-2.5">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]" />
+                {SERVICE_INFO.venue.full}
               </p>
-              <div
-                className={cn(
-                  'flex items-center gap-1 rounded-input border bg-white/[0.04] py-1 pl-4 pr-1 transition',
-                  subState === 'err'
-                    ? 'border-red-400/40'
-                    : 'border-[color-mix(in_srgb,white_12%,transparent)] focus-within:border-[var(--app-primary)]/50 focus-within:bg-white/[0.06]'
-                )}
+              <a
+                href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`}
+                className="flex items-center gap-2.5 transition hover:text-[var(--app-text)]"
               >
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Your email"
-                  aria-label="Email address"
-                  disabled={subState === 'loading'}
-                  className="h-9 min-w-0 flex-1 bg-transparent font-body text-body-sm text-white outline-none placeholder:text-white/40"
-                />
-                <button
-                  type="submit"
-                  disabled={subState === 'loading'}
-                  aria-label="Subscribe"
-                  className={buttonClass('primary', 'sm', '!size-9 !px-0')}
-                >
-                  {subState === 'loading' ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : subState === 'done' ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <ArrowRight className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-              {subState === 'done' ? (
-                <p className="mt-2 font-body text-caption text-[var(--app-primary)]">
-                  Subscribed — thank you!
-                </p>
-              ) : subState === 'err' ? (
-                <p className="mt-2 font-body text-caption text-red-400">
-                  Something went wrong — please try again.
-                </p>
-              ) : null}
-            </form>
+                <Phone className="h-4 w-4 shrink-0 text-[var(--app-primary-dark)]" />
+                {CONTACT_INFO.phone}
+              </a>
+              <a
+                href={`mailto:${CONTACT_INFO.email}`}
+                className="flex items-center gap-2.5 transition hover:text-[var(--app-text)]"
+              >
+                <Mail className="h-4 w-4 shrink-0 text-[var(--app-primary-dark)]" />
+                {CONTACT_INFO.email}
+              </a>
+            </div>
 
-            <div>
-              <p className="mb-3 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-white/45">
-                Follow
-              </p>
-              <div className="flex items-center gap-2.5">
-                {SOCIALS.map(s => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={s.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/55 transition hover:border-[var(--app-primary)]/40 hover:text-[var(--app-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
-                  >
-                    <s.Icon />
-                  </a>
-                ))}
-              </div>
+            <div className="mt-6 flex items-center gap-2.5">
+              {SOCIALS.map(s => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={s.label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
+                >
+                  <s.Icon />
+                </a>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* ── Bottom bar ────────────────────────────────────── */}
-        <div className="mt-16 flex flex-col gap-4 border-t border-white/[0.07] pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-body text-label text-white/45">
+        {/* ── Bottom bar ──────────────────────────────────── */}
+        <div className="mt-16 flex flex-col gap-4 border-t border-[var(--app-border)] pt-7 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-ui text-label text-[var(--app-subtle)]">
             © {new Date().getFullYear()} The Wisdom Church · Lagos, Nigeria
           </p>
-
-          <div className="flex gap-5">
+          <div className="flex gap-6">
             <Link
               href="/privacy"
               prefetch={false}
-              className="font-body text-label text-white/45 transition hover:text-white/75"
+              className="font-ui text-label text-[var(--app-subtle)] transition hover:text-[var(--app-text)]"
             >
               Privacy
             </Link>
             <Link
               href="/cookies"
               prefetch={false}
-              className="font-body text-label text-white/45 transition hover:text-white/75"
+              className="font-ui text-label text-[var(--app-subtle)] transition hover:text-[var(--app-text)]"
             >
               Cookies
             </Link>

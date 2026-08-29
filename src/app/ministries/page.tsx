@@ -30,7 +30,7 @@ const ministries = [
     description:
       'A Christ-centred community where a new generation is grounded in Scripture, prayer, purpose, and godly friendships.',
     href: '/ministries/youth',
-    image: '/Picflow/DSC00122 copy.webp',
+    image: '/Picflow/DSC00006 copy.webp',
     position: 'object-top',
   },
   {
