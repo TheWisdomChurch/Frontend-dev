@@ -29,21 +29,25 @@ const sizeClass: Record<ButtonSize, string> = {
 };
 
 const solid =
-  'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm hover:bg-[var(--app-ink)]/88 hover:shadow-lg hover:shadow-black/25 active:shadow-sm';
+  'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm hover:bg-[var(--app-neutral)] hover:shadow-lg hover:shadow-black/25 active:shadow-sm';
 
 const variantClass: Record<ButtonVariant, string> = {
-  // Fill state; hover brightens + adds a gold glow, active dims it back.
+  // Fill state; hover brightens, active dims it back.
   primary:
-    'bg-[var(--app-primary)] text-[var(--app-dark)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-lg hover:shadow-[var(--app-primary)]/35 active:bg-[var(--app-primary)] active:shadow-sm',
+    'bg-[var(--app-primary)] text-[var(--app-dark)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-lg hover:shadow-black/15 active:bg-[var(--app-primary)] active:shadow-sm',
   solid,
   // Back-compat alias — `dark` is the same high-contrast solid button.
   dark: solid,
   // Gold hairline at rest; hover fills the border and washes the surface gold.
+  // `--app-primary-10/20` are the same hue at 10/20% alpha, re-themed on
+  // `.tone-dark` / `.tone-brand`, so the button reads on any section — and
+  // `color-mix` for the hairline (an opacity modifier on a CSS var silently
+  // produces no rule in Tailwind 3).
   outline:
-    'border border-[var(--app-primary)]/55 bg-transparent text-current hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)]/[0.1] hover:text-[var(--app-primary-dark)] hover:shadow-sm active:bg-[var(--app-primary)]/[0.16]',
+    'border border-[color-mix(in_srgb,var(--app-primary)_55%,transparent)] bg-transparent text-current hover:border-[var(--app-primary)] hover:bg-[var(--app-primary-10)] hover:text-[var(--app-primary-dark)] hover:shadow-sm active:bg-[var(--app-primary-20)]',
   // No background at rest; a gold border + wash appears on hover.
   ghost:
-    'border border-transparent bg-transparent text-current hover:border-[var(--app-primary)]/50 hover:bg-[var(--app-primary)]/[0.08] hover:text-[var(--app-primary-dark)] active:bg-[var(--app-primary)]/[0.14]',
+    'border border-transparent bg-transparent text-current hover:border-[color-mix(in_srgb,var(--app-primary)_55%,transparent)] hover:bg-[var(--app-primary-10)] hover:text-[var(--app-primary-dark)] active:bg-[var(--app-primary-20)]',
 };
 
 export function buttonClass(

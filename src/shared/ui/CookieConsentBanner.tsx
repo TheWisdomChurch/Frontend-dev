@@ -186,13 +186,13 @@ export default function CookieConsentBanner() {
         ].join(' ')}
       >
         {/* Thin gold accent line at top */}
-        <div className="h-[2px] w-full bg-[var(--app-primary)]/40" />
+        <div className="h-[2px] w-full bg-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]" />
 
         <div className="border-t border-white/8 bg-[rgba(7,6,10,0.97)] backdrop-blur-xl">
           <div className="mx-auto flex max-w-screen-xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-6 lg:px-8 lg:py-5">
             {/* Left — icon + text */}
             <div className="flex min-w-0 items-start gap-3 sm:items-center">
-              <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-[var(--app-primary)]/12 sm:mt-0">
+              <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] sm:mt-0">
                 <ShieldCheck className="h-4 w-4 text-[var(--app-primary)]" />
               </div>
               <div className="min-w-0">

@@ -669,7 +669,7 @@ const OrderConfirmation = () => {
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--app-primary)]/[0.15]">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)]">
                   <User className="w-5 h-5 text-[var(--app-primary)]" />
                 </div>
                 <div>

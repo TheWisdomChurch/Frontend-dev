@@ -21,7 +21,7 @@ function ProductCard({ product, onQuickView }: ProductCardProps) {
   const colors = Array.isArray(product.colors) ? product.colors.length : 0;
 
   return (
-    <article className="group overflow-hidden rounded-[1.75rem] border border-[var(--app-border)] bg-[var(--app-surface)] shadow-lg transition duration-300 hover:-translate-y-1 hover:border-[var(--app-primary)]/45 hover:bg-[var(--app-canvas)]">
+    <article className="group overflow-hidden rounded-[1.75rem] border border-[var(--app-border)] bg-[var(--app-surface)] shadow-lg transition duration-300 hover:-translate-y-1 hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:bg-[var(--app-canvas)]">
       <Button
         type="button"
         variant="ghost"

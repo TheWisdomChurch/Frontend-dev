@@ -124,7 +124,7 @@ function ResourceCarousel() {
             whileHover={canPrev ? { scale: 1.08 } : undefined}
             whileTap={canPrev ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[var(--app-primary)]/45 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
           </motion.button>
@@ -136,7 +136,7 @@ function ResourceCarousel() {
             whileHover={canNext ? { scale: 1.08 } : undefined}
             whileTap={canNext ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[var(--app-primary)]/45 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
           </motion.button>
@@ -174,7 +174,7 @@ function ResourceCarousel() {
                 <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
 
                 {/* Icon chip — top right */}
-                <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[var(--app-primary)]/80">
+                <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[color-mix(in_srgb,var(--app-primary)_80%,transparent)]">
                   <Icon className="h-3.5 w-3.5 text-white" />
                 </div>
 
@@ -264,7 +264,7 @@ export default function ResourceSection() {
                 </span>
               </div>
 
-              <div className="mt-10 min-h-28 border-l border-[var(--app-primary)]/60 pl-6">
+              <div className="mt-10 min-h-28 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-6">
                 {loading ? (
                   <div
                     className="space-y-4"
@@ -343,7 +343,7 @@ export default function ResourceSection() {
                 </>
               ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
-                  <span className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--app-primary)]/35 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--app-primary)_35%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]">
                     <PlayCircle className="h-7 w-7" />
                   </span>
                   <p className="mt-6 font-headline text-heading-sm font-semibold !text-white">

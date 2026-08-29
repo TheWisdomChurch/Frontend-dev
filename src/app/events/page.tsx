@@ -156,7 +156,7 @@ function RelativeBadge({
         'inline-flex w-fit items-center gap-1.5 rounded-badge px-2.5 py-0.5 font-ui text-eyebrow font-bold uppercase tracking-[0.14em]',
         onImage
           ? 'bg-[var(--app-primary)] text-[var(--app-ink)]'
-          : 'border border-[var(--app-primary)]/40 bg-[var(--app-primary)]/10 text-[var(--app-primary-dark)]'
+          : 'border border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary-dark)]'
       )}
     >
       {live ? (
@@ -319,7 +319,7 @@ function EmptyState() {
       interactive
       className="group flex flex-col items-center gap-5 p-8 text-center hover:bg-[var(--app-surface-2)] sm:p-12"
     >
-      <span className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
         <CalendarClock className="h-6 w-6" aria-hidden="true" />
       </span>
       <h3 className="font-ui text-heading-md font-semibold text-[var(--app-text)]">
@@ -445,7 +445,7 @@ export default async function EventsPage() {
                       </span>
                     </div>
 
-                    <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
+                    <div className="h-[1.5px] w-8 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
 
                     <div className="space-y-1.5">
                       <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">

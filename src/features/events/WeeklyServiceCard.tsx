@@ -49,7 +49,7 @@ export default function WeeklyServiceCard({
           </span>
         </div>
 
-        <div className="h-px w-8 bg-[var(--app-primary)]/50" />
+        <div className="h-px w-8 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
 
         <div className="space-y-2">
           <h3 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">

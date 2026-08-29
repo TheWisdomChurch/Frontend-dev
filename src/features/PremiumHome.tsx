@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { CalendarDays, MapPin, Play, Users } from 'lucide-react';
+import { CalendarDays, MapPin, Play } from 'lucide-react';
 
 import {
   HOME_BELIEFS,
@@ -8,6 +8,7 @@ import {
   HOME_IMAGES,
 } from '@/features/home/content';
 import { CellFellowshipCta } from '@/features/community/CellFellowshipCta';
+import { ConnectCommunityCta } from '@/features/community/ConnectCommunityCta';
 import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
@@ -273,9 +274,7 @@ export default function PremiumHome() {
                 accent={HOME_COPY.community.accent}
                 description={HOME_COPY.community.description}
               />
-              <CtaLink href="/contact" variant="dark" className="mt-10">
-                <Users className="mr-2 h-4 w-4" /> {HOME_COPY.actions.connect}
-              </CtaLink>
+              <ConnectCommunityCta label={HOME_COPY.actions.connect} />
             </div>
           </Split>
         </Container>
@@ -304,7 +303,7 @@ export default function PremiumHome() {
                 className="tone-dark bg-[var(--app-dark)] p-6 sm:p-8"
               >
                 <span
-                  className="block h-[1.5px] w-8 bg-[var(--app-primary)]/60"
+                  className="block h-[1.5px] w-8 bg-[color-mix(in_srgb,var(--app-primary)_60%,transparent)]"
                   aria-hidden="true"
                 />
                 <h3 className="mt-4 font-ui text-heading-sm font-semibold text-[var(--app-text)]">

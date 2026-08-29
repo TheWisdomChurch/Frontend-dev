@@ -65,7 +65,7 @@ export function LeaderCard({ leader, tone = 'canvas' }: LeaderCardProps) {
         <h3 className="mt-2 font-headline text-heading-sm font-normal leading-snug text-current lg:text-heading-md">
           {name}
         </h3>
-        <div className="mt-3 h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
+        <div className="mt-3 h-[1.5px] w-8 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
         {leader.bio && (
           <p className="mt-3 font-ui text-body-sm leading-[1.8] text-[var(--app-muted)] line-clamp-4 sm:mt-4 sm:leading-[1.9] lg:line-clamp-none">
             {leader.bio}

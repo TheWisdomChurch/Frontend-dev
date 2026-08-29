@@ -219,9 +219,9 @@ type ModalValues = z.infer<typeof modalSchema>;
 /* ─── Field styles ────────────────────────────────────────────────── */
 
 const mInput =
-  'w-full border border-[var(--app-border)] bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:bg-white/[0.08] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 const mSelect =
-  'w-full border border-[var(--app-border)] bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -368,7 +368,7 @@ export default function JoinWorkforce() {
           the repo; needs a real photo re-uploaded to shared/assets. */}
       <div className="relative overflow-hidden border-b border-[var(--app-border)]">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[var(--app-dark)]/78 to-[var(--app-dark)]/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[color-mix(in_srgb,var(--app-dark)_78%,transparent)] to-[color-mix(in_srgb,var(--app-dark)_45%,transparent)]" />
         </div>
 
         <Container className="relative py-section-xs">
@@ -451,7 +451,7 @@ export default function JoinWorkforce() {
                   aria-hidden="true"
                 />
                 <div className="relative flex items-start justify-between gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] bg-white/[0.035] transition duration-300 group-hover:border-[var(--app-primary)]/45 group-hover:bg-[var(--app-primary)]/10 sm:h-12 sm:w-12">
+                  <div className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] bg-white/[0.035] transition duration-300 group-hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] group-hover:bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] sm:h-12 sm:w-12">
                     <Icon className="h-[1.1rem] w-[1.1rem] text-[var(--app-primary)] sm:h-5 sm:w-5" />
                   </div>
                   <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--app-border)] text-[var(--app-subtle)] transition duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black sm:h-10 sm:w-10">
@@ -459,7 +459,7 @@ export default function JoinWorkforce() {
                   </span>
                 </div>
                 <div className="relative mt-7 min-w-0 sm:mt-9">
-                  <p className="mb-2 font-ui text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]/75 sm:text-[10px]">
+                  <p className="mb-2 font-ui text-[9px] font-bold uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--app-primary)_75%,transparent)] sm:text-[10px]">
                     {dept.section} ministry
                   </p>
                   <p className="max-w-[14rem] font-ui text-base font-bold leading-5 text-white sm:text-xl sm:leading-6">
@@ -519,7 +519,7 @@ export default function JoinWorkforce() {
         {modalStep === 'detail' && selectedDept && (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 flex-none items-center justify-center bg-[var(--app-primary)]/14">
+              <div className="flex h-14 w-14 flex-none items-center justify-center bg-[color-mix(in_srgb,var(--app-primary)_14%,transparent)]">
                 <selectedDept.icon className="h-6 w-6 text-[var(--app-primary)]" />
               </div>
               <p className="font-ui text-caption font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
@@ -657,7 +657,7 @@ export default function JoinWorkforce() {
                       key={value}
                       className={`flex cursor-pointer items-center justify-center border px-3 py-2.5 font-ui text-body-sm font-semibold transition ${
                         marriedValue === value
-                          ? 'border-[var(--app-primary)]/50 bg-[var(--app-primary)]/10 text-white'
+                          ? 'border-[color-mix(in_srgb,var(--app-primary)_50%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-white'
                           : 'border-[var(--app-border)] bg-black/20 text-[var(--app-muted)] hover:border-[var(--app-border)] hover:text-[var(--app-muted)]'
                       }`}
                     >

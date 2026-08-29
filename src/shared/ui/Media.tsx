@@ -66,7 +66,7 @@ export function Media({
       >
         {fallback ?? (
           <ImageOff
-            className="h-8 w-8 text-[var(--app-ink)]/60"
+            className="h-8 w-8 text-[color-mix(in_srgb,var(--app-ink)_60%,transparent)]"
             aria-hidden="true"
           />
         )}

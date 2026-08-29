@@ -167,7 +167,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
               className={cn(
                 'grid h-10 w-10 place-items-center rounded-full border backdrop-blur-md transition',
                 wishlisted
-                  ? 'border-[var(--app-primary)]/40 bg-[var(--app-primary)]/10 text-[var(--app-primary)]'
+                  ? 'border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]'
                   : 'border-white/12 bg-white/[0.04] text-white/70 hover:text-white'
               )}
             >
@@ -282,7 +282,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                       {selected && (
                         <motion.span
                           layoutId="size-highlight"
-                          className="absolute inset-0 bg-[var(--app-primary)]/10"
+                          className="absolute inset-0 bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]"
                           transition={{
                             type: 'spring',
                             stiffness: 500,
@@ -322,7 +322,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                       {selected && (
                         <motion.span
                           layoutId="color-highlight"
-                          className="absolute inset-0 bg-[var(--app-primary)]/10"
+                          className="absolute inset-0 bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]"
                           transition={{
                             type: 'spring',
                             stiffness: 500,

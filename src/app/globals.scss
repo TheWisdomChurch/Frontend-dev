@@ -51,7 +51,10 @@
   /* Line */
   --app-border: rgba(0, 0, 0, 0.1);
 
-  /* Brand — gold. -10/-20/-40 are the same hue at 10/20/40% alpha. */
+  /* Brand — gold. -10/-20/-40 are the same hue at 10/20/40% alpha.
+     `--app-brand` is the fixed section fill; `.tone-brand` re-themes everything
+     else to dark-on-gold, so `--app-primary` must stay separate from it. */
+  --app-brand: #c9961a;
   --app-primary: #c9961a;
   --app-primary-light: #e8b44a;
   --app-primary-dark: #a0740c;
@@ -149,6 +152,10 @@
   --app-surface-solid: #12100c;
 
   --app-ink: #f4efe4;
+  /* `--app-neutral` is the `solid` button's hover fill; on dark it must be a
+     brighter shade of `--app-ink` (which is the button's rest fill here), not
+     the light-mode near-black. */
+  --app-neutral: #ffffff;
   --app-text: #f4efe4;
   --app-muted: #c0b7a7;
   --app-subtle: #8f8676;
@@ -156,6 +163,32 @@
 
   /* On dark, the "accent for light backgrounds" flips to the lighter gold. */
   --app-primary-dark: var(--app-primary-light);
+}
+
+/* ============================================================================
+   BRAND TONE — `.tone-brand` on a gold `<Section tone="brand">`. The section
+   keeps its `--app-brand` fill; everything on top of it re-themes to
+   dark-on-gold so text, hairlines and outline buttons all read. `--app-primary`
+   itself becomes ink here so gold-tinted borders/washes turn into dark ones.
+============================================================================ */
+
+.tone-brand {
+  --app-text: #0d0a06;
+  --app-ink: #0d0a06;
+  /* `solid` button hover fill — a touch lighter than the ink rest fill. */
+  --app-neutral: #262019;
+  --app-muted: rgba(13, 10, 6, 0.74);
+  --app-subtle: rgba(13, 10, 6, 0.56);
+  --app-border: rgba(13, 10, 6, 0.24);
+  --app-surface: #ffffff;
+  --app-surface-solid: #ffffff;
+  --app-surface-2: rgba(13, 10, 6, 0.07);
+  --app-primary: #0d0a06;
+  --app-primary-dark: #0d0a06;
+  --app-primary-light: #0d0a06;
+  --app-primary-10: rgba(13, 10, 6, 0.1);
+  --app-primary-20: rgba(13, 10, 6, 0.16);
+  --app-primary-40: rgba(13, 10, 6, 0.32);
 }
 
 html {

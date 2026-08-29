@@ -142,7 +142,7 @@ function SimpleConfirmation() {
                         style={{ transitionDelay: `${index * 60}ms` }}
                       >
                         <div className="flex gap-4">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)] text-[var(--app-primary)]">
                             <Icon className="h-5 w-5" />
                           </div>
 

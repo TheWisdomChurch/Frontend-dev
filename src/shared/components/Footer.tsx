@@ -89,7 +89,7 @@ function FooterLinks({ links }: { links: { href: string; label: string }[] }) {
           <Link
             href={l.href}
             prefetch={false}
-            className="group inline-flex items-center gap-1.5 rounded font-ui text-body-sm text-[var(--app-muted)] transition hover:text-[var(--app-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
+            className="group inline-flex items-center gap-1.5 rounded font-ui text-body-sm text-[var(--app-muted)] transition hover:text-[var(--app-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]"
           >
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
               {l.label}
@@ -147,7 +147,7 @@ export default function Footer() {
                 'flex items-center gap-1 rounded-input border bg-[var(--app-surface)] py-1 pl-4 pr-1 transition',
                 subState === 'err'
                   ? 'border-[var(--status-error)]/50'
-                  : 'border-[var(--app-border)] focus-within:border-[var(--app-primary)]/50 focus-within:bg-[var(--app-surface-2)]'
+                  : 'border-[var(--app-border)] focus-within:border-[color-mix(in_srgb,var(--app-primary)_50%,transparent)] focus-within:bg-[var(--app-surface-2)]'
               )}
             >
               <input
@@ -203,7 +203,7 @@ export default function Footer() {
             <Link
               href="/"
               prefetch={false}
-              className="mb-6 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
+              className="mb-6 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]"
               aria-label="The Wisdom Church — home"
             >
               <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-button border border-[var(--app-border)] bg-[var(--app-surface)]">
@@ -288,7 +288,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={s.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]/50"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]"
                 >
                   <s.Icon />
                 </a>

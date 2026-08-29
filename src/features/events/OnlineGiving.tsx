@@ -182,7 +182,7 @@ export default function OnlineGiving() {
                     transition={{ type: 'spring', stiffness: 420, damping: 32 }}
                     className="group grid w-full grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-[var(--app-border)] px-5 py-7 text-left transition-[background-color,transform] duration-300 hover:bg-white/[0.055] sm:gap-7 sm:px-7 sm:py-9"
                   >
-                    <span className="pt-0.5 font-ui text-caption font-bold tracking-[0.16em] text-[var(--app-primary)]/75">
+                    <span className="pt-0.5 font-ui text-caption font-bold tracking-[0.16em] text-[color-mix(in_srgb,var(--app-primary)_75%,transparent)]">
                       0{index + 1}
                     </span>
                     <span>

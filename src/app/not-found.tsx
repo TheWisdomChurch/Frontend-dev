@@ -20,7 +20,7 @@ export default function NotFound() {
           <div className="grid gap-4 md:grid-cols-2">
             <Panel
               tone="dark"
-              className="p-6 transition hover:border-[var(--app-primary)]/40"
+              className="p-6 transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
             >
               <Link href="/" className="block">
                 <Home className="h-8 w-8 text-[var(--app-primary)]" />
@@ -36,7 +36,7 @@ export default function NotFound() {
 
             <Panel
               tone="dark"
-              className="p-6 transition hover:border-[var(--app-primary)]/40"
+              className="p-6 transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
             >
               <Link href="/contact" className="block">
                 <Compass className="h-8 w-8 text-[var(--app-primary)]" />

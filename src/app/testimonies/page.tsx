@@ -100,7 +100,7 @@ function TestimonyCard({ testimony }: { testimony: UiTestimony }) {
     <Panel
       className={cn('flex h-full flex-col p-6 lg:p-7', interactiveCardClass)}
     >
-      <QuoteGlyph className="mb-2 text-heading-lg text-[var(--app-primary)]/40" />
+      <QuoteGlyph className="mb-2 text-heading-lg text-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]" />
       <p className="font-ui text-body-md font-normal leading-[1.75] text-[var(--app-text)] line-clamp-6">
         {testimony.quote}
       </p>
@@ -186,14 +186,14 @@ export default function TestimoniesPage() {
           <Section tone="dark">
             <Container>
               <div className="relative mx-auto max-w-3xl text-center">
-                <QuoteGlyph className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 text-[clamp(6rem,18vw,11rem)] text-[var(--app-primary)]/10 sm:-top-12" />
+                <QuoteGlyph className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 text-[clamp(6rem,18vw,11rem)] text-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] sm:-top-12" />
                 <p className="relative font-ui text-heading-md font-medium leading-[1.55] text-[var(--app-text)] sm:text-heading-lg">
                   {featured.quote}
                 </p>
                 <div className="relative mt-9 flex items-center justify-center gap-4">
-                  <span className="h-px w-10 bg-[var(--app-primary)]/50" />
+                  <span className="h-px w-10 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
                   <Eyebrow>{displayName(featured)}</Eyebrow>
-                  <span className="h-px w-10 bg-[var(--app-primary)]/50" />
+                  <span className="h-px w-10 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
                 </div>
               </div>
             </Container>

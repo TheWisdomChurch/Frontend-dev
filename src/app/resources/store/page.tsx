@@ -439,7 +439,7 @@ function StorePageContent() {
             tone="dark"
             className="mx-auto max-w-3xl p-6 text-center sm:p-8 lg:p-10"
           >
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)]">
               <Tag className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 

@@ -212,7 +212,7 @@ export default function CalendarPage() {
                               ? 'bg-[var(--app-canvas-2)]'
                               : 'bg-[var(--app-canvas)]',
                             isToday(day!)
-                              ? 'bg-[var(--app-primary)]/[0.06]'
+                              ? 'bg-[color-mix(in_srgb,var(--app-primary)_6%,transparent)]'
                               : '',
                           ].join(' ')}
                         >
@@ -233,7 +233,7 @@ export default function CalendarPage() {
                                   {eventsByDay[day].slice(0, 2).map(ev => (
                                     <span
                                       key={ev.id}
-                                      className="block truncate rounded-[2px] bg-[var(--app-primary)]/15 px-1 py-0.5 font-ui text-eyebrow text-[var(--app-primary)] leading-tight"
+                                      className="block truncate rounded-[2px] bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] px-1 py-0.5 font-ui text-eyebrow text-[var(--app-primary)] leading-tight"
                                     >
                                       {ev.title}
                                     </span>

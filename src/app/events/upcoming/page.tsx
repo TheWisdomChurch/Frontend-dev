@@ -142,7 +142,7 @@ export default function UpcomingPage() {
                         {href ? (
                           <a
                             href={href}
-                            className="inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                            className="inline-flex items-center gap-2 border border-[color-mix(in_srgb,var(--app-primary)_35%,transparent)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                           >
                             Register <Arrow />
                           </a>

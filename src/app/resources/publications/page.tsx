@@ -95,7 +95,7 @@ export default function PublicationPage() {
                       ? 'noopener noreferrer'
                       : undefined
                   }
-                  className="group flex flex-col gap-3 rounded-card border border-[var(--app-border)] bg-white/[0.025] p-5 transition hover:border-[var(--app-primary)]/25 hover:bg-white/[0.04]"
+                  className="group flex flex-col gap-3 rounded-card border border-[var(--app-border)] bg-white/[0.025] p-5 transition hover:border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] hover:bg-white/[0.04]"
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ transitionDelay: `${i * 40}ms` }}
                 >

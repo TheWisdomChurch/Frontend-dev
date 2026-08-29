@@ -29,11 +29,11 @@ export const sectionToneClass: Record<SectionTone, string> = {
   // `tone-dark` re-themes the tokens, so descendants using --app-* text
   // colours (and bare <p>/<h*>) stay readable on the dark surface.
   dark: 'tone-dark bg-[var(--app-dark)] text-[var(--app-text)]',
-  brand: 'bg-[var(--app-primary)] text-[var(--app-ink)]',
+  brand: 'tone-brand bg-[var(--app-brand)] text-[var(--app-ink)]',
 };
 
 export const fieldClass =
-  'w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-subtle)] outline-none transition focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[var(--app-primary)]/15';
+  'w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-body-sm text-[var(--app-ink)] placeholder:text-[var(--app-subtle)] outline-none transition focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_15%,transparent)]';
 
 export const fieldLabelClass =
   'block font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-subtle)]';
@@ -48,7 +48,7 @@ export const fieldErrorClass =
   'font-ui text-body-sm font-semibold text-[var(--status-error)]';
 
 export const interactiveCardClass =
-  'group/card transform-gpu transition-[transform,border-color,box-shadow,background-color] duration-[450ms] ease-out motion-safe:hover:-translate-y-2 motion-safe:hover:scale-[1.012] hover:border-[var(--app-primary)]/50 hover:shadow-2xl hover:shadow-black/15 focus-within:border-[var(--app-primary)]/60 focus-within:shadow-xl motion-reduce:transform-none motion-reduce:transition-none';
+  'group/card transform-gpu transition-[transform,border-color,box-shadow,background-color] duration-[450ms] ease-out motion-safe:hover:-translate-y-2 motion-safe:hover:scale-[1.012] hover:border-[color-mix(in_srgb,var(--app-primary)_50%,transparent)] hover:shadow-2xl hover:shadow-black/15 focus-within:border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] focus-within:shadow-xl motion-reduce:transform-none motion-reduce:transition-none';
 
 /**
  * JS-facing colour map for third-party APIs that cannot read CSS custom

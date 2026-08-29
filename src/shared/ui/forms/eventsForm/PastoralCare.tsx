@@ -148,13 +148,13 @@ type CareErrors = Partial<Record<keyof CareFormState, string>>;
    across every other form on the site (JoinUs, HeroHighlights) ───── */
 
 const fieldInput =
-  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:bg-white/[0.08] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const fieldInputError =
   'w-full border border-[var(--status-error)]/50 bg-[var(--status-error)]/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-[var(--status-error)] focus:ring-2 focus:ring-[var(--status-error)]/20';
 
 const fieldSelect =
-  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const fieldSelectError =
   'w-full border border-[var(--status-error)]/50 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition focus:border-[var(--status-error)] focus:ring-2 focus:ring-[var(--status-error)]/20';
@@ -431,7 +431,7 @@ const PastoralCareForm = () => {
                 aria-pressed={active}
                 className={`group flex flex-col items-start gap-2.5 border p-5 text-left transition duration-200 ${
                   active
-                    ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10'
+                    ? 'border-[var(--app-primary)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]'
                     : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.05]'
                 }`}
               >
@@ -856,7 +856,7 @@ const PastoralCareForm = () => {
         forceBottomSheet
       >
         <div className="flex items-center gap-3 border border-white/10 bg-white/[0.04] p-4">
-          <div className="flex h-10 w-10 flex-none items-center justify-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+          <div className="flex h-10 w-10 flex-none items-center justify-center border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]">
             <CheckCircle2 className="h-5 w-5" />
           </div>
           <p className="font-ui text-body-sm leading-[1.7] text-white/75">

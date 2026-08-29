@@ -258,7 +258,7 @@ function ContactPageContent() {
                           href={channel.href}
                           target={external ? '_blank' : undefined}
                           rel={external ? 'noreferrer' : undefined}
-                          className="group flex items-start gap-4 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4 transition hover:border-[var(--app-primary)]/40 hover:shadow-sm sm:p-5"
+                          className="group flex items-start gap-4 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4 transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] hover:shadow-sm sm:p-5"
                         >
                           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)]">
                             <ChannelIcon

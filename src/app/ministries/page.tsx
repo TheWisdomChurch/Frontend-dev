@@ -135,7 +135,7 @@ export default function MinistriesPage() {
               title="We grow best when we walk with others."
               size="sm"
             />
-            <div className="border-l-2 border-[var(--app-primary)]/55 pl-5 sm:pl-7">
+            <div className="border-l-2 border-[color-mix(in_srgb,var(--app-primary)_55%,transparent)] pl-5 sm:pl-7">
               <p className="max-w-2xl font-ui text-body-md leading-[1.85] text-[var(--app-muted)]">
                 Ministry is where church becomes personal. It is where names are
                 remembered, prayers are shared, disciples are formed, and every
@@ -171,7 +171,7 @@ export default function MinistriesPage() {
                 <Link
                   href={ministry.href}
                   aria-label={`Explore ${ministry.title}`}
-                  className="group relative flex min-h-[24rem] flex-col overflow-hidden rounded-image bg-[var(--app-dark)] ring-1 ring-inset ring-[var(--app-border)] transition-[transform,box-shadow,ring-color] duration-500 ease-out will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-dark)] motion-safe:hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/40 hover:ring-[var(--app-primary)]/40 sm:min-h-[28rem] lg:min-h-[32rem]"
+                  className="group relative flex min-h-[24rem] flex-col overflow-hidden rounded-image bg-[var(--app-dark)] ring-1 ring-inset ring-[var(--app-border)] transition-[transform,box-shadow,ring-color] duration-500 ease-out will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-dark)] motion-safe:hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/40 hover:ring-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] sm:min-h-[28rem] lg:min-h-[32rem]"
                 >
                   {/* Image */}
                   <Image

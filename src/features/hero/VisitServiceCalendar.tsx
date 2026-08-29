@@ -83,7 +83,7 @@ export default function VisitServiceCalendar({
       {selected ? (
         <div className="flex min-w-0 flex-col gap-3 bg-[var(--app-primary-10)] px-4 py-4 min-[420px]:flex-row min-[420px]:items-center sm:px-5">
           <div className="flex min-w-0 flex-1 items-start gap-3">
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--app-primary)]/14 text-[var(--app-primary)]">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[color-mix(in_srgb,var(--app-primary)_14%,transparent)] text-[var(--app-primary)]">
               <CalendarCheck2 className="h-5 w-5" />
             </div>
             <div className="min-w-0">
@@ -100,7 +100,7 @@ export default function VisitServiceCalendar({
             type="button"
             aria-expanded={calendarOpen}
             onClick={() => setExpanded(current => !current)}
-            className="min-h-10 shrink-0 rounded-full border border-white/12 px-4 font-ui text-xs font-bold text-white/70 transition hover:border-[var(--app-primary)]/45 hover:text-[var(--app-primary)]"
+            className="min-h-10 shrink-0 rounded-full border border-white/12 px-4 font-ui text-xs font-bold text-white/70 transition hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[var(--app-primary)]"
           >
             {calendarOpen ? 'Close calendar' : 'Change date'}
           </button>
@@ -179,10 +179,10 @@ export default function VisitServiceCalendar({
                       onChange(service);
                       setExpanded(false);
                     }}
-                    className={`relative grid h-9 place-items-center rounded-lg border font-ui text-sm font-extrabold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/20 sm:aspect-square sm:h-auto sm:min-h-10 sm:rounded-xl ${
+                    className={`relative grid h-9 place-items-center rounded-lg border font-ui text-sm font-extrabold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] sm:aspect-square sm:h-auto sm:min-h-10 sm:rounded-xl ${
                       isSelected
-                        ? 'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-lg shadow-[var(--app-primary)]/15'
-                        : 'border-[var(--app-primary)]/24 bg-[var(--app-primary)]/[0.07] text-[var(--app-primary)] hover:border-[var(--app-primary)]/55 hover:bg-[var(--app-primary)]/12'
+                        ? 'border-[var(--app-primary)] bg-[var(--app-primary)] text-black shadow-lg shadow-[color-mix(in_srgb,var(--app-primary)_15%,transparent)]'
+                        : 'border-[color-mix(in_srgb,var(--app-primary)_24%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_7%,transparent)] text-[var(--app-primary)] hover:border-[color-mix(in_srgb,var(--app-primary)_55%,transparent)] hover:bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]'
                     }`}
                   >
                     {day}

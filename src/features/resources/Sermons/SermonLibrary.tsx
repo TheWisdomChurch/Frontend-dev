@@ -385,7 +385,7 @@ export default function SermonLibrary({
                 </div>
 
                 <div className="relative flex flex-col justify-center p-7 sm:p-10 lg:p-12 xl:p-16">
-                  <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
+                  <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] blur-3xl" />
                   <div className="relative">
                     <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/[.06] px-3 py-1.5 font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--app-primary)]" />{' '}

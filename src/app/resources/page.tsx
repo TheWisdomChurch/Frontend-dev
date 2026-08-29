@@ -191,12 +191,12 @@ export default function ResourcesPage() {
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="group relative block h-full min-h-[11rem] overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.035] p-6 transition duration-500 ease-out motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/40"
+                  className="group relative block h-full min-h-[11rem] overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.035] p-6 transition duration-500 ease-out motion-safe:hover:-translate-y-1 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
                 >
-                  <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-0 blur-3xl transition group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_13%,transparent)] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                   <div className="relative z-10 flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)] transition-transform duration-500 ease-out group-hover:scale-110">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)] text-[var(--app-primary)] transition-transform duration-500 ease-out group-hover:scale-110">
                       <Icon className="h-5 w-5" />
                     </div>
 
@@ -296,14 +296,14 @@ export default function ResourcesPage() {
                       onClick={(
                         e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
                       ) => handleLiveServiceClick(e, resource.isLiveService)}
-                      className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-6 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--app-primary)]/40"
+                      className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-6 transition duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
                     >
-                      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[var(--app-primary)]/[0.12] opacity-0 blur-3xl transition group-hover:opacity-100" />
+                      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                       <div className="relative z-10 flex h-full flex-col">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex min-w-0 items-start gap-3">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)] text-[var(--app-primary)]">
                               <Icon className="h-5 w-5" />
                             </div>
 
@@ -358,7 +358,7 @@ export default function ResourcesPage() {
       >
         <div className="min-w-0 space-y-5">
           <div className="text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)]">
               <Radio className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
@@ -390,7 +390,7 @@ export default function ResourcesPage() {
               onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="h-12 w-full rounded-2xl border border-[var(--app-border)] bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+              className="h-12 w-full rounded-2xl border border-[var(--app-border)] bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]"
             />
 
             <Button

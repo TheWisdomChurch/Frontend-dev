@@ -72,11 +72,11 @@ export const modalStyles = {
   label:
     'mb-2 block text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-subtle)]',
   input:
-    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[var(--app-primary)]/40 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] focus:border-[color-mix(in_srgb,var(--app-primary)_65%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
   select:
-    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none transition-[border-color,background-color,box-shadow] duration-200 hover:border-[var(--app-primary)]/40 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none transition-[border-color,background-color,box-shadow] duration-200 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] focus:border-[color-mix(in_srgb,var(--app-primary)_65%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
   textarea:
-    'min-h-[130px] w-full resize-y rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm leading-7 text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[var(--app-primary)]/40 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-[130px] w-full resize-y rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm leading-7 text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] focus:border-[color-mix(in_srgb,var(--app-primary)_65%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
   errorText:
     'mt-2 rounded-md border border-[var(--status-error)]/25 bg-[var(--status-error)]/10 px-3 py-2 text-xs leading-5 text-[var(--status-error)]',
   primaryButton: buttonClass('primary', 'md', 'w-full'),
@@ -254,16 +254,16 @@ function ModalPanel({
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-12 top-0 z-20 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/80 to-transparent"
+          className="pointer-events-none absolute inset-x-12 top-0 z-20 h-px bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--app-primary)_80%,transparent)] to-transparent"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-28 -z-10 h-64 w-64 rounded-full bg-[var(--app-primary)]/[0.09] blur-3xl"
+          className="pointer-events-none absolute -right-24 -top-28 -z-10 h-64 w-64 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)] blur-3xl"
         />
         {isLoading ? (
           <div className="absolute inset-0 z-30 grid place-items-center bg-black/72 px-6 backdrop-blur-md">
-            <div className="flex min-w-52 flex-col items-center gap-3 rounded-2xl border border-white/12 bg-[var(--app-dark-3)]/95 px-6 py-5 text-center shadow-2xl">
-              <span className="grid h-11 w-11 place-items-center rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10">
+            <div className="flex min-w-52 flex-col items-center gap-3 rounded-2xl border border-white/12 bg-[color-mix(in_srgb,var(--app-dark-3)_95%,transparent)] px-6 py-5 text-center shadow-2xl">
+              <span className="grid h-11 w-11 place-items-center rounded-full border border-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]">
                 <Loader2 className="h-5 w-5 animate-spin text-[var(--app-primary)]" />
               </span>
               <BodySM className="text-white/75">{loadingText}</BodySM>
@@ -296,7 +296,7 @@ function ModalPanel({
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-dark)] shadow-inner sm:h-11 sm:w-11 sm:rounded-2xl [&_svg]:h-[1.125rem] [&_svg]:w-[1.125rem]'
+                    'mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary-dark)] shadow-inner sm:h-11 sm:w-11 sm:rounded-2xl [&_svg]:h-[1.125rem] [&_svg]:w-[1.125rem]'
                   )}
                 >
                   {headerIcon || <Sparkles />}
@@ -335,7 +335,7 @@ function ModalPanel({
                 disabled={!canClose}
                 aria-label="Close modal"
                 className={cn(
-                  'grid h-10 w-10 flex-none place-items-center rounded-full border transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/15 disabled:cursor-not-allowed disabled:opacity-50',
+                  'grid h-10 w-10 flex-none place-items-center rounded-full border transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] disabled:cursor-not-allowed disabled:opacity-50',
                   'border-current/15 bg-current/[0.04] text-current/60 hover:rotate-3 hover:border-current/30 hover:bg-current/[0.1] hover:text-current'
                 )}
               >
@@ -575,7 +575,7 @@ export function ServiceUnavailableSheet({
       maxWidth="max-w-lg"
     >
       <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-        <div className="pointer-events-none absolute right-0 top-0 h-44 w-44 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 top-0 h-44 w-44 translate-x-1/3 -translate-y-1/3 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] blur-3xl" />
 
         <div className="relative flex items-start justify-between gap-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-label font-bold uppercase tracking-[0.18em] text-white/75">

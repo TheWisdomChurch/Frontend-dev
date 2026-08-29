@@ -85,10 +85,10 @@ const ACTIONS = [
 ───────────────────────────────────────────────────────── */
 
 const inputClass =
-  'w-full border border-[var(--app-border)] bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:bg-white/[0.08] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const selectClass =
-  'w-full border border-[var(--app-border)] bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-[var(--app-border)] focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const fieldLabelClass =
   'font-ui text-caption font-bold uppercase tracking-[0.15em] text-[var(--app-subtle)]';
@@ -359,7 +359,7 @@ export default function HeroHighlights({
                       <span className="relative">
                         <span
                           aria-hidden="true"
-                          className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[var(--app-primary)]/0 blur-lg transition-colors duration-300 group-hover:bg-[var(--app-primary)]/20"
+                          className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_0%,transparent)] blur-lg transition-colors duration-300 group-hover:bg-[color-mix(in_srgb,var(--app-primary)_20%,transparent)]"
                         />
                         <Icon
                           className="h-4 w-4 text-[var(--app-muted)] transition duration-200 group-hover:text-[var(--app-primary)]"
@@ -404,10 +404,10 @@ export default function HeroHighlights({
         icon={<CalendarClock />}
       >
         <form className="min-w-0 space-y-5 pb-1" onSubmit={onSubmitVisit}>
-          <div className="relative min-w-0 overflow-hidden rounded-card border border-[var(--app-primary)]/20 bg-[var(--app-primary-10)] p-4 sm:p-5">
-            <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
+          <div className="relative min-w-0 overflow-hidden rounded-card border border-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] bg-[var(--app-primary-10)] p-4 sm:p-5">
+            <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] blur-3xl" />
             <div className="relative flex min-w-0 items-start gap-3 sm:gap-4">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[var(--app-primary)]/25 bg-black/25 text-[var(--app-primary)] sm:h-11 sm:w-11 sm:rounded-2xl">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-black/25 text-[var(--app-primary)] sm:h-11 sm:w-11 sm:rounded-2xl">
                 <CalendarClock className="h-5 w-5" />
               </div>
               <div className="min-w-0 break-words">
@@ -611,7 +611,7 @@ export default function HeroHighlights({
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
           <div className="flex items-start gap-3 border border-[var(--app-border)] bg-white/[0.03] p-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]">
               <Headphones className="h-4 w-4" />
             </div>
             <div>

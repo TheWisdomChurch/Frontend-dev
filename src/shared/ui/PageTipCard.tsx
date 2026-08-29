@@ -25,7 +25,7 @@ export default function PageTipCard({
           transition={{ type: 'spring', stiffness: 340, damping: 30 }}
           className="fixed inset-x-[var(--page-gutter)] bottom-[max(var(--page-gutter),env(safe-area-inset-bottom))] z-[70] flex items-start gap-3 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3.5 shadow-xl shadow-black/10 sm:left-[var(--page-gutter)] sm:right-auto sm:max-w-[320px]"
         >
-          <div className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-[var(--app-primary)]/12 text-[var(--app-primary-dark)]">
+          <div className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] text-[var(--app-primary-dark)]">
             <Info className="h-3.5 w-3.5" />
           </div>
 

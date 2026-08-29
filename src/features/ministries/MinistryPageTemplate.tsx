@@ -282,7 +282,7 @@ export default function MinistryPageTemplate({
                   data-gsap="reveal"
                   className="border-t border-[var(--app-border)] py-8"
                 >
-                  <div className="mb-4 h-[1.5px] w-6 bg-[var(--app-primary)]/50" />
+                  <div className="mb-4 h-[1.5px] w-6 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
                   <h3 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                     {item.title}
                   </h3>

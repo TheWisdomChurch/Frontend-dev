@@ -82,7 +82,7 @@ export default function BlogPage() {
               href="https://wa.me/2347069995333"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex h-10 items-center gap-2 border border-[var(--app-whatsapp)]/25 bg-[var(--app-whatsapp)]/10 px-5 font-ui text-label font-bold text-[var(--app-whatsapp)] transition hover:bg-[var(--app-whatsapp)]/18"
+              className="mt-5 inline-flex h-10 items-center gap-2 border border-[color-mix(in_srgb,var(--app-whatsapp)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-whatsapp)_10%,transparent)] px-5 font-ui text-label font-bold text-[var(--app-whatsapp)] transition hover:bg-[color-mix(in_srgb,var(--app-whatsapp)_18%,transparent)]"
             >
               Join WhatsApp community
             </a>
