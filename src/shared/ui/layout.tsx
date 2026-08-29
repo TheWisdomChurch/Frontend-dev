@@ -411,6 +411,7 @@ export function SectionHeader({
   tone = 'light',
   size = 'md',
   align = 'left',
+  reveal = true,
   className,
 }: {
   eyebrow?: string;
@@ -422,6 +423,8 @@ export function SectionHeader({
   tone?: 'light' | 'dark';
   size?: 'sm' | 'md' | 'lg';
   align?: 'left' | 'center';
+  /** Opt out of the global scroll-reveal animation for this header. */
+  reveal?: boolean;
   className?: string;
 }) {
   return (
@@ -431,7 +434,7 @@ export function SectionHeader({
         align === 'center' && 'flex flex-col items-center text-center',
         className
       )}
-      data-gsap="reveal"
+      data-gsap={reveal ? 'reveal' : undefined}
     >
       {eyebrow ? (
         <p className="font-ui text-eyebrow font-semibold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">

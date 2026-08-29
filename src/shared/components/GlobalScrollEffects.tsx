@@ -65,6 +65,7 @@ export default function GlobalScrollEffects() {
     let ctx: gsap.Context | null = null;
     let refreshId: number | null = null;
     let runTimer: ReturnType<typeof setTimeout> | null = null;
+    let safetyTimer: ReturnType<typeof setTimeout> | null = null;
     let cancelled = false;
 
     const runEffects = () => {
@@ -203,6 +204,28 @@ export default function GlobalScrollEffects() {
       refreshId = requestAnimationFrame(() => {
         ScrollTrigger.refresh();
       });
+
+      // Safety net: if a reveal trigger never fires (e.g. late image load
+      // shifts layout and moves its start point past the element), force any
+      // still-hidden target visible so content can never be stranded.
+      if (!reduceMotion) {
+        safetyTimer = setTimeout(() => {
+          if (cancelled) return;
+          const stranded = collectRevealTargets(root).filter(
+            node => Number(gsap.getProperty(node, 'autoAlpha')) < 1
+          );
+          if (stranded.length > 0) {
+            gsap.to(stranded, {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.4,
+              ease: 'power2.out',
+              clearProps: 'transform,opacity,visibility,will-change',
+            });
+          }
+        }, 3200);
+      }
     };
 
     const scheduleRun = () => {
@@ -225,6 +248,7 @@ export default function GlobalScrollEffects() {
       window.removeEventListener('load', scheduleRun);
 
       if (runTimer) clearTimeout(runTimer);
+      if (safetyTimer) clearTimeout(safetyTimer);
       if (refreshId) cancelAnimationFrame(refreshId);
 
       ctx?.revert();

@@ -98,15 +98,15 @@ function SermonCard({
             <Play className="h-4 w-4 fill-current" />
           </span>
           {sermon.duration && (
-            <span className="absolute bottom-3 right-3 rounded-full bg-black/75 px-2.5 py-1 font-ui text-[10px] font-bold text-white backdrop-blur">
+            <span className="absolute bottom-3 right-3 rounded-full bg-black/75 px-2.5 py-1 font-ui text-caption font-bold text-white backdrop-blur">
               {sermon.duration}
             </span>
           )}
         </div>
-        <p className="mt-4 truncate font-ui text-[10px] font-bold uppercase tracking-[.19em] text-[var(--app-primary-dark)]">
+        <p className="mt-4 truncate font-ui text-eyebrow font-bold uppercase tracking-[.19em] text-[var(--app-primary-dark)]">
           {sermon.series || 'Wisdom teaching'}
         </p>
-        <h3 className="mt-2 line-clamp-2 font-ui text-xl font-semibold leading-[1.18] text-[var(--app-ink)] transition group-hover:text-[var(--app-primary-dark)]">
+        <h3 className="mt-2 line-clamp-2 font-ui text-heading-sm font-semibold leading-[1.25] text-[var(--app-ink)] transition group-hover:text-[var(--app-primary-dark)]">
           {displayTitle(sermon.title)}
         </h3>
         <p className="mt-2 truncate font-ui text-xs text-black/48">
@@ -133,7 +133,7 @@ function Rail({
     <section className="border-t border-black/10 py-section-xs">
       <div className="mb-7 flex items-end justify-between gap-5">
         <div>
-          <h2 className="font-ui text-3xl font-medium tracking-[-0.035em] text-[var(--app-ink)] sm:text-4xl">
+          <h2 className="font-ui text-heading-md font-semibold tracking-[-0.02em] text-[var(--app-ink)] sm:text-heading-lg">
             {title}
           </h2>
           <p className="mt-2 max-w-xl font-ui text-sm leading-6 text-black/50">
@@ -314,10 +314,10 @@ export default function SermonLibrary({
                 className="!rounded-none ring-1 ring-white/10"
               />
               <div>
-                <p className="font-ui text-[10px] font-bold uppercase tracking-[.24em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[.24em] text-[var(--app-primary)]">
                   Now playing · {selected.series}
                 </p>
-                <h1 className="mt-4 font-ui text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl">
+                <h1 className="mt-4 font-ui text-heading-lg font-semibold leading-[1.1] tracking-[-0.025em] text-white sm:text-display-sm">
                   {displayTitle(selected.title)}
                 </h1>
                 <p className="mt-4 font-ui text-sm text-[var(--app-subtle)]">
@@ -378,7 +378,7 @@ export default function SermonLibrary({
                       <Play className="ml-1 h-7 w-7 fill-current sm:h-8 sm:w-8" />
                     </span>
                   </a>
-                  <div className="absolute bottom-5 left-5 rounded-full border border-[var(--app-border)] bg-black/35 px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-[.2em] text-white backdrop-blur-md sm:bottom-7 sm:left-7">
+                  <div className="absolute bottom-5 left-5 rounded-full border border-[var(--app-border)] bg-black/35 px-4 py-2 font-ui text-eyebrow font-bold uppercase tracking-[.2em] text-white backdrop-blur-md sm:bottom-7 sm:left-7">
                     Official media channel
                   </div>
                 </div>
@@ -386,11 +386,11 @@ export default function SermonLibrary({
                 <div className="relative flex flex-col justify-center p-7 sm:p-10 lg:p-12 xl:p-16">
                   <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
                   <div className="relative">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/[.06] px-3 py-1.5 font-ui text-[10px] font-bold uppercase tracking-[.2em] text-[var(--app-primary)]">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/[.06] px-3 py-1.5 font-ui text-eyebrow font-bold uppercase tracking-[.2em] text-[var(--app-primary)]">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--app-primary)]" />{' '}
                       Media library online
                     </div>
-                    <h2 className="mt-6 max-w-lg font-ui text-4xl font-medium leading-[1.02] tracking-[-0.04em] sm:text-5xl lg:text-[3.5rem]">
+                    <h2 className="mt-6 max-w-lg font-ui text-display-sm font-semibold leading-[1.05] tracking-[-0.03em] sm:text-display-md">
                       Every message.
                       <br />
                       <em className="text-[var(--app-primary)]">
@@ -433,7 +433,7 @@ export default function SermonLibrary({
                           <span className="block font-ui text-xs font-bold text-white">
                             Join this Sunday
                           </span>
-                          <span className="mt-1 block font-ui text-[11px] text-[var(--app-subtle)]">
+                          <span className="mt-1 block font-ui text-caption text-[var(--app-subtle)]">
                             {SERVICE_INFO.sunday.time} ·{' '}
                             {SERVICE_INFO.venue.short}
                           </span>
@@ -450,7 +450,7 @@ export default function SermonLibrary({
                           <span className="block font-ui text-xs font-bold text-white">
                             More resources
                           </span>
-                          <span className="mt-1 block font-ui text-[11px] text-[var(--app-subtle)]">
+                          <span className="mt-1 block font-ui text-caption text-[var(--app-subtle)]">
                             Books, articles and growth tools
                           </span>
                         </span>
@@ -509,10 +509,10 @@ export default function SermonLibrary({
             >
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
-                  <p className="font-ui text-[10px] font-bold uppercase tracking-[.22em] text-[var(--app-primary-dark)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[.22em] text-[var(--app-primary-dark)]">
                     Complete library
                   </p>
-                  <h2 className="mt-2 font-ui text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
+                  <h2 className="mt-2 font-ui text-heading-md font-semibold tracking-[-0.02em] sm:text-heading-lg">
                     Explore every message.
                   </h2>
                 </div>
@@ -662,10 +662,10 @@ export default function SermonLibrary({
               className="mt-16 grid gap-4 p-7 sm:grid-cols-[1fr_auto] sm:items-center sm:p-10"
             >
               <div>
-                <p className="flex items-center gap-2 font-ui text-[10px] font-bold uppercase tracking-[.22em] text-[var(--app-primary)]">
+                <p className="flex items-center gap-2 font-ui text-eyebrow font-bold uppercase tracking-[.22em] text-[var(--app-primary)]">
                   <Clock3 className="h-4 w-4" /> Updated automatically
                 </p>
-                <p className="mt-3 max-w-xl font-ui text-2xl font-medium tracking-[-0.03em] sm:text-3xl">
+                <p className="mt-3 max-w-xl font-ui text-heading-md font-semibold tracking-[-0.02em] sm:text-heading-lg">
                   Fresh teaching flows directly from the official Wisdom Church
                   channel.
                 </p>

@@ -195,28 +195,35 @@ export default function PremiumHome() {
 
       <Section tone="canvas">
         <Container>
-          <Split>
-            <Figure
-              parallax
-              src={HOME_IMAGES.pastor.src}
-              alt={HOME_IMAGES.pastor.alt}
-              fill
-              sizes="(max-width: 1023px) 100vw, 50vw"
-              className="aspect-[4/5] sm:aspect-[5/4]"
-              imageClassName="object-top"
-            />
+          <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
+            <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-image bg-[var(--app-surface-2)] lg:mx-0 lg:max-w-none">
+              {/* Bishop portrait is ~4:5 — the frame matches it so nothing
+                  is cropped or stretched at any width. */}
+              <div className="relative aspect-[4/5]">
+                <Image
+                  src={HOME_IMAGES.pastor.src}
+                  alt={HOME_IMAGES.pastor.alt}
+                  fill
+                  sizes="(max-width: 1023px) 22rem, 45vw"
+                  quality={IMAGE_QUALITY}
+                  className="object-cover object-top"
+                />
+              </div>
+            </div>
+
             <div>
               <SectionHeader
                 eyebrow={HOME_COPY.pastor.eyebrow}
                 title={HOME_COPY.pastor.title}
                 accent={HOME_COPY.pastor.accent}
                 description={HOME_COPY.pastor.description}
+                reveal={false}
               />
-              <CtaLink href="/leadership" variant="dark" className="mt-10">
+              <CtaLink href="/leadership" variant="dark" className="mt-8">
                 {HOME_COPY.actions.meetLeadership}
               </CtaLink>
             </div>
-          </Split>
+          </div>
         </Container>
       </Section>
 
