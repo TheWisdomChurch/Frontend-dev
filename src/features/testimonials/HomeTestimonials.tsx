@@ -203,7 +203,7 @@ export default function HomeTestimonials() {
             />
           ) : (
             <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px] lg:col-start-2 lg:row-start-1 lg:row-span-2">
-              <article className="relative flex min-h-[340px] flex-col overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
+              <article className="relative flex min-h-[340px] flex-col overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[var(--app-surface)] p-6 sm:p-8">
                 <span
                   className="pointer-events-none absolute -right-2 -top-10 select-none font-headline text-[9rem] leading-none text-[var(--app-primary)] opacity-[0.08]"
                   aria-hidden="true"

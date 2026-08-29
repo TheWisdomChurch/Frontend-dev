@@ -129,6 +129,53 @@
   /* Contained editorial measure — content is never edge-to-edge on wide
      screens. Text-heavy layouts use the narrower Container widths. */
   --content-wide: 78rem;
+
+  /* Form controls, scrollbars and UA chrome follow the palette. */
+  color-scheme: light;
+}
+
+/* ============================================================================
+   SYSTEM DARK MODE — when the visitor's OS is set to dark and they have not
+   explicitly chosen light (`[data-theme="light"]` reserved for a future
+   in-app toggle), re-point the SAME semantic tokens to an opaque dark palette.
+   Every component already consumes `--app-*`, so the whole site flips with no
+   per-component work. `.tone-dark` / `.tone-brand` sections keep their own
+   scoped re-theming and are unaffected.
+============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    /* Opaque dark surfaces (page → sunk → raised). Distinct from the
+       translucent lifts in `.tone-dark`, which sit on top of these. */
+    --app-surface: #0c0b0d;
+    --app-surface-2: #151317;
+    --app-surface-3: #201d22;
+    --app-surface-solid: #151317;
+    --app-canvas: #0e0d10;
+    --app-canvas-2: #151217;
+    --app-canvas-3: #1e1a20;
+
+    /* Ink / neutral flip so `solid` buttons become light-on-dark. */
+    --app-ink: #f4efe4;
+    --app-neutral: #ffffff;
+
+    /* Text */
+    --app-text: #f4efe4;
+    --app-muted: #b9b1a3;
+    --app-subtle: #8b8377;
+
+    /* Line */
+    --app-border: rgba(255, 255, 255, 0.12);
+
+    /* Gold: the "accent for light backgrounds" flips to the lighter gold so
+       it keeps contrast on dark, and the alpha washes follow it. */
+    --app-primary-dark: #e8b44a;
+    --app-primary-10: rgba(232, 180, 74, 0.12);
+    --app-primary-20: rgba(232, 180, 74, 0.22);
+    --app-primary-40: rgba(232, 180, 74, 0.4);
+  }
 }
 
 /* ============================================================================

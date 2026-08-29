@@ -207,7 +207,7 @@ function ModalPanel({
   const modalClassName = cn(
     'relative isolate flex w-full min-w-0 flex-col overflow-hidden border shadow-[0_32px_110px_rgba(0,0,0,.68)]',
     tone === 'light'
-      ? 'border-black/10 bg-[linear-gradient(155deg,var(--app-surface)_0%,var(--app-canvas)_100%)] text-[var(--app-ink)]'
+      ? 'border-[var(--app-border)] bg-[linear-gradient(155deg,var(--app-surface)_0%,var(--app-canvas)_100%)] text-[var(--app-ink)]'
       : 'tone-dark border-white/[0.11] bg-[linear-gradient(155deg,var(--app-dark-3)_0%,var(--app-dark-2)_48%,var(--app-dark)_100%)] text-[var(--app-text)] ring-1 ring-black/30',
     dragEnabled
       ? 'max-h-[calc(100dvh-0.5rem)] rounded-t-[1.75rem] rounded-b-none'

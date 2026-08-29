@@ -109,7 +109,7 @@ function SermonCard({
         <h3 className="mt-2 line-clamp-2 font-ui text-heading-sm font-semibold leading-[1.25] text-[var(--app-ink)] transition group-hover:text-[var(--app-primary-dark)]">
           {displayTitle(sermon.title)}
         </h3>
-        <p className="mt-2 truncate font-ui text-xs text-black/48">
+        <p className="mt-2 truncate font-ui text-xs text-[var(--app-muted)]">
           {sermon.preacher} · {date(sermon.publishedAt)}
         </p>
       </button>
@@ -130,13 +130,13 @@ function Rail({
 }) {
   if (!sermons.length) return null;
   return (
-    <section className="border-t border-black/10 py-section-xs">
+    <section className="border-t border-[var(--app-border)] py-section-xs">
       <div className="mb-7 flex items-end justify-between gap-5">
         <div>
           <h2 className="font-ui text-heading-md font-semibold tracking-[-0.02em] text-[var(--app-ink)] sm:text-heading-lg">
             {title}
           </h2>
-          <p className="mt-2 max-w-xl font-ui text-sm leading-6 text-black/50">
+          <p className="mt-2 max-w-xl font-ui text-sm leading-6 text-[var(--app-muted)]">
             {note}
           </p>
         </div>
@@ -463,7 +463,7 @@ export default function SermonLibrary({
             </Panel>
           )}
           {!unavailable && source === 'legacy' && (
-            <p className="mb-6 font-ui text-xs text-black/45">
+            <p className="mb-6 font-ui text-xs text-[var(--app-muted)]">
               Live catalogue loaded from the church sermon feed.
             </p>
           )}
@@ -506,7 +506,7 @@ export default function SermonLibrary({
           {!unavailable && (
             <section
               id="library"
-              className="border-t border-black/10 pt-12 sm:pt-16"
+              className="border-t border-[var(--app-border)] pt-12 sm:pt-16"
             >
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
@@ -517,7 +517,10 @@ export default function SermonLibrary({
                     Explore every message.
                   </h2>
                 </div>
-                <p aria-live="polite" className="font-ui text-sm text-black/50">
+                <p
+                  aria-live="polite"
+                  className="font-ui text-sm text-[var(--app-muted)]"
+                >
                   {results.length} available
                 </p>
               </div>
@@ -525,7 +528,7 @@ export default function SermonLibrary({
                 <div className="flex gap-2">
                   <label className="relative min-w-0 flex-1">
                     <span className="sr-only">Search the sermon library</span>
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/35" />
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
                     <input
                       id="sermon-search"
                       name="sermonSearch"
@@ -552,7 +555,7 @@ export default function SermonLibrary({
                     type="button"
                     onClick={() => setFiltersOpen(open => !open)}
                     aria-expanded={filtersOpen}
-                    className="inline-flex h-12 items-center gap-2 rounded-xl border border-black/10 px-4 font-ui text-xs font-bold uppercase tracking-wider"
+                    className="inline-flex h-12 items-center gap-2 rounded-xl border border-[var(--app-border)] px-4 font-ui text-xs font-bold uppercase tracking-wider"
                   >
                     <BookOpen className="h-4 w-4" />
                     <span className="hidden sm:inline">Filters</span>
@@ -562,7 +565,7 @@ export default function SermonLibrary({
                   </button>
                 </div>
                 {filtersOpen && (
-                  <div className="mt-3 grid gap-3 border-t border-black/8 pt-3 sm:grid-cols-3">
+                  <div className="mt-3 grid gap-3 border-t border-[var(--app-border)] pt-3 sm:grid-cols-3">
                     <select
                       id="sermon-series"
                       name="sermonSeries"
@@ -606,7 +609,7 @@ export default function SermonLibrary({
               </Panel>
               {activeFilters && (
                 <div className="mt-4 flex items-center justify-between">
-                  <p className="font-ui text-xs text-black/45">
+                  <p className="font-ui text-xs text-[var(--app-muted)]">
                     Showing a focused selection
                   </p>
                   <button
@@ -649,7 +652,7 @@ export default function SermonLibrary({
                   <button
                     type="button"
                     onClick={() => setVisible(count => count + 12)}
-                    className="rounded-full border border-black/15 px-7 py-3 font-ui text-xs font-bold uppercase tracking-wider"
+                    className="rounded-full border border-[var(--app-border)] px-7 py-3 font-ui text-xs font-bold uppercase tracking-wider"
                   >
                     Show more messages
                   </button>
