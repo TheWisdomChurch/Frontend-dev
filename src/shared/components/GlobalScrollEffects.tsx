@@ -62,6 +62,16 @@ export default function GlobalScrollEffects() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Land every route change at the top so the page opens on its hero.
+    // GSAP ScrollTrigger flips history.scrollRestoration to "manual" and
+    // remembers offsets; without clearing that and resetting here, a nav
+    // fired from a scrolled position can strand the user below the new
+    // hero. Deep links that target an in-page anchor are left alone.
+    if (!window.location.hash) {
+      ScrollTrigger.clearScrollMemory();
+      window.scrollTo(0, 0);
+    }
+
     let ctx: gsap.Context | null = null;
     let refreshId: number | null = null;
     let runTimer: ReturnType<typeof setTimeout> | null = null;
