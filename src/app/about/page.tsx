@@ -24,6 +24,7 @@ import {
   Split,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
+import { GlassSmokeCard } from '@/shared/ui/GlassSmokeCard';
 import { Marquee } from '@/shared/ui/Marquee';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 
@@ -142,19 +143,14 @@ export default async function AboutPage() {
 
       <Section tone="canvas">
         <Container>
-          <div className="grid gap-px overflow-hidden rounded-card bg-[var(--app-border)] lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2">
             {[content.vision, content.mission].map(item => (
-              <div
+              <GlassSmokeCard
                 key={item.label}
-                className="bg-[var(--app-canvas)] p-8 sm:p-12 lg:p-16"
-              >
-                <SectionHeader
-                  eyebrow={item.label}
-                  title={item.title}
-                  description={item.body}
-                  size="sm"
-                />
-              </div>
+                eyebrow={item.label}
+                title={item.title}
+                body={item.body}
+              />
             ))}
           </div>
         </Container>
@@ -193,15 +189,8 @@ export default async function AboutPage() {
                 title="This is The Wisdom Church."
                 description={content.declaration}
               />
-              <div className="mt-8 flex flex-wrap gap-2">
-                {content.practices.map(practice => (
-                  <span
-                    key={practice}
-                    className="rounded-badge border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold"
-                  >
-                    {practice}
-                  </span>
-                ))}
+              <div className="mt-8 border-y border-[var(--app-border)] py-5">
+                <Marquee items={content.practices} speedSeconds={26} />
               </div>
             </div>
             <div className="grid gap-x-8 sm:grid-cols-2">
