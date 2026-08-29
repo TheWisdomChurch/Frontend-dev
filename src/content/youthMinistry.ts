@@ -1,8 +1,8 @@
 import type { MinistryContent } from '@/features/ministries/MinistryPageTemplate';
 
-// NOTE: youth-specific photography is not available yet — the images below are
-// placeholders drawn from the general library. Swap `image` / `conference.images`
-// once the youth photos land; the copy and structure are final.
+// NOTE: `conference.images` are still placeholders from the general library —
+// swap them once youth conference photos land. Hero / intro / convener images
+// are the church-assigned photos.
 
 export const YOUTH_MINISTRY_CONTENT: MinistryContent = {
   hero: {
@@ -10,7 +10,7 @@ export const YOUTH_MINISTRY_CONTENT: MinistryContent = {
     title: 'A generation on fire for God.',
     description:
       'Building young people who know what they believe, why they believe it, and how to live it — confidently.',
-    image: '/images/conference-2025.webp',
+    image: '/Picflow/DSC00006 copy.webp',
   },
   primaryCta: { label: 'Join the youth ministry', href: '/contact' },
   introduction: {
@@ -39,12 +39,12 @@ export const YOUTH_MINISTRY_CONTENT: MinistryContent = {
     ],
   },
   leader: {
-    label: 'Ministry Lead',
+    label: 'Convener',
     title: 'Walking with young people through the questions that matter.',
     body: 'At the heart of this ministry is a commitment to know each young person, take their questions seriously, and help them move from simply attending into real ownership of their faith.',
     image: {
-      src: '/Picflow/DSC00122 copy.webp',
-      alt: 'A youth ministry leader at The Wisdom Church',
+      src: '/Picflow/DSC00064 copy.webp',
+      alt: 'The youth ministry convener at The Wisdom Church',
     },
   },
   focus: {

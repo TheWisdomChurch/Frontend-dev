@@ -87,6 +87,7 @@ export default async function AboutPage() {
         title={content.hero.title}
         subtitle={content.hero.description}
         backgroundImage={content.hero.images[0].src}
+        imagePositionClassName="object-center"
         priority
         actions={
           <>

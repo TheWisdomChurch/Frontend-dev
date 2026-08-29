@@ -1,8 +1,7 @@
 import type { MinistryContent } from '@/features/ministries/MinistryPageTemplate';
 
-// NOTE: children's-ministry photography is limited — hero and section images
-// below are placeholders from the general library. The in-page carousel
-// (ChildrenGallery, passed as `extra`) uses the real children's photos.
+// NOTE: the in-page carousel (ChildrenGallery, passed as `extra`) uses the real
+// children's-ministry photos. Hero / intro / leader use church-library photos.
 
 export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
   hero: {
@@ -10,7 +9,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Where little ones meet Jesus.',
     description:
       'Safe, joyful, and built around families — from nursery through pre-teen years.',
-    image: '/images/easter-service.webp',
+    image: '/Picflow/DSC00049 copy.webp',
   },
   primaryCta: { label: 'Connect my family', href: '/contact' },
   introduction: {

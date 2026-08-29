@@ -370,6 +370,7 @@ export default async function EventsPage() {
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <SiteHero
         backgroundImage="/Picflow/DSC00039 copy.webp"
+        imagePositionClassName="object-center"
         eyebrow="Events & Programs"
         title="What's happening at Wisdom Church."
         subtitle="Weekly services, special gatherings, and everything in between."

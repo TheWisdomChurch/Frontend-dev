@@ -299,6 +299,7 @@ export default function SermonLibrary({
     <>
       <SiteHero
         backgroundImage="/Picflow/DSC00082 copy.webp"
+        imagePositionClassName="object-[center_12%] sm:object-[center_18%]"
         eyebrow="Wisdom Church Media"
         title="Truth for every season."
         subtitle="Start with what matters to you. Discover relevant teachings, continue where you left off, and grow one message at a time."

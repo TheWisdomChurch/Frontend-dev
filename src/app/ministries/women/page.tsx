@@ -31,6 +31,7 @@ export default function WomenMinistryPage() {
         title={content.hero.title}
         subtitle={content.hero.description}
         backgroundImage={content.hero.image}
+        imagePositionClassName="object-center"
         priority
         actions={
           <CtaLink href="/contact">

@@ -30,6 +30,8 @@ export type MinistryContent = {
     title: string;
     description: string;
     image?: string;
+    /** Object-position class — pass `object-center` for a landscape photo. */
+    imagePosition?: string;
   };
   primaryCta: { label: string; href: string };
   introduction: {
@@ -115,6 +117,7 @@ export default function MinistryPageTemplate({
         title={hero.title}
         subtitle={hero.description}
         backgroundImage={hero.image}
+        imagePositionClassName={hero.imagePosition}
         priority
         actions={
           <CtaLink href={primaryCta.href}>

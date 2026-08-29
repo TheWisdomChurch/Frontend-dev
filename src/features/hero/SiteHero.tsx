@@ -20,8 +20,13 @@ export type SiteHeroProps = {
   chips?: string[];
   actions?: ReactNode;
   backgroundImage?: string | StaticImageData;
+  /**
+   * Object-position / filter classes for the background image. Church photos
+   * are portraits, so the frame defaults to `object-top` — pass
+   * `object-center` for the few landscape images.
+   */
   imagePositionClassName?: string;
-  /** `home` = tall, lower-third text block, scroll cue. `page` = compact. */
+  /** `home` = the largest headline. `page` = the same layout, a touch smaller. */
   size?: 'page' | 'home';
   align?: 'left' | 'center';
   priority?: boolean;
@@ -60,14 +65,27 @@ export default function SiteHero({
         sizes="100vw"
         data-hero-media
         className={cn(
-          '-z-20 object-cover object-center will-change-transform',
+          '-z-20 object-cover object-[center_25%] will-change-transform',
           imagePositionClassName
         )}
       />
-      {/* One restrained scrim — darker toward the base so text always holds. */}
+
+      {/* Top wash keeps the nav legible. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-1/3 bg-gradient-to-b from-black/60 to-transparent"
+      />
+      {/* Gradient-masked backdrop blur over the lower band — softens a busy or
+          bright photo behind the headline so the text always reads, while the
+          upper photo stays sharp. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 backdrop-blur-md [-webkit-mask-image:linear-gradient(to_top,black_0%,black_34%,transparent_66%)] [mask-image:linear-gradient(to_top,black_0%,black_34%,transparent_66%)]"
+      />
+      {/* Deep base gradient — the text-contrast guarantee. */}
       <div
         data-hero-overlay
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-black/30 via-black/40 to-black/70"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,var(--app-dark)_0%,color-mix(in_srgb,var(--app-dark)_78%,transparent)_26%,color-mix(in_srgb,var(--app-dark)_36%,transparent)_46%,transparent_68%)]"
       />
 
       <Container className="flex flex-1 flex-col">
@@ -75,10 +93,7 @@ export default function SiteHero({
           data-hero-content
           className={cn(
             'flex w-full min-w-0 flex-1 flex-col',
-            'min-h-[100svh] justify-end pt-[calc(var(--app-header-height)+var(--section-xs))]',
-            isHome
-              ? 'pb-[11svh] sm:pb-[13svh] lg:pb-[10svh]'
-              : 'pb-[12svh] sm:pb-[13svh] lg:pb-[10svh]',
+            'min-h-[100svh] justify-end pt-[calc(var(--app-header-height)+var(--section-xs))] pb-[11svh] sm:pb-[13svh] lg:pb-[10svh]',
             centered
               ? 'mx-auto max-w-4xl items-center text-center 2xl:max-w-5xl'
               : 'max-w-2xl items-start text-left 2xl:max-w-3xl'
@@ -87,7 +102,7 @@ export default function SiteHero({
           {eyebrow ? (
             <p
               data-hero-item
-              className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.24em] text-[var(--app-primary-light)]"
+              className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.24em] text-[var(--app-primary-light)] [text-shadow:0_1px_10px_black]"
             >
               {eyebrow}
             </p>
@@ -95,10 +110,10 @@ export default function SiteHero({
 
           <h1
             className={cn(
-              'w-full max-w-full font-ui font-black leading-[0.96] tracking-[-0.03em] text-white drop-shadow-xl [text-wrap:balance]',
+              'w-full max-w-full font-ui font-black leading-[0.96] tracking-[-0.03em] text-white [text-shadow:0_2px_28px_black] [text-wrap:balance]',
               isHome
                 ? 'text-[clamp(2.35rem,8vw,5.5rem)] 2xl:text-[6.25rem]'
-                : 'text-[clamp(2rem,5.5vw,4.25rem)] 2xl:text-[4.75rem]'
+                : 'text-[clamp(2.15rem,7vw,5rem)] 2xl:text-[5.5rem]'
             )}
           >
             {lines.map((line, index) => (
@@ -125,7 +140,7 @@ export default function SiteHero({
             <p
               data-hero-item
               className={cn(
-                'mt-7 w-full font-ui text-lead leading-[1.6] text-[var(--app-text)]',
+                'mt-7 w-full font-ui text-lead leading-[1.6] text-white/90 [text-shadow:0_1px_14px_black]',
                 centered ? 'max-w-2xl' : 'max-w-xl'
               )}
             >
@@ -136,7 +151,7 @@ export default function SiteHero({
           {description ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-md leading-relaxed text-[var(--app-muted)]"
+              className="mt-3 max-w-2xl font-ui text-body-md leading-relaxed text-white/78 [text-shadow:0_1px_12px_black]"
             >
               {description}
             </p>
@@ -145,7 +160,7 @@ export default function SiteHero({
           {note ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-sm leading-relaxed text-[var(--app-muted)]"
+              className="mt-3 max-w-2xl font-ui text-body-sm leading-relaxed text-white/75 [text-shadow:0_1px_12px_black]"
             >
               {note}
             </p>

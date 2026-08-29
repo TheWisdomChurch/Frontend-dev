@@ -1,7 +1,7 @@
 import type { MinistryContent } from '@/features/ministries/MinistryPageTemplate';
 
-// NOTE: outreach-specific photography is not available yet — the images below
-// are placeholders from the general library. Swap them once outreach photos land.
+// NOTE: images are from the church library; swap for outreach-specific photos
+// as they land.
 
 export const OUTREACH_MINISTRY_CONTENT: MinistryContent = {
   hero: {
@@ -9,7 +9,7 @@ export const OUTREACH_MINISTRY_CONTENT: MinistryContent = {
     title: 'Taking the church beyond the walls.',
     description:
       'Practical expressions of compassion, service, and gospel witness in the communities around us.',
-    image: '/images/supernatural-service.webp',
+    image: '/Picflow/DSC00007 copy.webp',
   },
   primaryCta: { label: 'Join outreach', href: '/contact' },
   introduction: {

@@ -228,7 +228,8 @@ function ContactPageContent() {
       />
 
       <SiteHero
-        backgroundImage="/Picflow/DSC06712 copy.webp"
+        backgroundImage="/Picflow/DSC00048 copy.webp"
+        imagePositionClassName="object-[center_10%] [filter:brightness(1.06)_contrast(1.03)]"
         eyebrow="Get in touch"
         title="We'd love to hear from you."
         subtitle="Plan a visit, request prayer, or send us a message — we'll get back to you quickly."
@@ -269,7 +270,7 @@ function ContactPageContent() {
                             <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-subtle)]">
                               {channel.label}
                             </span>
-                            <span className="mt-1 block truncate font-ui text-body-md font-semibold text-[var(--app-ink)]">
+                            <span className="mt-1 block break-words font-ui text-body-md font-semibold text-[var(--app-ink)]">
                               {channel.value}
                             </span>
                             <span className="mt-0.5 block font-ui text-label text-[var(--app-muted)]">

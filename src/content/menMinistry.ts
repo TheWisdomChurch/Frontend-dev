@@ -7,6 +7,7 @@ export const MEN_MINISTRY_CONTENT: MinistryContent = {
     description:
       'A community where men grow in faith, accountability, and the kind of strength that leads — at home, in church, and beyond.',
     image: '/Picflow/men1.webp',
+    imagePosition: 'object-center',
   },
   primaryCta: { label: 'Join the brotherhood', href: '/contact' },
   introduction: {

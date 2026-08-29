@@ -175,6 +175,7 @@ export default function TestimoniesPage() {
         {/* ── 1. Hero ────────────────────────────────────────── */}
         <SiteHero
           backgroundImage="/Picflow/DSC00058 copy.webp"
+          imagePositionClassName="object-center"
           eyebrow="Testimonies"
           title="Stories of faith, healing, and change."
           subtitle="Real accounts from the Wisdom Church community — God still moves."
