@@ -1,13 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  ArrowLeft,
-  ArrowUpRight,
-  MessageCircle,
-  Share2,
-  Users,
-} from 'lucide-react';
+import { ArrowLeft, AtSign, MessageCircle, Users } from 'lucide-react';
 
 import apiClient from '@/lib/api';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
@@ -15,15 +9,10 @@ import { buttonClass } from '@/shared/ui/button';
 import { BaseModal, modalStyles } from '@/shared/ui/modals/Modal';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import Arrow from '@/shared/ui/icons/Arrow';
+import { SOCIAL_MARKS } from '@/shared/ui/icons/social';
 
 type View = 'closed' | 'options' | 'form';
 const EMPTY = { name: '', phone: '', email: '' };
-
-const SOCIALS = [
-  { href: SOCIAL_LINKS.instagram, label: 'Instagram' },
-  { href: SOCIAL_LINKS.youtube, label: 'YouTube' },
-  { href: SOCIAL_LINKS.facebook, label: 'Facebook' },
-];
 
 /**
  * "Connect with us" — opens a modal offering three ways in: the WhatsApp
@@ -122,7 +111,7 @@ export function ConnectCommunityCta({ label }: { label: string }) {
           <li className="rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4 sm:p-5">
             <div className="flex items-start gap-4">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)]">
-                <Share2 className="h-4 w-4" aria-hidden="true" />
+                <AtSign className="h-4 w-4" aria-hidden="true" />
               </span>
               <div className="min-w-0 flex-1">
                 <span className="block font-ui text-body-md font-semibold text-[var(--app-text)]">
@@ -131,20 +120,17 @@ export function ConnectCommunityCta({ label }: { label: string }) {
                 <span className="mt-0.5 block font-ui text-label text-[var(--app-muted)]">
                   Sermons, reels, and moments from church life.
                 </span>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {SOCIALS.map(social => (
+                <div className="mt-3 flex flex-wrap gap-2.5">
+                  {SOCIAL_MARKS.map(social => (
                     <a
                       key={social.label}
                       href={social.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-button border border-[var(--app-border)] px-3 py-1.5 font-ui text-label font-semibold text-[var(--app-muted)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)]"
+                      aria-label={social.label}
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]"
                     >
-                      {social.label}
-                      <ArrowUpRight
-                        className="h-3.5 w-3.5"
-                        aria-hidden="true"
-                      />
+                      <social.Icon />
                     </a>
                   ))}
                 </div>
