@@ -99,11 +99,18 @@ export default function GlobalScrollEffects() {
           const overlay = hero.querySelector<HTMLElement>(
             '[data-hero-overlay]'
           );
+          const content = hero.querySelector<HTMLElement>(
+            '[data-hero-content]'
+          );
           const titleLines = hero.querySelectorAll<HTMLElement>(
             '[data-hero-title-line]'
           );
           const items = hero.querySelectorAll<HTMLElement>('[data-hero-item]');
+          const cue = hero.querySelector<HTMLElement>('[data-hero-cue]');
 
+          // Entrance choreography — the image settles slightly zoomed (never
+          // back to 1) so the scroll parallax below always has headroom and
+          // can never expose the frame edge.
           const heroTimeline = gsap.timeline({
             defaults: { ease: 'power3.out' },
           });
@@ -111,43 +118,90 @@ export default function GlobalScrollEffects() {
           if (media) {
             heroTimeline.fromTo(
               media,
-              { scale: isMobile ? 1.06 : 1.12 },
-              { scale: 1, duration: isMobile ? 1.4 : 1.9, ease: 'power2.out' },
+              { scale: isMobile ? 1.12 : 1.2, yPercent: -1.5 },
+              {
+                scale: isMobile ? 1.04 : 1.06,
+                yPercent: 0,
+                duration: isMobile ? 1.7 : 2.4,
+                ease: 'power2.out',
+              },
               0
             );
           }
           if (overlay) {
             heroTimeline.fromTo(
               overlay,
-              { opacity: 0.25 },
-              { opacity: 1, duration: 1.3 },
+              { opacity: 0 },
+              { opacity: 1, duration: 1.5 },
               0
             );
           }
           heroTimeline.fromTo(
             titleLines,
-            { yPercent: 118, autoAlpha: 0 },
+            { yPercent: 115, autoAlpha: 0 },
             {
               yPercent: 0,
               autoAlpha: 1,
-              duration: isMobile ? 0.9 : 1.15,
-              stagger: 0.12,
+              duration: isMobile ? 1 : 1.3,
+              stagger: 0.14,
               ease: 'expo.out',
             },
-            0.2
+            0.25
           );
           heroTimeline.fromTo(
             items,
-            { y: isMobile ? 22 : 34, autoAlpha: 0 },
+            { y: isMobile ? 20 : 32, autoAlpha: 0, filter: 'blur(6px)' },
             {
               y: 0,
               autoAlpha: 1,
-              duration: 0.9,
-              stagger: 0.1,
+              filter: 'blur(0px)',
+              duration: 1,
+              stagger: 0.12,
               ease: 'expo.out',
+              clearProps: 'filter',
             },
-            0.42
+            0.5
           );
+          if (cue) {
+            heroTimeline.fromTo(
+              cue,
+              { autoAlpha: 0, y: 12 },
+              { autoAlpha: 1, y: 0, duration: 0.8 },
+              1.15
+            );
+          }
+
+          // Scroll-linked exit — desktop only (a scrubbed transform competes
+          // with the scroll gesture on touch and reads as jank).
+          if (!isMobile) {
+            if (media) {
+              gsap.to(media, {
+                scale: 1.16,
+                ease: 'none',
+                immediateRender: false,
+                scrollTrigger: {
+                  trigger: hero,
+                  start: 'top top',
+                  end: 'bottom top',
+                  scrub: 0.5,
+                },
+              });
+            }
+            if (content) {
+              gsap.to(content, {
+                yPercent: -7,
+                autoAlpha: 0.25,
+                ease: 'none',
+                immediateRender: false,
+                scrollTrigger: {
+                  trigger: hero,
+                  start: 'top top',
+                  end: '65% top',
+                  scrub: 0.5,
+                },
+              });
+            }
+          }
         }
 
         if (!reduceMotion && revealTargets.length > 0) {
@@ -205,12 +259,29 @@ export default function GlobalScrollEffects() {
         ScrollTrigger.refresh();
       });
 
-      // Safety net: if a reveal trigger never fires (e.g. late image load
-      // shifts layout and moves its start point past the element), force any
-      // still-hidden target visible so content can never be stranded.
+      // Safety net: if an entrance/reveal animation never completes (a late
+      // image load shifts a trigger past its element, a route-change race,
+      // hydration timing) force any still-hidden element visible so content
+      // can never be stranded — hero headline included.
       if (!reduceMotion) {
         safetyTimer = setTimeout(() => {
           if (cancelled) return;
+
+          const heroBits = root.querySelectorAll<HTMLElement>(
+            '[data-hero-title-line], [data-hero-item], [data-hero-cue]'
+          );
+          const strandedHero = Array.from(heroBits).filter(
+            node => Number(gsap.getProperty(node, 'autoAlpha')) < 1
+          );
+          if (strandedHero.length > 0) {
+            gsap.set(strandedHero, {
+              autoAlpha: 1,
+              yPercent: 0,
+              y: 0,
+              clearProps: 'transform,opacity,visibility,filter,will-change',
+            });
+          }
+
           const stranded = collectRevealTargets(root).filter(
             node => Number(gsap.getProperty(node, 'autoAlpha')) < 1
           );

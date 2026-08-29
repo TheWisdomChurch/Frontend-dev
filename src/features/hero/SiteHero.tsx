@@ -76,10 +76,12 @@ export default function SiteHero({
           className={cn(
             'flex w-full min-w-0 flex-1 flex-col',
             'min-h-[100svh] justify-end pt-[calc(var(--app-header-height)+var(--section-xs))]',
-            isHome ? 'pb-[12svh] sm:pb-[14svh]' : 'pb-[13svh] sm:pb-[15svh]',
+            isHome
+              ? 'pb-[11svh] sm:pb-[13svh] lg:pb-[10svh]'
+              : 'pb-[12svh] sm:pb-[13svh] lg:pb-[10svh]',
             centered
-              ? 'mx-auto max-w-4xl items-center text-center'
-              : 'max-w-2xl items-start text-left'
+              ? 'mx-auto max-w-4xl items-center text-center 2xl:max-w-5xl'
+              : 'max-w-2xl items-start text-left 2xl:max-w-3xl'
           )}
         >
           {eyebrow ? (
@@ -95,8 +97,8 @@ export default function SiteHero({
             className={cn(
               'w-full max-w-full font-ui font-black leading-[0.96] tracking-[-0.03em] text-white drop-shadow-xl [text-wrap:balance]',
               isHome
-                ? 'text-[clamp(2.35rem,8.5vw,5.5rem)]'
-                : 'text-[clamp(2rem,6.5vw,3.75rem)]'
+                ? 'text-[clamp(2.35rem,8vw,5.5rem)] 2xl:text-[6.25rem]'
+                : 'text-[clamp(2rem,5.5vw,4.25rem)] 2xl:text-[4.75rem]'
             )}
           >
             {lines.map((line, index) => (
@@ -183,6 +185,7 @@ export default function SiteHero({
       </Container>
 
       <div
+        data-hero-cue
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center motion-reduce:hidden"
       >

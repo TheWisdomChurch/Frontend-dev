@@ -195,20 +195,24 @@ export default function PremiumHome() {
 
       <Section tone="canvas">
         <Container>
-          <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-            <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-image bg-[var(--app-surface-2)] lg:mx-0 lg:max-w-none">
-              {/* Bishop portrait is ~4:5 — the frame matches it so nothing
-                  is cropped or stretched at any width. */}
-              <div className="relative aspect-[4/5]">
-                <Image
-                  src={HOME_IMAGES.pastor.src}
-                  alt={HOME_IMAGES.pastor.alt}
-                  fill
-                  sizes="(max-width: 1023px) 22rem, 45vw"
-                  quality={IMAGE_QUALITY}
-                  className="object-cover object-top"
-                />
-              </div>
+          <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-16">
+            {/* The Bishop image is a transparent cut-out, so it sits on the
+                dark panel it was shot for rather than in a cropped frame —
+                no seam, nothing clipped, at any width. */}
+            <div className="tone-dark relative flex justify-center overflow-hidden rounded-image bg-[var(--app-dark)]">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(65%_55%_at_50%_22%,var(--app-primary-20),transparent_70%)]"
+              />
+              <Image
+                src={HOME_IMAGES.pastor.src}
+                alt={HOME_IMAGES.pastor.alt}
+                width={792}
+                height={963}
+                sizes="(max-width: 1023px) 20rem, 38vw"
+                quality={IMAGE_QUALITY}
+                className="relative h-auto w-full max-w-[20rem] object-contain lg:max-w-none"
+              />
             </div>
 
             <div>

@@ -113,7 +113,7 @@ export default function ChurchRouteMap({
 
   if (!browserKey) {
     return (
-      <div className="flex h-full min-h-[320px] items-center justify-center bg-[var(--app-canvas-3)] p-8 text-center font-ui text-sm text-black/65">
+      <div className="flex h-full min-h-[320px] items-center justify-center bg-[var(--app-canvas-3)] p-8 text-center font-ui text-body-sm text-[var(--app-muted)]">
         The secure route is ready. Configure the browser-restricted Maps key to
         display the interactive map.
       </div>
@@ -122,7 +122,7 @@ export default function ChurchRouteMap({
 
   if (loadError) {
     return (
-      <div className="flex h-full min-h-[320px] items-center justify-center bg-[var(--app-canvas-3)] p-8 text-center font-ui text-sm text-black/65">
+      <div className="flex h-full min-h-[320px] items-center justify-center bg-[var(--app-canvas-3)] p-8 text-center font-ui text-body-sm text-[var(--app-muted)]">
         The map could not load. You can still continue with turn-by-turn
         navigation.
       </div>
@@ -138,7 +138,7 @@ export default function ChurchRouteMap({
         aria-label="Driving route from your location to The Wisdom Church"
       />
       {!ready ? (
-        <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[var(--app-canvas-3)] font-ui text-sm text-black/60">
+        <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[var(--app-canvas-3)] font-ui text-body-sm text-[var(--app-subtle)]">
           Loading your route map…
         </div>
       ) : null}
