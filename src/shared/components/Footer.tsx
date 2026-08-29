@@ -75,7 +75,7 @@ const SOCIALS = [
 
 function ColHead({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
+    <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
       {children}
     </p>
   );
@@ -133,7 +133,7 @@ export default function Footer() {
         {/* ── Newsletter band ─────────────────────────────── */}
         <div className="grid gap-8 border-b border-[var(--app-border)] pb-12 lg:grid-cols-[1fr_minmax(0,26rem)] lg:items-end lg:gap-16">
           <div>
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-dark)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
               Stay in the loop
             </p>
             <h2 className="mt-3 max-w-md font-ui text-heading-md font-semibold leading-snug text-[var(--app-text)] sm:text-heading-lg">
@@ -217,7 +217,7 @@ export default function Footer() {
                 />
               </span>
               <span className="flex flex-col leading-none">
-                <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.25em] text-[var(--app-primary-dark)]">
+                <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
                   The
                 </span>
                 <span className="font-ui text-heading-sm font-semibold leading-none text-[var(--app-text)]">

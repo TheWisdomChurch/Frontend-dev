@@ -68,7 +68,7 @@ function isTopModal(id: string) {
  */
 export const modalStyles = {
   sectionTitle:
-    'text-eyebrow font-extrabold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]',
+    'text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]',
   label:
     'mb-2 block text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-subtle)]',
   input:

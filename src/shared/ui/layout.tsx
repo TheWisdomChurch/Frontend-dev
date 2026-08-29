@@ -170,6 +170,12 @@ export function Stack({
   );
 }
 
+/** The one eyebrow / kicker treatment — a small brand-gold uppercase line.
+ *  Use the `<Eyebrow>` component; reach for this string only where a component
+ *  can't be rendered (spans inside other primitives). */
+export const eyebrowClass =
+  'font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]';
+
 /** The one eyebrow / kicker label — a small uppercase brand-gold line above a
  *  heading. `SectionHeader` renders the same treatment inline. */
 export function Eyebrow({
@@ -178,13 +184,7 @@ export function Eyebrow({
   ...props
 }: ComponentPropsWithoutRef<'p'>) {
   return (
-    <p
-      className={cn(
-        'font-ui text-eyebrow font-semibold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]',
-        className
-      )}
-      {...props}
-    >
+    <p className={cn(eyebrowClass, className)} {...props}>
       {children}
     </p>
   );
@@ -436,11 +436,7 @@ export function SectionHeader({
       )}
       data-gsap={reveal ? 'reveal' : undefined}
     >
-      {eyebrow ? (
-        <p className="font-ui text-eyebrow font-semibold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
-          {eyebrow}
-        </p>
-      ) : null}
+      {eyebrow ? <p className={eyebrowClass}>{eyebrow}</p> : null}
       <Heading
         className={cn(
           'text-balance font-ui font-semibold leading-[1.1] tracking-[-0.025em] text-current',

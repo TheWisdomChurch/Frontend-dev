@@ -103,7 +103,7 @@ function SermonCard({
             </span>
           )}
         </div>
-        <p className="mt-4 truncate font-ui text-eyebrow font-bold uppercase tracking-[.19em] text-[var(--app-primary-dark)]">
+        <p className="mt-4 truncate font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
           {sermon.series || 'Wisdom teaching'}
         </p>
         <h3 className="mt-2 line-clamp-2 font-ui text-heading-sm font-semibold leading-[1.25] text-[var(--app-ink)] transition group-hover:text-[var(--app-primary-dark)]">
@@ -315,7 +315,7 @@ export default function SermonLibrary({
                 className="!rounded-none ring-1 ring-white/10"
               />
               <div>
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[.24em] text-[var(--app-primary)]">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
                   Now playing · {selected.series}
                 </p>
                 <h1 className="mt-4 font-ui text-heading-lg font-semibold leading-[1.1] tracking-[-0.025em] text-white sm:text-display-sm">
@@ -387,7 +387,7 @@ export default function SermonLibrary({
                 <div className="relative flex flex-col justify-center p-7 sm:p-10 lg:p-12 xl:p-16">
                   <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[var(--app-primary)]/10 blur-3xl" />
                   <div className="relative">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/[.06] px-3 py-1.5 font-ui text-eyebrow font-bold uppercase tracking-[.2em] text-[var(--app-primary)]">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/[.06] px-3 py-1.5 font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--app-primary)]" />{' '}
                       Media library online
                     </div>
@@ -510,7 +510,7 @@ export default function SermonLibrary({
             >
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[.22em] text-[var(--app-primary-dark)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
                     Complete library
                   </p>
                   <h2 className="mt-2 font-ui text-heading-md font-semibold tracking-[-0.02em] sm:text-heading-lg">
@@ -663,7 +663,7 @@ export default function SermonLibrary({
               className="mt-16 grid gap-4 p-7 sm:grid-cols-[1fr_auto] sm:items-center sm:p-10"
             >
               <div>
-                <p className="flex items-center gap-2 font-ui text-eyebrow font-bold uppercase tracking-[.22em] text-[var(--app-primary)]">
+                <p className="flex items-center gap-2 font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
                   <Clock3 className="h-4 w-4" /> Updated automatically
                 </p>
                 <p className="mt-3 max-w-xl font-ui text-heading-md font-semibold tracking-[-0.02em] sm:text-heading-lg">

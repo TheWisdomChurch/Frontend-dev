@@ -182,7 +182,7 @@ export default function MinistriesPage() {
                   {/* Content — eyebrow + title top, description + CTA at the foot */}
                   <div className="relative flex flex-1 flex-col justify-between gap-10 p-6 sm:p-7 lg:p-8">
                     <div>
-                      <p className="font-ui text-eyebrow font-semibold uppercase tracking-[0.2em] text-[var(--app-primary-light)]">
+                      <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)]">
                         {ministry.label}
                       </p>
                       <h3 className="mt-3 font-ui text-heading-md font-semibold leading-snug text-white sm:text-heading-lg">

@@ -406,7 +406,7 @@ const PastoralCareForm = () => {
       <Container>
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
             Pastoral care
           </p>
           <h2 className="mt-4 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
@@ -463,7 +463,7 @@ const PastoralCareForm = () => {
           className="mx-auto mt-10 max-w-2xl scroll-mt-24 border border-white/10 bg-white/[0.03] p-6 sm:p-8 lg:p-10"
         >
           <div className="mb-8 text-center">
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
               {INTENTS.find(i => i.id === intent)?.short}
             </p>
             {isCounseling && (

@@ -256,7 +256,7 @@ function GridCard({
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-5">
-        <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary-dark)]">
+        <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
           {slide.badge}
         </span>
         <h3 className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-text)] line-clamp-2 transition group-hover:text-[var(--app-primary-dark)]">

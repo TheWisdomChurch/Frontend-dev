@@ -102,7 +102,7 @@ export default function SiteHero({
           {eyebrow ? (
             <p
               data-hero-item
-              className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.24em] text-[var(--app-primary-light)] [text-shadow:0_1px_10px_black]"
+              className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)] [text-shadow:0_1px_10px_black]"
             >
               {eyebrow}
             </p>
