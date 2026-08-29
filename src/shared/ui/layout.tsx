@@ -130,7 +130,10 @@ export const Section = forwardRef<
     <section
       ref={ref}
       className={cn(
-        'relative overflow-hidden border-b border-current/10',
+        // `overflow-clip` (not `hidden`) so decorative bleeds are contained
+        // without turning every Section into a scroll container — that would
+        // break `position: sticky` for any sidebar rendered inside one.
+        'relative overflow-clip border-b border-current/10',
         !flush && (compact ? 'py-section-xs' : 'py-section-sm'),
         sectionToneClass[tone],
         className

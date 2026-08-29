@@ -150,7 +150,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body
         className={cn(
-          'min-h-screen overflow-x-hidden bg-[var(--app-surface)] font-body'
+          'min-h-screen overflow-x-clip bg-[var(--app-surface)] font-body'
         )}
       >
         <script
