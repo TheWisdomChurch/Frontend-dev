@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { buttonClass } from '@/shared/ui/button';
 import {
   CalendarClock,
   CalendarDays,
@@ -10,8 +9,9 @@ import {
   Sparkles,
   SunMedium,
 } from 'lucide-react';
-import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 
+import { cn } from '@/lib/cn';
+import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { Media } from '@/shared/ui/Media';
@@ -29,23 +29,24 @@ import {
 } from '@/shared/utils/eventDate';
 import {
   Container,
-  Page,
-  SectionHeader,
   CtaLink,
+  Page,
   Panel,
   Section,
+  SectionHeader,
   interactiveCardClass,
 } from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
-// Kept outside the component body so the impure Date.now() read happens at
-// call time (each request), not as a value captured during render.
 function registerHref(event: EventPublic): string | null {
   if (event.registerLink) return event.registerLink;
   if (event.formSlug) return `/forms/${event.formSlug}`;
   return null;
 }
+
+type DateParts = ReturnType<typeof formatDate>;
 
 /* ── Static weekly data ─────────────────────────────────── */
 
@@ -67,89 +68,208 @@ const WEEKLY = [
   },
 ] as const;
 
+const BROWSE = [
+  {
+    href: '/events/weekly',
+    label: 'Weekly Services',
+    hint: 'Our regular rhythm of gathering',
+    icon: CalendarDays,
+  },
+  {
+    href: '/events/calendar',
+    label: 'Calendar View',
+    hint: 'Everything, month by month',
+    icon: CalendarRange,
+  },
+  {
+    href: '/events/upcoming',
+    label: 'Upcoming Events',
+    hint: 'The full list of what is ahead',
+    icon: List,
+  },
+] as const;
+
+/* ── Shared pieces ──────────────────────────────────────── */
+
+function DateBadge({
+  date,
+  size = 'sm',
+}: {
+  date: DateParts;
+  size?: 'sm' | 'lg';
+}) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-baseline gap-1.5 rounded-badge bg-[var(--app-primary)] font-ui font-bold uppercase tracking-[0.16em] text-[var(--app-ink)]',
+        size === 'lg' ? 'px-3 py-1.5 text-eyebrow' : 'px-2.5 py-1 text-eyebrow'
+      )}
+    >
+      <span
+        className={cn(
+          'font-semibold leading-none',
+          size === 'lg' ? 'text-body-md' : 'text-body-sm'
+        )}
+      >
+        {date.day}
+      </span>
+      {date.month}
+    </span>
+  );
+}
+
+function DatePlate({ date, large }: { date: DateParts; large?: boolean }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-1 bg-[var(--app-dark-2)]">
+      <span className="font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+        {date.month}
+      </span>
+      <span
+        className={cn(
+          'font-ui font-medium leading-none text-[var(--app-text)]',
+          large ? 'text-display-md' : 'text-display-sm'
+        )}
+      >
+        {date.day}
+      </span>
+    </div>
+  );
+}
+
+function EventMeta({ event }: { event: EventPublic }) {
+  const date = formatDate(event);
+  const time = formatTime(event);
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-ui text-label font-semibold">
+      <span className="text-[var(--app-primary-dark)]">{date.full}</span>
+      {time ? <span className="text-[var(--app-muted)]">{time}</span> : null}
+      {event.location ? (
+        <span className="inline-flex items-center gap-1.5 text-[var(--app-subtle)]">
+          <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+          {event.location}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+/* ── Featured (next) event ──────────────────────────────── */
+
+function EventFeature({ event }: { event: EventPublic }) {
+  const href = registerHref(event);
+  const image = event.bannerUrl ?? event.imageUrl ?? null;
+  const date = formatDate(event);
+
+  return (
+    <article className="group grid overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] lg:grid-cols-[1.15fr_1fr]">
+      <div className="relative aspect-[16/10] overflow-hidden bg-[var(--app-dark-2)] lg:aspect-auto lg:min-h-[26rem]">
+        {image ? (
+          <Media
+            src={image}
+            alt={event.title}
+            sizes="(max-width: 1024px) 100vw, 55vw"
+            className="transition duration-700 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <DatePlate date={date} large />
+        )}
+        <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-badge bg-[var(--app-primary)] px-3 py-1 font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-ink)]">
+          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+          Next up
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-4 p-6 sm:p-8 lg:p-10">
+        <EventMeta event={event} />
+        <h3 className="font-ui text-heading-lg font-semibold leading-snug text-[var(--app-text)]">
+          {event.title}
+        </h3>
+        {event.description ? (
+          <p className="font-ui text-body-md leading-[1.8] text-[var(--app-muted)] line-clamp-4">
+            {event.description}
+          </p>
+        ) : null}
+        <div className="mt-auto pt-2">
+          {href ? (
+            <a href={href} className={buttonClass('primary')}>
+              Register <Arrow />
+            </a>
+          ) : (
+            <span className="inline-flex items-center gap-2 rounded-button border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-subtle)]">
+              Free entry — just come
+            </span>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 /* ── Event card ─────────────────────────────────────────── */
 
 function EventCard({ event }: { event: EventPublic }) {
   const date = formatDate(event);
   const time = formatTime(event);
   const href = registerHref(event);
-  const imgSrc = event.bannerUrl ?? event.imageUrl ?? null;
+  const image = event.bannerUrl ?? event.imageUrl ?? null;
 
   return (
     <article
-      className={`group flex h-full flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.03] hover:bg-white/[0.05] ${interactiveCardClass}`}
+      className={cn(
+        'group flex h-full flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)]',
+        interactiveCardClass
+      )}
     >
-      {/* Image / date block */}
-      <div className="relative aspect-video overflow-hidden bg-[var(--app-dark-2)]">
-        {imgSrc ? (
-          <Media
-            src={imgSrc}
-            alt={event.title}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-[center_22%] sm:object-center transition duration-500 group-hover:scale-[1.04]"
-          />
+      <div className="relative aspect-[16/10] overflow-hidden bg-[var(--app-dark-2)]">
+        {image ? (
+          <>
+            <Media
+              src={image}
+              alt={event.title}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="transition duration-500 group-hover:scale-[1.04]"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(to_top,var(--app-dark),transparent_58%)] opacity-80" />
+          </>
         ) : (
-          /* No-image: bold date display */
-          <div className="flex h-full flex-col items-center justify-center gap-1">
-            <span className="font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-              {date.month}
-            </span>
-            <span className="font-ui text-display-sm font-medium leading-none text-[var(--app-text)]">
-              {date.day}
-            </span>
-          </div>
+          <DatePlate date={date} />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)]/70 via-transparent to-transparent" />
-
-        {/* Date badge — only when there's an image */}
-        {imgSrc && (
-          <div className="absolute bottom-3 left-4 flex items-baseline gap-2">
-            <span className="font-ui text-heading-md font-semibold leading-none text-white">
-              {date.day}
-            </span>
-            <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-              {date.month}
-            </span>
-          </div>
-        )}
+        <span className="absolute left-4 top-4">
+          <DateBadge date={date} />
+        </span>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col gap-3 p-5 pt-4">
-        <h3 className="font-ui text-heading-sm font-semibold leading-snug text-white line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary)]/90">
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        <h3 className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-text)] line-clamp-2 transition duration-200 group-hover:text-[var(--app-primary-dark)]">
           {event.title}
         </h3>
-
-        {event.description && (
-          <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-muted)] line-clamp-2">
+        {event.description ? (
+          <p className="font-ui text-body-sm leading-[1.75] text-[var(--app-muted)] line-clamp-2">
             {event.description}
           </p>
-        )}
+        ) : null}
 
         <div className="mt-auto space-y-1.5 border-t border-[var(--app-border)] pt-4">
-          {time && (
-            <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
-              {date.full} · {time}
-            </p>
-          )}
-          {event.location && (
+          <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
+            {time ? `${date.full} · ${time}` : date.full}
+          </p>
+          {event.location ? (
             <p className="font-ui text-label text-[var(--app-subtle)] line-clamp-1">
               {event.location}
             </p>
-          )}
+          ) : null}
         </div>
 
         {href ? (
           <a
             href={href}
-            className={buttonClass('outline', 'sm', 'mt-2 self-start')}
+            className={buttonClass('outline', 'sm', 'mt-1 self-start')}
           >
-            Register{' '}
-            <Arrow className="transition-transform group-hover/action:translate-x-1" />
+            Register <Arrow />
           </a>
         ) : (
-          <span className="mt-2 inline-flex items-center gap-2 self-start rounded-button border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-subtle)]">
-            Free entry
+          <span className="mt-1 self-start font-ui text-label font-semibold text-[var(--app-subtle)]">
+            Free entry — just come
           </span>
         )}
       </div>
@@ -161,25 +281,23 @@ function EventCard({ event }: { event: EventPublic }) {
 
 function EmptyState() {
   return (
-    <ScrollFadeIn>
-      <Panel
-        tone="dark"
-        interactive
-        className="group flex flex-col items-center gap-5 p-6 text-center hover:bg-white/[0.05] sm:p-10 lg:p-12"
-      >
-        <span className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
-          <CalendarClock className="h-6 w-6" aria-hidden="true" />
-        </span>
-        <h3 className="font-ui text-heading-md font-semibold text-white">
-          Events are on their way.
-        </h3>
-        <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-muted)]">
-          Nothing is scheduled right now. In the meantime, join us for Sunday
-          Worship and Daily Prayer, Monday through Friday.
-        </p>
-        <PlanVisitTrigger className="mt-1">Plan a visit</PlanVisitTrigger>
-      </Panel>
-    </ScrollFadeIn>
+    <Panel
+      tone="dark"
+      interactive
+      className="group flex flex-col items-center gap-5 p-8 text-center hover:bg-[var(--app-surface-2)] sm:p-12"
+    >
+      <span className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
+        <CalendarClock className="h-6 w-6" aria-hidden="true" />
+      </span>
+      <h3 className="font-ui text-heading-md font-semibold text-[var(--app-text)]">
+        Events are on their way.
+      </h3>
+      <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-muted)]">
+        Nothing is scheduled right now. In the meantime, join us for Sunday
+        Worship and Daily Prayer, Monday through Friday.
+      </p>
+      <PlanVisitTrigger className="mt-1">Plan a visit</PlanVisitTrigger>
+    </Panel>
   );
 }
 
@@ -193,6 +311,8 @@ export default async function EventsPage() {
     .filter(isUpcoming)
     .sort((a, b) => getTimestamp(a) - getTimestamp(b));
 
+  const [featured, ...rest] = events;
+
   return (
     <Page>
       <JsonLd
@@ -201,12 +321,12 @@ export default async function EventsPage() {
           { name: 'Events', path: '/events' },
         ])}
       />
-
       {events
         .filter(event => Boolean(event.startAt))
         .map(event => (
           <JsonLd key={event.id} data={buildEventSchema(event)} />
         ))}
+
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <SiteHero
         backgroundImage="/Picflow/DSC00039 copy.webp"
@@ -215,49 +335,30 @@ export default async function EventsPage() {
         subtitle="Weekly services, special gatherings, and everything in between."
       />
 
-      {/* ── 1.5 Sub-nav — other ways to browse events ────────── */}
+      {/* ── 2. Ways to browse ────────────────────────────────── */}
       <Section compact tone="canvas">
         <Container>
-          <nav
-            aria-label="Events sections"
-            className="flex flex-wrap gap-2 py-5"
-          >
-            {[
-              {
-                href: '/events/weekly',
-                label: 'Weekly Services',
-                icon: CalendarDays,
-              },
-              {
-                href: '/events/calendar',
-                label: 'Calendar View',
-                icon: CalendarRange,
-              },
-              {
-                href: '/events/upcoming',
-                label: 'Upcoming Events',
-                icon: List,
-              },
-            ].map((item, index) => {
+          <nav aria-label="Browse events" className="grid gap-3 sm:grid-cols-3">
+            {BROWSE.map((item, index) => {
               const NavIcon = item.icon;
               return (
-                <ScrollFadeIn
-                  key={item.href}
-                  delay={index * 0.06}
-                  y={12}
-                  className="flex-1 sm:min-w-52 sm:flex-none"
-                >
+                <ScrollFadeIn key={item.href} delay={index * 0.06} y={12}>
                   <Link
                     href={item.href}
-                    className="group flex min-h-12 w-full items-center justify-between gap-4 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 font-ui text-label font-bold text-[var(--app-ink)] transition duration-200 motion-safe:hover:-translate-y-0.5 hover:border-[var(--app-primary)] hover:shadow-md"
+                    className="group flex h-full items-center gap-4 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4 transition duration-200 motion-safe:hover:-translate-y-0.5 hover:border-[var(--app-primary)] hover:shadow-md sm:p-5"
                   >
-                    <span className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)] transition group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
-                        <NavIcon className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                      {item.label}
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)] transition group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
+                      <NavIcon className="h-4 w-4" aria-hidden="true" />
                     </span>
-                    <Arrow className="transition-transform group-hover:translate-x-1" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-ui text-body-md font-semibold text-[var(--app-ink)]">
+                        {item.label}
+                      </span>
+                      <span className="block font-ui text-label text-[var(--app-muted)]">
+                        {item.hint}
+                      </span>
+                    </span>
+                    <Arrow className="shrink-0 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </ScrollFadeIn>
               );
@@ -266,7 +367,7 @@ export default async function EventsPage() {
         </Container>
       </Section>
 
-      {/* ── 2. Weekly rhythm — canvas, always present ────────── */}
+      {/* ── 3. Weekly rhythm ─────────────────────────────────── */}
       <Section tone="canvas">
         <Container>
           <ScrollFadeIn>
@@ -277,16 +378,17 @@ export default async function EventsPage() {
             />
           </ScrollFadeIn>
 
-          {/* Two service panels */}
-          <div className="mt-8 grid gap-4 md:mt-10 md:grid-cols-2">
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
             {WEEKLY.map((svc, i) => {
               const ServiceIcon = svc.icon;
               return (
                 <ScrollFadeIn key={svc.day} delay={i * 0.09} className="h-full">
                   <div
-                    className={`group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:p-8 ${interactiveCardClass}`}
+                    className={cn(
+                      'group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8',
+                      interactiveCardClass
+                    )}
                   >
-                    {/* Day + time */}
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)]">
@@ -302,10 +404,8 @@ export default async function EventsPage() {
                       </span>
                     </div>
 
-                    {/* Gold rule */}
                     <div className="h-[1.5px] w-8 bg-[var(--app-primary)]/50" />
 
-                    {/* Service info */}
                     <div className="space-y-1.5">
                       <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                         {svc.name}
@@ -322,7 +422,6 @@ export default async function EventsPage() {
                       </p>
                     </div>
 
-                    {/* CTA */}
                     <PlanVisitTrigger
                       variant="outline"
                       className="mt-auto self-start"
@@ -337,46 +436,56 @@ export default async function EventsPage() {
         </Container>
       </Section>
 
-      {/* ── 3. Upcoming events — dark, API-driven ────────────── */}
+      {/* ── 4. Upcoming events ───────────────────────────────── */}
       <Section tone="dark">
         <Container>
-          {/* Header */}
-          <ScrollFadeIn className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+          <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
               eyebrow="Upcoming events"
               title="Special gatherings & programs."
               tone="dark"
               size="sm"
             />
-            {events.length > 0 && (
+            {events.length > 0 ? (
               <span className="inline-flex items-center gap-2 self-start rounded-badge border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)] sm:self-auto">
                 <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                {events.length} event{events.length !== 1 ? 's' : ''}
+                {events.length} event{events.length !== 1 ? 's' : ''} ahead
               </span>
-            )}
+            ) : null}
           </ScrollFadeIn>
 
-          {/* Content */}
           {events.length === 0 ? (
-            <EmptyState />
+            <ScrollFadeIn>
+              <EmptyState />
+            </ScrollFadeIn>
           ) : (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {events.map((event, i) => (
-                <ScrollFadeIn key={event.id} delay={i * 0.05}>
-                  <EventCard event={event} />
+            <div className="space-y-8">
+              {featured ? (
+                <ScrollFadeIn>
+                  <EventFeature event={featured} />
                 </ScrollFadeIn>
-              ))}
+              ) : null}
+
+              {rest.length > 0 ? (
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {rest.map((event, i) => (
+                    <ScrollFadeIn key={event.id} delay={i * 0.05}>
+                      <EventCard event={event} />
+                    </ScrollFadeIn>
+                  ))}
+                </div>
+              ) : null}
             </div>
           )}
         </Container>
       </Section>
 
-      {/* ── 4. CTA strip ─────────────────────────────────────── */}
+      {/* ── 5. CTA strip ─────────────────────────────────────── */}
       <Section compact tone="dark" className="bg-[var(--app-dark-2)]">
         <Container>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-ui text-heading-sm font-semibold text-white">
+              <p className="font-ui text-heading-sm font-semibold text-[var(--app-text)]">
                 Have a question about an event?
               </p>
               <p className="mt-1 font-ui text-body-sm text-[var(--app-muted)]">
