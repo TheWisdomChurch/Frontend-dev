@@ -1102,6 +1102,54 @@ body.nav-open {
 }
 
 /* =========================
+   MARQUEE — "TV scroll" ticker
+========================= */
+
+.marquee {
+  --marquee-duration: 32s;
+  --marquee-gap: clamp(1.75rem, 5vw, 3.5rem);
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--marquee-gap);
+  padding-right: var(--marquee-gap);
+  min-width: 100%;
+  animation: marquee-scroll var(--marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* =========================
    RESPONSIVE — HEADER
 ========================= */
 

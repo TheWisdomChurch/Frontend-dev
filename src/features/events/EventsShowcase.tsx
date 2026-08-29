@@ -192,14 +192,9 @@ function FeaturedCard({
 function PortraitCard({
   slide,
   onClick,
-  wide,
 }: {
   slide: Slide;
   onClick?: () => void;
-  /** True when this card spans the tablet row's full width (odd trailing
-   * card) instead of sharing it — the image switches to a wider ratio so
-   * it doesn't render as an oversized, oddly-tall portrait. */
-  wide?: boolean;
 }) {
   const isReel = slide.category === 'reel';
 
@@ -218,30 +213,18 @@ function PortraitCard({
     <div
       {...interactiveProps}
       className={[
-        'group flex h-full overflow-hidden border border-[var(--app-border)] bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
-        wide ? 'flex-col sm:flex-row lg:flex-col' : 'flex-col',
+        'group flex h-full flex-col overflow-hidden border border-[var(--app-border)] bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
         onClick ? 'cursor-pointer' : '',
       ].join(' ')}
     >
-      {/* Image */}
-      <div
-        className={[
-          'relative shrink-0 overflow-hidden bg-[var(--app-canvas-2)]',
-          wide
-            ? 'aspect-[16/10] sm:aspect-auto sm:w-2/5 lg:aspect-[4/5] lg:w-full'
-            : 'aspect-[4/5]',
-        ].join(' ')}
-      >
+      {/* Image — landscape ratio suits event banners on every breakpoint */}
+      <div className="relative aspect-[16/10] shrink-0 overflow-hidden bg-[var(--app-canvas-2)]">
         <Media
           src={slide.imageUrl}
           alt={slide.title}
           frameClassName="bg-[var(--app-canvas-2)]"
-          sizes={
-            wide
-              ? '(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 22vw'
-              : '(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 22vw'
-          }
-          className="object-[center_18%] sm:object-center transition duration-500 group-hover:scale-[1.04]"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-center transition duration-500 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
         {isReel && (
@@ -322,26 +305,18 @@ function EmptyState({ category }: { category: Category }) {
 
 function Skeleton() {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-      <div className="aspect-[16/10] animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)] sm:col-span-2 sm:aspect-[2/1] lg:col-span-1 lg:aspect-auto lg:min-h-[360px]" />
-      {[0, 1, 2].map(i => (
-        <div
-          key={i}
-          className="aspect-[4/5] animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
-        />
-      ))}
+    <div className="space-y-5">
+      <div className="aspect-[16/10] animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)] sm:aspect-[2/1] lg:aspect-[5/2]" />
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {[0, 1, 2].map(i => (
+          <div
+            key={i}
+            className="aspect-[16/10] animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
+          />
+        ))}
+      </div>
     </div>
   );
-}
-
-/* ── Grid layout — adapts to number of slides ───────────── */
-
-function gridCols(restCount: number) {
-  if (restCount === 0) return '';
-  if (restCount === 1) return 'sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr]';
-  if (restCount === 2)
-    return 'sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(2,1fr)]';
-  return 'sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]';
 }
 
 /* ── Main component ─────────────────────────────────────── */
@@ -432,7 +407,6 @@ export default function EventsShowcase() {
   const isLoading = category === 'program' ? loadingEvents : loadingReels;
   const featured = activeSlides[0] ?? null;
   const rest = activeSlides.slice(1, 4);
-  const onlyFeatured = !!featured && rest.length === 0;
 
   return (
     <Section tone="surface" className="min-w-0 overflow-hidden">
@@ -499,17 +473,14 @@ export default function EventsShowcase() {
                 variants={staggerContainer}
                 initial="hidden"
                 animate="show"
-                className={`grid gap-5 ${gridCols(rest.length)}`}
+                className="space-y-5"
               >
-                {/* Featured */}
+                {/* Featured — always full width, horizontal split from lg up */}
                 {featured && (
-                  <motion.div
-                    variants={staggerItem}
-                    className="sm:col-span-2 lg:col-span-1"
-                  >
+                  <motion.div variants={staggerItem}>
                     <FeaturedCard
                       slide={featured}
-                      fullWidth={onlyFeatured}
+                      fullWidth
                       onClick={
                         featured.category === 'reel'
                           ? () => setReelModal(featured)
@@ -519,32 +490,23 @@ export default function EventsShowcase() {
                   </motion.div>
                 )}
 
-                {/* Portrait cards — the last card spans the tablet row's
-                    remaining width when the count is odd, instead of
-                    leaving an empty cell beside it. */}
-                {rest.map((slide, index) => {
-                  const isTrailingOdd =
-                    rest.length % 2 === 1 && index === rest.length - 1;
-                  return (
-                    <motion.div
-                      key={slide.id}
-                      variants={staggerItem}
-                      className={
-                        isTrailingOdd ? 'sm:col-span-2 lg:col-span-1' : ''
-                      }
-                    >
-                      <PortraitCard
-                        slide={slide}
-                        wide={isTrailingOdd}
-                        onClick={
-                          slide.category === 'reel'
-                            ? () => setReelModal(slide)
-                            : undefined
-                        }
-                      />
-                    </motion.div>
-                  );
-                })}
+                {/* Secondary cards — even 3-up grid */}
+                {rest.length > 0 && (
+                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {rest.map(slide => (
+                      <motion.div key={slide.id} variants={staggerItem}>
+                        <PortraitCard
+                          slide={slide}
+                          onClick={
+                            slide.category === 'reel'
+                              ? () => setReelModal(slide)
+                              : undefined
+                          }
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             </motion.div>
           </AnimatePresence>

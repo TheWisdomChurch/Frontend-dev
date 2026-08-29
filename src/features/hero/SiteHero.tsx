@@ -75,9 +75,8 @@ export default function SiteHero({
           data-hero-content
           className={cn(
             'flex w-full min-w-0 flex-1 flex-col',
-            isHome
-              ? 'min-h-[100svh] justify-end pb-[12svh] pt-[calc(var(--app-header-height)+var(--section-xs))] sm:pb-[14svh]'
-              : 'min-h-[74svh] justify-end pb-[10svh] pt-[calc(var(--app-header-height)+var(--section-sm))] sm:min-h-[80svh] sm:pb-[11svh]',
+            'min-h-[100svh] justify-end pt-[calc(var(--app-header-height)+var(--section-xs))]',
+            isHome ? 'pb-[12svh] sm:pb-[14svh]' : 'pb-[13svh] sm:pb-[15svh]',
             centered
               ? 'mx-auto max-w-4xl items-center text-center'
               : 'max-w-2xl items-start text-left'
@@ -183,27 +182,25 @@ export default function SiteHero({
         </div>
       </Container>
 
-      {isHome ? (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center motion-reduce:hidden"
-        >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--app-border)] text-[var(--app-muted)] motion-safe:animate-bounce">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </span>
-        </div>
-      ) : null}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center motion-reduce:hidden"
+      >
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-white/70 motion-safe:animate-bounce">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </span>
+      </div>
     </section>
   );
 }

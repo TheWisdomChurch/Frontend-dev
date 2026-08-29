@@ -46,6 +46,11 @@ export function Media({
   fit = 'cover',
 }: MediaProps) {
   const sourceKey = typeof src === 'string' ? src : src?.src;
+  // CMS / form-uploaded images are served from storage hosts we can't
+  // enumerate ahead of time in next.config. Skip the optimizer for any
+  // absolute remote URL so the image always renders; local bundled assets
+  // (hero art, Picflow) keep full optimization.
+  const isRemote = typeof src === 'string' && /^(https?:)?\/\//i.test(src);
   const [failedSource, setFailedSource] = useState<string>();
   const [loadedSource, setLoadedSource] = useState<string>();
   const failed = failedSource === sourceKey;
@@ -87,6 +92,7 @@ export function Media({
         sizes={sizes}
         quality={quality}
         priority={priority}
+        unoptimized={isRemote}
         onLoad={() => setLoadedSource(sourceKey)}
         onError={() => setFailedSource(sourceKey)}
         className={cn(

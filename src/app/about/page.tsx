@@ -24,6 +24,7 @@ import {
   Split,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
+import { Marquee } from '@/shared/ui/Marquee';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 
 export const dynamic = 'force-dynamic';
@@ -133,15 +134,8 @@ export default async function AboutPage() {
             description="Good news that establishes believers in faith and equips them to manifest the life of Christ wherever they go."
             className="max-w-4xl"
           />
-          <div className="mt-12 flex flex-wrap border-y border-[var(--app-border)] py-5">
-            {content.message.themes.map(theme => (
-              <span
-                key={theme}
-                className="mr-8 py-2 font-ui text-heading-sm font-semibold text-[var(--app-muted)]"
-              >
-                {theme}
-              </span>
-            ))}
+          <div className="mt-12 border-y border-[var(--app-border)] py-6">
+            <Marquee items={content.message.themes} />
           </div>
         </Container>
       </Section>
