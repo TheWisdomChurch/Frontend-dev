@@ -283,7 +283,7 @@ export const communityLinks = [
     iconFA: true,
     title: 'Subscribe to Our YouTube',
     description: 'Watch our sermons and inspirational content',
-    url: 'https://www.youtube.com/channel/UCJuXOj075x81CYK-cCuXwdg',
+    url: SOCIAL_LINKS.youtube,
     bgColor: 'from-red-500 to-red-600',
     hoverColor: 'hover:from-red-600 hover:to-red-700',
   },

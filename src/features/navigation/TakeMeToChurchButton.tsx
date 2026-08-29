@@ -15,10 +15,11 @@ import { buildDrivingDirectionsUrl } from '@/domain/navigation/directions';
 import type { Coordinates } from '@/domain/navigation/directions';
 import type { RoutePreview } from '@/domain/navigation/types';
 import { cn } from '@/lib/cn';
+import { buttonClass } from '@/shared/ui/button';
 import { useAnalytics } from '@/shared/providers/AnalyticsProvider';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import ChurchRouteMap from './ChurchRouteMap';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 
 type NavigationState = 'idle' | 'locating' | 'preview' | 'recovery';
 type LocationFailure = 'permission_denied' | 'timeout' | 'position_unavailable';
@@ -155,21 +156,14 @@ export default function TakeMeToChurchButton({
 
   return (
     <div
-      className={cn(
-        'flex flex-col items-center sm:items-start',
-        fullWidth && 'w-full',
-        className
-      )}
+      className={cn('flex flex-col gap-2', fullWidth && 'w-full', className)}
     >
       <button
         type="button"
         onClick={startNavigation}
         disabled={state === 'locating'}
         aria-describedby={state === 'locating' ? statusId : undefined}
-        className={cn(
-          'group inline-flex min-h-12 min-w-0 items-center justify-center gap-2 whitespace-normal rounded-full border border-black bg-black px-4 py-3 text-center font-ui text-xs font-bold leading-5 text-white transition duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 disabled:cursor-wait disabled:opacity-75 sm:gap-3 sm:px-5 sm:text-sm',
-          fullWidth && 'w-full justify-center'
-        )}
+        className={buttonClass('dark', 'md', fullWidth ? 'w-full' : undefined)}
       >
         {state === 'locating' ? (
           <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -183,13 +177,13 @@ export default function TakeMeToChurchButton({
         <p
           id={statusId}
           role="status"
-          className="mt-2 text-center font-ui text-xs leading-5 text-black/60 sm:text-left"
+          className="font-ui text-caption leading-relaxed text-[var(--app-muted)]"
         >
           Checking the fastest route.{' '}
           <button
             type="button"
             onClick={useMapsFallback}
-            className="font-bold underline decoration-2 underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
+            className="font-semibold text-[var(--app-primary-dark)] underline underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]"
           >
             Open Maps now
           </button>
@@ -205,8 +199,8 @@ export default function TakeMeToChurchButton({
         ariaLabel="Route to The Wisdom Church"
       >
         {preview && origin ? (
-          <div className="grid min-h-0 w-full overflow-hidden bg-white lg:h-[min(760px,88svh)] lg:grid-cols-[minmax(0,1fr)_360px]">
-            <div className="relative min-h-[45vh] lg:min-h-0">
+          <div className="grid min-h-0 w-full overflow-hidden bg-[var(--app-surface)] lg:h-[min(760px,88svh)] lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="relative min-h-[45svh] lg:min-h-0">
               <ChurchRouteMap
                 origin={origin}
                 encodedPolyline={preview.encodedPolyline}
@@ -215,21 +209,21 @@ export default function TakeMeToChurchButton({
                 type="button"
                 onClick={closeFlow}
                 aria-label="Close route planner"
-                className="absolute left-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-lg transition hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 lg:hidden"
+                className="absolute left-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)] shadow-lg transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] lg:hidden"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
-            <div className="flex flex-col bg-white p-6 sm:p-8">
+            <div className="flex flex-col bg-[var(--app-surface)] p-6 sm:p-8">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="font-ui text-xs font-bold uppercase tracking-[0.16em] text-[var(--app-primary-dark)]">
+                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
                     Live route planner
                   </p>
                   <h2
                     id="church-route-title"
-                    className="mt-2 font-sans text-3xl font-black uppercase leading-none tracking-[-0.035em] text-black"
+                    className="mt-2 font-ui text-heading-md font-semibold leading-tight tracking-[-0.02em] text-[var(--app-text)] sm:text-heading-lg"
                   >
                     Take me to church
                   </h2>
@@ -238,13 +232,13 @@ export default function TakeMeToChurchButton({
                   type="button"
                   onClick={closeFlow}
                   aria-label="Close route planner"
-                  className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/15 text-black transition hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20 lg:inline-flex"
+                  className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--app-border)] text-[var(--app-text)] transition hover:bg-[var(--app-ink)] hover:text-[var(--app-surface)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] lg:inline-flex"
                 >
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
 
-              <p className="mt-5 font-ui text-sm leading-6 text-black/60">
+              <p className="mt-5 font-ui text-body-sm leading-relaxed text-[var(--app-muted)]">
                 Fastest available driving route to {SERVICE_INFO.venue.name},
                 calculated using current traffic.
               </p>
@@ -255,10 +249,10 @@ export default function TakeMeToChurchButton({
                     className="h-5 w-5 text-[var(--app-primary-dark)]"
                     aria-hidden="true"
                   />
-                  <strong className="mt-3 block font-ui text-xl text-black">
+                  <strong className="mt-3 block font-ui text-heading-sm text-[var(--app-text)]">
                     {preview.durationLabel}
                   </strong>
-                  <span className="font-ui text-xs text-black/50">
+                  <span className="font-ui text-caption text-[var(--app-subtle)]">
                     Estimated time
                   </span>
                 </div>
@@ -267,25 +261,25 @@ export default function TakeMeToChurchButton({
                     className="h-5 w-5 text-[var(--app-primary-dark)]"
                     aria-hidden="true"
                   />
-                  <strong className="mt-3 block font-ui text-xl text-black">
+                  <strong className="mt-3 block font-ui text-heading-sm text-[var(--app-text)]">
                     {preview.distanceLabel}
                   </strong>
-                  <span className="font-ui text-xs text-black/50">
+                  <span className="font-ui text-caption text-[var(--app-subtle)]">
                     Driving distance
                   </span>
                 </div>
               </div>
 
-              <div className="mt-6 border-t border-black/10 pt-5">
-                <p className="font-ui text-xs font-bold uppercase tracking-[0.14em] text-black/45">
+              <div className="mt-6 border-t border-[var(--app-border)] pt-5">
+                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.18em] text-[var(--app-subtle)]">
                   Destination
                 </p>
-                <p className="mt-2 font-ui text-sm font-semibold leading-6 text-black">
+                <p className="mt-2 font-ui text-body-sm font-semibold leading-relaxed text-[var(--app-text)]">
                   {SERVICE_INFO.venue.full}
                 </p>
               </div>
 
-              <p className="mt-auto pt-6 font-ui text-xs leading-5 text-black/45">
+              <p className="mt-auto pt-6 font-ui text-caption leading-relaxed text-[var(--app-subtle)]">
                 Your location is used only to calculate this route and is not
                 saved by The Wisdom Church.
               </p>
@@ -293,7 +287,7 @@ export default function TakeMeToChurchButton({
               <button
                 type="button"
                 onClick={beginTurnByTurnNavigation}
-                className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-black px-5 font-ui text-sm font-bold text-white transition hover:bg-[var(--app-primary-dark)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/20"
+                className={buttonClass('dark', 'md', 'mt-4 w-full')}
               >
                 <Navigation
                   className="h-4 w-4 fill-current"
@@ -315,9 +309,9 @@ export default function TakeMeToChurchButton({
         forceBottomSheet
       >
         <div className="min-w-0">
-          <div className="flex items-start gap-3 rounded-card border border-[var(--status-warning)]/15 bg-[var(--status-warning)]/[0.06] p-4">
+          <div className="flex items-start gap-3 rounded-card border border-[var(--status-warning)]/25 bg-[var(--status-warning)]/10 p-4">
             <LocateFixed className="mt-0.5 h-5 w-5 shrink-0 text-[var(--app-primary)]" />
-            <p className="font-ui text-sm leading-6 text-white/62">
+            <p className="font-ui text-body-sm leading-relaxed text-[var(--app-muted)]">
               {failure === 'permission_denied'
                 ? 'Location permission was not granted. You can change it in your browser settings or continue without it.'
                 : failure === 'timeout'
@@ -329,7 +323,7 @@ export default function TakeMeToChurchButton({
             <button
               type="button"
               onClick={useMapsFallback}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 py-3 font-ui text-sm font-extrabold text-black transition hover:brightness-110"
+              className={buttonClass('primary')}
             >
               <Navigation className="h-4 w-4 fill-current" /> Open directions in
               Maps
@@ -338,13 +332,13 @@ export default function TakeMeToChurchButton({
               <button
                 type="button"
                 onClick={startNavigation}
-                className="min-h-12 rounded-full border border-white/12 px-5 py-3 font-ui text-sm font-bold text-white transition hover:bg-white/[0.06]"
+                className={buttonClass('outline')}
               >
                 Try location again
               </button>
             ) : null}
           </div>
-          <p className="mt-4 break-words text-center font-ui text-xs leading-5 text-white/40">
+          <p className="mt-4 break-words text-center font-ui text-caption leading-relaxed text-[var(--app-subtle)]">
             Destination: {SERVICE_INFO.venue.full}
           </p>
         </div>

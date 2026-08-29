@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, PictureInPicture, X } from 'lucide-react';
 import { Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 
 export interface YouTubePlayerController {
   playVideo: () => void;
@@ -142,7 +142,9 @@ const YouTubePlayer = ({
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-[var(--app-dark-2)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
-            <Caption className="text-white/70">Loading video...</Caption>
+            <Caption className="text-[var(--app-muted)]">
+              Loading video...
+            </Caption>
           </div>
         </div>
       )}
@@ -251,7 +253,7 @@ export const YouTubePlayerWithBackground = ({
           variant="ghost"
           size="icon"
           onClick={toggleDetachedMode}
-          className={`absolute top-2 right-2 z-10 rounded-full border border-white/20 p-2 backdrop-blur-sm transition-all duration-200 ${
+          className={`absolute top-2 right-2 z-10 rounded-full border border-[var(--app-border)] p-2 backdrop-blur-sm transition-all duration-200 ${
             isDetached
               ? 'bg-yellow-500 text-black hover:bg-yellow-600'
               : 'bg-black/70 text-white hover:bg-black/90'
@@ -269,7 +271,7 @@ export const YouTubePlayerWithBackground = ({
 
         {/* Video Title in Detached Mode */}
         {isDetached && (
-          <div className="absolute top-2 left-2 right-10 bg-black/70 text-white text-xs p-2 rounded backdrop-blur-sm line-clamp-1 border border-white/20">
+          <div className="absolute top-2 left-2 right-10 bg-black/70 text-white text-xs p-2 rounded backdrop-blur-sm line-clamp-1 border border-[var(--app-border)]">
             {title}
           </div>
         )}

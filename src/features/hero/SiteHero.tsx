@@ -5,52 +5,32 @@ import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 import { lader } from '@/shared/assets';
 import { IMAGE_QUALITY } from '@/shared/constants';
-import { Container } from '@/shared/layout';
+import { Container } from '@/shared/ui/Container';
 
 export type SiteHeroProps = {
   title: string;
+  /** Split the headline across two lines; the second can take the gold accent. */
   titleLines?: readonly [string, string];
   highlightSecondLine?: boolean;
   eyebrow?: string;
   subtitle?: string;
+  /** Secondary supporting line, shown smaller under the subtitle. */
   description?: string;
   note?: string;
   chips?: string[];
   actions?: ReactNode;
   backgroundImage?: string | StaticImageData;
+  /**
+   * Object-position / filter classes for the background image. Church photos
+   * are portraits, so the frame defaults to `object-top` — pass
+   * `object-center` for the few landscape images.
+   */
   imagePositionClassName?: string;
+  /** `home` = the largest headline. `page` = the same layout, a touch smaller. */
   size?: 'page' | 'home';
   align?: 'left' | 'center';
   priority?: boolean;
-  /** Legacy inputs retained for callers; neither changes visual architecture. */
-  compact?: boolean;
-  showButtons?: boolean;
-  primaryButtonText?: string;
-  secondaryButtonText?: string;
 };
-
-function balanceTitle(title: string): string[] {
-  const words = title.trim().split(/\s+/).filter(Boolean);
-  if (words.length < 4 || title.length <= 24) return [title];
-
-  let bestIndex = 1;
-  let smallestDifference = Number.POSITIVE_INFINITY;
-
-  for (let index = 1; index < words.length; index += 1) {
-    const firstLength = words.slice(0, index).join(' ').length;
-    const secondLength = words.slice(index).join(' ').length;
-    const difference = Math.abs(firstLength - secondLength);
-    if (difference < smallestDifference) {
-      smallestDifference = difference;
-      bestIndex = index;
-    }
-  }
-
-  return [
-    words.slice(0, bestIndex).join(' '),
-    words.slice(bestIndex).join(' '),
-  ];
-}
 
 export default function SiteHero({
   title,
@@ -67,22 +47,14 @@ export default function SiteHero({
   size = 'page',
   align = 'center',
 }: SiteHeroProps) {
-  const supportingCopy = subtitle ?? description ?? note;
-  const resolvedTitleLines = titleLines ?? balanceTitle(title);
-  const longestTitleLine = Math.max(
-    ...resolvedTitleLines.map(line => line.length)
-  );
-  const titleSizeClass =
-    longestTitleLine > 30
-      ? 'text-[clamp(1.45rem,4.7vw,4.6rem)]'
-      : longestTitleLine > 22
-        ? 'text-[clamp(1.65rem,5.5vw,5.35rem)]'
-        : 'text-[clamp(2.15rem,6.4vw,6.35rem)]';
+  const isHome = size === 'home';
+  const lines = titleLines ?? [title];
+  const centered = align === 'center';
 
   return (
     <section
       data-site-hero
-      className="relative isolate overflow-hidden bg-[var(--app-dark)] text-white"
+      className="tone-dark relative isolate flex flex-col overflow-hidden bg-[var(--app-dark)] text-white"
     >
       <Image
         src={backgroundImage}
@@ -93,50 +65,68 @@ export default function SiteHero({
         sizes="100vw"
         data-hero-media
         className={cn(
-          '-z-20 object-cover object-center will-change-transform',
+          '-z-20 object-cover object-[center_25%] will-change-transform',
           imagePositionClassName
         )}
       />
-      <div data-hero-overlay className="absolute inset-0 -z-10 bg-black/60" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/30 to-transparent" />
 
-      <Container size="xl">
+      {/* Top wash keeps the nav legible. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-1/3 bg-gradient-to-b from-black/60 to-transparent"
+      />
+      {/* Gradient-masked backdrop blur over the lower band — softens a busy or
+          bright photo behind the headline so the text always reads, while the
+          upper photo stays sharp. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 backdrop-blur-md [-webkit-mask-image:linear-gradient(to_top,black_0%,black_34%,transparent_66%)] [mask-image:linear-gradient(to_top,black_0%,black_34%,transparent_66%)]"
+      />
+      {/* Deep base gradient — the text-contrast guarantee. */}
+      <div
+        data-hero-overlay
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,var(--app-dark)_0%,color-mix(in_srgb,var(--app-dark)_78%,transparent)_26%,color-mix(in_srgb,var(--app-dark)_36%,transparent)_46%,transparent_68%)]"
+      />
+
+      <Container className="flex flex-1 flex-col">
         <div
           data-hero-content
           className={cn(
-            'flex min-h-[78svh] w-full min-w-0 flex-col justify-center pb-section-sm pt-[calc(var(--app-header-height)+var(--section-xs))] sm:min-h-[86svh] lg:min-h-[92svh]',
-            size === 'page' &&
-              'min-h-[62svh] pb-section-xs sm:min-h-[68svh] lg:min-h-[72svh]',
-            align === 'center'
-              ? 'mx-auto max-w-6xl items-center text-center'
-              : 'max-w-3xl items-start text-left'
+            'flex w-full min-w-0 flex-1 flex-col',
+            'min-h-[100svh] justify-end pt-[calc(var(--app-header-height)+var(--section-xs))] pb-[11svh] sm:pb-[13svh] lg:pb-[10svh]',
+            centered
+              ? 'mx-auto max-w-4xl items-center text-center 2xl:max-w-5xl'
+              : 'max-w-2xl items-start text-left 2xl:max-w-3xl'
           )}
         >
           {eyebrow ? (
             <p
               data-hero-item
-              className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary-light)]"
+              className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)] [text-shadow:0_1px_10px_black]"
             >
               {eyebrow}
             </p>
           ) : null}
+
           <h1
             className={cn(
-              'mt-5 w-full max-w-full font-ui font-medium leading-[0.98] tracking-[-0.045em] !text-white',
-              titleSizeClass
+              'w-full max-w-full font-ui font-black leading-[0.96] tracking-[-0.03em] text-white [text-shadow:0_2px_28px_black] [text-wrap:balance]',
+              isHome
+                ? 'text-[clamp(2.35rem,8vw,5.5rem)] 2xl:text-[6.25rem]'
+                : 'text-[clamp(2.15rem,7vw,5rem)] 2xl:text-[5.5rem]'
             )}
           >
-            {resolvedTitleLines.map((line, index) => (
+            {lines.map((line, index) => (
               <span
                 key={`${index}-${line}`}
-                className="block overflow-hidden pb-[0.08em]"
+                className="block overflow-hidden pb-[0.06em]"
               >
                 <span
                   data-hero-title-line
                   className={cn(
-                    'block whitespace-normal',
+                    'block',
                     index === 1 && highlightSecondLine
-                      ? 'font-normal text-[var(--app-primary-light)]'
+                      ? 'text-[var(--app-primary-light)]'
                       : 'text-white'
                   )}
                 >
@@ -145,52 +135,90 @@ export default function SiteHero({
               </span>
             ))}
           </h1>
-          {supportingCopy ? (
+
+          {subtitle ? (
             <p
               data-hero-item
-              className="mt-6 w-full max-w-2xl font-ui text-lead leading-relaxed text-white/75"
+              className={cn(
+                'mt-7 w-full font-ui text-lead leading-[1.6] text-white/90 [text-shadow:0_1px_14px_black]',
+                centered ? 'max-w-2xl' : 'max-w-xl'
+              )}
             >
-              {supportingCopy}
+              {subtitle}
             </p>
           ) : null}
-          {description && subtitle ? (
+
+          {description ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-md leading-loose text-white/60"
+              className="mt-3 max-w-2xl font-ui text-body-md leading-relaxed text-white/78 [text-shadow:0_1px_12px_black]"
             >
               {description}
             </p>
           ) : null}
-          {note && (subtitle || description) ? (
+
+          {note ? (
             <p
               data-hero-item
-              className="mt-3 max-w-2xl font-ui text-body-md leading-loose text-white/60"
+              className="mt-3 max-w-2xl font-ui text-body-sm leading-relaxed text-white/75 [text-shadow:0_1px_12px_black]"
             >
               {note}
             </p>
           ) : null}
+
           {chips?.length ? (
-            <div data-hero-item className="mt-6 flex flex-wrap gap-2">
+            <div
+              data-hero-item
+              className={cn(
+                'mt-7 flex flex-wrap gap-2.5',
+                centered && 'justify-center'
+              )}
+            >
               {chips.map(chip => (
                 <span
                   key={chip}
-                  className="rounded-badge border border-white/20 px-3 py-1.5 font-ui text-label font-semibold text-white/70"
+                  className="rounded-badge border border-[var(--app-border)] px-3.5 py-1.5 font-ui text-label font-semibold text-[var(--app-muted)]"
                 >
                   {chip}
                 </span>
               ))}
             </div>
           ) : null}
+
           {actions ? (
             <div
               data-hero-item
-              className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap"
+              className={cn(
+                'mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap',
+                centered && 'sm:justify-center'
+              )}
             >
               {actions}
             </div>
           ) : null}
         </div>
       </Container>
+
+      <div
+        data-hero-cue
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center motion-reduce:hidden"
+      >
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-white/70 motion-safe:animate-bounce">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </span>
+      </div>
     </section>
   );
 }

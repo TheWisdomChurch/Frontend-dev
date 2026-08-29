@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { FlexboxLayout } from '@/shared/layout';
+import { Flex } from '@/shared/ui/Flex';
 import { H2, H3, H4, BaseText, Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { CONTACT_INFO } from '@/shared/constants/contactInfo';
 import { storeClient } from '@/lib/api/storeClient';
 import {
@@ -250,10 +250,10 @@ const OrderConfirmation = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <FlexboxLayout direction="column" align="center" gap="lg">
+        <Flex direction="column" align="center" gap="lg">
           <Loader2 className="w-12 h-12 animate-spin text-[var(--app-primary)]" />
           <H3 className="text-white">Loading Order Details...</H3>
-        </FlexboxLayout>
+        </Flex>
       </div>
     );
   }
@@ -261,7 +261,7 @@ const OrderConfirmation = () => {
   if (loadError) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <FlexboxLayout direction="column" align="center" gap="lg">
+        <Flex direction="column" align="center" gap="lg">
           <AlertCircle className="w-16 h-16 text-[var(--status-error)]" />
           <H3 className="text-white">Couldn&apos;t load your order</H3>
           <Caption className="text-white/55">
@@ -271,7 +271,7 @@ const OrderConfirmation = () => {
           <Button variant="primary" onClick={() => window.location.reload()}>
             Try Again
           </Button>
-        </FlexboxLayout>
+        </Flex>
       </div>
     );
   }
@@ -279,7 +279,7 @@ const OrderConfirmation = () => {
   if (!orderDetails) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <FlexboxLayout direction="column" align="center" gap="lg">
+        <Flex direction="column" align="center" gap="lg">
           <AlertCircle className="w-16 h-16 text-[var(--status-error)]" />
           <H3 className="text-white">Order Not Found</H3>
           <Caption className="text-white/55">
@@ -289,7 +289,7 @@ const OrderConfirmation = () => {
           <Button variant="primary" onClick={() => router.push('/')}>
             Return to Home
           </Button>
-        </FlexboxLayout>
+        </Flex>
       </div>
     );
   }
@@ -316,11 +316,11 @@ const OrderConfirmation = () => {
 
       {/* Header with Success Message */}
       <div className="text-center mb-8 print-section">
-        <FlexboxLayout direction="column" align="center" gap="sm">
+        <Flex direction="column" align="center" gap="sm">
           <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-900/30">
             <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <H2 fontFamily="bricolage" className="text-green-500" weight="bold">
+          <H2 className="text-green-500" weight="bold">
             Order Confirmed!
           </H2>
           <Caption className="text-lg text-white/55">
@@ -332,7 +332,7 @@ const OrderConfirmation = () => {
           <Caption className="text-white/55">
             {formatDate(orderDetails.orderDate)}
           </Caption>
-        </FlexboxLayout>
+        </Flex>
       </div>
 
       {/* Action Buttons */}
@@ -344,14 +344,14 @@ const OrderConfirmation = () => {
           disabled={isPrinting}
           className="border-white/[0.12] text-white"
         >
-          <FlexboxLayout align="center" gap="xs">
+          <Flex align="center" gap="xs">
             {isPrinting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Printer className="w-4 h-4" />
             )}
             <span>Print Receipt</span>
-          </FlexboxLayout>
+          </Flex>
         </Button>
 
         <Button
@@ -361,14 +361,14 @@ const OrderConfirmation = () => {
           disabled={isSharing}
           className="border-white/[0.12] text-white"
         >
-          <FlexboxLayout align="center" gap="xs">
+          <Flex align="center" gap="xs">
             {isSharing ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Share2 className="w-4 h-4" />
             )}
             <span>Share Order</span>
-          </FlexboxLayout>
+          </Flex>
         </Button>
 
         <Button
@@ -378,14 +378,14 @@ const OrderConfirmation = () => {
           disabled={isDownloading}
           className="border-white/[0.12] text-white"
         >
-          <FlexboxLayout align="center" gap="xs">
+          <Flex align="center" gap="xs">
             {isDownloading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Download className="w-4 h-4" />
             )}
             <span>Download Receipt</span>
-          </FlexboxLayout>
+          </Flex>
         </Button>
       </div>
 
@@ -406,7 +406,7 @@ const OrderConfirmation = () => {
               const isActive = isCompleted || isCurrentStep;
 
               return (
-                <FlexboxLayout key={step.id} align="center" gap="md">
+                <Flex key={step.id} align="center" gap="md">
                   <div className="relative z-10">
                     <div
                       className={`w-16 h-16 rounded-full flex items-center justify-center border-2 ${
@@ -443,7 +443,7 @@ const OrderConfirmation = () => {
                           : 'Pending'}
                     </Caption>
                   </div>
-                </FlexboxLayout>
+                </Flex>
               );
             })}
           </div>
@@ -463,7 +463,7 @@ const OrderConfirmation = () => {
             <div className="space-y-4">
               {orderDetails.items.map((item, index) => (
                 <div key={index} className="pb-4 border-b border-white/[0.07]">
-                  <FlexboxLayout justify="between" align="start">
+                  <Flex justify="between" align="start">
                     <div className="flex-1">
                       <BaseText weight="semibold" className="text-white">
                         {item.name}
@@ -487,29 +487,29 @@ const OrderConfirmation = () => {
                         item.quantity
                       ).toLocaleString()}
                     </BaseText>
-                  </FlexboxLayout>
+                  </Flex>
                 </div>
               ))}
 
               <div className="space-y-3 pt-4">
-                <FlexboxLayout justify="between">
+                <Flex justify="between">
                   <Caption className="text-white/55">Subtotal</Caption>
                   <BaseText weight="semibold">
                     NGN {orderDetails.subtotal.toLocaleString()}
                   </BaseText>
-                </FlexboxLayout>
+                </Flex>
 
                 {orderDetails.deliveryFee > 0 && (
-                  <FlexboxLayout justify="between">
+                  <Flex justify="between">
                     <Caption className="text-white/55">Delivery Fee</Caption>
                     <BaseText weight="semibold">
                       NGN {orderDetails.deliveryFee.toLocaleString()}
                     </BaseText>
-                  </FlexboxLayout>
+                  </Flex>
                 )}
 
                 <div className="pt-4 border-t border-white/[0.12]">
-                  <FlexboxLayout justify="between">
+                  <Flex justify="between">
                     <BaseText weight="bold" className="text-lg">
                       Total Amount
                     </BaseText>
@@ -528,7 +528,7 @@ const OrderConfirmation = () => {
                         </Caption>
                       )}
                     </div>
-                  </FlexboxLayout>
+                  </Flex>
                 </div>
               </div>
             </div>
@@ -637,20 +637,20 @@ const OrderConfirmation = () => {
                       Your Bank Transfer Details
                     </H4>
                     <div className="space-y-2">
-                      <FlexboxLayout justify="between">
+                      <Flex justify="between">
                         <Caption className="text-white/55">
                           Account Name:
                         </Caption>
                         <BaseText weight="semibold">
                           {orderDetails.bankDetails.customerAccountName}
                         </BaseText>
-                      </FlexboxLayout>
-                      <FlexboxLayout justify="between">
+                      </Flex>
+                      <Flex justify="between">
                         <Caption className="text-white/55">Bank Name:</Caption>
                         <BaseText weight="semibold">
                           {orderDetails.bankDetails.customerBankName}
                         </BaseText>
-                      </FlexboxLayout>
+                      </Flex>
                     </div>
                   </div>
                 )}
@@ -669,7 +669,7 @@ const OrderConfirmation = () => {
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--app-primary)]/[0.15]">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)]">
                   <User className="w-5 h-5 text-[var(--app-primary)]" />
                 </div>
                 <div>
@@ -682,23 +682,23 @@ const OrderConfirmation = () => {
               </div>
 
               <div className="space-y-3">
-                <FlexboxLayout align="center" gap="sm">
+                <Flex align="center" gap="sm">
                   <Mail className="w-4 h-4 text-white/55" />
                   <Caption className="text-white">
                     {orderDetails.customer.email}
                   </Caption>
-                </FlexboxLayout>
+                </Flex>
 
-                <FlexboxLayout align="center" gap="sm">
+                <Flex align="center" gap="sm">
                   <Phone className="w-4 h-4 text-white/55" />
                   <Caption className="text-white">
                     {orderDetails.customer.phone}
                   </Caption>
-                </FlexboxLayout>
+                </Flex>
 
                 {orderDetails.customer.address && (
                   <div className="pt-3 border-t border-white/[0.07]">
-                    <FlexboxLayout align="start" gap="sm" className="mb-2">
+                    <Flex align="start" gap="sm" className="mb-2">
                       <MapPin className="w-4 h-4 mt-0.5 text-white/55" />
                       <div>
                         <Caption
@@ -718,7 +718,7 @@ const OrderConfirmation = () => {
                           </Caption>
                         </div>
                       </div>
-                    </FlexboxLayout>
+                    </Flex>
                   </div>
                 )}
               </div>
@@ -813,7 +813,7 @@ const OrderConfirmation = () => {
             <Button
               variant="primary"
               size="lg"
-              curvature="full"
+
               onClick={() => router.push('/')}
               className="w-full"
             >

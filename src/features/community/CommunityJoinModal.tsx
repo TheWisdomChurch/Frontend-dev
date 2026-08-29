@@ -19,12 +19,13 @@ import {
 } from '@/lib/validation/phone';
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { PhoneNumberField } from '@/shared/ui/forms';
-import { BaseModal } from '@/shared/ui/modals/Base';
-import { Button } from '@/shared/utils/buttons';
+import { BaseModal } from '@/shared/ui/modals/Modal';
+import { buttonClass } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/button';
 import { COMMUNITY_JOIN_EVENT } from './communityJoinEvent';
 
 const inputClass =
-  'min-h-12 w-full min-w-0 rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3 font-ui text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10';
+  'min-h-12 w-full min-w-0 rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3 font-ui text-sm text-white outline-none placeholder:text-white/35 transition focus:border-[color-mix(in_srgb,var(--app-primary)_65%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]';
 const labelClass =
   'block font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-white/50';
 
@@ -162,7 +163,11 @@ export default function CommunityJoinModal() {
               href={whatsappHref}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button bg-[var(--app-whatsapp)] px-5 py-3 font-ui text-sm font-extrabold text-black transition hover:brightness-110"
+              className={buttonClass(
+                'solid',
+                'md',
+                'bg-[var(--app-whatsapp)] text-black hover:bg-[color-mix(in_srgb,var(--app-whatsapp)_90%,transparent)]'
+              )}
             >
               <MessageCircle className="h-4 w-4" /> Continue on WhatsApp
             </a>
@@ -177,9 +182,9 @@ export default function CommunityJoinModal() {
         </div>
       ) : (
         <form className="min-w-0 space-y-5 pb-1" onSubmit={submit}>
-          <div className="relative overflow-hidden rounded-card border border-[var(--app-primary)]/20 bg-[var(--app-primary-10)] p-4 sm:p-5">
+          <div className="relative overflow-hidden rounded-card border border-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] bg-[var(--app-primary-10)] p-4 sm:p-5">
             <div className="relative flex min-w-0 items-start gap-3">
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[var(--app-primary)]/12 text-[var(--app-primary)]">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] text-[var(--app-primary)]">
                 <HeartHandshake className="h-5 w-5" />
               </div>
               <div className="min-w-0">

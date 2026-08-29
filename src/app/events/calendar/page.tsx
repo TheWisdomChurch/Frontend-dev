@@ -10,11 +10,13 @@ import type { EventPublic } from '@/lib/apiTypes';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { getEventTimestamp as getTimestamp } from '@/shared/utils/eventDate';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialEmptyState,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  Eyebrow,
+  Page,
+  Section,
+  SectionEmpty,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = [
@@ -114,22 +116,22 @@ export default function CalendarPage() {
   );
 
   return (
-    <EditorialPage>
+    <Page>
       <SiteHero
+        backgroundImage="/Picflow/DSC00048 copy.webp"
         eyebrow="Church Calendar"
         title="Every event, every month."
         subtitle="Browse the full calendar of services, programs, and special gatherings."
-        compact
       />
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           {/* Month navigation */}
           <ScrollFadeIn className="mb-10 flex items-center justify-between">
             <button
               type="button"
               onClick={prevMonth}
-              className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/14 text-[var(--app-ink)]/45 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              className={buttonClass('outline', 'icon')}
               aria-label="Previous month"
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -146,14 +148,14 @@ export default function CalendarPage() {
               <p className="font-ui text-heading-md font-semibold text-[var(--app-ink)]">
                 {MONTHS[viewMonth]}
               </p>
-              <p className="font-ui text-label font-semibold text-[var(--app-ink)]/60">
+              <p className="font-ui text-label font-semibold text-[var(--app-muted)]">
                 {viewYear}
               </p>
             </div>
             <button
               type="button"
               onClick={nextMonth}
-              className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/14 text-[var(--app-ink)]/45 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
+              className={buttonClass('outline', 'icon')}
               aria-label="Next month"
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -179,13 +181,13 @@ export default function CalendarPage() {
               aria-label="Monthly event calendar"
               tabIndex={0}
             >
-              <div className="min-w-[42rem] border border-[var(--app-ink)]/10 md:min-w-0">
+              <div className="min-w-[42rem] border border-[var(--app-border)] md:min-w-0">
                 {/* Day headers */}
-                <div className="grid grid-cols-7 border-b border-[var(--app-ink)]/10">
+                <div className="grid grid-cols-7 border-b border-[var(--app-border)]">
                   {DAYS.map(d => (
                     <div
                       key={d}
-                      className="py-2.5 text-center font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/60"
+                      className="py-2.5 text-center font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-muted)]"
                     >
                       {d}
                     </div>
@@ -196,7 +198,7 @@ export default function CalendarPage() {
                 {Array.from({ length: cells.length / 7 }, (_, w) => (
                   <div
                     key={w}
-                    className="grid grid-cols-7 border-b border-[var(--app-ink)]/8 last:border-b-0"
+                    className="grid grid-cols-7 border-b border-[var(--app-border)] last:border-b-0"
                   >
                     {cells.slice(w * 7, w * 7 + 7).map((day, j) => {
                       const hasEvents =
@@ -205,12 +207,12 @@ export default function CalendarPage() {
                         <div
                           key={j}
                           className={[
-                            'relative min-h-[56px] border-r border-[var(--app-ink)]/8 last:border-r-0 p-2 lg:min-h-[72px] lg:p-3',
+                            'relative min-h-[56px] border-r border-[var(--app-border)] last:border-r-0 p-2 lg:min-h-[72px] lg:p-3',
                             day === null
                               ? 'bg-[var(--app-canvas-2)]'
                               : 'bg-[var(--app-canvas)]',
                             isToday(day!)
-                              ? 'bg-[var(--app-primary)]/[0.06]'
+                              ? 'bg-[color-mix(in_srgb,var(--app-primary)_6%,transparent)]'
                               : '',
                           ].join(' ')}
                         >
@@ -221,7 +223,7 @@ export default function CalendarPage() {
                                   'font-ui text-label font-semibold',
                                   isToday(day)
                                     ? 'text-[var(--app-primary)]'
-                                    : 'text-[var(--app-ink)]/50',
+                                    : 'text-[var(--app-subtle)]',
                                 ].join(' ')}
                               >
                                 {day}
@@ -231,13 +233,13 @@ export default function CalendarPage() {
                                   {eventsByDay[day].slice(0, 2).map(ev => (
                                     <span
                                       key={ev.id}
-                                      className="block truncate rounded-[2px] bg-[var(--app-primary)]/15 px-1 py-0.5 font-ui text-eyebrow text-[var(--app-primary)] leading-tight"
+                                      className="block truncate rounded-[2px] bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] px-1 py-0.5 font-ui text-eyebrow text-[var(--app-primary)] leading-tight"
                                     >
                                       {ev.title}
                                     </span>
                                   ))}
                                   {eventsByDay[day].length > 2 && (
-                                    <span className="font-ui text-eyebrow text-[var(--app-ink)]/60">
+                                    <span className="font-ui text-eyebrow text-[var(--app-muted)]">
                                       +{eventsByDay[day].length - 2} more
                                     </span>
                                   )}
@@ -257,10 +259,8 @@ export default function CalendarPage() {
           {/* This month event list */}
           {!loading && monthEvents.length > 0 && (
             <ScrollFadeIn className="mt-12">
-              <p className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                Events this month
-              </p>
-              <div className="divide-y divide-[var(--app-ink)]/8 border-y border-[var(--app-ink)]/8">
+              <Eyebrow className="mb-5">Events this month</Eyebrow>
+              <div className="divide-y divide-[var(--app-border)] border-y border-[var(--app-border)]">
                 {monthEvents.map(ev => {
                   const t = getTimestamp(ev);
                   const d = new Date(t);
@@ -273,18 +273,18 @@ export default function CalendarPage() {
                         <p className="font-ui text-heading-md font-semibold leading-none text-[var(--app-ink)]">
                           {d.getDate()}
                         </p>
-                        <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-primary)]">
+                        <Eyebrow>
                           {d
                             .toLocaleString('en', { month: 'short' })
                             .toUpperCase()}
-                        </p>
+                        </Eyebrow>
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-ui text-body-lg font-semibold text-[var(--app-ink)] truncate">
                           {ev.title}
                         </p>
                         {ev.location && (
-                          <p className="font-ui text-label text-[var(--app-ink)]/60 truncate">
+                          <p className="font-ui text-label text-[var(--app-muted)] truncate">
                             {ev.location}
                           </p>
                         )}
@@ -292,7 +292,7 @@ export default function CalendarPage() {
                       {href && (
                         <a
                           href={href}
-                          className="shrink-0 inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-4 py-2 font-ui text-caption font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                          className={buttonClass('outline', 'sm', 'shrink-0')}
                         >
                           Register <Arrow />
                         </a>
@@ -306,14 +306,11 @@ export default function CalendarPage() {
 
           {!loading && monthEvents.length === 0 && (
             <div className="mt-10">
-              <EditorialEmptyState
+              <SectionEmpty
                 title={`No events scheduled for ${MONTHS[viewMonth]}.`}
                 description="Navigate to another month or view all upcoming events."
                 action={
-                  <Link
-                    href="/events"
-                    className="font-ui text-label font-bold text-[var(--app-primary-dark)] underline underline-offset-4"
-                  >
+                  <Link href="/events" className={buttonClass('outline', 'sm')}>
                     View all events
                   </Link>
                 }
@@ -330,8 +327,8 @@ export default function CalendarPage() {
               </p>
             </div>
           )}
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { buttonClass } from '@/shared/ui/button';
 import { ShieldCheck, SlidersHorizontal } from 'lucide-react';
-import { BaseModal } from '@/shared/ui/modals/Base';
-import { Button } from '@/shared/utils/buttons';
+import { BaseModal } from '@/shared/ui/modals/Modal';
+import { Button } from '@/shared/ui/button';
 import { useIsClient } from '@/hooks';
 import {
   DEFAULT_CONSENT,
@@ -185,13 +186,13 @@ export default function CookieConsentBanner() {
         ].join(' ')}
       >
         {/* Thin gold accent line at top */}
-        <div className="h-[2px] w-full bg-[var(--app-primary)]/40" />
+        <div className="h-[2px] w-full bg-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]" />
 
         <div className="border-t border-white/8 bg-[rgba(7,6,10,0.97)] backdrop-blur-xl">
           <div className="mx-auto flex max-w-screen-xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-6 lg:px-8 lg:py-5">
             {/* Left — icon + text */}
             <div className="flex min-w-0 items-start gap-3 sm:items-center">
-              <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-[var(--app-primary)]/12 sm:mt-0">
+              <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] sm:mt-0">
                 <ShieldCheck className="h-4 w-4 text-[var(--app-primary)]" />
               </div>
               <div className="min-w-0">
@@ -233,7 +234,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => apply({ analytics: true, marketing: true })}
-                className="inline-flex h-9 min-w-0 items-center justify-center rounded-button bg-[var(--app-primary)] px-2 font-ui text-caption font-bold text-[var(--app-ink)] transition hover:bg-[var(--app-primary-light)] sm:px-4 sm:text-label"
+                className={buttonClass('primary', 'sm')}
               >
                 Accept all
               </button>
@@ -283,7 +284,7 @@ export default function CookieConsentBanner() {
             <Button
               variant="ghost"
               size="sm"
-              curvature="md"
+
               className="h-11 border border-white/12 font-ui text-sm text-white/70"
               onClick={() => apply({ analytics: false, marketing: false })}
             >
@@ -292,7 +293,7 @@ export default function CookieConsentBanner() {
             <Button
               variant="primary"
               size="sm"
-              curvature="md"
+
               className="h-11 font-ui text-sm font-bold"
               onClick={() =>
                 apply({

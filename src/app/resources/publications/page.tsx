@@ -3,13 +3,13 @@ import { ArrowRight, Download, MessageCircle } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialSection,
-  editorialActionClass,
-} from '@/shared/ui/editorial';
+  Container,
+  Page,
+  SectionHeader,
+  CtaLink,
+  Section,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = {
   title: 'Publications',
@@ -43,17 +43,18 @@ const available = [
 
 export default function PublicationPage() {
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
+        backgroundImage="/Picflow/DSC00018 copy.webp"
         eyebrow="Publications"
         title="Resources to help you grow between services."
         subtitle="Sermon notes, study guides, and devotional materials from The Wisdom Church."
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="In development"
               title="A digital resource library is on the way."
               description="We are building a proper resource section where you will be able to download sermon notes, study guides, and devotional materials. Until then, reach out directly and we will get you what you need."
@@ -65,22 +66,22 @@ export default function PublicationPage() {
                 href="https://wa.me/2347069995333"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 <MessageCircle className="h-3.5 w-3.5" />
                 Request via WhatsApp
               </a>
 
-              <EditorialLink href="/contact" variant="outline">
+              <CtaLink href="/contact" variant="outline">
                 Contact us
                 <ArrowRight className="h-3.5 w-3.5" />
-              </EditorialLink>
+              </CtaLink>
             </div>
           </div>
 
           {/* Available now cards */}
           <div className="mx-auto mt-16 max-w-3xl" data-gsap="reveal">
-            <p className="mb-5 font-ui text-caption font-bold uppercase tracking-[0.2em] text-white/45">
+            <p className="mb-5 font-ui text-caption font-bold uppercase tracking-[0.2em] text-[var(--app-subtle)]">
               Available now — request directly
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
@@ -94,7 +95,7 @@ export default function PublicationPage() {
                       ? 'noopener noreferrer'
                       : undefined
                   }
-                  className="group flex flex-col gap-3 rounded-card border border-white/8 bg-white/[0.025] p-5 transition hover:border-[var(--app-primary)]/25 hover:bg-white/[0.04]"
+                  className="group flex flex-col gap-3 rounded-card border border-[var(--app-border)] bg-white/[0.025] p-5 transition hover:border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] hover:bg-white/[0.04]"
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ transitionDelay: `${i * 40}ms` }}
                 >
@@ -103,7 +104,7 @@ export default function PublicationPage() {
                     <p className="font-ui text-body-sm font-semibold text-white">
                       {item.label}
                     </p>
-                    <p className="mt-1 font-ui text-label leading-[1.7] text-white/62">
+                    <p className="mt-1 font-ui text-label leading-[1.7] text-[var(--app-muted)]">
                       {item.detail}
                     </p>
                   </div>
@@ -114,8 +115,8 @@ export default function PublicationPage() {
               ))}
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

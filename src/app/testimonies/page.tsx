@@ -12,14 +12,17 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import Arrow from '@/shared/ui/icons/Arrow';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialPage,
-  EditorialPanel,
-  EditorialSection,
-  editorialActionClass,
-} from '@/shared/ui/editorial';
+  Container,
+  Eyebrow,
+  Page,
+  Panel,
+  Section,
+  SectionEmpty,
+  SectionHeader,
+  interactiveCardClass,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
+import { cn } from '@/lib/cn';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -43,13 +46,19 @@ function mapTestimony(item: ApiTestimonial): UiTestimony {
   };
 }
 
+function displayName(t: UiTestimony) {
+  return t.isAnonymous ? 'Anonymous member' : t.name;
+}
+
+function initial(t: UiTestimony) {
+  return (t.isAnonymous ? 'A' : t.name.trim()[0] || 'W').toUpperCase();
+}
+
 /* ── Share URL ──────────────────────────────────────────── */
 
 const FORM_BASE =
   process.env.NEXT_PUBLIC_TESTIMONIAL_FORM_URL || '/forms/share-testimony';
 
-// window.location.origin is stable for the component's lifetime, so this
-// is read as a one-shot external snapshot rather than synced via effect.
 function subscribeNever() {
   return () => {};
 }
@@ -68,16 +77,48 @@ function getShareUrlServerSnapshot() {
   return FORM_BASE;
 }
 
-/* ── Quote mark ─────────────────────────────────────────── */
+/* ── Quote glyph ────────────────────────────────────────── */
 
-function OpenQuote({ className }: { className?: string }) {
+function QuoteGlyph({ className }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
-      className={`font-headline font-normal leading-none select-none ${className}`}
+      className={cn(
+        'block select-none font-ui font-black leading-[0.7]',
+        className
+      )}
     >
       &ldquo;
     </span>
+  );
+}
+
+/* ── Testimony card ─────────────────────────────────────── */
+
+function TestimonyCard({ testimony }: { testimony: UiTestimony }) {
+  return (
+    <Panel
+      className={cn('flex h-full flex-col p-6 lg:p-7', interactiveCardClass)}
+    >
+      <QuoteGlyph className="mb-2 text-heading-lg text-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]" />
+      <p className="font-ui text-body-md font-normal leading-[1.75] text-[var(--app-text)] line-clamp-6">
+        {testimony.quote}
+      </p>
+
+      <div className="mt-auto flex items-center gap-3 border-t border-[var(--app-border)] pt-5">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary-10)] font-ui text-body-sm font-bold text-[var(--app-primary-dark)]">
+          {initial(testimony)}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate font-ui text-body-sm font-semibold text-[var(--app-text)]">
+            {displayName(testimony)}
+          </span>
+          <span className="block font-ui text-caption text-[var(--app-subtle)]">
+            Wisdom Church
+          </span>
+        </span>
+      </div>
+    </Panel>
   );
 }
 
@@ -98,7 +139,6 @@ export default function TestimoniesPage() {
     () => searchParams.get('testimonial_submitted') === '1'
   );
 
-  /* Load testimonies */
   useEffect(() => {
     let live = true;
     apiClient
@@ -124,7 +164,7 @@ export default function TestimoniesPage() {
 
   return (
     <>
-      <EditorialPage>
+      <Page>
         <JsonLd
           data={buildBreadcrumbSchema([
             { name: 'Home', path: '/' },
@@ -134,156 +174,116 @@ export default function TestimoniesPage() {
 
         {/* ── 1. Hero ────────────────────────────────────────── */}
         <SiteHero
+          backgroundImage="/Picflow/DSC00058 copy.webp"
+          imagePositionClassName="object-center"
           eyebrow="Testimonies"
           title="Stories of faith, healing, and change."
           subtitle="Real accounts from the Wisdom Church community — God still moves."
-          compact
         />
 
-        {/* ── 2. Featured testimony — dark ─────────────────── */}
-        {!loading && featured && (
-          <EditorialSection tone="dark">
-            <EditorialContainer className="text-center">
-              <OpenQuote className="text-display-lg text-[var(--app-primary)]/30 lg:text-display-xl" />
-              <p className="mx-auto mt-2 max-w-2xl font-headline text-heading-sm font-normal leading-[1.65] text-white sm:text-heading-md lg:text-heading-md">
-                {featured.quote}
-              </p>
-              <div className="mx-auto mt-8 flex items-center justify-center gap-4">
-                <div className="h-px w-8 bg-[var(--app-primary)]/45" />
-                <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-                  {featured.isAnonymous ? 'Anonymous member' : featured.name}
+        {/* ── 2. Featured testimony ──────────────────────────── */}
+        {!loading && featured ? (
+          <Section tone="dark">
+            <Container>
+              <div className="relative mx-auto max-w-3xl text-center">
+                <QuoteGlyph className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 text-[clamp(6rem,18vw,11rem)] text-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] sm:-top-12" />
+                <p className="relative font-ui text-heading-md font-medium leading-[1.55] text-[var(--app-text)] sm:text-heading-lg">
+                  {featured.quote}
                 </p>
-                <div className="h-px w-8 bg-[var(--app-primary)]/45" />
+                <div className="relative mt-9 flex items-center justify-center gap-4">
+                  <span className="h-px w-10 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
+                  <Eyebrow>{displayName(featured)}</Eyebrow>
+                  <span className="h-px w-10 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
+                </div>
               </div>
-            </EditorialContainer>
-          </EditorialSection>
-        )}
+            </Container>
+          </Section>
+        ) : null}
 
-        {/* ── 3. Testimony grid — canvas ───────────────────── */}
-        <EditorialSection tone="canvas">
-          <EditorialContainer>
-            {/* Section header */}
-            <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <EditorialHeader
+        {/* ── 3. Testimony grid ─────────────────────────────── */}
+        <Section tone="canvas">
+          <Container>
+            <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+              <SectionHeader
                 eyebrow="Community stories"
                 title="What God has done in our community."
+                size="sm"
               />
               <a
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.outline}
+                className={buttonClass('outline', 'sm', 'shrink-0')}
               >
                 Share your story <Arrow />
               </a>
             </ScrollFadeIn>
 
-            {/* Loading */}
-            {loading && (
+            {loading ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {[0, 1, 2].map(i => (
+                {[0, 1, 2, 3, 4, 5].map(i => (
                   <div
                     key={i}
-                    className="h-48 animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
+                    className="h-52 animate-pulse rounded-card border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
                   />
                 ))}
               </div>
-            )}
-
-            {/* Empty */}
-            {!loading && visible.length === 0 && (
-              <div>
-                <EditorialEmptyState
-                  title="Stories are coming."
-                  description="Approved testimonies will appear here. Be the first to share what God has done in your life."
-                  action={
-                    <a
-                      href={shareUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={editorialActionClass.dark}
-                    >
-                      Share your story
-                    </a>
-                  }
-                />
-              </div>
-            )}
-
-            {/* Testimony cards */}
-            {!loading && rest.length > 0 && (
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {rest.map((testimony, i) => {
-                  // Fills the dangling grid cell(s) a partial trailing row
-                  // would otherwise leave empty at the sm (2-col) and lg
-                  // (3-col) breakpoints.
-                  const isLast = i === rest.length - 1;
-                  const lgRemainder = rest.length % 3;
-                  const spanClass = [
-                    isLast && rest.length % 2 === 1 ? 'sm:col-span-2' : '',
-                    isLast && lgRemainder === 1 ? 'lg:col-span-3' : '',
-                    isLast && lgRemainder === 2 ? 'lg:col-span-2' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ');
-
-                  return (
-                    <ScrollFadeIn
-                      key={testimony.id}
-                      delay={i * 0.04}
-                      className={spanClass}
-                    >
-                      <EditorialPanel className="flex h-full flex-col p-6 lg:p-7">
-                        {/* Quote mark */}
-                        <OpenQuote className="mb-1 text-heading-lg text-[var(--app-primary)]/35" />
-                        {/* Quote text */}
-                        <p className="font-headline text-body-lg font-normal leading-[1.7] text-[var(--app-ink)] line-clamp-6">
-                          {testimony.quote}
-                        </p>
-                        {/* Attribution */}
-                        <div className="mt-5 border-t border-[var(--app-ink)]/8 pt-4">
-                          <div className="h-[1.5px] w-5 bg-[var(--app-primary)]/45" />
-                          <p className="mt-3 font-ui text-label font-bold uppercase tracking-[0.14em] text-[var(--app-ink)]/55">
-                            {testimony.isAnonymous
-                              ? 'Anonymous member'
-                              : testimony.name}
-                          </p>
-                          <p className="mt-0.5 font-ui text-caption text-[var(--app-ink)]/60">
-                            Wisdom Church
-                          </p>
-                        </div>
-                      </EditorialPanel>
-                    </ScrollFadeIn>
-                  );
-                })}
-              </div>
-            )}
-          </EditorialContainer>
-        </EditorialSection>
-
-        {/* ── 4. CTA — dark ──────────────────────────────────── */}
-        <EditorialSection tone="dark">
-          <EditorialContainer>
-            <div className="flex flex-col items-center gap-7 text-center">
-              <EditorialHeader
-                eyebrow="Share your story"
-                title="If God has done something in your life,"
-                accent="someone needs to hear it."
-                description="Testimonies encourage the people who are still praying, still waiting, and still learning to trust. Your story matters."
-                tone="dark"
+            ) : visible.length === 0 ? (
+              <SectionEmpty
+                title="Stories are coming."
+                description="Approved testimonies will appear here. Be the first to share what God has done in your life."
+                action={
+                  <a
+                    href={shareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={buttonClass('dark')}
+                  >
+                    Share your story
+                  </a>
+                }
               />
+            ) : rest.length > 0 ? (
+              <div className="grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {rest.map((testimony, i) => (
+                  <ScrollFadeIn key={testimony.id} delay={i * 0.04}>
+                    <TestimonyCard testimony={testimony} />
+                  </ScrollFadeIn>
+                ))}
+              </div>
+            ) : (
+              <p className="font-ui text-body-sm text-[var(--app-muted)]">
+                More stories are on the way.
+              </p>
+            )}
+          </Container>
+        </Section>
+
+        {/* ── 4. CTA ────────────────────────────────────────── */}
+        <Section tone="dark">
+          <Container>
+            <SectionHeader
+              align="center"
+              eyebrow="Share your story"
+              title="If God has done something in your life,"
+              accent="someone needs to hear it."
+              description="Testimonies encourage the people who are still praying, still waiting, and still learning to trust. Your story matters."
+              tone="dark"
+              size="sm"
+            />
+            <div className="mt-8 flex justify-center">
               <a
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 Submit a testimony <Arrow />
               </a>
             </div>
-          </EditorialContainer>
-        </EditorialSection>
-      </EditorialPage>
+          </Container>
+        </Section>
+      </Page>
 
       <SuccessModal
         isOpen={showSuccess}

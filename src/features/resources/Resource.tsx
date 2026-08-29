@@ -23,11 +23,8 @@ import { useApiQuery } from '@/hooks/useApiQuery';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
-import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, Eyebrow, Section, SectionHeader } from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
 
@@ -110,7 +107,7 @@ function ResourceCarousel() {
     <div>
       {/* Header */}
       <div className="mb-8 flex items-end justify-between gap-4">
-        <EditorialHeader
+        <SectionHeader
           eyebrow="Explore"
           title="You can do"
           accent="more"
@@ -127,7 +124,7 @@ function ResourceCarousel() {
             whileHover={canPrev ? { scale: 1.08 } : undefined}
             whileTap={canPrev ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
           </motion.button>
@@ -139,7 +136,7 @@ function ResourceCarousel() {
             whileHover={canNext ? { scale: 1.08 } : undefined}
             whileTap={canNext ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-ink)]/15 text-[var(--app-ink)]/60 transition-colors hover:border-[var(--app-ink)]/30 hover:text-[var(--app-ink)]/80 disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
           </motion.button>
@@ -177,19 +174,17 @@ function ResourceCarousel() {
                 <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
 
                 {/* Icon chip — top right */}
-                <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[var(--app-primary)]/80">
+                <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[color-mix(in_srgb,var(--app-primary)_80%,transparent)]">
                   <Icon className="h-3.5 w-3.5 text-white" />
                 </div>
 
                 {/* Content */}
                 <div className="relative z-10 p-6">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-                    {item.label}
-                  </p>
+                  <Eyebrow>{item.label}</Eyebrow>
                   <p className="mt-1.5 font-headline text-heading-sm font-normal leading-snug text-white">
                     {item.title}
                   </p>
-                  <p className="mt-1.5 font-ui text-label leading-[1.6] text-white/60">
+                  <p className="mt-1.5 font-ui text-label leading-[1.6] text-[var(--app-muted)]">
                     {item.desc}
                   </p>
                   <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
@@ -247,12 +242,12 @@ export default function ResourceSection() {
     : null;
 
   return (
-    <EditorialSection ref={sectionRef} id="resources" tone="surface" flush>
+    <Section ref={sectionRef} id="resources" tone="surface" flush>
       <div className="relative overflow-hidden bg-[var(--app-dark)]">
-        <EditorialContainer className="relative py-section-sm">
+        <Container className="relative py-section-sm">
           <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 xl:gap-20">
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Latest Message"
                 title="Hear the"
                 accent="Word."
@@ -260,16 +255,16 @@ export default function ResourceSection() {
               />
 
               <div className="mt-8 flex flex-wrap gap-2.5">
-                <span className="rounded-badge border border-white/12 bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-white/68">
+                <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
                   {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
                 </span>
-                <span className="rounded-badge border border-white/12 bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-white/68">
+                <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
                   {SERVICE_INFO.dailyPrayer.label} ·{' '}
                   {SERVICE_INFO.dailyPrayer.time}
                 </span>
               </div>
 
-              <div className="mt-10 min-h-28 border-l border-[var(--app-primary)]/60 pl-6">
+              <div className="mt-10 min-h-28 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-6">
                 {loading ? (
                   <div
                     className="space-y-4"
@@ -283,7 +278,7 @@ export default function ResourceSection() {
                     <h3 className="line-clamp-3 font-headline text-heading-lg font-semibold leading-tight !text-white">
                       {recentVideoTitle}
                     </h3>
-                    <p className="mt-3 font-ui text-body-sm text-white/52">
+                    <p className="mt-3 font-ui text-body-sm text-[var(--app-subtle)]">
                       The Wisdom Church
                     </p>
                   </>
@@ -292,7 +287,7 @@ export default function ResourceSection() {
                     <h3 className="font-headline text-heading-md font-semibold !text-white">
                       Message coming soon
                     </h3>
-                    <p className="mt-3 max-w-md font-ui text-body-sm leading-7 text-white/52">
+                    <p className="mt-3 max-w-md font-ui text-body-sm leading-7 text-[var(--app-subtle)]">
                       Our latest teaching will appear here as soon as it is
                       published.
                     </p>
@@ -302,7 +297,7 @@ export default function ResourceSection() {
 
               <Link
                 href="/resources/sermons"
-                className="mt-9 inline-flex h-12 items-center gap-2 rounded-button bg-[var(--app-primary)] px-7 font-ui text-body-sm font-bold uppercase tracking-[0.1em] text-[var(--app-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--app-primary-light)]"
+                className={buttonClass('primary', 'md', 'mt-9')}
               >
                 Explore sermons <ArrowRight className="h-4 w-4" />
               </Link>
@@ -310,12 +305,12 @@ export default function ResourceSection() {
 
             <div
               data-gsap="reveal"
-              className="relative aspect-video w-full overflow-hidden rounded-image border border-white/12 bg-white/[0.035] shadow-2xl shadow-black/30"
+              className="relative aspect-video w-full overflow-hidden rounded-image border border-[var(--app-border)] bg-white/[0.035] shadow-2xl shadow-black/30"
             >
               {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                   <Loader2 className="h-7 w-7 animate-spin text-[var(--app-primary)]" />
-                  <p className="font-ui text-label text-white/48">
+                  <p className="font-ui text-label text-[var(--app-subtle)]">
                     Preparing the latest message…
                   </p>
                 </div>
@@ -348,13 +343,13 @@ export default function ResourceSection() {
                 </>
               ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
-                  <span className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--app-primary)]/35 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--app-primary)_35%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]">
                     <PlayCircle className="h-7 w-7" />
                   </span>
                   <p className="mt-6 font-headline text-heading-sm font-semibold !text-white">
                     Latest message coming soon
                   </p>
-                  <p className="mt-2 max-w-sm font-ui text-body-sm leading-7 text-white/48">
+                  <p className="mt-2 max-w-sm font-ui text-body-sm leading-7 text-[var(--app-subtle)]">
                     Explore previous sermons while the newest teaching is being
                     prepared.
                   </p>
@@ -362,12 +357,12 @@ export default function ResourceSection() {
               )}
             </div>
           </div>
-        </EditorialContainer>
+        </Container>
       </div>
 
-      <EditorialContainer className="py-section-sm">
+      <Container className="py-section-sm">
         <ResourceCarousel />
-      </EditorialContainer>
-    </EditorialSection>
+      </Container>
+    </Section>
   );
 }

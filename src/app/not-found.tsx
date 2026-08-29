@@ -2,29 +2,25 @@
 import { Compass, Home } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
-import {
-  EditorialContainer,
-  EditorialPanel,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+import { Container, Panel, Section } from '@/shared/ui/layout';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[var(--app-dark)] text-white">
+    <div className="tone-dark min-h-screen bg-[var(--app-dark)] text-[var(--app-text)]">
       <SiteHero
+        backgroundImage="/Picflow/DSC00005 copy.webp"
         title="That page could not be found."
         subtitle="The route may have changed, the page may have moved, or the link may no longer exist."
         note="Use the links below to get back to the main church pages without guessing where to go next."
         chips={['Home', 'Events', 'Resources', 'Contact']}
-        compact
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="grid gap-4 md:grid-cols-2">
-            <EditorialPanel
+            <Panel
               tone="dark"
-              className="p-6 transition hover:border-[var(--app-primary)]/40"
+              className="p-6 transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
             >
               <Link href="/" className="block">
                 <Home className="h-8 w-8 text-[var(--app-primary)]" />
@@ -36,11 +32,11 @@ export default function NotFound() {
                   section you need.
                 </p>
               </Link>
-            </EditorialPanel>
+            </Panel>
 
-            <EditorialPanel
+            <Panel
               tone="dark"
-              className="p-6 transition hover:border-[var(--app-primary)]/40"
+              className="p-6 transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
             >
               <Link href="/contact" className="block">
                 <Compass className="h-8 w-8 text-[var(--app-primary)]" />
@@ -52,10 +48,10 @@ export default function NotFound() {
                   need the right route quickly.
                 </p>
               </Link>
-            </EditorialPanel>
+            </Panel>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
     </div>
   );
 }

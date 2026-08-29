@@ -274,13 +274,13 @@ export const surfaces = {
     'rounded-[1.75rem] border border-white/10 bg-white/[0.055] shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/22 hover:bg-white/[0.085]',
 
   input:
-    'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:bg-white/[0.08] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
 
   select:
-    'w-full rounded-2xl border border-white/12 bg-[var(--app-surface-3)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'w-full rounded-2xl border border-white/12 bg-[var(--app-surface-3)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
 
   goldPill:
-    'inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 px-3 py-1.5 text-[var(--app-primary)]',
+    'inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] px-3 py-1.5 text-[var(--app-primary)]',
 
   mutedPill:
     'inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-white/65',

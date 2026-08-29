@@ -92,7 +92,7 @@ const nextConfig: NextConfig = {
       "img-src 'self' data: blob: https://*.ytimg.com https://*.supabase.co https://www.facebook.com",
       "font-src 'self' data:",
       "connect-src 'self' https://analytics.ahrefs.com https://www.google-analytics.com https://www.facebook.com https://cloudflareinsights.com",
-      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",

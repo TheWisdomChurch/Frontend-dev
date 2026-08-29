@@ -11,9 +11,9 @@ import {
   clearCart,
 } from '@/lib/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { BaseText, LightText } from '@/shared/text';
-import { FlexboxLayout } from '@/shared/layout';
+import { Flex } from '@/shared/ui/Flex';
 
 const CartSidebar = () => {
   const router = useRouter();
@@ -27,18 +27,19 @@ const CartSidebar = () => {
   useEffect(() => {
     if (sidebarRef.current && overlayRef.current) {
       if (isCartOpen) {
-        gsap.to(overlayRef.current, { opacity: 1, duration: 0.3 });
+        gsap.to(overlayRef.current, { opacity: 1, duration: 0.35 });
         gsap.fromTo(
           sidebarRef.current,
-          { x: 400, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
+          { x: 460, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.62, ease: 'expo.out' }
         );
       } else {
         gsap.to(overlayRef.current, { opacity: 0, duration: 0.3 });
         gsap.to(sidebarRef.current, {
-          x: 400,
+          x: 460,
           opacity: 0,
-          duration: 0.3,
+          duration: 0.34,
+          ease: 'power2.in',
         });
       }
     }
@@ -70,16 +71,12 @@ const CartSidebar = () => {
 
       <div
         ref={sidebarRef}
-        className="fixed right-0 top-0 z-50 flex h-dvh w-full max-w-md flex-col border-l border-white/[0.12] bg-[var(--app-dark)] pb-[env(safe-area-inset-bottom)] shadow-2xl"
+        className="tone-dark fixed right-0 top-0 z-50 flex h-dvh w-full max-w-md flex-col border-l border-white/[0.12] bg-[var(--app-dark)] pb-[env(safe-area-inset-bottom)] shadow-2xl"
       >
         {/* Header */}
         <div className="border-b border-white/[0.12] p-6">
-          <FlexboxLayout justify="between" align="center">
-            <BaseText
-              fontFamily="bricolage"
-              weight="bold"
-              className="text-2xl text-white"
-            >
+          <Flex justify="between" align="center">
+            <BaseText weight="bold" className="text-2xl text-white">
               Your Cart ({itemCount})
             </BaseText>
             <Button
@@ -92,27 +89,27 @@ const CartSidebar = () => {
             >
               <X className="h-5 w-5" />
             </Button>
-          </FlexboxLayout>
+          </Flex>
         </div>
 
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-6">
           {items.length === 0 ? (
-            <FlexboxLayout
+            <Flex
               direction="column"
               justify="center"
               align="center"
               gap="md"
               className="h-full text-center"
             >
-              <ShoppingBag className="h-16 w-16 text-white/60" />
+              <ShoppingBag className="h-16 w-16 text-[var(--app-muted)]" />
               <BaseText weight="semibold" className="text-xl text-white">
                 Your cart is empty
               </BaseText>
-              <LightText className="text-white/60">
+              <LightText className="text-[var(--app-muted)]">
                 Add some items to get started
               </LightText>
-            </FlexboxLayout>
+            </Flex>
           ) : (
             <div className="space-y-4">
               {items.map(item => (
@@ -120,7 +117,7 @@ const CartSidebar = () => {
                   key={item.id}
                   className="space-y-3 rounded-2xl bg-white/[0.04] p-4"
                 >
-                  <FlexboxLayout justify="between" align="start">
+                  <Flex justify="between" align="start">
                     <div className="flex-1">
                       <BaseText
                         weight="semibold"
@@ -128,7 +125,7 @@ const CartSidebar = () => {
                       >
                         {item.name}
                       </BaseText>
-                      <LightText className="text-sm text-white/60">
+                      <LightText className="text-sm text-[var(--app-muted)]">
                         {item.selectedSize} • {item.selectedColor}
                       </LightText>
                       <BaseText
@@ -149,10 +146,10 @@ const CartSidebar = () => {
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                  </FlexboxLayout>
+                  </Flex>
 
-                  <FlexboxLayout justify="between" align="center">
-                    <FlexboxLayout align="center" gap="sm">
+                  <Flex justify="between" align="center">
+                    <Flex align="center" gap="sm">
                       <Button
                         type="button"
                         variant="ghost"
@@ -183,7 +180,7 @@ const CartSidebar = () => {
                       >
                         <Plus className="h-3 w-3" />
                       </Button>
-                    </FlexboxLayout>
+                    </Flex>
 
                     <BaseText weight="bold" className="text-lg text-white">
                       ₦
@@ -192,7 +189,7 @@ const CartSidebar = () => {
                         item.quantity
                       ).toLocaleString()}
                     </BaseText>
-                  </FlexboxLayout>
+                  </Flex>
                 </div>
               ))}
             </div>
@@ -202,7 +199,7 @@ const CartSidebar = () => {
         {/* Footer */}
         {items.length > 0 && (
           <div className="space-y-4 border-t border-white/[0.12] p-6">
-            <FlexboxLayout justify="between" align="center">
+            <Flex justify="between" align="center">
               <BaseText weight="semibold" className="text-xl text-white">
                 Total:
               </BaseText>
@@ -212,11 +209,11 @@ const CartSidebar = () => {
               >
                 ₦{total.toLocaleString()}
               </BaseText>
-            </FlexboxLayout>
+            </Flex>
             <Button
               variant="primary"
               size="lg"
-              curvature="full"
+
               elevated={true}
               onClick={handleCheckout}
               className="w-full transition-all duration-300 hover:scale-105"
@@ -226,7 +223,7 @@ const CartSidebar = () => {
             <Button
               variant="outline"
               size="md"
-              curvature="full"
+
               onClick={() => dispatch(clearCart())}
               className="w-full text-white hover:bg-white/10"
             >

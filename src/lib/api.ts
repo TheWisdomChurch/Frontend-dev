@@ -28,6 +28,7 @@ import type {
   LeadershipApplicationRequest,
   LeadershipMember,
   LeadershipRole,
+  LeadershipStatus,
 } from '@/domain/leadership/types';
 import { resolveConfiguredApiOrigin } from './apiOrigin';
 import {
@@ -276,6 +277,80 @@ function mapBackendReel(input: unknown): ReelPublic | null {
       asNonEmptyString(input.publishedAt) ??
       asNonEmptyString(input.createdAt) ??
       asNonEmptyString(input.created_at),
+  };
+}
+
+/**
+ * Media URLs from the CMS/upload endpoints arrive in three shapes: an absolute
+ * URL, a protocol-relative URL, or a path relative to the API host (e.g.
+ * `/uploads/leader.jpg`). Resolve the last case against the configured API
+ * origin so `next/image` receives something it can actually load.
+ */
+function resolveMediaUrl(url: string | null | undefined): string | null {
+  const value = asNonEmptyString(url);
+  if (!value) return null;
+  if (/^(https?:)?\/\//i.test(value) || value.startsWith('data:')) return value;
+  if (!API_ORIGIN) return value; // browser same-origin
+  return `${API_ORIGIN}${value.startsWith('/') ? '' : '/'}${value}`;
+}
+
+const LEADERSHIP_ROLES: readonly LeadershipRole[] = [
+  'senior_pastor',
+  'associate_pastor',
+  'deacon',
+  'deaconess',
+  'reverend',
+];
+
+function mapBackendLeader(input: unknown): LeadershipMember | null {
+  if (!isRecord(input)) return null;
+
+  const id = asNonEmptyString(input.id) ?? asNonEmptyString(input._id);
+  const firstName =
+    asNonEmptyString(input.firstName) ?? asNonEmptyString(input.first_name);
+  const lastName =
+    asNonEmptyString(input.lastName) ?? asNonEmptyString(input.last_name);
+  if (!id || (!firstName && !lastName)) return null;
+
+  const rawRole = asNonEmptyString(input.role);
+  const role: LeadershipRole = LEADERSHIP_ROLES.includes(
+    rawRole as LeadershipRole
+  )
+    ? (rawRole as LeadershipRole)
+    : 'deacon';
+
+  const status =
+    (asNonEmptyString(input.status) as LeadershipStatus | undefined) ??
+    'approved';
+
+  const imageUrl = resolveMediaUrl(
+    (input.imageUrl ??
+      input.image_url ??
+      input.image ??
+      input.imageURL ??
+      input.photo ??
+      input.photoUrl ??
+      input.photo_url ??
+      input.avatar ??
+      input.avatarUrl) as string | null | undefined
+  );
+
+  return {
+    id,
+    firstName: firstName ?? '',
+    lastName: lastName ?? '',
+    email: asNonEmptyString(input.email),
+    phone: asNonEmptyString(input.phone),
+    role,
+    status,
+    bio: asNonEmptyString(input.bio) ?? null,
+    imageUrl,
+    birthday: asNonEmptyString(input.birthday),
+    anniversary: asNonEmptyString(input.anniversary),
+    createdAt:
+      asNonEmptyString(input.createdAt) ?? asNonEmptyString(input.created_at),
+    updatedAt:
+      asNonEmptyString(input.updatedAt) ?? asNonEmptyString(input.updated_at),
   };
 }
 
@@ -760,7 +835,12 @@ export const apiClient = {
     return normalizeTestimonial(unwrapData<unknown>(res));
   },
 
-  async subscribe(payload: { name?: string; email: string }) {
+  async subscribe(payload: {
+    name?: string;
+    email: string;
+    phone?: string;
+    source?: string;
+  }) {
     return request<unknown>('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify(payload),
@@ -928,7 +1008,9 @@ export const apiClient = {
       { method: 'GET' },
       { skipCache: true }
     );
-    return unwrapData<LeadershipMember[]>(res);
+    return extractArrayData<unknown>(res)
+      .map(mapBackendLeader)
+      .filter((leader): leader is LeadershipMember => leader !== null);
   },
 
   async applyLeadership(

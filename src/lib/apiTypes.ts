@@ -174,6 +174,9 @@ export type CreateTestimonialRequest = {
 export interface SubscriberPayload {
   name?: string;
   email: string;
+  phone?: string;
+  /** Where the signup came from, e.g. "incense-prayer-marathon". */
+  source?: string;
 }
 
 export interface NotificationPayload {

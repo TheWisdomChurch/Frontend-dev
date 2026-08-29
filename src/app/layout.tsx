@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 
 import '@/app/globals.scss';
 
-import { dmSans, playfair } from '@/shared/fonts/fonts';
+import { dmSans } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
@@ -92,7 +92,11 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: 'var(--app-surface)',
+  colorScheme: 'light dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
 };
 
 // Production analytics must never initialize while developing locally. Apart
@@ -145,12 +149,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={cn(dmSans.variable, playfair.variable, 'antialiased')}
+      className={cn(dmSans.variable, 'antialiased')}
       suppressHydrationWarning
     >
       <body
         className={cn(
-          'min-h-screen overflow-x-hidden bg-[var(--app-surface)] font-body'
+          'min-h-screen overflow-x-clip bg-[var(--app-surface)] font-body'
         )}
       >
         <script

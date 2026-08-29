@@ -16,7 +16,7 @@ import {
   Video,
 } from 'lucide-react';
 
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import SiteHero from '@/features/hero/SiteHero';
 import { H2, H3, BodyMD, Caption, SmallText } from '@/shared/text';
 import { ScrollFadeIn } from '@/shared/ui/motion';
@@ -24,17 +24,17 @@ import { resourceLinks } from '@/lib/data';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialPanel,
-  EditorialPage,
-  EditorialRail,
-  EditorialSection,
-  editorialFieldClass,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Panel,
+  Page,
+  CardRail,
+  Section,
+  fieldClass,
+} from '@/shared/ui/layout';
 
 type Category =
   'all' | 'media' | 'live' | 'events' | 'store' | 'care' | 'books';
@@ -150,7 +150,7 @@ export default function ResourcesPage() {
   };
 
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -159,18 +159,18 @@ export default function ResourcesPage() {
       />
 
       <SiteHero
+        backgroundImage="/Picflow/DSC00082 copy.webp"
         title="Resource Center"
         subtitle="Everything you need in one place."
         note="Live streams, sermons, events, publications, store, and pastoral care — curated for your growth."
         chips={['Live', 'Sermons', 'Events', 'Store', 'Books', 'Care']}
-        compact
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer className="space-y-10">
+      <Section tone="dark">
+        <Container className="space-y-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="Resources & growth"
                 title="Explore every ministry resource from one clean hub."
                 description="Find sermons, live services, events, publications, store links, and care pathways without confusion."
@@ -178,12 +178,12 @@ export default function ResourcesPage() {
               />
             </div>
 
-            <div className="rounded-full border border-white/10 bg-white/[0.045] px-4 py-2 text-sm text-white/60 backdrop-blur-xl">
+            <div className="rounded-full border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 text-sm text-[var(--app-muted)] backdrop-blur-xl">
               {filteredResources.length} resources available
             </div>
           </div>
 
-          <EditorialRail columns={3} itemWidth="compact" className="gap-4">
+          <CardRail columns={3} itemWidth="compact" className="gap-4">
             {quickActions.map(item => {
               const Icon = item.icon;
 
@@ -191,12 +191,12 @@ export default function ResourcesPage() {
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="group relative block h-full min-h-[11rem] overflow-hidden rounded-card border border-white/12 bg-white/[0.035] p-6 transition duration-500 ease-out motion-safe:hover:-translate-y-1 hover:border-[var(--app-primary)]/40"
+                  className="group relative block h-full min-h-[11rem] overflow-hidden rounded-card border border-[var(--app-border)] bg-white/[0.035] p-6 transition duration-500 ease-out motion-safe:hover:-translate-y-1 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
                 >
-                  <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[var(--app-primary)]/[0.13] opacity-0 blur-3xl transition group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_13%,transparent)] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                   <div className="relative z-10 flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)] transition-transform duration-500 ease-out group-hover:scale-110">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)] text-[var(--app-primary)] transition-transform duration-500 ease-out group-hover:scale-110">
                       <Icon className="h-5 w-5" />
                     </div>
 
@@ -205,25 +205,25 @@ export default function ResourcesPage() {
                         {item.title}
                       </H3>
 
-                      <SmallText className="mt-2 block text-sm leading-6 text-white/58">
+                      <SmallText className="mt-2 block text-sm leading-6 text-[var(--app-muted)]">
                         {item.desc}
                       </SmallText>
                     </div>
 
-                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
+                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:translate-x-1 group-hover:text-white" />
                   </div>
                 </Link>
               );
             })}
-          </EditorialRail>
-        </EditorialContainer>
-      </EditorialSection>
+          </CardRail>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <div className="grid gap-6 lg:grid-cols-[minmax(16rem,19rem)_minmax(0,1fr)]">
             <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-              <EditorialPanel className="p-5">
+              <Panel className="p-5">
                 <H2 className="text-xl font-semibold leading-tight text-[var(--app-ink)]">
                   Resource library
                 </H2>
@@ -253,17 +253,17 @@ export default function ResourcesPage() {
                     );
                   })}
                 </div>
-              </EditorialPanel>
+              </Panel>
 
-              <EditorialPanel className="p-5">
+              <Panel className="p-5">
                 <label className="relative block">
                   <span className="sr-only">Search resources</span>
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)]" />
                   <input
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     placeholder="Search resources..."
-                    className={`${editorialFieldClass} h-12 pl-11`}
+                    className={`${fieldClass} h-12 pl-11`}
                   />
                 </label>
 
@@ -271,7 +271,7 @@ export default function ResourcesPage() {
                   Showing {filteredResources.length} result
                   {filteredResources.length === 1 ? '' : 's'}
                 </Caption>
-              </EditorialPanel>
+              </Panel>
             </aside>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -296,14 +296,14 @@ export default function ResourcesPage() {
                       onClick={(
                         e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
                       ) => handleLiveServiceClick(e, resource.isLiveService)}
-                      className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-6 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--app-primary)]/40"
+                      className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-6 transition duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)]"
                     >
-                      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[var(--app-primary)]/[0.12] opacity-0 blur-3xl transition group-hover:opacity-100" />
+                      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] opacity-0 blur-3xl transition group-hover:opacity-100" />
 
                       <div className="relative z-10 flex h-full flex-col">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex min-w-0 items-start gap-3">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09] text-[var(--app-primary)]">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)] text-[var(--app-primary)]">
                               <Icon className="h-5 w-5" />
                             </div>
 
@@ -318,7 +318,7 @@ export default function ResourcesPage() {
                             </div>
                           </div>
 
-                          <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition group-hover:translate-x-1 group-hover:text-white" />
+                          <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:translate-x-1 group-hover:text-white" />
                         </div>
 
                         <BodyMD className="mt-4 line-clamp-4 text-sm leading-7 text-[var(--app-muted)]">
@@ -337,7 +337,7 @@ export default function ResourcesPage() {
               })}
 
               {filteredResources.length === 0 && (
-                <EditorialEmptyState
+                <SectionEmpty
                   className="sm:col-span-2"
                   title="No resources found"
                   description="Try another category or clear your search term."
@@ -345,8 +345,8 @@ export default function ResourcesPage() {
               )}
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
       <BaseModal
         isOpen={showLiveModal}
@@ -358,11 +358,11 @@ export default function ResourcesPage() {
       >
         <div className="min-w-0 space-y-5">
           <div className="text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-primary)]/[0.09]">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)]">
               <Radio className="h-7 w-7 text-[var(--app-primary)]" />
             </div>
 
-            <BodyMD className="mt-2 text-sm leading-7 text-white/62">
+            <BodyMD className="mt-2 text-sm leading-7 text-[var(--app-muted)]">
               Get alerts for every stream and access the full video library.
             </BodyMD>
           </div>
@@ -380,7 +380,7 @@ export default function ResourcesPage() {
           </Button>
 
           <form onSubmit={handleEmailSubmit} className="space-y-3">
-            <label className="block text-sm font-semibold text-white/80">
+            <label className="block text-sm font-semibold text-[var(--app-text)]">
               Or get email reminders
             </label>
 
@@ -390,7 +390,7 @@ export default function ResourcesPage() {
               onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="h-12 w-full rounded-2xl border border-white/12 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-white/35 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-4 focus:ring-[var(--app-primary)]/10"
+              className="h-12 w-full rounded-2xl border border-[var(--app-border)] bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]"
             />
 
             <Button
@@ -402,11 +402,11 @@ export default function ResourcesPage() {
             </Button>
           </form>
 
-          <Caption className="block text-center text-white/45">
+          <Caption className="block text-center text-[var(--app-subtle)]">
             We’ll email you before each live service starts.
           </Caption>
         </div>
       </BaseModal>
-    </EditorialPage>
+    </Page>
   );
 }

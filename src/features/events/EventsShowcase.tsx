@@ -2,27 +2,26 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Play } from 'lucide-react';
+import { MapPin, Play } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { EventBannerDesktop } from '@/shared/assets';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
-import { AnimatePresence, motion } from '@/lib/safe-motion';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
 import Arrow from '@/shared/ui/icons/Arrow';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialSection,
-  editorialActionClass,
-} from '@/shared/ui/editorial';
-import {
-  staggerContainer,
-  staggerItem,
-} from '@/shared/ui/motion/staggerReveal';
+  Container,
+  Section,
+  SectionEmpty,
+  SectionHeader,
+  interactiveCardClass,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
+import { staggerContainer, staggerItem } from '@/shared/ui/motion';
+import { cn } from '@/lib/cn';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -39,8 +38,6 @@ type Slide = {
   href?: string;
   badge: string;
   category: Category;
-  start?: string;
-  end?: string;
   videoUrl?: string;
 };
 
@@ -49,11 +46,10 @@ const CATEGORY_LABELS: Record<Category, string> = {
   reel: 'Reels',
 };
 
+const DATE_TBA = 'Date TBA';
+
 /* ── Helpers ────────────────────────────────────────────── */
 
-// Matches the sort/filter logic used on the /events hub so the "featured"
-// event is consistent between the homepage and the hub instead of the two
-// diverging due to independent, uncoordinated ordering.
 function getEventTimestamp(event: EventPublic): number {
   if (event.startAt) {
     const t = new Date(event.startAt).getTime();
@@ -63,9 +59,9 @@ function getEventTimestamp(event: EventPublic): number {
 }
 
 function formatDate(startAt?: string): string {
-  if (!startAt) return 'Date TBA';
+  if (!startAt) return DATE_TBA;
   const d = new Date(startAt);
-  if (Number.isNaN(d.getTime())) return 'Date TBA';
+  if (Number.isNaN(d.getTime())) return DATE_TBA;
   return d
     .toLocaleDateString('en', { month: 'short', day: '2-digit' })
     .toUpperCase();
@@ -81,213 +77,202 @@ function statusBadge(startAt?: string, endAt?: string): string {
   return 'Recent';
 }
 
-/* ── Featured card — stacked (image top, content below) through tablet,
-   horizontal split from lg up ── */
+/* ── Shared pieces ──────────────────────────────────────── */
 
-function FeaturedCard({
-  slide,
-  fullWidth,
-  onClick,
+function CategoryToggle({
+  value,
+  onChange,
 }: {
-  slide: Slide;
-  fullWidth?: boolean;
-  onClick?: () => void;
+  value: Category;
+  onChange: (next: Category) => void;
 }) {
-  const isReel = slide.category === 'reel';
-
-  const interactiveProps = onClick
-    ? {
-        role: 'button' as const,
-        tabIndex: 0,
-        onClick,
-        onKeyDown: (e: React.KeyboardEvent) => {
-          if (e.key === 'Enter' || e.key === ' ') onClick();
-        },
-      }
-    : {};
-
   return (
     <div
-      {...interactiveProps}
-      className={[
-        'group relative flex flex-col overflow-hidden bg-[var(--app-ink)] lg:flex-row',
-        fullWidth ? 'lg:min-h-[400px]' : 'lg:min-h-[360px]',
-        onClick ? 'cursor-pointer' : '',
-      ].join(' ')}
+      role="tablist"
+      aria-label="Event content category"
+      className="inline-flex rounded-button border border-[var(--app-border)] bg-[var(--app-surface)] p-1"
     >
-      {/* Image — full-width top block through tablet, left column from lg up */}
-      <div
-        className={`relative aspect-[16/10] w-full shrink-0 overflow-hidden sm:aspect-[2/1] lg:aspect-auto ${fullWidth ? 'lg:w-1/2' : 'lg:w-[52%]'}`}
-      >
-        <Media
-          src={slide.imageUrl}
-          alt={slide.title}
-          frameClassName="bg-[var(--app-dark-2)]"
-          sizes={
-            fullWidth
-              ? '(max-width: 1023px) 100vw, 55vw'
-              : '(max-width: 1023px) 100vw, 30vw'
-          }
-          className="object-[center_22%] sm:object-center transition duration-700 group-hover:scale-[1.04]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-ink)]/45 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[var(--app-ink)]/35" />
-        {isReel && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl transition duration-300 group-hover:scale-[1.1]">
-              <Play className="h-5 w-5 fill-black text-black" />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Content — full-width bottom block through tablet, right column from lg up */}
-      <div
-        className={`flex flex-1 flex-col justify-between p-6 sm:p-7 ${fullWidth ? 'lg:p-12' : 'lg:p-8'}`}
-      >
-        <div>
-          <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-            {slide.badge} · Featured
-          </span>
-          <p
-            className={`mt-4 font-headline font-normal leading-snug text-white ${fullWidth ? 'text-heading-md sm:text-heading-md lg:text-heading-lg' : 'text-heading-sm sm:text-heading-md lg:text-heading-md'}`}
-          >
-            {slide.title}
-          </p>
-          <p className="mt-3 line-clamp-3 font-ui text-body-sm leading-[1.8] text-white/68">
-            {slide.description}
-          </p>
-        </div>
-
-        <div className="mt-6 space-y-2">
-          {slide.date !== 'Date TBA' && (
-            <p className="font-ui text-caption font-semibold uppercase tracking-[0.14em] text-white/40">
-              {slide.date}
-            </p>
+      {(Object.keys(CATEGORY_LABELS) as Category[]).map(cat => (
+        <button
+          key={cat}
+          type="button"
+          role="tab"
+          aria-selected={value === cat}
+          onClick={() => onChange(cat)}
+          className={cn(
+            'rounded-sm px-4 py-1.5 font-ui text-label font-semibold transition duration-150',
+            value === cat
+              ? 'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm'
+              : 'text-[var(--app-subtle)] hover:text-[var(--app-text)]'
           )}
-          {slide.location && (
-            <p className="font-ui text-label text-white/35">{slide.location}</p>
-          )}
-          {/* CTA — Link for navigable cards, plain styled span for reel (whole card is clickable) */}
-          {slide.href && !isReel && (
-            <Link
-              href={slide.href}
-              className="mt-4 inline-flex items-center gap-2 rounded-button border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-            >
-              {slide.cta} <Arrow />
-            </Link>
-          )}
-          {isReel && (
-            <span className="mt-4 inline-flex items-center gap-2 rounded-button border border-white/20 px-5 py-2.5 font-ui text-label font-semibold text-white/60">
-              {slide.cta} <Arrow />
-            </span>
-          )}
-        </div>
-      </div>
+        >
+          {CATEGORY_LABELS[cat]}
+        </button>
+      ))}
     </div>
   );
 }
 
-/* ── Portrait card ──────────────────────────────────────── */
+function PlayBadge({ large = false }: { large?: boolean }) {
+  return (
+    <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <span
+        className={cn(
+          'flex items-center justify-center rounded-full bg-[var(--app-surface)] text-[var(--app-ink)] shadow-xl transition duration-300 group-hover:scale-110',
+          large ? 'h-16 w-16' : 'h-12 w-12'
+        )}
+      >
+        <Play
+          className={large ? 'h-6 w-6 fill-current' : 'h-4 w-4 fill-current'}
+        />
+      </span>
+    </span>
+  );
+}
 
-function PortraitCard({
+function DatePill({ date, className }: { date: string; className?: string }) {
+  if (date === DATE_TBA) return null;
+  return (
+    <span
+      className={cn(
+        'inline-flex rounded-badge bg-[var(--app-primary)] px-2.5 py-1 font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-ink)]',
+        className
+      )}
+    >
+      {date}
+    </span>
+  );
+}
+
+/** Whole-card link (events) or button (reels open a modal). */
+function CardShell({
   slide,
-  onClick,
-  wide,
+  onReelClick,
+  className,
+  children,
 }: {
   slide: Slide;
-  onClick?: () => void;
-  /** True when this card spans the tablet row's full width (odd trailing
-   * card) instead of sharing it — the image switches to a wider ratio so
-   * it doesn't render as an oversized, oddly-tall portrait. */
-  wide?: boolean;
+  onReelClick?: () => void;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const base = cn(
+    'group flex flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-2',
+    interactiveCardClass,
+    className
+  );
+
+  if (slide.category === 'reel') {
+    return (
+      <button
+        type="button"
+        onClick={onReelClick}
+        className={cn(base, 'w-full')}
+      >
+        {children}
+      </button>
+    );
+  }
+  return (
+    <Link href={slide.href ?? '/events'} className={base}>
+      {children}
+    </Link>
+  );
+}
+
+/* ── Featured card ──────────────────────────────────────── */
+
+function FeaturedCard({
+  slide,
+  onReelClick,
+}: {
+  slide: Slide;
+  onReelClick?: () => void;
 }) {
   const isReel = slide.category === 'reel';
-
-  const interactiveProps = onClick
-    ? {
-        role: 'button' as const,
-        tabIndex: 0,
-        onClick,
-        onKeyDown: (e: React.KeyboardEvent) => {
-          if (e.key === 'Enter' || e.key === ' ') onClick();
-        },
-      }
-    : {};
-
   return (
-    <div
-      {...interactiveProps}
-      className={[
-        'group flex h-full overflow-hidden border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] transition duration-200 hover:border-[var(--app-primary)]/30',
-        wide ? 'flex-col sm:flex-row lg:flex-col' : 'flex-col',
-        onClick ? 'cursor-pointer' : '',
-      ].join(' ')}
-    >
-      {/* Image */}
-      <div
-        className={[
-          'relative shrink-0 overflow-hidden bg-[var(--app-ink)]/8',
-          wide
-            ? 'aspect-[16/10] sm:aspect-auto sm:w-2/5 lg:aspect-[4/5] lg:w-full'
-            : 'aspect-[4/5]',
-        ].join(' ')}
-      >
+    <CardShell slide={slide} onReelClick={onReelClick} className="lg:flex-row">
+      <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-[var(--app-canvas-2)] sm:aspect-[2/1] lg:aspect-auto lg:w-[54%]">
         <Media
           src={slide.imageUrl}
           alt={slide.title}
-          frameClassName="bg-[var(--app-ink)]/8"
-          sizes={
-            wide
-              ? '(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 22vw'
-              : '(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 22vw'
-          }
-          className="object-[center_18%] sm:object-center transition duration-500 group-hover:scale-[1.04]"
+          frameClassName="bg-[var(--app-canvas-2)]"
+          sizes="(max-width: 1023px) 100vw, 45vw"
+          className="object-center transition duration-700 group-hover:scale-[1.04]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-        {isReel && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-[1.07]">
-              <Play className="h-4 w-4 fill-black text-black" />
-            </div>
-          </div>
-        )}
-        {/* Date pill */}
-        <div className="absolute left-4 top-4 bg-[var(--app-primary)] px-2.5 py-1 font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-ink)]">
-          {slide.date}
-        </div>
+        {isReel ? <PlayBadge large /> : null}
+        <DatePill date={slide.date} className="absolute left-4 top-4" />
       </div>
 
-      {/* Text */}
-      <div className="flex flex-1 flex-col gap-2 px-5 py-4">
-        <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-          {slide.badge}
+      <div className="flex flex-1 flex-col gap-4 p-6 sm:p-8 lg:p-10">
+        <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
+          {slide.badge} · Featured
         </span>
-        <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)] line-clamp-2">
+        <h3 className="font-ui text-heading-md font-semibold leading-snug text-[var(--app-text)] sm:text-heading-lg">
           {slide.title}
+        </h3>
+        <p className="line-clamp-3 font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
+          {slide.description}
         </p>
-        {slide.location && (
-          <p className="font-ui text-label text-[var(--app-ink)]/60">
-            {slide.location}
-          </p>
-        )}
-        {/* Link for nav cards; plain span for reels (whole card is clickable) */}
-        {slide.href && !isReel && (
-          <Link
-            href={slide.href}
-            className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-ink)]/14 px-4 py-2 pt-2 font-ui text-label font-semibold text-[var(--app-ink)]/55 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-            onClick={(e: React.MouseEvent) => e.stopPropagation()}
-          >
-            {slide.cta} <Arrow />
-          </Link>
-        )}
-        {isReel && (
-          <span className="mt-auto inline-flex w-fit items-center gap-2 border border-[var(--app-ink)]/14 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/55">
+
+        <div className="mt-auto flex flex-col gap-3 border-t border-[var(--app-border)] pt-5">
+          {slide.location ? (
+            <p className="inline-flex items-center gap-2 font-ui text-label text-[var(--app-subtle)]">
+              <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+              {slide.location}
+            </p>
+          ) : null}
+          <span className={buttonClass('outline', 'sm', 'self-start')}>
             {slide.cta} <Arrow />
           </span>
-        )}
+        </div>
       </div>
-    </div>
+    </CardShell>
+  );
+}
+
+/* ── Grid card ──────────────────────────────────────────── */
+
+function GridCard({
+  slide,
+  onReelClick,
+}: {
+  slide: Slide;
+  onReelClick?: () => void;
+}) {
+  const isReel = slide.category === 'reel';
+  return (
+    <CardShell slide={slide} onReelClick={onReelClick} className="h-full">
+      <div className="relative aspect-[16/10] shrink-0 overflow-hidden bg-[var(--app-canvas-2)]">
+        <Media
+          src={slide.imageUrl}
+          alt={slide.title}
+          frameClassName="bg-[var(--app-canvas-2)]"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-center transition duration-500 group-hover:scale-[1.04]"
+        />
+        {isReel ? <PlayBadge /> : null}
+        <DatePill date={slide.date} className="absolute left-4 top-4" />
+      </div>
+
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
+          {slide.badge}
+        </span>
+        <h3 className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-text)] line-clamp-2 transition group-hover:text-[var(--app-primary-dark)]">
+          {slide.title}
+        </h3>
+        {slide.location ? (
+          <p className="font-ui text-label text-[var(--app-muted)] line-clamp-1">
+            {slide.location}
+          </p>
+        ) : null}
+        <span className="mt-auto inline-flex items-center gap-1.5 pt-3 font-ui text-label font-semibold text-[var(--app-subtle)] transition group-hover:text-[var(--app-primary-dark)]">
+          {slide.cta}
+          <Arrow className="transition-transform group-hover:translate-x-1" />
+        </span>
+      </div>
+    </CardShell>
   );
 }
 
@@ -295,7 +280,7 @@ function PortraitCard({
 
 function EmptyState({ category }: { category: Category }) {
   return (
-    <EditorialEmptyState
+    <SectionEmpty
       title={
         category === 'program'
           ? 'No programs scheduled right now.'
@@ -309,7 +294,7 @@ function EmptyState({ category }: { category: Category }) {
       action={
         <Link
           href={category === 'program' ? '/events' : '/resources'}
-          className={editorialActionClass.outline}
+          className={buttonClass('outline')}
         >
           {category === 'program' ? 'View all events' : 'Go to resources'}{' '}
           <Arrow />
@@ -323,26 +308,18 @@ function EmptyState({ category }: { category: Category }) {
 
 function Skeleton() {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-      <div className="aspect-[16/10] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] sm:col-span-2 sm:aspect-[2/1] lg:col-span-1 lg:aspect-auto lg:min-h-[360px]" />
-      {[0, 1, 2].map(i => (
-        <div
-          key={i}
-          className="aspect-[4/5] animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
-        />
-      ))}
+    <div className="space-y-5">
+      <div className="aspect-[16/10] animate-pulse rounded-card border border-[var(--app-border)] bg-[var(--app-canvas-2)] sm:aspect-[2/1] lg:aspect-[5/2]" />
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {[0, 1, 2].map(i => (
+          <div
+            key={i}
+            className="aspect-[4/3] animate-pulse rounded-card border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
+          />
+        ))}
+      </div>
     </div>
   );
-}
-
-/* ── Grid layout — adapts to number of slides ───────────── */
-
-function gridCols(restCount: number) {
-  if (restCount === 0) return '';
-  if (restCount === 1) return 'sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr]';
-  if (restCount === 2)
-    return 'sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(2,1fr)]';
-  return 'sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]';
 }
 
 /* ── Main component ─────────────────────────────────────── */
@@ -406,8 +383,6 @@ export default function EventsShowcase() {
           href: e.formSlug ? `/forms/${e.formSlug}` : '/events',
           badge: statusBadge(e.startAt, e.endAt),
           category: 'program' as const,
-          start: e.startAt,
-          end: e.endAt,
         })),
     [events]
   );
@@ -431,139 +406,94 @@ export default function EventsShowcase() {
 
   const activeSlides = category === 'program' ? programSlides : reelSlides;
   const isLoading = category === 'program' ? loadingEvents : loadingReels;
-  const featured = activeSlides[0] ?? null;
-  const rest = activeSlides.slice(1, 4);
-  const onlyFeatured = !!featured && rest.length === 0;
+  const [featured, ...rest] = activeSlides;
+  const gridSlides = rest.slice(0, 3);
+  const hasContent = !isLoading && activeSlides.length > 0;
 
   return (
-    <EditorialSection tone="surface" className="min-w-0 overflow-hidden">
-      <EditorialContainer>
-        {/* ── Section header ──────────────────────────────── */}
-        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <EditorialHeader
+    <Section tone="surface">
+      <Container>
+        {/* ── Header ──────────────────────────────────────── */}
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeader
             eyebrow="Events & Programs"
             title="What's"
             accent="happening"
             size="sm"
           />
 
-          <div className="flex items-center justify-end gap-5">
-            {/* Category tabs */}
-            <div
-              role="tablist"
-              aria-label="Event content category"
-              className="flex shrink-0 gap-0 overflow-x-auto border border-[var(--app-ink)]/10"
-            >
-              {(Object.keys(CATEGORY_LABELS) as Category[]).map(cat => (
-                <button
-                  key={cat}
-                  type="button"
-                  role="tab"
-                  aria-selected={category === cat}
-                  onClick={() => setCategory(cat)}
-                  className={[
-                    'px-4 py-2.5 font-ui text-label font-semibold transition duration-150',
-                    category === cat
-                      ? 'bg-[var(--app-ink)] text-white'
-                      : 'text-[var(--app-ink)]/45 hover:bg-[var(--app-canvas-2)] hover:text-[var(--app-ink)]/70',
-                  ].join(' ')}
-                >
-                  {CATEGORY_LABELS[cat]}
-                </button>
-              ))}
-            </div>
-
-            <Link
-              href="/events"
-              className="hidden items-center gap-1.5 rounded-button border border-[var(--app-ink)]/14 px-4 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] sm:inline-flex"
-            >
-              See all <Arrow />
-            </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <CategoryToggle value={category} onChange={setCategory} />
+            {hasContent ? (
+              <Link
+                href="/events"
+                className="inline-flex items-center gap-1.5 rounded-button border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)]"
+              >
+                See all <Arrow />
+              </Link>
+            ) : null}
           </div>
         </div>
 
         {/* ── Content ─────────────────────────────────────── */}
-        {isLoading ? (
-          <Skeleton />
-        ) : activeSlides.length === 0 ? (
-          <EmptyState category={category} />
-        ) : (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={category}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.25 }}
-            >
+        <div className="mt-10">
+          {isLoading ? (
+            <Skeleton />
+          ) : activeSlides.length === 0 ? (
+            <EmptyState category={category} />
+          ) : (
+            <AnimatePresence mode="wait">
               <motion.div
-                variants={staggerContainer}
-                initial="hidden"
-                animate="show"
-                className={`grid gap-5 ${gridCols(rest.length)}`}
+                key={category}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.25 }}
               >
-                {/* Featured */}
-                {featured && (
-                  <motion.div
-                    variants={staggerItem}
-                    className="sm:col-span-2 lg:col-span-1"
-                  >
-                    <FeaturedCard
-                      slide={featured}
-                      fullWidth={onlyFeatured}
-                      onClick={
-                        featured.category === 'reel'
-                          ? () => setReelModal(featured)
-                          : undefined
-                      }
-                    />
-                  </motion.div>
-                )}
-
-                {/* Portrait cards — the last card spans the tablet row's
-                    remaining width when the count is odd, instead of
-                    leaving an empty cell beside it. */}
-                {rest.map((slide, index) => {
-                  const isTrailingOdd =
-                    rest.length % 2 === 1 && index === rest.length - 1;
-                  return (
-                    <motion.div
-                      key={slide.id}
-                      variants={staggerItem}
-                      className={
-                        isTrailingOdd ? 'sm:col-span-2 lg:col-span-1' : ''
-                      }
-                    >
-                      <PortraitCard
-                        slide={slide}
-                        wide={isTrailingOdd}
-                        onClick={
-                          slide.category === 'reel'
-                            ? () => setReelModal(slide)
+                <motion.div
+                  variants={staggerContainer}
+                  initial="hidden"
+                  animate="show"
+                  className="space-y-5"
+                >
+                  {featured ? (
+                    <motion.div variants={staggerItem}>
+                      <FeaturedCard
+                        slide={featured}
+                        onReelClick={
+                          featured.category === 'reel'
+                            ? () => setReelModal(featured)
                             : undefined
                         }
                       />
                     </motion.div>
-                  );
-                })}
+                  ) : null}
+
+                  {gridSlides.length > 0 ? (
+                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                      {gridSlides.map(slide => (
+                        <motion.div key={slide.id} variants={staggerItem}>
+                          <GridCard
+                            slide={slide}
+                            onReelClick={
+                              slide.category === 'reel'
+                                ? () => setReelModal(slide)
+                                : undefined
+                            }
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : null}
+                </motion.div>
               </motion.div>
-            </motion.div>
-          </AnimatePresence>
-        )}
-
-        {/* Mobile see-all */}
-        <div className="mt-8 sm:hidden">
-          <Link
-            href="/events"
-            className="inline-flex items-center gap-2 rounded-button border border-[var(--app-ink)]/14 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)]"
-          >
-            See all events <Arrow />
-          </Link>
+            </AnimatePresence>
+          )}
         </div>
-      </EditorialContainer>
+      </Container>
 
-      {/* Reel modal */}
-      {reelModal && (
+      {/* ── Reel modal ──────────────────────────────────── */}
+      {reelModal ? (
         <BaseModal
           isOpen
           onClose={() => setReelModal(null)}
@@ -575,21 +505,21 @@ export default function EventsShowcase() {
           {reelModal.videoUrl ? (
             <video
               controls
-              className="w-full bg-black"
-              poster={reelModal.imageUrl}
+              className="w-full rounded-image bg-[var(--app-dark)]"
+              poster={reelModal.imageUrl || undefined}
             >
               <source src={reelModal.videoUrl} type="video/mp4" />
             </video>
           ) : (
-            <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 bg-[var(--app-dark-2)]">
-              <Play className="h-10 w-10 text-white/45" />
-              <p className="font-ui text-body-sm text-white/45">
+            <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 rounded-image bg-[var(--app-dark-2)]">
+              <Play className="h-10 w-10 text-[var(--app-subtle)]" />
+              <p className="font-ui text-body-sm text-[var(--app-subtle)]">
                 This reel&apos;s video isn&apos;t available right now.
               </p>
             </div>
           )}
         </BaseModal>
-      )}
-    </EditorialSection>
+      ) : null}
+    </Section>
   );
 }

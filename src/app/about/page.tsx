@@ -15,13 +15,17 @@ import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialSection,
-  EditorialSplit,
-} from '@/shared/ui/editorial';
+  Container,
+  CtaLink,
+  Eyebrow,
+  Page,
+  Section,
+  SectionHeader,
+  Split,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
+import { GlassSmokeCard } from '@/shared/ui/GlassSmokeCard';
+import { Marquee } from '@/shared/ui/Marquee';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 
 export const dynamic = 'force-dynamic';
@@ -70,7 +74,7 @@ export default async function AboutPage() {
     .slice(0, 2);
 
   return (
-    <EditorialPage tone="surface">
+    <Page tone="surface">
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -83,17 +87,16 @@ export default async function AboutPage() {
         title={content.hero.title}
         subtitle={content.hero.description}
         backgroundImage={content.hero.images[0].src}
+        imagePositionClassName="object-center"
         priority
         actions={
           <>
-            <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)]">
-              Worship with us
-            </PlanVisitTrigger>
+            <PlanVisitTrigger size="lg">Worship with us</PlanVisitTrigger>
             <a
               href={SOCIAL_LINKS.youtube}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-button border border-white/20 px-7 font-ui text-label font-bold uppercase tracking-widest text-white"
+              className={buttonClass('outline', 'lg')}
             >
               <Play className="h-4 w-4" /> Watch a service
             </a>
@@ -101,8 +104,8 @@ export default async function AboutPage() {
         }
       />
 
-      <EditorialSection compact tone="canvas">
-        <EditorialContainer>
+      <Section compact tone="canvas">
+        <Container>
           <div className="grid gap-px overflow-hidden rounded-card bg-[var(--app-border)] sm:grid-cols-3">
             {serviceDetails.map(item => {
               const Icon = item.icon;
@@ -113,9 +116,7 @@ export default async function AboutPage() {
                 >
                   <Icon className="h-5 w-5 shrink-0 text-[var(--app-primary-dark)]" />
                   <div>
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-widest text-[var(--app-subtle)]">
-                      {item.label}
-                    </p>
+                    <Eyebrow>{item.label}</Eyebrow>
                     <p className="mt-1 font-headline text-heading-sm">
                       {item.value}
                     </p>
@@ -124,92 +125,73 @@ export default async function AboutPage() {
               );
             })}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialHeader
+      <Section>
+        <Container>
+          <SectionHeader
             eyebrow={content.message.label}
             title={content.message.title}
             description="Good news that establishes believers in faith and equips them to manifest the life of Christ wherever they go."
             className="max-w-4xl"
           />
-          <div className="mt-12 flex flex-wrap border-y border-[var(--app-border)] py-5">
-            {content.message.themes.map(theme => (
-              <span
-                key={theme}
-                className="mr-8 py-2 font-ui text-heading-sm font-semibold text-[var(--app-muted)]"
-              >
-                {theme}
-              </span>
-            ))}
+          <div className="mt-12 border-y border-[var(--app-border)] py-6">
+            <Marquee items={content.message.themes} />
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
-          <div className="grid gap-px overflow-hidden rounded-card bg-[var(--app-border)] lg:grid-cols-2">
+      <Section tone="canvas">
+        <Container>
+          <div className="grid gap-5 lg:grid-cols-2">
             {[content.vision, content.mission].map(item => (
-              <div
+              <GlassSmokeCard
                 key={item.label}
-                className="bg-[var(--app-canvas)] p-8 sm:p-12 lg:p-16"
-              >
-                <EditorialHeader
-                  eyebrow={item.label}
-                  title={item.title}
-                  description={item.body}
-                  size="sm"
-                />
-              </div>
+                eyebrow={item.label}
+                title={item.title}
+                body={item.body}
+              />
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
-          <EditorialHeader
+      <Section tone="dark">
+        <Container>
+          <SectionHeader
             eyebrow="What shapes us"
             title="Five pillars. One way of life."
             tone="dark"
           />
-          <div className="mt-12 border-y border-white/15">
+          <div className="mt-12 border-y border-[var(--app-border)]">
             {content.pillars.map((pillar, index) => (
               <ScrollFadeIn key={pillar.title} delay={index * 0.04}>
-                <article className="grid gap-4 border-b border-white/15 py-8 last:border-b-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10 lg:py-10">
+                <article className="grid gap-4 border-b border-[var(--app-border)] py-8 last:border-b-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-10 lg:py-10">
                   <h3 className="font-ui text-heading-lg font-semibold !text-white">
                     {pillar.title}
                   </h3>
-                  <p className="max-w-2xl font-ui text-body-md leading-loose text-white/65">
+                  <p className="max-w-2xl font-ui text-body-md leading-loose text-[var(--app-muted)]">
                     {pillar.body}
                   </p>
                 </article>
               </ScrollFadeIn>
             ))}
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection>
-        <EditorialContainer>
-          <EditorialSplit>
+      <Section>
+        <Container>
+          <Split>
             <div>
-              <EditorialHeader
+              <SectionHeader
                 eyebrow="What it means to belong"
                 title="This is The Wisdom Church."
                 description={content.declaration}
               />
-              <div className="mt-8 flex flex-wrap gap-2">
-                {content.practices.map(practice => (
-                  <span
-                    key={practice}
-                    className="rounded-badge border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold"
-                  >
-                    {practice}
-                  </span>
-                ))}
+              <div className="mt-8 border-y border-[var(--app-border)] py-5">
+                <Marquee items={content.practices} speedSeconds={26} />
               </div>
             </div>
             <div className="grid gap-x-8 sm:grid-cols-2">
@@ -222,7 +204,7 @@ export default async function AboutPage() {
                       <h3 className="mt-4 font-headline text-heading-sm font-semibold">
                         {item.title}
                       </h3>
-                      <p className="mt-3 font-ui text-body-sm leading-loose text-[var(--app-ink)]/65">
+                      <p className="mt-3 font-ui text-body-sm leading-loose text-[var(--app-muted)]">
                         {item.body}
                       </p>
                     </article>
@@ -230,29 +212,25 @@ export default async function AboutPage() {
                 );
               })}
             </div>
-          </EditorialSplit>
-        </EditorialContainer>
-      </EditorialSection>
+          </Split>
+        </Container>
+      </Section>
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Pastoral leadership"
               title="Serving God’s people with the Word, prayer, and love."
               tone="dark"
               className="max-w-3xl"
             />
-            <EditorialLink
-              href="/leadership"
-              variant="outline"
-              className="shrink-0"
-            >
+            <CtaLink href="/leadership" variant="outline" className="shrink-0">
               Meet our leaders <ArrowRight className="ml-2 h-4 w-4" />
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
       {leaders.length ? (
         <div className="grid lg:grid-cols-2">
           <CanvasCard leader={leaders[0]} />
@@ -260,23 +238,21 @@ export default async function AboutPage() {
         </div>
       ) : null}
 
-      <EditorialSection tone="brand">
-        <EditorialContainer className="text-center">
-          <EditorialHeader
+      <Section tone="brand">
+        <Container className="text-center">
+          <SectionHeader
             eyebrow="There is a place for you"
             title="Come worship Jesus with us this Sunday."
             className="mx-auto max-w-4xl"
           />
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <PlanVisitTrigger className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-dark)] px-7 font-ui text-label font-bold uppercase tracking-widest text-white">
-              Plan your visit
-            </PlanVisitTrigger>
-            <EditorialLink href="/ministries" variant="outline">
+            <PlanVisitTrigger variant="dark">Plan your visit</PlanVisitTrigger>
+            <CtaLink href="/ministries" variant="outline">
               Explore ministries
-            </EditorialLink>
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

@@ -10,9 +10,9 @@ import {
   User,
   CheckCircle2,
 } from 'lucide-react';
-import { Button } from '@/shared/utils/buttons';
-import { BaseModal } from '@/shared/ui/modals/Base';
-import { EditorialContainer, EditorialSection } from '@/shared/ui/editorial';
+import { Button } from '@/shared/ui/button';
+import { BaseModal } from '@/shared/ui/modals/Modal';
+import { Container, Section } from '@/shared/ui/layout';
 import { apiClient } from '@/lib/api';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import {
@@ -148,13 +148,13 @@ type CareErrors = Partial<Record<keyof CareFormState, string>>;
    across every other form on the site (JoinUs, HeroHighlights) ───── */
 
 const fieldInput =
-  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:bg-white/[0.08] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const fieldInputError =
   'w-full border border-[var(--status-error)]/50 bg-[var(--status-error)]/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-[var(--status-error)] focus:ring-2 focus:ring-[var(--status-error)]/20';
 
 const fieldSelect =
-  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const fieldSelectError =
   'w-full border border-[var(--status-error)]/50 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition focus:border-[var(--status-error)] focus:ring-2 focus:ring-[var(--status-error)]/20';
@@ -402,14 +402,11 @@ const PastoralCareForm = () => {
   const successCopy = SUCCESS_COPY[intent];
 
   return (
-    <EditorialSection
-      tone="dark"
-      className="overflow-hidden border-b border-white/8"
-    >
-      <EditorialContainer>
+    <Section tone="dark" className="overflow-hidden border-b border-white/8">
+      <Container>
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
+          <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
             Pastoral care
           </p>
           <h2 className="mt-4 font-headline text-heading-md font-normal leading-snug text-white sm:text-heading-lg">
@@ -434,7 +431,7 @@ const PastoralCareForm = () => {
                 aria-pressed={active}
                 className={`group flex flex-col items-start gap-2.5 border p-5 text-left transition duration-200 ${
                   active
-                    ? 'border-[var(--app-primary)] bg-[var(--app-primary)]/10'
+                    ? 'border-[var(--app-primary)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]'
                     : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.05]'
                 }`}
               >
@@ -466,7 +463,7 @@ const PastoralCareForm = () => {
           className="mx-auto mt-10 max-w-2xl scroll-mt-24 border border-white/10 bg-white/[0.03] p-6 sm:p-8 lg:p-10"
         >
           <div className="mb-8 text-center">
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
+            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
               {INTENTS.find(i => i.id === intent)?.short}
             </p>
             {isCounseling && (
@@ -847,7 +844,7 @@ const PastoralCareForm = () => {
             </form>
           )}
         </div>
-      </EditorialContainer>
+      </Container>
 
       <BaseModal
         isOpen={showSuccess}
@@ -859,7 +856,7 @@ const PastoralCareForm = () => {
         forceBottomSheet
       >
         <div className="flex items-center gap-3 border border-white/10 bg-white/[0.04] p-4">
-          <div className="flex h-10 w-10 flex-none items-center justify-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+          <div className="flex h-10 w-10 flex-none items-center justify-center border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]">
             <CheckCircle2 className="h-5 w-5" />
           </div>
           <p className="font-ui text-body-sm leading-[1.7] text-white/75">
@@ -867,7 +864,7 @@ const PastoralCareForm = () => {
           </p>
         </div>
       </BaseModal>
-    </EditorialSection>
+    </Section>
   );
 };
 

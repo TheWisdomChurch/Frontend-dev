@@ -4,7 +4,7 @@ import { CalendarClock, Clock3, MapPin, SunMedium } from 'lucide-react';
 
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import { ScrollFadeIn } from '@/shared/ui/motion';
-import { editorialInteractiveClass } from '@/shared/ui/editorial';
+import { interactiveCardClass } from '@/shared/ui/layout';
 
 export type WeeklyServiceCardProps = {
   day: string;
@@ -32,7 +32,7 @@ export default function WeeklyServiceCard({
   return (
     <ScrollFadeIn delay={delay} className="h-full">
       <article
-        className={`group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:p-8 ${editorialInteractiveClass}`}
+        className={`group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:p-8 ${interactiveCardClass}`}
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -49,7 +49,7 @@ export default function WeeklyServiceCard({
           </span>
         </div>
 
-        <div className="h-px w-8 bg-[var(--app-primary)]/50" />
+        <div className="h-px w-8 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
 
         <div className="space-y-2">
           <h3 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
@@ -82,7 +82,7 @@ export default function WeeklyServiceCard({
           <span>{location}</span>
         </p>
 
-        <PlanVisitTrigger className="mt-auto self-start border-[var(--app-border)] bg-transparent text-[var(--app-ink)] hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)]">
+        <PlanVisitTrigger variant="outline" className="mt-auto self-start">
           Plan a visit
         </PlanVisitTrigger>
       </article>

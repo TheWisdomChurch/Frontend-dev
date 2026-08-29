@@ -69,6 +69,27 @@ export const HOME_COPY = {
     description:
       'Build meaningful relationships, grow in faith, and discover where you belong in a community that feels like home.',
   },
+  cellFellowship: {
+    eyebrow: 'Cell Fellowship',
+    title: 'There is a Cell Fellowship',
+    accent: 'center near you.',
+    description:
+      'Taking the gospel to your community. Our Cell Fellowship centers are where church becomes a weekly rhythm close to home — the Word, prayer, and genuine care among neighbours.',
+    points: [
+      {
+        title: 'Close to home',
+        body: 'Centers meet in homes and neighbourhoods across the city, so fellowship fits your week.',
+      },
+      {
+        title: 'The Word, together',
+        body: 'Each center studies Scripture, prays, and helps one another apply faith to everyday life.',
+      },
+      {
+        title: 'Known and cared for',
+        body: 'A smaller setting where people are known by name, supported, and encouraged to grow.',
+      },
+    ],
+  },
 } as const;
 
 export const HOME_BELIEFS: {

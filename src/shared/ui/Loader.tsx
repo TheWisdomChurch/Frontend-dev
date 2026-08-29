@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from '@/lib/safe-motion';
+import { motion } from 'framer-motion';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { WisdomeHouseLogo } from '@/shared/assets';
 
@@ -40,7 +40,7 @@ export default function Loader({
       aria-label={subLabel}
     >
       {/* Single soft ambient glow — calm, not busy */}
-      <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--app-primary)]/[0.08] blur-[90px] motion-safe:animate-[loader-glow_4s_ease-in-out_infinite] sm:h-[26rem] sm:w-[26rem]" />
+      <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_8%,transparent)] blur-[90px] motion-safe:animate-[loader-glow_4s_ease-in-out_infinite] sm:h-[26rem] sm:w-[26rem]" />
 
       <div className="relative z-10 flex w-full max-w-sm flex-col items-center px-6 text-center">
         {/* Mark — one steady ring, one gentle breathing scale. No competing motion. */}

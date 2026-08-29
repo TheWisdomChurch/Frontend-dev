@@ -16,7 +16,7 @@ import type { LucideIcon } from 'lucide-react';
 
 import Arrow from '@/shared/ui/icons/Arrow';
 import SiteHero from '@/features/hero/SiteHero';
-import { Caption } from '@/shared/text';
+import { LocationMap } from '@/shared/ui/LocationMap';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import apiClient, { mapValidationErrors } from '@/lib/api';
@@ -30,16 +30,19 @@ import {
 } from '@/lib/validation/phone';
 import type { CountryCode } from 'libphonenumber-js';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialPanel,
-  EditorialSection,
-  editorialActionClass,
-  editorialFieldClass,
-  editorialLabelClass,
-} from '@/shared/ui/editorial';
+  Actions,
+  Container,
+  CtaLink,
+  Eyebrow,
+  Page,
+  Panel,
+  Section,
+  SectionHeader,
+  fieldClass,
+  fieldHelpClass,
+  fieldLabelClass,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 type ContactFormData = {
   firstName: string;
@@ -77,8 +80,13 @@ const initialFormData: ContactFormData = {
   isAnonymous: false,
 };
 
-const inputCls = editorialFieldClass;
-const labelCls = editorialLabelClass;
+const inputCls = fieldClass;
+const labelCls = fieldLabelClass;
+
+const MAP_QUERY = SERVICE_INFO.venue.full;
+const DIRECTIONS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  MAP_QUERY
+)}`;
 
 function ContactPageContent() {
   const searchParams = useSearchParams();
@@ -118,6 +126,33 @@ function ContactPageContent() {
         handle: SOCIAL_LINKS.handle,
         href: SOCIAL_LINKS.youtube,
         icon: PlayCircle,
+      },
+    ],
+    []
+  );
+
+  const contactChannels = useMemo(
+    () => [
+      {
+        icon: MapPin,
+        label: 'Visit',
+        value: SERVICE_INFO.venue.name,
+        detail: SERVICE_INFO.venue.short,
+        href: DIRECTIONS_HREF,
+      },
+      {
+        icon: Phone,
+        label: 'Call or WhatsApp',
+        value: CONTACT_INFO.phone,
+        detail: 'Weekdays · same-day reply',
+        href: SOCIAL_LINKS.whatsapp,
+      },
+      {
+        icon: Mail,
+        label: 'Email',
+        value: CONTACT_INFO.email,
+        detail: 'Within 24 hours on weekdays',
+        href: `mailto:${CONTACT_INFO.email}`,
       },
     ],
     []
@@ -184,7 +219,7 @@ function ContactPageContent() {
   };
 
   return (
-    <EditorialPage>
+    <Page>
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -193,136 +228,94 @@ function ContactPageContent() {
       />
 
       <SiteHero
+        backgroundImage="/Picflow/DSC00048 copy.webp"
+        imagePositionClassName="object-[center_10%] [filter:brightness(1.06)_contrast(1.03)]"
         eyebrow="Get in touch"
         title="We'd love to hear from you."
         subtitle="Plan a visit, request prayer, or send us a message — we'll get back to you quickly."
-        compact
       />
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
-          <div className="grid gap-8 md:gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16 xl:gap-20">
+      <Section tone="canvas">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
+            {/* ── Contact rail ─────────────────────────────── */}
             <div data-gsap="reveal">
-              <aside className="space-y-10 lg:sticky lg:top-28 lg:h-fit">
-                {/* Location */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2.5">
-                    <MapPin className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-                      Visit us
-                    </p>
-                  </div>
-                  <p className="font-ui text-heading-sm font-semibold leading-snug text-[var(--app-ink)]">
-                    {SERVICE_INFO.venue.name}
-                  </p>
-                  <div className="space-y-1 font-ui text-body-sm leading-[1.7] text-[var(--app-ink)]/70">
-                    <p>{SERVICE_INFO.venue.streetAddress}</p>
-                    <p>
-                      {SERVICE_INFO.venue.locality},{' '}
-                      {SERVICE_INFO.venue.country === 'NG'
-                        ? 'Nigeria'
-                        : SERVICE_INFO.venue.country}
-                    </p>
-                  </div>
-                  <div className="pt-1 space-y-0.5">
-                    <p className="font-ui text-label font-semibold text-[var(--app-ink)]/70">
-                      {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
-                    </p>
-                    <p className="font-ui text-label font-semibold text-[var(--app-ink)]/70">
-                      {SERVICE_INFO.dailyPrayer.label} ·{' '}
-                      {SERVICE_INFO.dailyPrayer.time}
-                    </p>
-                  </div>
-                </div>
+              <div className="lg:sticky lg:top-28">
+                <SectionHeader
+                  eyebrow="Reach us"
+                  title="Every message reaches a real person."
+                  description="Pick whichever way is easiest — we read all of them."
+                  size="sm"
+                />
 
-                {/* Divider */}
-                <div className="h-px bg-[var(--app-ink)]/8" />
-
-                {/* Phone */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2.5">
-                    <Phone className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-                      Call us
-                    </p>
-                  </div>
-                  <a
-                    href="https://wa.me/2347069995333"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 font-ui text-heading-sm font-semibold text-[var(--app-ink)] transition hover:text-[var(--app-primary-dark)]"
-                  >
-                    +234 706 999 5333
-                    <ArrowUpRight className="h-3.5 w-3.5 opacity-40 transition group-hover:opacity-100" />
-                  </a>
-                  <p className="font-ui text-label text-[var(--app-ink)]/45">
-                    Open on WhatsApp
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div className="h-px bg-[var(--app-ink)]/8" />
-
-                {/* Email */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2.5">
-                    <Mail className="h-3.5 w-3.5 text-[var(--app-primary)]" />
-                    <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary)]">
-                      Email us
-                    </p>
-                  </div>
-                  <a
-                    href={`mailto:${CONTACT_INFO.email}`}
-                    className="group inline-flex items-center gap-2 font-ui text-body-md font-medium text-[var(--app-ink)] transition hover:text-[var(--app-primary)]"
-                  >
-                    {CONTACT_INFO.email}
-                    <ArrowUpRight className="h-3.5 w-3.5 opacity-40 transition group-hover:opacity-100" />
-                  </a>
-                </div>
-
-                {/* Divider */}
-                <div className="h-px bg-[var(--app-ink)]/8" />
-
-                {/* Social */}
-                <div className="space-y-4">
-                  <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-ink)]/60">
-                    Follow us
-                  </p>
-                  <div className="flex flex-col gap-3">
-                    {socialLinks.map(s => (
-                      <a
-                        key={s.platform}
-                        href={s.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-3 transition"
-                      >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-card border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)] text-[var(--app-ink)]/50 transition group-hover:border-[var(--app-primary)]/30 group-hover:text-[var(--app-primary)]">
-                          <s.icon className="h-3.5 w-3.5" />
-                        </span>
-                        <span className="flex flex-col">
-                          <span className="font-ui text-body-sm font-semibold text-[var(--app-ink)]">
-                            {s.platform}
+                <ul className="mt-8 space-y-3">
+                  {contactChannels.map(channel => {
+                    const ChannelIcon = channel.icon;
+                    const external = channel.href.startsWith('http');
+                    return (
+                      <li key={channel.label}>
+                        <a
+                          href={channel.href}
+                          target={external ? '_blank' : undefined}
+                          rel={external ? 'noreferrer' : undefined}
+                          className="group flex items-start gap-4 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4 transition hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] hover:shadow-sm sm:p-5"
+                        >
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)]">
+                            <ChannelIcon
+                              className="h-4 w-4"
+                              aria-hidden="true"
+                            />
                           </span>
-                          <span className="font-ui text-label text-[var(--app-ink)]/60">
-                            {s.handle}
+                          <span className="min-w-0 flex-1">
+                            <span className="font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-subtle)]">
+                              {channel.label}
+                            </span>
+                            <span className="mt-1 block break-words font-ui text-body-md font-semibold text-[var(--app-ink)]">
+                              {channel.value}
+                            </span>
+                            <span className="mt-0.5 block font-ui text-label text-[var(--app-muted)]">
+                              {channel.detail}
+                            </span>
                           </span>
-                        </span>
-                      </a>
-                    ))}
+                          <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-[var(--app-subtle)] transition group-hover:text-[var(--app-primary)]" />
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <div className="mt-8 border-t border-[var(--app-border)] pt-6">
+                  <Eyebrow>Follow the church</Eyebrow>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {socialLinks.map(s => {
+                      const SocialIcon = s.icon;
+                      return (
+                        <a
+                          key={s.platform}
+                          href={s.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={s.platform}
+                          className="flex h-10 w-10 items-center justify-center rounded-button border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-subtle)] transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)]"
+                        >
+                          <SocialIcon className="h-4 w-4" />
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
-              </aside>
+              </div>
             </div>
 
+            {/* ── Message form ─────────────────────────────── */}
             <div data-gsap="reveal">
-              <EditorialPanel>
-                <div className="bg-[var(--app-dark)] px-7 py-7 sm:px-8 sm:py-8">
-                  <EditorialHeader
+              <Panel>
+                <div className="border-b border-[var(--app-border)] px-6 py-6 sm:px-8 sm:py-7">
+                  <SectionHeader
                     eyebrow="Message us"
-                    title="Send us a message."
+                    title="Send us a message"
                     description="We respond within 24 hours on weekdays."
-                    tone="dark"
+                    as="h3"
                     size="sm"
                   />
                 </div>
@@ -330,11 +323,10 @@ function ContactPageContent() {
                 <form
                   id="contact-form"
                   onSubmit={handleSubmit}
-                  className="space-y-0 divide-y divide-[var(--app-ink)]/6"
+                  className="space-y-5 p-6 sm:p-8"
                 >
-                  {/* Name row */}
-                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/6">
-                    <label className="block px-7 py-5 sm:px-8">
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <label className="block">
                       <span className={labelCls}>First name</span>
                       <input
                         type="text"
@@ -347,7 +339,7 @@ function ContactPageContent() {
                         placeholder="John"
                       />
                     </label>
-                    <label className="block px-7 py-5 sm:px-8">
+                    <label className="block">
                       <span className={labelCls}>Last name</span>
                       <input
                         type="text"
@@ -362,9 +354,8 @@ function ContactPageContent() {
                     </label>
                   </div>
 
-                  {/* Contact row */}
-                  <div className="grid sm:grid-cols-2 sm:divide-x sm:divide-[var(--app-ink)]/6">
-                    <label className="block px-7 py-5 sm:px-8">
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <label className="block">
                       <span className={labelCls}>Email address</span>
                       <input
                         type="email"
@@ -377,10 +368,10 @@ function ContactPageContent() {
                         placeholder="you@example.com"
                       />
                     </label>
-                    <div className="block px-7 py-5 sm:px-8">
+                    <div className="block">
                       <span className={labelCls}>
                         Phone{' '}
-                        <span className="normal-case font-normal tracking-normal text-[var(--app-ink)]/60">
+                        <span className="font-normal normal-case tracking-normal text-[var(--app-muted)]">
                           (optional)
                         </span>
                       </span>
@@ -400,33 +391,27 @@ function ContactPageContent() {
                     </div>
                   </div>
 
-                  {/* Topic */}
-                  <div className="px-7 py-5 sm:px-8">
-                    <label className="block">
-                      <span className={labelCls}>What is this about?</span>
-                      <select
-                        name="topic"
-                        value={formData.topic}
-                        onChange={updateField('topic')}
-                        className={`${inputCls} mt-2 cursor-pointer`}
-                      >
-                        <option value="">Select a topic</option>
-                        <option value="visit">Planning a visit</option>
-                        <option value={PRAYER_TOPIC_VALUE}>
-                          Prayer request
-                        </option>
-                        <option value="connect">
-                          Connect &amp; get involved
-                        </option>
-                        <option value="events">Events &amp; programmes</option>
-                        <option value="media">Media &amp; resources</option>
-                        <option value="other">General enquiry</option>
-                      </select>
-                    </label>
-                  </div>
+                  <label className="block">
+                    <span className={labelCls}>What is this about?</span>
+                    <select
+                      name="topic"
+                      value={formData.topic}
+                      onChange={updateField('topic')}
+                      className={`${inputCls} mt-2 cursor-pointer`}
+                    >
+                      <option value="">Select a topic</option>
+                      <option value="visit">Planning a visit</option>
+                      <option value={PRAYER_TOPIC_VALUE}>Prayer request</option>
+                      <option value="connect">
+                        Connect &amp; get involved
+                      </option>
+                      <option value="events">Events &amp; programmes</option>
+                      <option value="media">Media &amp; resources</option>
+                      <option value="other">General enquiry</option>
+                    </select>
+                  </label>
 
-                  {/* Message */}
-                  <div className="px-7 py-5 sm:px-8">
+                  <div className="block">
                     <label className="block">
                       <span className={labelCls}>
                         {isPrayerRequest
@@ -439,7 +424,7 @@ function ContactPageContent() {
                         value={formData.message}
                         onChange={updateField('message')}
                         required
-                        className={`${inputCls} mt-2 min-h-[120px] resize-none`}
+                        className={`${inputCls} mt-2 min-h-[140px] resize-none`}
                         placeholder={
                           isPrayerRequest
                             ? 'Share what you would like us to pray with you about...'
@@ -448,7 +433,7 @@ function ContactPageContent() {
                       />
                     </label>
                     {isPrayerRequest && (
-                      <label className="mt-3 flex items-center gap-2.5 font-ui text-body-sm text-[var(--app-ink)]/70">
+                      <label className="mt-3 flex items-center gap-2.5 font-ui text-body-sm text-[var(--app-muted)]">
                         <input
                           type="checkbox"
                           checked={formData.isAnonymous}
@@ -458,38 +443,16 @@ function ContactPageContent() {
                               isAnonymous: e.target.checked,
                             }))
                           }
-                          className="h-4 w-4 rounded border-[var(--app-ink)]/20 accent-[var(--app-primary)]"
+                          className="h-4 w-4 rounded border-[var(--app-border)] accent-[var(--app-primary)]"
                         />
                         Keep my request anonymous to the prayer team
                       </label>
                     )}
                   </div>
 
-                  {/* Footer row */}
-                  <div className="flex flex-col gap-4 bg-[var(--app-canvas)] px-7 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className={editorialActionClass.dark}
-                    >
-                      {submitting ? 'Sending...' : 'Send message'}
-                      {!submitting && <Arrow />}
-                    </button>
-                    <Caption className="text-[var(--app-ink)]/60">
-                      For pastoral care, visit our{' '}
-                      <Link
-                        href="/pastoral"
-                        className="text-[var(--app-primary)] underline underline-offset-2"
-                      >
-                        Pastoral Care
-                      </Link>{' '}
-                      page.
-                    </Caption>
-                  </div>
-
                   {submitted && (
                     <div
-                      className="border-t border-[var(--status-success)]/20 bg-[var(--status-success)]/10 px-7 py-4 font-ui text-body-sm text-[var(--status-success)] sm:px-8"
+                      className="rounded-input border border-[var(--status-success)]/25 bg-[var(--status-success)]/10 px-4 py-3 font-ui text-body-sm text-[var(--status-success)]"
                       aria-live="polite"
                     >
                       {submittedPrayerRequest
@@ -500,32 +463,116 @@ function ContactPageContent() {
 
                   {error && (
                     <div
-                      className="border-t border-[var(--status-error)]/20 bg-[var(--status-error)]/10 px-7 py-4 font-ui text-body-sm text-[var(--status-error)] sm:px-8"
+                      className="rounded-input border border-[var(--status-error)]/25 bg-[var(--status-error)]/10 px-4 py-3 font-ui text-body-sm text-[var(--status-error)]"
                       aria-live="polite"
                     >
                       {error}
                     </div>
                   )}
+
+                  <div className="flex flex-col gap-4 border-t border-[var(--app-border)] pt-5 sm:flex-row sm:items-center sm:justify-between">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className={buttonClass('dark')}
+                    >
+                      {submitting ? 'Sending...' : 'Send message'}
+                      {!submitting && <Arrow />}
+                    </button>
+                    <p className={fieldHelpClass}>
+                      For pastoral care, visit our{' '}
+                      <Link
+                        href="/pastoral"
+                        className="text-[var(--app-primary-dark)] underline underline-offset-2"
+                      >
+                        Pastoral Care
+                      </Link>{' '}
+                      page.
+                    </p>
+                  </div>
                 </form>
-              </EditorialPanel>
+              </Panel>
             </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
+        </Container>
+      </Section>
 
-      <EditorialSection compact tone="surface">
-        <EditorialContainer>
-          <div className="flex flex-col gap-1.5 py-7 sm:flex-row sm:items-center sm:justify-between sm:py-6">
-            <p className="font-ui text-label font-semibold text-[var(--app-ink)]/60">
-              {SERVICE_INFO.venue.full}
-            </p>
-            <EditorialLink href="/events/weekly" variant="dark">
-              See service times
-            </EditorialLink>
+      {/* ── Find us — map + getting here ────────────────────── */}
+      <Section tone="surface">
+        <Container>
+          <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr] lg:gap-12">
+            <div data-gsap="reveal" className="flex flex-col">
+              <SectionHeader
+                eyebrow="Find us"
+                title="Getting here."
+                description="We gather at Honor Gardens on the Lekki-Epe Expressway, directly opposite Dominion City."
+                size="sm"
+              />
+              <LocationMap
+                query={MAP_QUERY}
+                title="Map to Honor Gardens, Lekki-Epe Expressway"
+                className="mt-6 flex-1"
+              />
+            </div>
+
+            <div
+              data-gsap="reveal"
+              className="flex flex-col gap-6 rounded-card border border-[var(--app-border)] bg-[var(--app-canvas)] p-6 sm:p-8"
+            >
+              <div>
+                <Eyebrow>Address</Eyebrow>
+                <p className="mt-2 font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
+                  {SERVICE_INFO.venue.name}
+                </p>
+                <p className="mt-2 font-ui text-body-sm leading-[1.7] text-[var(--app-muted)]">
+                  {SERVICE_INFO.venue.streetAddress}
+                </p>
+                <p className="font-ui text-body-sm leading-[1.7] text-[var(--app-muted)]">
+                  {SERVICE_INFO.venue.locality}, Nigeria
+                </p>
+              </div>
+
+              <div className="border-t border-[var(--app-border)] pt-6">
+                <Eyebrow>When we gather</Eyebrow>
+                <ul className="mt-3 space-y-2 font-ui text-body-sm text-[var(--app-muted)]">
+                  <li className="flex items-baseline justify-between gap-4">
+                    <span className="font-semibold text-[var(--app-ink)]">
+                      {SERVICE_INFO.sunday.day}
+                    </span>
+                    <span>
+                      {SERVICE_INFO.sunday.time} {SERVICE_INFO.sunday.timezone}
+                    </span>
+                  </li>
+                  <li className="flex items-baseline justify-between gap-4">
+                    <span className="font-semibold text-[var(--app-ink)]">
+                      {SERVICE_INFO.dailyPrayer.label}
+                    </span>
+                    <span>
+                      {SERVICE_INFO.dailyPrayer.daysShort} ·{' '}
+                      {SERVICE_INFO.dailyPrayer.time}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <Actions className="mt-auto border-t border-[var(--app-border)] pt-6">
+                <a
+                  href={DIRECTIONS_HREF}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={buttonClass('primary')}
+                >
+                  Get directions <Arrow />
+                </a>
+                <CtaLink href="/events/weekly" variant="text">
+                  Service details
+                </CtaLink>
+              </Actions>
+            </div>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }
 

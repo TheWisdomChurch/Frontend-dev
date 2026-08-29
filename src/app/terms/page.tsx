@@ -2,11 +2,7 @@ import type { Metadata } from 'next';
 
 import SiteHero from '@/features/hero/SiteHero';
 import { buildPageMetadata } from '@/lib/seo';
-import {
-  EditorialDocument,
-  EditorialPage,
-  type EditorialDocumentSection,
-} from '@/shared/ui/editorial';
+import { DocumentLayout, Page, type DocumentSection } from '@/shared/ui/layout';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Terms of Use',
@@ -15,7 +11,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/terms',
 });
 
-const sections: readonly EditorialDocumentSection[] = [
+const sections: readonly DocumentSection[] = [
   {
     id: 'acceptance',
     title: 'Acceptance of Terms',
@@ -129,14 +125,15 @@ const relatedPolicies = [
 
 export default function TermsPage() {
   return (
-    <EditorialPage>
+    <Page>
       <SiteHero
+        backgroundImage="/Picflow/DSC00019 copy.webp"
         eyebrow="Legal · Terms"
         title="Terms of Use"
         subtitle="These terms govern your access to our website, livestreams, registrations, forms, and related digital services."
         note="Last updated: February 2026"
       />
-      <EditorialDocument sections={sections} navigation={relatedPolicies} />
-    </EditorialPage>
+      <DocumentLayout sections={sections} navigation={relatedPolicies} />
+    </Page>
   );
 }

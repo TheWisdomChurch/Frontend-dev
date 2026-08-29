@@ -1,58 +1,106 @@
 import type { ReactNode } from 'react';
-import Link from 'next/link';
+import { ArrowRight, CalendarClock } from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
-import { ScrollFadeIn } from '@/shared/ui/motion';
-import Arrow from '@/shared/ui/icons/Arrow';
-import { cn } from '@/lib/cn';
+import MinistryGallery from '@/features/ministries/MinistryGallery';
+import { NotifyCta } from '@/features/notifications/NotifyCta';
+import { VideoEmbed } from '@/shared/ui/VideoEmbed';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialSection,
-  editorialActionClass,
-} from '@/shared/ui/editorial';
+  Container,
+  CtaLink,
+  Eyebrow,
+  Figure,
+  Page,
+  Section,
+  SectionHeader,
+  Split,
+} from '@/shared/ui/layout';
 
-export type MinistryHeading = { lead: string; accent: string; tail?: string };
-export type MinistryActivity = { title: string; description: string };
-export type MinistryValue = { title: string; body: string };
+/* ============================================================================
+   Every ministry page is composed from this one template so /ministries/women,
+   /men, /youth, /children and /outreach share a single architecture. Sections
+   with no data yet (leader, activities, conference) are simply omitted until
+   the details land — the page still reads as complete.
+============================================================================ */
 
-export type MinistryPageConfig = {
+export type MinistryImage = { src: string; alt: string };
+
+export type MinistryContent = {
   hero: {
     eyebrow: string;
     title: string;
-    subtitle: string;
-    backgroundImage?: string;
+    description: string;
+    image?: string;
+    /** Object-position class — pass `object-center` for a landscape photo. */
+    imagePosition?: string;
+  };
+  primaryCta: { label: string; href: string };
+  introduction: {
+    label: string;
+    title: string;
+    body: string;
+    image: MinistryImage;
+    /**
+     * Aspect of the image frame. Defaults to a landscape `3/2`; pass a
+     * portrait ratio (e.g. `aspect-[4/5]`) when the photo is a portrait so it
+     * fills the frame instead of being side-cropped.
+     */
+    imageFrameClassName?: string;
+    imagePositionClassName?: string;
+  };
+  /** Vision + mission (or any pair of guiding statements). */
+  pillars: {
+    eyebrow: string;
+    title: string;
+    items: readonly { label: string; title: string; body: string }[];
+  };
+  /** The person who carries the ministry — convener, lead, coordinator. */
+  leader?: {
+    label: string;
+    title: string;
+    body: string;
+    image: MinistryImage;
+  };
+  focus: {
+    eyebrow: string;
+    title: string;
+    items: readonly { title: string; body: string }[];
+  };
+  /** Optional deeper "what we do" list — kept for ministries that have it. */
+  activities?: {
+    eyebrow: string;
+    title: string;
+    items: readonly { title: string; description: string }[];
   };
   conference?: {
     eyebrow: string;
-    heading: MinistryHeading;
+    title: string;
     description: string;
-    youtubeSrc: string;
-    youtubeTitle: string;
-    ctaLabel: string;
+    images: readonly MinistryImage[];
   };
-  mission: {
-    dark: boolean;
-    heading: MinistryHeading;
-    body: string;
+  /**
+   * A flagship gathering — its schedule, a call to join, and (optionally) the
+   * replay of the last one. "Missed it? Watch and be blessed."
+   */
+  conferenceVideo?: {
+    eyebrow: string;
+    title: string;
+    description?: string;
+    /** e.g. "Every third Saturday". */
+    schedule?: string;
+    ctaLabel?: string;
+    /** A plain link CTA. Ignored when `notifySignup` is set. */
+    ctaHref?: string;
+    /** Open the "notify me" modal (name / phone / email → backend) instead. */
+    notifySignup?: boolean;
+    notifyBlurb?: string;
+    notifySource?: string;
+    youtubeSrc?: string;
+    youtubeTitle?: string;
   };
-  activities: {
-    dark: boolean;
-    heading: MinistryHeading;
-    items: readonly MinistryActivity[];
-  };
-  /** Slot for a page-specific section (e.g. children's ministry gallery). */
-  extra?: ReactNode;
-  values: {
-    dark: boolean;
-    eyebrow?: string;
-    heading: MinistryHeading;
-    items: readonly MinistryValue[];
-  };
-  cta: {
-    dark: boolean;
-    eyebrow?: string;
-    heading: MinistryHeading;
+  invitation: {
+    label: string;
+    title: string;
     body: string;
     primaryLabel: string;
     primaryHref: string;
@@ -61,268 +109,292 @@ export type MinistryPageConfig = {
   };
 };
 
-function Heading({
-  heading,
-  className,
-}: {
-  heading: MinistryHeading;
-  className: string;
-}) {
-  return (
-    <h2 className={className}>
-      {heading.lead}
-      <em className="italic text-[var(--app-primary)]/80">{heading.accent}</em>
-      {heading.tail}
-    </h2>
-  );
-}
-
-function Eyebrow({ children }: { children: ReactNode }) {
-  return (
-    <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.22em] text-[var(--app-primary)]">
-      {children}
-    </p>
-  );
-}
-
 export default function MinistryPageTemplate({
-  config,
+  content,
+  extra,
 }: {
-  config: MinistryPageConfig;
+  content: MinistryContent;
+  /** Slot for a page-specific section (e.g. the children's photo carousel). */
+  extra?: ReactNode;
 }) {
-  const { hero, conference, mission, activities, extra, values, cta } = config;
+  const {
+    hero,
+    primaryCta,
+    introduction,
+    pillars,
+    leader,
+    focus,
+    activities,
+    conference,
+    conferenceVideo,
+    invitation,
+  } = content;
 
   return (
-    <EditorialPage>
-      {/* ── Hero ─────────────────────────────────────────────── */}
+    <Page tone="surface">
       <SiteHero
         eyebrow={hero.eyebrow}
         title={hero.title}
-        subtitle={hero.subtitle}
-        backgroundImage={hero.backgroundImage}
+        subtitle={hero.description}
+        backgroundImage={hero.image}
+        imagePositionClassName={hero.imagePosition}
+        priority
+        actions={
+          <CtaLink href={primaryCta.href}>
+            {primaryCta.label} <ArrowRight className="ml-2 h-4 w-4" />
+          </CtaLink>
+        }
       />
 
-      {/* ── Conference (optional) — dark ─────────────────────── */}
-      {conference ? (
-        <EditorialSection tone="dark">
-          <EditorialContainer>
-            <ScrollFadeIn className="pt-14 lg:pt-18">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <Eyebrow>{conference.eyebrow}</Eyebrow>
-                  <Heading
-                    heading={conference.heading}
-                    className="mt-3 font-ui text-heading-lg font-medium leading-[1.05] tracking-[-0.04em] text-white sm:text-heading-lg lg:text-display-sm"
-                  />
-                  <p className="mt-4 max-w-xl font-ui text-body-sm leading-[2] text-white/70">
-                    {conference.description}
-                  </p>
-                </div>
-                <Link
-                  href="/contact"
-                  className="inline-flex shrink-0 items-center gap-2 self-start border border-white/18 px-6 py-3 font-ui text-label font-semibold text-white/50 transition hover:border-[var(--app-primary)] hover:text-[var(--app-primary)] lg:self-auto"
-                >
-                  {conference.ctaLabel} <Arrow />
-                </Link>
-              </div>
-            </ScrollFadeIn>
+      {/* ── Introduction ─────────────────────────────────────── */}
+      <Section>
+        <Container>
+          <Split className="lg:grid-cols-[0.88fr_1.12fr]">
+            <SectionHeader
+              eyebrow={introduction.label}
+              title={introduction.title}
+              description={introduction.body}
+              size="sm"
+            />
+            <div data-gsap="reveal">
+              <Figure
+                src={introduction.image.src}
+                alt={introduction.image.alt}
+                fill
+                sizes="(max-width: 1023px) 100vw, 56vw"
+                className={
+                  introduction.imageFrameClassName ??
+                  'aspect-[4/3] sm:aspect-[3/2]'
+                }
+                imageClassName={
+                  introduction.imagePositionClassName ?? 'object-center'
+                }
+              />
+            </div>
+          </Split>
+        </Container>
+      </Section>
 
-            <ScrollFadeIn delay={0.1}>
-              <div className="pb-14 pt-8 lg:pb-18 lg:pt-10">
-                <div className="relative aspect-video w-full overflow-hidden border border-white/8">
-                  <iframe
-                    src={conference.youtubeSrc}
-                    title={conference.youtubeTitle}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full border-0"
-                  />
-                </div>
+      {/* ── Vision + Mission ─────────────────────────────────── */}
+      <Section tone="dark">
+        <Container>
+          <div className="mb-12 max-w-3xl lg:mb-16">
+            <SectionHeader
+              eyebrow={pillars.eyebrow}
+              title={pillars.title}
+              tone="dark"
+              size="sm"
+            />
+          </div>
+          <div className="grid gap-px overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-border)] lg:grid-cols-2">
+            {pillars.items.map(item => (
+              <article
+                key={item.label}
+                data-gsap="reveal"
+                className="tone-dark bg-[var(--app-dark)] p-8 sm:p-12 lg:p-14"
+              >
+                <Eyebrow>{item.label}</Eyebrow>
+                <h3 className="mt-4 max-w-xl font-ui text-heading-md font-semibold leading-tight tracking-[-0.02em] text-[var(--app-text)] sm:text-heading-lg">
+                  {item.title}
+                </h3>
+                <p className="mt-5 max-w-xl font-ui text-body-md leading-loose text-[var(--app-muted)]">
+                  {item.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* ── Leader ───────────────────────────────────────────── */}
+      {leader ? (
+        <Section>
+          <Container>
+            <Split reverse className="lg:grid-cols-[0.9fr_1.1fr]">
+              <div
+                data-gsap="reveal"
+                className="mx-auto w-full max-w-xl lg:mx-0"
+              >
+                <Figure
+                  src={leader.image.src}
+                  alt={leader.image.alt}
+                  fill
+                  sizes="(max-width: 1023px) 100vw, 45vw"
+                  className="aspect-[4/5] sm:aspect-[3/4]"
+                  imageClassName="object-top"
+                />
               </div>
-            </ScrollFadeIn>
-          </EditorialContainer>
-        </EditorialSection>
+              <SectionHeader
+                eyebrow={leader.label}
+                title={leader.title}
+                description={leader.body}
+                size="sm"
+              />
+            </Split>
+          </Container>
+        </Section>
       ) : null}
 
-      {/* ── Mission ──────────────────────────────────────────── */}
-      <EditorialSection tone={mission.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
-          <ScrollFadeIn>
-            <Eyebrow>Our mission</Eyebrow>
-            <Heading
-              heading={mission.heading}
-              className={cn(
-                'mt-4 max-w-2xl font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
-                mission.dark ? 'text-white' : 'text-[var(--app-ink)]'
-              )}
-            />
-            <div className="mt-8 h-[1.5px] w-10 bg-[var(--app-primary)]/50" />
-            <p
-              className={cn(
-                'mt-6 max-w-xl font-ui text-body-sm leading-[2]',
-                mission.dark ? 'text-white/70' : 'text-[var(--app-ink)]/70'
-              )}
-            >
-              {mission.body}
-            </p>
-          </ScrollFadeIn>
-        </EditorialContainer>
-      </EditorialSection>
+      {/* ── Focus / the journey ──────────────────────────────── */}
+      <Section tone="canvas">
+        <Container>
+          <SectionHeader
+            eyebrow={focus.eyebrow}
+            title={focus.title}
+            size="sm"
+          />
+          <div className="mt-12 grid overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] md:grid-cols-3">
+            {focus.items.map(item => (
+              <article
+                key={item.title}
+                data-gsap="reveal"
+                className="min-h-56 border-b border-[var(--app-border)] p-8 last:border-b-0 sm:p-10 md:border-b-0 md:border-r md:last:border-r-0"
+              >
+                <span
+                  className="mb-8 block h-px w-12 bg-[var(--app-primary)]"
+                  aria-hidden="true"
+                />
+                <h3 className="font-ui text-heading-md font-semibold tracking-[-0.02em] text-[var(--app-ink)]">
+                  {item.title}
+                </h3>
+                <p className="mt-4 max-w-sm font-ui text-body-sm leading-loose text-[var(--app-muted)]">
+                  {item.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        </Container>
+      </Section>
 
-      {/* ── What we do ───────────────────────────────────────── */}
-      <EditorialSection tone={activities.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
-          <ScrollFadeIn className="pt-16 lg:pt-20">
-            <Eyebrow>What we do</Eyebrow>
-            <Heading
-              heading={activities.heading}
-              className={cn(
-                'mt-3 max-w-xl font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
-                activities.dark ? 'text-white' : 'text-[var(--app-ink)]'
-              )}
+      {/* ── What we do (optional) ────────────────────────────── */}
+      {activities ? (
+        <Section>
+          <Container>
+            <SectionHeader
+              eyebrow={activities.eyebrow}
+              title={activities.title}
+              size="sm"
             />
-          </ScrollFadeIn>
-
-          <div className="grid grid-cols-1 gap-x-12 gap-y-0 pb-16 pt-12 sm:grid-cols-2 lg:pb-20 lg:pt-14">
-            {activities.items.map((item, i) => (
-              <ScrollFadeIn key={item.title} delay={i * 0.07}>
+            <div className="mt-10 grid grid-cols-1 gap-x-12 sm:grid-cols-2">
+              {activities.items.map(item => (
                 <div
-                  className={cn(
-                    'border-t py-8',
-                    activities.dark
-                      ? 'border-white/8'
-                      : 'border-[var(--app-ink)]/10'
-                  )}
+                  key={item.title}
+                  data-gsap="reveal"
+                  className="border-t border-[var(--app-border)] py-8"
                 >
-                  <div className="mb-4 h-[1.5px] w-6 bg-[var(--app-primary)]/50" />
-                  <h3
-                    className={cn(
-                      'font-ui text-heading-sm font-semibold',
-                      activities.dark ? 'text-white' : 'text-[var(--app-ink)]'
-                    )}
-                  >
+                  <div className="mb-4 h-[1.5px] w-6 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
+                  <h3 className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
                     {item.title}
                   </h3>
-                  <p
-                    className={cn(
-                      'mt-3 font-ui text-body-sm leading-[1.95]',
-                      activities.dark
-                        ? 'text-white/70'
-                        : 'text-[var(--app-ink)]/68'
-                    )}
-                  >
+                  <p className="mt-3 font-ui text-body-sm leading-[1.9] text-[var(--app-muted)]">
                     {item.description}
                   </p>
                 </div>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </EditorialContainer>
-      </EditorialSection>
+              ))}
+            </div>
+          </Container>
+        </Section>
+      ) : null}
 
-      {/* ── Extra (optional page-specific section) ───────────── */}
+      {/* ── Conference gallery (optional) ────────────────────── */}
+      {conference ? (
+        <Section tone="canvas">
+          <Container>
+            <Split>
+              <SectionHeader
+                eyebrow={conference.eyebrow}
+                title={conference.title}
+                description={conference.description}
+                size="sm"
+              />
+              <MinistryGallery images={conference.images} />
+            </Split>
+          </Container>
+        </Section>
+      ) : null}
+
+      {/* ── Flagship gathering + replay (optional) ───────────── */}
+      {conferenceVideo ? (
+        <Section tone="dark">
+          <Container>
+            <div className="mb-10 max-w-3xl">
+              <SectionHeader
+                eyebrow={conferenceVideo.eyebrow}
+                title={conferenceVideo.title}
+                description={conferenceVideo.description}
+                tone="dark"
+                size="sm"
+              />
+              {conferenceVideo.schedule ? (
+                <p className="mt-5 inline-flex items-center gap-2 rounded-badge border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 py-1.5 font-ui text-label font-semibold text-[var(--app-muted)]">
+                  <CalendarClock
+                    className="h-4 w-4 text-[var(--app-primary)]"
+                    aria-hidden="true"
+                  />
+                  {conferenceVideo.schedule}
+                </p>
+              ) : null}
+              {conferenceVideo.ctaLabel ? (
+                <div className="mt-6">
+                  {conferenceVideo.notifySignup ? (
+                    <NotifyCta
+                      label={conferenceVideo.ctaLabel}
+                      heading={`Get notified about ${conferenceVideo.eyebrow}`}
+                      blurb={
+                        conferenceVideo.notifyBlurb ??
+                        'Leave your details and we will let you know before the next gathering.'
+                      }
+                      source={
+                        conferenceVideo.notifySource ??
+                        conferenceVideo.eyebrow
+                          .toLowerCase()
+                          .replace(/\s+/g, '-')
+                      }
+                    />
+                  ) : conferenceVideo.ctaHref ? (
+                    <CtaLink href={conferenceVideo.ctaHref}>
+                      {conferenceVideo.ctaLabel}{' '}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </CtaLink>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+            {conferenceVideo.youtubeSrc ? (
+              <div data-gsap="reveal">
+                <VideoEmbed
+                  src={conferenceVideo.youtubeSrc}
+                  title={conferenceVideo.youtubeTitle ?? conferenceVideo.title}
+                />
+              </div>
+            ) : null}
+          </Container>
+        </Section>
+      ) : null}
+
       {extra}
 
-      {/* ── Core values ──────────────────────────────────────── */}
-      <EditorialSection tone={values.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
-          <ScrollFadeIn>
-            <div
-              className={cn(
-                'border-b pb-8 sm:pb-10',
-                values.dark ? 'border-white/8' : 'border-[var(--app-ink)]/8'
-              )}
-            >
-              <Eyebrow>{values.eyebrow ?? 'What shapes us'}</Eyebrow>
-              <Heading
-                heading={values.heading}
-                className={cn(
-                  'mt-3 max-w-lg font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
-                  values.dark ? 'text-white' : 'text-[var(--app-ink)]'
-                )}
-              />
-            </div>
-          </ScrollFadeIn>
-
-          <div
-            className={cn(
-              'grid grid-cols-1 sm:grid-cols-3 sm:divide-x sm:divide-y-0',
-              values.dark
-                ? 'divide-y divide-white/8'
-                : 'divide-y divide-[var(--app-ink)]/8'
-            )}
-          >
-            {values.items.map((v, i) => (
-              <ScrollFadeIn key={v.title} delay={i * 0.08}>
-                <div className="flex flex-col py-8 sm:px-6 lg:px-8 lg:py-10">
-                  <div className="mb-5 h-[1.5px] w-6 bg-[var(--app-primary)]/55" />
-                  <h3
-                    className={cn(
-                      'font-ui text-heading-md font-medium leading-none tracking-[-0.03em] lg:text-heading-lg',
-                      values.dark ? 'text-white' : 'text-[var(--app-ink)]'
-                    )}
-                  >
-                    {v.title}
-                  </h3>
-                  <p
-                    className={cn(
-                      'mt-4 font-ui text-body-sm leading-[1.95]',
-                      values.dark ? 'text-white/70' : 'text-[var(--app-ink)]/68'
-                    )}
-                  >
-                    {v.body}
-                  </p>
-                </div>
-              </ScrollFadeIn>
-            ))}
+      {/* ── Invitation ───────────────────────────────────────── */}
+      <Section tone="brand">
+        <Container className="text-center">
+          <SectionHeader
+            eyebrow={invitation.label}
+            title={invitation.title}
+            description={invitation.body}
+            size="sm"
+            align="center"
+            className="mx-auto max-w-3xl [&_p]:mx-auto"
+          />
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <CtaLink href={invitation.primaryHref} variant="dark">
+              {invitation.primaryLabel}
+            </CtaLink>
+            <CtaLink href={invitation.secondaryHref} variant="outline">
+              {invitation.secondaryLabel}
+            </CtaLink>
           </div>
-        </EditorialContainer>
-      </EditorialSection>
-
-      {/* ── CTA ──────────────────────────────────────────────── */}
-      <EditorialSection tone={cta.dark ? 'dark' : 'canvas'}>
-        <EditorialContainer>
-          <div className="flex flex-col items-center gap-7 text-center">
-            <Eyebrow>{cta.eyebrow ?? 'Join the ministry'}</Eyebrow>
-            <Heading
-              heading={cta.heading}
-              className={cn(
-                'font-ui text-heading-md font-medium leading-[1.08] tracking-[-0.035em] sm:text-heading-lg',
-                cta.dark ? 'text-white' : 'text-[var(--app-ink)]'
-              )}
-            />
-            <div
-              className={cn(
-                'h-px w-10 bg-[var(--app-primary)]',
-                cta.dark ? 'opacity-40' : 'opacity-35'
-              )}
-            />
-            <p
-              className={cn(
-                'max-w-md font-ui text-body-sm leading-[2]',
-                cta.dark ? 'text-white/70' : 'text-[var(--app-ink)]/68'
-              )}
-            >
-              {cta.body}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href={cta.primaryHref}
-                className={editorialActionClass.primary}
-              >
-                {cta.primaryLabel} <Arrow />
-              </Link>
-              <Link
-                href={cta.secondaryHref}
-                className={editorialActionClass.outline}
-              >
-                {cta.secondaryLabel}
-              </Link>
-            </div>
-          </div>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

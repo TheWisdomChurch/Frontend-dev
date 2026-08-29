@@ -14,14 +14,15 @@ import {
   getEventTimestamp as getTimestamp,
 } from '@/shared/utils/eventDate';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialSection,
-  editorialActionClass,
-  editorialInteractiveClass,
-} from '@/shared/ui/editorial';
+  Container,
+  Eyebrow,
+  Page,
+  Section,
+  SectionEmpty,
+  SectionHeader,
+  interactiveCardClass,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 export default function UpcomingPage() {
   const [events, setEvents] = useState<EventPublic[]>([]);
@@ -51,23 +52,23 @@ export default function UpcomingPage() {
   }, []);
 
   return (
-    <EditorialPage>
+    <Page>
       <SiteHero
+        backgroundImage="/Picflow/DSC00054 copy.webp"
         eyebrow="Upcoming Events"
         title="What's next at Wisdom Church."
         subtitle="Special gatherings, conferences, and programs coming up — plan ahead."
-        compact
       />
 
-      <EditorialSection tone="canvas">
-        <EditorialContainer>
+      <Section tone="canvas">
+        <Container>
           <ScrollFadeIn className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Coming up"
               title="Upcoming events & programs."
             />
             {!loading && events.length > 0 && (
-              <span className="inline-flex self-start items-center border border-[var(--app-ink)]/12 px-4 py-2 font-ui text-label font-semibold text-[var(--app-ink)]/45 sm:self-auto">
+              <span className="inline-flex self-start items-center border border-[var(--app-border)] px-4 py-2 font-ui text-label font-semibold text-[var(--app-subtle)] sm:self-auto">
                 {events.length} upcoming
               </span>
             )}
@@ -78,7 +79,7 @@ export default function UpcomingPage() {
               {[0, 1, 2].map(i => (
                 <div
                   key={i}
-                  className="h-24 animate-pulse border border-[var(--app-ink)]/8 bg-[var(--app-canvas-2)]"
+                  className="h-24 animate-pulse border border-[var(--app-border)] bg-[var(--app-canvas-2)]"
                 />
               ))}
             </div>
@@ -86,14 +87,11 @@ export default function UpcomingPage() {
 
           {!loading && events.length === 0 && (
             <div>
-              <EditorialEmptyState
+              <SectionEmpty
                 title="Nothing scheduled yet."
                 description={`Check back soon. In the meantime, join us every ${SERVICE_INFO.sunday.day} at ${SERVICE_INFO.sunday.time}, and for ${SERVICE_INFO.dailyPrayer.label} ${SERVICE_INFO.dailyPrayer.daysShort} at ${SERVICE_INFO.dailyPrayer.time}.`}
                 action={
-                  <Link
-                    href="/events/weekly"
-                    className={editorialActionClass.dark}
-                  >
+                  <Link href="/events/weekly" className={buttonClass('dark')}>
                     See weekly services
                   </Link>
                 }
@@ -112,16 +110,14 @@ export default function UpcomingPage() {
                 return (
                   <ScrollFadeIn key={event.id} delay={i * 0.04}>
                     <article
-                      className={`group grid items-start gap-6 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:grid-cols-[120px_1fr_auto] lg:gap-10 ${editorialInteractiveClass}`}
+                      className={`group grid items-start gap-6 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-5 sm:p-7 lg:grid-cols-[120px_1fr_auto] lg:gap-10 ${interactiveCardClass}`}
                     >
                       {/* Date column */}
                       <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
                         <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)]">
                           {date.day}
                         </p>
-                        <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-                          {date.month}
-                        </p>
+                        <Eyebrow>{date.month}</Eyebrow>
                       </div>
 
                       {/* Content */}
@@ -130,12 +126,12 @@ export default function UpcomingPage() {
                           {event.title}
                         </h3>
                         {event.description && (
-                          <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-ink)]/68 line-clamp-2">
+                          <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-muted)] line-clamp-2">
                             {event.description}
                           </p>
                         )}
                         {event.location && (
-                          <p className="font-ui text-label text-[var(--app-ink)]/60">
+                          <p className="font-ui text-label text-[var(--app-muted)]">
                             {event.location}
                           </p>
                         )}
@@ -146,12 +142,12 @@ export default function UpcomingPage() {
                         {href ? (
                           <a
                             href={href}
-                            className="inline-flex items-center gap-2 border border-[var(--app-primary)]/35 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
+                            className="inline-flex items-center gap-2 border border-[color-mix(in_srgb,var(--app-primary)_35%,transparent)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                           >
                             Register <Arrow />
                           </a>
                         ) : (
-                          <span className="inline-flex items-center border border-[var(--app-ink)]/10 px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-ink)]/60">
+                          <span className="inline-flex items-center border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-muted)]">
                             Free entry
                           </span>
                         )}
@@ -162,8 +158,8 @@ export default function UpcomingPage() {
               })}
             </div>
           )}
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+        </Container>
+      </Section>
+    </Page>
   );
 }

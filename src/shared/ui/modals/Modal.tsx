@@ -11,7 +11,7 @@ import {
 import { CheckCircle2, Clock, Loader2, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { H2, H3, BodySM } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button, buttonClass } from '@/shared/ui/button';
 import { useIsClient, useMediaQuery } from '@/hooks';
 
 // A drag past this distance, or a fast-enough flick, dismisses the sheet.
@@ -61,23 +61,26 @@ function isTopModal(id: string) {
 // Style tokens shared across all modal content
 // ---------------------------------------------------------------------------
 
+/**
+ * Field/label styles for modal forms. They reference --app-* tokens, so inside
+ * the modal panel (which carries `.tone-dark`) they render light-on-dark, and
+ * a `tone="light"` modal renders them dark-on-light — one definition, both.
+ */
 export const modalStyles = {
   sectionTitle:
-    'text-[0.6875rem] font-extrabold uppercase tracking-[0.2em] text-[var(--app-primary)]',
+    'text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]',
   label:
-    'mb-2 block text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white/58',
+    'mb-2 block text-eyebrow font-bold uppercase tracking-[0.14em] text-[var(--app-subtle)]',
   input:
-    'min-h-12 w-full rounded-xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:bg-white/[0.075] focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] focus:border-[color-mix(in_srgb,var(--app-primary)_65%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
   select:
-    'min-h-12 w-full rounded-xl border border-white/10 bg-[#15120f] px-4 py-3 text-sm text-white outline-none transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-12 w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm text-[var(--app-text)] outline-none transition-[border-color,background-color,box-shadow] duration-200 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] focus:border-[color-mix(in_srgb,var(--app-primary)_65%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
   textarea:
-    'min-h-[130px] w-full resize-y rounded-xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition-[border-color,background-color,box-shadow] duration-200 hover:border-white/16 focus:border-[var(--app-primary)]/65 focus:bg-white/[0.075] focus:ring-4 focus:ring-[var(--app-primary)]/10',
+    'min-h-[130px] w-full resize-y rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm leading-7 text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)] transition-[border-color,background-color,box-shadow] duration-200 hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] focus:border-[color-mix(in_srgb,var(--app-primary)_65%,transparent)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]',
   errorText:
-    'mt-2 rounded-lg border border-rose-300/15 bg-rose-300/[0.07] px-3 py-2 text-xs leading-5 text-rose-200',
-  primaryButton:
-    'inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--app-primary)] px-6 text-sm font-extrabold text-black shadow-[0_12px_30px_rgba(201,150,26,.2)] transition duration-200 hover:-translate-y-0.5 hover:bg-[var(--app-primary-hover)] hover:shadow-[0_16px_36px_rgba(201,150,26,.28)] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none',
-  ghostButton:
-    'inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.045] px-6 text-sm font-bold text-white/82 transition duration-200 hover:border-white/20 hover:bg-white/[0.085] hover:text-white disabled:cursor-not-allowed disabled:opacity-60',
+    'mt-2 rounded-md border border-[var(--status-error)]/25 bg-[var(--status-error)]/10 px-3 py-2 text-xs leading-5 text-[var(--status-error)]',
+  primaryButton: buttonClass('primary', 'md', 'w-full'),
+  ghostButton: buttonClass('ghost', 'md', 'w-full'),
 };
 
 // ---------------------------------------------------------------------------
@@ -204,8 +207,8 @@ function ModalPanel({
   const modalClassName = cn(
     'relative isolate flex w-full min-w-0 flex-col overflow-hidden border shadow-[0_32px_110px_rgba(0,0,0,.68)]',
     tone === 'light'
-      ? 'border-black/10 bg-[linear-gradient(155deg,#ffffff_0%,#fbfaf7_100%)] text-black'
-      : 'border-white/[0.11] bg-[linear-gradient(155deg,#1b1712_0%,#100d0a_48%,#090806_100%)] text-white ring-1 ring-black/30',
+      ? 'border-[var(--app-border)] bg-[linear-gradient(155deg,var(--app-surface)_0%,var(--app-canvas)_100%)] text-[var(--app-ink)]'
+      : 'tone-dark border-white/[0.11] bg-[linear-gradient(155deg,var(--app-dark-3)_0%,var(--app-dark-2)_48%,var(--app-dark)_100%)] text-[var(--app-text)] ring-1 ring-black/30',
     dragEnabled
       ? 'max-h-[calc(100dvh-0.5rem)] rounded-t-[1.75rem] rounded-b-none'
       : 'max-h-[calc(100dvh-1rem)] rounded-[1.5rem] sm:max-h-[min(90dvh,880px)] sm:rounded-[2rem]',
@@ -251,16 +254,16 @@ function ModalPanel({
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-12 top-0 z-20 h-px bg-gradient-to-r from-transparent via-[var(--app-primary)]/80 to-transparent"
+          className="pointer-events-none absolute inset-x-12 top-0 z-20 h-px bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--app-primary)_80%,transparent)] to-transparent"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-28 -z-10 h-64 w-64 rounded-full bg-[var(--app-primary)]/[0.09] blur-3xl"
+          className="pointer-events-none absolute -right-24 -top-28 -z-10 h-64 w-64 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_9%,transparent)] blur-3xl"
         />
         {isLoading ? (
           <div className="absolute inset-0 z-30 grid place-items-center bg-black/72 px-6 backdrop-blur-md">
-            <div className="flex min-w-52 flex-col items-center gap-3 rounded-2xl border border-white/12 bg-[#15110d]/95 px-6 py-5 text-center shadow-2xl">
-              <span className="grid h-11 w-11 place-items-center rounded-full border border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10">
+            <div className="flex min-w-52 flex-col items-center gap-3 rounded-2xl border border-white/12 bg-[color-mix(in_srgb,var(--app-dark-3)_95%,transparent)] px-6 py-5 text-center shadow-2xl">
+              <span className="grid h-11 w-11 place-items-center rounded-full border border-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]">
                 <Loader2 className="h-5 w-5 animate-spin text-[var(--app-primary)]" />
               </span>
               <BodySM className="text-white/75">{loadingText}</BodySM>
@@ -284,9 +287,7 @@ function ModalPanel({
           <header
             className={cn(
               'relative flex min-w-0 items-start justify-between gap-4 border-b px-5 pb-5 pt-4 sm:gap-6 sm:px-8 sm:pb-6 sm:pt-7',
-              tone === 'light'
-                ? 'border-black/[0.07] bg-black/[0.012]'
-                : 'border-white/[0.08] bg-white/[0.022]',
+              'border-current/[0.08] bg-current/[0.02]',
               dragEnabled && 'sm:touch-auto'
             )}
           >
@@ -295,10 +296,7 @@ function ModalPanel({
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border shadow-inner sm:h-11 sm:w-11 sm:rounded-2xl [&_svg]:h-[1.125rem] [&_svg]:w-[1.125rem]',
-                    tone === 'light'
-                      ? 'border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-dark)]'
-                      : 'border-[var(--app-primary)]/20 bg-[var(--app-primary)]/10 text-[var(--app-primary-light)]'
+                    'mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary-dark)] shadow-inner sm:h-11 sm:w-11 sm:rounded-2xl [&_svg]:h-[1.125rem] [&_svg]:w-[1.125rem]'
                   )}
                 >
                   {headerIcon || <Sparkles />}
@@ -309,8 +307,7 @@ function ModalPanel({
                   <h2
                     id={titleId}
                     className={cn(
-                      'break-words font-headline text-[clamp(1.4rem,6vw,2rem)] font-normal leading-[1.12] tracking-[-0.02em]',
-                      tone === 'light' ? 'text-black' : 'text-white'
+                      'break-words font-headline text-[clamp(1.4rem,6vw,2rem)] font-semibold leading-[1.12] tracking-[-0.02em] text-[var(--app-text)]'
                     )}
                   >
                     {title}
@@ -321,8 +318,7 @@ function ModalPanel({
                   <p
                     id={subtitleId}
                     className={cn(
-                      'mt-2.5 max-w-xl break-words font-ui text-xs leading-5 sm:text-sm sm:leading-6',
-                      tone === 'light' ? 'text-black/55' : 'text-white/52'
+                      'mt-2.5 max-w-xl break-words font-ui text-xs leading-5 sm:text-sm sm:leading-6 text-[var(--app-muted)]'
                     )}
                   >
                     {subtitle}
@@ -339,10 +335,8 @@ function ModalPanel({
                 disabled={!canClose}
                 aria-label="Close modal"
                 className={cn(
-                  'grid h-10 w-10 flex-none place-items-center rounded-full border transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-primary)]/15 disabled:cursor-not-allowed disabled:opacity-50',
-                  tone === 'light'
-                    ? 'border-black/10 bg-black/[0.025] text-black/55 hover:rotate-3 hover:bg-black hover:text-white'
-                    : 'border-white/10 bg-white/[0.045] text-white/55 hover:rotate-3 hover:border-white/18 hover:bg-white/[0.1] hover:text-white'
+                  'grid h-10 w-10 flex-none place-items-center rounded-full border transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] disabled:cursor-not-allowed disabled:opacity-50',
+                  'border-current/15 bg-current/[0.04] text-current/60 hover:rotate-3 hover:border-current/30 hover:bg-current/[0.1] hover:text-current'
                 )}
               >
                 <X className="h-4 w-4" />
@@ -536,7 +530,7 @@ export function SuccessModal({
       forceBottomSheet
     >
       <div className="text-center">
-        <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl border border-[var(--status-success)]/25 bg-[var(--status-success)]/10 text-[var(--status-success)]">
           <CheckCircle2 className="h-8 w-8" />
         </div>
 
@@ -581,7 +575,7 @@ export function ServiceUnavailableSheet({
       maxWidth="max-w-lg"
     >
       <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-        <div className="pointer-events-none absolute right-0 top-0 h-44 w-44 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 top-0 h-44 w-44 translate-x-1/3 -translate-y-1/3 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] blur-3xl" />
 
         <div className="relative flex items-start justify-between gap-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-label font-bold uppercase tracking-[0.18em] text-white/75">

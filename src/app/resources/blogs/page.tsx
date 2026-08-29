@@ -6,14 +6,15 @@ import { BlogSubscribeForm } from './BlogSubscribeForm';
 import SiteHero from '@/features/hero/SiteHero';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import {
-  EditorialContainer,
-  EditorialPage,
-  EditorialHeader,
-  EditorialLink,
-  EditorialPanel,
-  EditorialSection,
-  editorialActionClass,
-} from '@/shared/ui/editorial';
+  Container,
+  CtaLink,
+  Eyebrow,
+  Page,
+  Panel,
+  Section,
+  SectionHeader,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 export const metadata: Metadata = {
   title: 'Blog & Devotionals',
@@ -24,17 +25,18 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
+        backgroundImage="/Picflow/DSC00123 copy.webp"
         eyebrow="Blog & Devotionals"
         title="Insights, reflections, and devotionals from the church."
         subtitle="Written content to encourage, teach, and equip you between Sundays."
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
+      <Section tone="dark">
+        <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <EditorialHeader
+            <SectionHeader
               eyebrow="Coming soon"
               title="We are preparing devotionals and articles for you."
               description="Our team is working on written content—devotionals, sermon notes, and reflections—that will live here. Check back soon."
@@ -46,25 +48,20 @@ export default function BlogPage() {
                 href={SOCIAL_LINKS.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={editorialActionClass.primary}
+                className={buttonClass('primary')}
               >
                 <Play className="h-3.5 w-3.5 fill-[var(--app-ink)]" />
                 Watch our messages
               </a>
 
-              <EditorialLink href="/resources/sermons" variant="outline">
+              <CtaLink href="/resources/sermons" variant="outline">
                 Browse sermons <ArrowRight className="h-3.5 w-3.5" />
-              </EditorialLink>
+              </CtaLink>
             </div>
           </div>
 
-          <EditorialPanel
-            tone="dark"
-            className="mx-auto mt-16 max-w-xl p-8 text-center"
-          >
-            <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-              Get notified
-            </p>
+          <Panel tone="dark" className="mx-auto mt-16 max-w-xl p-8 text-center">
+            <Eyebrow>Get notified</Eyebrow>
             <p className="mt-2 font-ui text-body-sm text-white/70">
               Be the first to know when devotionals and articles go live. Drop
               your email below.
@@ -72,16 +69,11 @@ export default function BlogPage() {
             <div className="mt-6 flex justify-center">
               <BlogSubscribeForm />
             </div>
-          </EditorialPanel>
+          </Panel>
 
           {/* WhatsApp update strip */}
-          <EditorialPanel
-            tone="dark"
-            className="mx-auto mt-5 max-w-xl p-6 text-center"
-          >
-            <p className="font-ui text-label font-bold uppercase tracking-[0.18em] text-[var(--app-primary)]">
-              Or join our community
-            </p>
+          <Panel tone="dark" className="mx-auto mt-5 max-w-xl p-6 text-center">
+            <Eyebrow>Or join our community</Eyebrow>
             <p className="mt-2 font-ui text-body-sm text-white/65">
               Get devotionals, sermon notes, and church updates directly via
               WhatsApp.
@@ -90,13 +82,13 @@ export default function BlogPage() {
               href="https://wa.me/2347069995333"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex h-10 items-center gap-2 border border-[var(--app-whatsapp)]/25 bg-[var(--app-whatsapp)]/10 px-5 font-ui text-label font-bold text-[var(--app-whatsapp)] transition hover:bg-[var(--app-whatsapp)]/18"
+              className="mt-5 inline-flex h-10 items-center gap-2 border border-[color-mix(in_srgb,var(--app-whatsapp)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-whatsapp)_10%,transparent)] px-5 font-ui text-label font-bold text-[var(--app-whatsapp)] transition hover:bg-[color-mix(in_srgb,var(--app-whatsapp)_18%,transparent)]"
             >
               Join WhatsApp community
             </a>
-          </EditorialPanel>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+          </Panel>
+        </Container>
+      </Section>
+    </Page>
   );
 }

@@ -5,9 +5,9 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 import { useCallback, useState } from 'react';
 import { Check, Copy, ShieldCheck } from 'lucide-react';
 
-import { BaseModal, modalStyles } from './Base';
+import { BaseModal, modalStyles } from './Modal';
 import { H3, H4, BodySM, Caption } from '@/shared/text';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import type { GivingModalProps } from '@/lib/types';
 
 export default function GivingModal({
@@ -50,7 +50,7 @@ export default function GivingModal({
       forceBottomSheet
     >
       <div className="space-y-5">
-        <section className="overflow-hidden min-w-0 border border-[var(--app-primary)]/15 bg-[var(--app-primary)]/8 p-5">
+        <section className="overflow-hidden min-w-0 border border-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_8%,transparent)] p-5">
           <blockquote
             className="pl-4"
             // eslint-disable-next-line no-restricted-syntax
@@ -139,8 +139,8 @@ export default function GivingModal({
                           }
                           className={`h-10 w-10 flex-none rounded-full transition ${
                             isCopied
-                              ? 'bg-emerald-400/15 text-emerald-300'
-                              : 'bg-[var(--app-primary)]/10 text-[var(--app-primary)] hover:bg-[var(--app-primary)]/20'
+                              ? 'bg-[var(--status-success)]/15 text-[var(--status-success)]'
+                              : 'bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)] hover:bg-[color-mix(in_srgb,var(--app-primary)_20%,transparent)]'
                           }`}
                           aria-label={
                             isCopied
@@ -160,7 +160,7 @@ export default function GivingModal({
                       {isCopied ? (
                         <Caption
                           weight="semibold"
-                          className="mt-2 text-emerald-300"
+                          className="mt-2 text-[var(--status-success)]"
                         >
                           Account number copied.
                         </Caption>

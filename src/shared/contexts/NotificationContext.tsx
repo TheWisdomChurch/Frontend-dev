@@ -9,7 +9,7 @@ import React, {
   useEffect,
 } from 'react';
 import gsap from 'gsap';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 
 export interface Notification {
   id: string;
@@ -46,9 +46,10 @@ export function NotificationProvider({
     if (element) {
       gsap.to(element, {
         opacity: 0,
-        y: -20,
-        duration: 0.3,
-        ease: 'back.in',
+        x: 64,
+        scale: 0.9,
+        duration: 0.34,
+        ease: 'power2.in',
         onComplete: () => {
           setNotifications(prev => prev.filter(n => n.id !== id));
         },
@@ -146,15 +147,17 @@ function NotificationItem({
       itemRef.current,
       {
         opacity: 0,
-        y: -30,
-        x: 50,
+        y: -18,
+        x: 64,
+        scale: 0.9,
       },
       {
         opacity: 1,
         y: 0,
         x: 0,
-        duration: 0.5,
-        ease: 'back.out',
+        scale: 1,
+        duration: 0.6,
+        ease: 'back.out(1.5)',
       }
     );
   }, []);
@@ -165,23 +168,23 @@ function NotificationItem({
       { bg: string; border: string; icon: string }
     > = {
       success: {
-        bg: 'rgba(76, 175, 80, 0.1)',
-        border: '#4CAF50',
+        bg: 'color-mix(in srgb, var(--status-success) 12%, transparent)',
+        border: 'var(--status-success)',
         icon: '✓',
       },
       error: {
-        bg: 'rgba(244, 67, 54, 0.1)',
-        border: '#F44336',
+        bg: 'color-mix(in srgb, var(--status-error) 12%, transparent)',
+        border: 'var(--status-error)',
         icon: '✗',
       },
       info: {
-        bg: 'rgba(33, 150, 243, 0.1)',
-        border: '#2196F3',
+        bg: 'color-mix(in srgb, var(--status-info) 12%, transparent)',
+        border: 'var(--status-info)',
         icon: 'ℹ',
       },
       warning: {
-        bg: 'rgba(255, 152, 0, 0.1)',
-        border: '#FF9800',
+        bg: 'color-mix(in srgb, var(--status-warning) 12%, transparent)',
+        border: 'var(--status-warning)',
         icon: '!',
       },
     };
@@ -219,7 +222,7 @@ function NotificationItem({
         {colors.icon}
       </div>
 
-      <div className="flex-1 text-sm leading-[1.5] text-[#F5F0E8]">
+      <div className="flex-1 text-sm leading-[1.5] text-white/90">
         {notification.message}
       </div>
 
@@ -229,7 +232,7 @@ function NotificationItem({
         size="icon"
         onClick={() => onRemove(notification.id)}
         aria-label="Dismiss notification"
-        className="min-w-6 min-h-0 h-auto p-0 text-[18px] text-[#999] hover:text-[#C9A84C]"
+        className="min-w-6 min-h-0 h-auto p-0 text-[18px] text-white/55 hover:text-[var(--app-primary)]"
       >
         ✕
       </Button>

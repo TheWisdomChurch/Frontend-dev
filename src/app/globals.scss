@@ -1,42 +1,60 @@
-@use '../styles/index';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   DESIGN TOKENS — the single source of truth for the whole app.
+   One name per value. Four orthogonal groups: colour/surface, type scale,
+   spacing rhythm, status. Nothing else in the codebase may define design
+   values — components consume these via Tailwind arbitrary values
+   (`bg-[var(--app-surface)]`) or the utilities wired up in tailwind.config.ts.
+============================================================================= */
 
 :root {
-  /* Semantic typography aliases. Existing components can migrate without
-     creating competing font systems. */
-  --font-bricolage: var(--font-product-sans);
-  --app-header-height: 72px;
-  --app-radius: 18px;
+  /* ------------------------------------------------------------------ *
+   * TYPEFACE  (font files are loaded in src/shared/fonts/fonts.ts)     *
+   * ------------------------------------------------------------------ */
+  --font-sans: var(--font-product-sans);
 
-  /* Responsive layout rhythm. These are the only page-level gutter and
-     section-spacing sources; components consume them through layout recipes. */
-  --page-gutter: clamp(1rem, 2.7vw, 2.5rem);
-  --page-gutter-compact: clamp(0.75rem, 2vw, 1.5rem);
-  --content-wide: 96rem;
+  /* ------------------------------------------------------------------ *
+   * COLOUR                                                            *
+   * ------------------------------------------------------------------ */
 
-  /* Surfaces — clean white */
+  /* Light surfaces (page → sunk → raised) */
   --app-surface: #ffffff;
   --app-surface-2: #f5f5f5;
   --app-surface-3: #ebebeb;
-
-  /* Canvas — warm off-white (editorial light sections) */
+  /* Opaque near-white — for solid fills that must stay readable in both
+     themes even where --app-surface itself is translucent. */
+  --app-surface-solid: #ffffff;
   --app-canvas: #faf9f7;
   --app-canvas-2: #f2f0ec;
   --app-canvas-3: #e8e5e0;
+
+  /* Dark surfaces (intentional dark sections: hero, CTA, feature panels) */
+  --app-dark: #07060a;
+  --app-dark-2: #0e0c0a;
+  --app-dark-3: #17140f;
+  --app-dark-input: #1a1814;
+
+  /* Ink / neutral extremes */
   --app-ink: #0d0a06;
-
-  /* Mid-tones (section variety) */
   --app-neutral: #1c1a17;
-  --app-neutral-2: #252219;
 
-  /* Typography */
+  /* Text */
   --app-text: #0d0b08;
   --app-muted: #5c5849;
   --app-subtle: #8a8278;
+  /* Text sitting on dark imagery / overlays (heroes, smoke panels) */
+  --app-on-dark: #f6f2ea;
 
-  /* Borders */
+  /* Line */
   --app-border: rgba(0, 0, 0, 0.1);
 
-  /* Primary — gold */
+  /* Brand — gold. -10/-20/-40 are the same hue at 10/20/40% alpha.
+     `--app-brand` is the fixed section fill; `.tone-brand` re-themes everything
+     else to dark-on-gold, so `--app-primary` must stay separate from it. */
+  --app-brand: #c9961a;
   --app-primary: #c9961a;
   --app-primary-light: #e8b44a;
   --app-primary-dark: #a0740c;
@@ -45,60 +63,10 @@
   --app-primary-20: rgba(201, 150, 26, 0.2);
   --app-primary-40: rgba(201, 150, 26, 0.4);
 
-  /* Brand-partner colors */
+  /* Partner brands */
   --app-whatsapp: #25d366;
   --app-youtube: #cc0000;
   --app-youtube-hover: #aa0000;
-
-  /* Base corner radius consumed by Tailwind's rounded-lg/md/sm utilities */
-  --radius: 0.875rem;
-
-  /* Dark surface tokens — used in hero sections, feature panels, cards */
-  --app-dark: #07060a;
-  --app-dark-2: #0e0c0a;
-  --app-dark-3: #17140f;
-  --app-dark-input: #1a1814;
-
-  /* Display type scale */
-  --type-display-xl: clamp(4rem, 9vw, 7.5rem);
-  --type-display-lg: clamp(3rem, 6vw, 5.5rem);
-  --type-display-md: clamp(2.25rem, 4vw, 3.75rem);
-  --type-display-sm: clamp(1.75rem, 3vw, 2.75rem);
-  --type-lead: clamp(1.05rem, 1.5vw, 1.25rem);
-
-  /* Heading scale — section/card-level, below display */
-  --type-heading-lg: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
-  --type-heading-md: clamp(1.25rem, 1rem + 1vw, 1.65rem);
-  --type-heading-sm: clamp(1.05rem, 0.94rem + 0.5vw, 1.3rem);
-
-  /* Body scale */
-  --type-body-lg: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
-  --type-body-md: clamp(0.85rem, 0.82rem + 0.15vw, 0.92rem);
-  --type-body-sm: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
-
-  /* Micro scale — labels, captions, eyebrows */
-  --type-label: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
-  --type-caption: clamp(0.68rem, 0.66rem + 0.08vw, 0.72rem);
-  --type-eyebrow: clamp(0.58rem, 0.57rem + 0.05vw, 0.64rem);
-
-  /* Section spacing scale */
-  --section-xs: clamp(2.25rem, 4vw, 3.5rem);
-  --section-sm: clamp(3.5rem, 6vw, 5.5rem);
-  --section-md: clamp(4.5rem, 8vw, 7rem);
-  --section-lg: clamp(5.5rem, 10vw, 9rem);
-  --section-xl: clamp(7rem, 12vw, 11rem);
-
-  /* Refined border radii */
-  --radius-card: 0.875rem;
-  --radius-button: 0.5rem;
-  --radius-input: 0.75rem;
-  --radius-badge: 0.25rem;
-  --radius-image: 0.875rem;
-
-  /* Legacy radius scale (keep for compat) */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 0.875rem;
 
   /* Status */
   --status-success: #22c55e;
@@ -106,9 +74,168 @@
   --status-error: #ef4444;
   --status-info: #3b82f6;
 
-  /* Overlays */
-  --overlay-light: rgba(255, 255, 255, 0.06);
-  --overlay-dark: rgba(0, 0, 0, 0.6);
+  /* ------------------------------------------------------------------ *
+   * TYPE SCALE  (bridged to Tailwind `text-*` utilities in config)     *
+   * Compact editorial scale: body ~15–16px, headings restrained. Buttons  *
+   * keep their own size scale in button.tsx.                             *
+   * ------------------------------------------------------------------ */
+  --type-display-xl: clamp(2.75rem, 6vw, 5rem);
+  --type-display-lg: clamp(2.4rem, 4.6vw, 3.9rem);
+  --type-display-md: clamp(1.95rem, 3.2vw, 2.9rem);
+  --type-display-sm: clamp(1.6rem, 2.4vw, 2.2rem);
+  --type-heading-lg: clamp(1.35rem, 1.15rem + 1vw, 1.8rem);
+  --type-heading-md: clamp(1.18rem, 1.05rem + 0.65vw, 1.45rem);
+  --type-heading-sm: clamp(1.05rem, 0.98rem + 0.32vw, 1.2rem);
+  --type-lead: clamp(1rem, 0.95rem + 0.35vw, 1.18rem);
+  --type-body-lg: clamp(0.9375rem, 0.92rem + 0.15vw, 1rem);
+  --type-body-md: clamp(0.9rem, 0.88rem + 0.12vw, 0.9688rem);
+  --type-body-sm: clamp(0.8438rem, 0.83rem + 0.08vw, 0.9rem);
+  --type-label: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
+  --type-caption: clamp(0.7188rem, 0.7rem + 0.06vw, 0.775rem);
+  --type-eyebrow: clamp(0.6563rem, 0.64rem + 0.08vw, 0.7188rem);
+
+  /* ------------------------------------------------------------------ *
+   * SPACING — section rhythm (bridged to `py-section-*` in config).    *
+   * Generous vertical breathing room; sections should never feel       *
+   * crowded against each other.                                        *
+   * ------------------------------------------------------------------ */
+  --section-xs: clamp(2.5rem, 5vw, 4.5rem);
+  --section-sm: clamp(3.5rem, 7vw, 7rem);
+  --section-md: clamp(4.5rem, 9vw, 9.5rem);
+  --section-lg: clamp(6rem, 11vw, 12rem);
+  --section-xl: clamp(7rem, 14vw, 15rem);
+
+  /* ------------------------------------------------------------------ *
+   * RADIUS — one scale. Semantic names map onto it (no bare values).   *
+   * ------------------------------------------------------------------ */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+
+  --radius: var(--radius-lg); /* Tailwind rounded-lg/md/sm base */
+  --radius-badge: var(--radius-xs);
+  --radius-button: 0.5rem; /* sits between sm and md; kept until <Button> lands */
+  --radius-input: 0.75rem; /* sits between md and lg; kept until <Field> lands */
+  --radius-card: var(--radius-lg);
+  --radius-image: var(--radius-lg);
+
+  /* ------------------------------------------------------------------ *
+   * LAYOUT                                                            *
+   * ------------------------------------------------------------------ */
+  --app-header-height: 72px;
+  --page-gutter: clamp(1.25rem, 3.2vw, 3rem);
+  --page-gutter-compact: clamp(1rem, 2.2vw, 1.75rem);
+  /* Contained editorial measure — content is never edge-to-edge on wide
+     screens. Text-heavy layouts use the narrower Container widths. */
+  --content-wide: 78rem;
+
+  /* Form controls, scrollbars and UA chrome follow the palette. */
+  color-scheme: light;
+}
+
+/* ============================================================================
+   SYSTEM DARK MODE — when the visitor's OS is set to dark and they have not
+   explicitly chosen light (`[data-theme="light"]` reserved for a future
+   in-app toggle), re-point the SAME semantic tokens to an opaque dark palette.
+   Every component already consumes `--app-*`, so the whole site flips with no
+   per-component work. `.tone-dark` / `.tone-brand` sections keep their own
+   scoped re-theming and are unaffected.
+============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    /* Opaque dark surfaces (page → sunk → raised). Distinct from the
+       translucent lifts in `.tone-dark`, which sit on top of these. */
+    --app-surface: #0c0b0d;
+    --app-surface-2: #151317;
+    --app-surface-3: #201d22;
+    --app-surface-solid: #151317;
+    --app-canvas: #0e0d10;
+    --app-canvas-2: #151217;
+    --app-canvas-3: #1e1a20;
+
+    /* Ink / neutral flip so `solid` buttons become light-on-dark. */
+    --app-ink: #f4efe4;
+    --app-neutral: #ffffff;
+
+    /* Text */
+    --app-text: #f4efe4;
+    --app-muted: #b9b1a3;
+    --app-subtle: #8b8377;
+
+    /* Line */
+    --app-border: rgba(255, 255, 255, 0.12);
+
+    /* Gold: the "accent for light backgrounds" flips to the lighter gold so
+       it keeps contrast on dark, and the alpha washes follow it. */
+    --app-primary-dark: #e8b44a;
+    --app-primary-10: rgba(232, 180, 74, 0.12);
+    --app-primary-20: rgba(232, 180, 74, 0.22);
+    --app-primary-40: rgba(232, 180, 74, 0.4);
+  }
+}
+
+/* ============================================================================
+   DARK TONE — apply `.tone-dark` (or [data-theme="dark"]) to any dark surface
+   (a <Section tone="dark">, the hero, a dark card). It re-points the semantic
+   text/surface/border tokens to their light-on-dark values, so every
+   descendant — including bare <p>/<h*> and any component using
+   text-[var(--app-*)] — becomes readable without per-element overrides.
+============================================================================ */
+
+.tone-dark,
+[data-theme='dark'] {
+  /* Surfaces on dark are translucent lifts so a panel/card reads above
+     whatever dark background it sits on. */
+  --app-surface: rgba(255, 255, 255, 0.045);
+  --app-surface-2: rgba(255, 255, 255, 0.07);
+  --app-surface-3: rgba(255, 255, 255, 0.1);
+  --app-canvas: rgba(255, 255, 255, 0.03);
+  --app-canvas-2: rgba(255, 255, 255, 0.05);
+  --app-canvas-3: rgba(255, 255, 255, 0.08);
+  --app-surface-solid: #12100c;
+
+  --app-ink: #f4efe4;
+  /* `--app-neutral` is the `solid` button's hover fill; on dark it must be a
+     brighter shade of `--app-ink` (which is the button's rest fill here), not
+     the light-mode near-black. */
+  --app-neutral: #ffffff;
+  --app-text: #f4efe4;
+  --app-muted: #c0b7a7;
+  --app-subtle: #8f8676;
+  --app-border: rgba(255, 255, 255, 0.14);
+
+  /* On dark, the "accent for light backgrounds" flips to the lighter gold. */
+  --app-primary-dark: var(--app-primary-light);
+}
+
+/* ============================================================================
+   BRAND TONE — `.tone-brand` on a gold `<Section tone="brand">`. The section
+   keeps its `--app-brand` fill; everything on top of it re-themes to
+   dark-on-gold so text, hairlines and outline buttons all read. `--app-primary`
+   itself becomes ink here so gold-tinted borders/washes turn into dark ones.
+============================================================================ */
+
+.tone-brand {
+  --app-text: #0d0a06;
+  --app-ink: #0d0a06;
+  /* `solid` button hover fill — a touch lighter than the ink rest fill. */
+  --app-neutral: #262019;
+  --app-muted: rgba(13, 10, 6, 0.74);
+  --app-subtle: rgba(13, 10, 6, 0.56);
+  --app-border: rgba(13, 10, 6, 0.24);
+  --app-surface: #ffffff;
+  --app-surface-solid: #ffffff;
+  --app-surface-2: rgba(13, 10, 6, 0.07);
+  --app-primary: #0d0a06;
+  --app-primary-dark: #0d0a06;
+  --app-primary-light: #0d0a06;
+  --app-primary-10: rgba(13, 10, 6, 0.1);
+  --app-primary-20: rgba(13, 10, 6, 0.16);
+  --app-primary-40: rgba(13, 10, 6, 0.32);
 }
 
 html {
@@ -160,89 +287,6 @@ body {
 }
 
 /* =========================
-   KEYFRAMES
-========================= */
-
-@keyframes kenburns {
-  from {
-    scale: 1;
-  }
-  to {
-    scale: 1.08;
-  }
-}
-
-@keyframes community-ticker-scroll {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-.community-ticker {
-  min-width: 0;
-  overflow: hidden;
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 8%,
-    #000 92%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 8%,
-    #000 92%,
-    transparent 100%
-  );
-}
-
-.community-ticker__track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-  animation: community-ticker-scroll 22s linear infinite;
-}
-
-.community-ticker__group {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: clamp(1.75rem, 4vw, 3.5rem);
-  padding-right: clamp(1.75rem, 4vw, 3.5rem);
-}
-
-.community-ticker:hover .community-ticker__track,
-.community-ticker:focus-within .community-ticker__track {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .community-ticker {
-    overflow-x: auto;
-    mask-image: none;
-    -webkit-mask-image: none;
-    scrollbar-width: none;
-  }
-
-  .community-ticker::-webkit-scrollbar {
-    display: none;
-  }
-
-  .community-ticker__track {
-    animation: none;
-    transform: none;
-  }
-
-  .community-ticker__group[aria-hidden='true'] {
-    display: none;
-  }
-}
-
-/* =========================
    HARD RESET / PAGE SHELL
 ========================= */
 
@@ -269,7 +313,7 @@ body {
   background: var(--app-surface);
   color: var(--app-text);
   font-size: 15.5px;
-  line-height: 1.6;
+  line-height: 1.62;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -365,32 +409,36 @@ h6 {
 
 h1,
 h2 {
-  font-family: var(--font-playfair), 'Georgia', serif;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
 }
 
 h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-bricolage), sans-serif;
+  font-family: var(--font-sans), sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw, 4rem);
+  font-size: var(--type-display-sm);
 }
 
 h2 {
-  font-size: clamp(1.55rem, 2.6vw, 2.75rem);
+  font-size: var(--type-heading-lg);
 }
 
 h3 {
-  font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+  font-size: var(--type-heading-md);
+}
+
+h4 {
+  font-size: var(--type-heading-sm);
 }
 
 p,
@@ -401,7 +449,8 @@ li {
 }
 
 p {
-  font-size: clamp(0.92rem, 0.25vw + 0.85rem, 1rem);
+  font-size: var(--type-body-md);
+  line-height: 1.7;
 }
 
 a {
@@ -449,53 +498,6 @@ section[data-gsap='reveal'] {
   transform-origin: center top;
 }
 
-.perf-section {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 720px;
-}
-
-@media (max-width: 640px) {
-  .perf-section {
-    contain-intrinsic-size: 1px 560px;
-  }
-}
-
-// Fluid safety net for raw Tailwind display-size utilities (text-4xl and up).
-// Applied unconditionally (not gated behind a max-width query) so a
-// hardcoded text-6xl+ heading can't silently render at its full fixed rem
-// size in the 641–1024px tablet/narrow-laptop gap that a mobile-only
-// override would miss — each clamp() interpolates smoothly from a
-// mobile-safe minimum up to Tailwind's original size as the viewport grows.
-.text-9xl {
-  font-size: clamp(2.4rem, 9vw, 8rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-8xl {
-  font-size: clamp(2.2rem, 7vw, 6rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-7xl {
-  font-size: clamp(2rem, 6vw, 4.5rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-6xl {
-  font-size: clamp(2rem, 5vw, 3.75rem) !important;
-  line-height: 1.05 !important;
-}
-
-.text-5xl {
-  font-size: clamp(1.8rem, 4vw, 3rem) !important;
-  line-height: 1.08 !important;
-}
-
-.text-4xl {
-  font-size: clamp(1.55rem, 3vw, 2.25rem) !important;
-  line-height: 1.12 !important;
-}
-
 @media (max-width: 640px) {
   body {
     font-size: 15px;
@@ -515,8 +517,16 @@ section[data-gsap='reveal'] {
   z-index: 1000;
   width: 100%;
   height: var(--app-header-height);
-  background: transparent;
+  /* A soft top scrim so the white nav stays legible over a bright hero
+     before the user scrolls and the solid bar takes over. */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0.12) 60%,
+    transparent
+  );
   transition:
+    height 280ms cubic-bezier(0.16, 1, 0.3, 1),
     background 320ms ease,
     border-color 320ms ease,
     box-shadow 320ms ease,
@@ -524,20 +534,12 @@ section[data-gsap='reveal'] {
 }
 
 body[data-scrolled='true'] .site-header {
-  background: rgba(7, 6, 10, 0.96);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.35);
-}
-
-/* The premium landing page uses one calm sans-serif display language.
-   Editorial serif remains available for quotations and long-form content. */
-.premium-home h2,
-.premium-home h3 {
-  font-family: var(--font-product-sans), 'Inter', sans-serif;
-  font-style: normal;
-  letter-spacing: -0.035em;
+  height: calc(var(--app-header-height) - 10px);
+  background: rgba(10, 8, 6, 0.82);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.28);
 }
 
 .site-header__inner {
@@ -564,14 +566,14 @@ body[data-scrolled='true'] .site-header {
   display: inline-flex;
   align-items: center;
   height: 36px;
-  padding: 0 0.9rem;
-  font-family: var(--font-bricolage, sans-serif);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.72);
+  padding: 0 0.95rem;
+  font-family: var(--font-sans, sans-serif);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--radius-button);
   gap: 0.3rem;
   transition:
     color 180ms ease,
@@ -614,10 +616,10 @@ body[data-scrolled='true'] .site-header {
 }
 
 .site-header__logo {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   flex: 0 0 auto;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
 }
 
@@ -651,24 +653,25 @@ body[data-scrolled='true'] .site-header {
 .site-header__give {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  height: 36px;
-  padding: 0 1rem;
+  gap: 0.45rem;
+  height: 38px;
+  padding: 0 1.1rem;
   border: 1px solid var(--app-primary);
-  border-radius: 4px;
-  color: var(--app-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  border-radius: var(--radius-button);
+  background: var(--app-primary);
+  color: var(--app-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
   transition:
     background 200ms ease,
-    color 200ms ease;
+    box-shadow 200ms ease,
+    transform 200ms ease;
 }
 
 .site-header__give svg {
-  width: 0.85rem;
-  height: 0.85rem;
+  width: 0.9rem;
+  height: 0.9rem;
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -677,20 +680,22 @@ body[data-scrolled='true'] .site-header {
 }
 
 .site-header__give:hover {
-  background: var(--app-primary);
-  color: #07060a;
+  background: var(--app-primary-light);
+  border-color: var(--app-primary-light);
+  box-shadow: 0 8px 22px rgba(201, 150, 26, 0.35);
+  transform: translateY(-1px);
 }
 
 .site-header__toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  height: 36px;
-  padding: 0 0.75rem 0 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.75);
+  gap: 0.55rem;
+  height: 38px;
+  padding: 0 0.85rem 0 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-button);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.82);
   cursor: pointer;
   transition:
     border-color 200ms ease,
@@ -710,9 +715,9 @@ body[data-scrolled='true'] .site-header {
 }
 
 .site-header__toggle-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   line-height: 1;
   min-width: 2.8em;
   text-align: center;
@@ -872,7 +877,7 @@ body.nav-open {
 }
 
 .nav-overlay__close-label {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -921,7 +926,7 @@ body.nav-open {
 }
 
 .nav-footer__label {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.55rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -931,7 +936,7 @@ body.nav-open {
 }
 
 .nav-footer__time {
-  font-family: var(--font-playfair, serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.95rem;
   font-weight: 400;
   color: #ffffff;
@@ -939,7 +944,7 @@ body.nav-open {
 }
 
 .nav-footer__venue {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.35);
   margin-bottom: 0.55rem;
@@ -947,7 +952,7 @@ body.nav-open {
 
 .nav-footer__cta {
   display: inline-block;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.68rem;
   font-weight: 600;
   color: var(--app-primary, #c9961a);
@@ -967,7 +972,7 @@ body.nav-open {
 }
 
 .nav-footer__social-link {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
@@ -998,7 +1003,7 @@ body.nav-open {
 }
 
 .nav-item__link {
-  font-family: var(--font-playfair, serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: clamp(2.1rem, 4.5vw, 3.6rem);
   font-weight: 400;
   line-height: 1;
@@ -1050,7 +1055,7 @@ body.nav-open {
 
 .nav-item__sub {
   margin: 0.45rem 0 0;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.78rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.32);
@@ -1090,7 +1095,7 @@ body.nav-open {
 
 .nav-panel__eyebrow {
   margin: 0 0 0.55rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -1100,7 +1105,7 @@ body.nav-open {
 
 .nav-panel__title {
   margin: 0 0 0.3rem;
-  font-family: var(--font-playfair, serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 1.3rem;
   font-weight: 400;
   line-height: 1.2;
@@ -1109,7 +1114,7 @@ body.nav-open {
 
 .nav-panel__detail {
   margin: 0 0 0.2rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -1117,7 +1122,7 @@ body.nav-open {
 .nav-panel__cta {
   display: inline-flex;
   margin-top: 0.8rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--app-primary, #c9961a);
@@ -1152,7 +1157,7 @@ body.nav-open {
 
 .nav-socials__label {
   margin: 0 0 0.65rem;
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -1167,7 +1172,7 @@ body.nav-open {
 }
 
 .nav-socials__link {
-  font-family: var(--font-bricolage, sans-serif);
+  font-family: var(--font-sans, sans-serif);
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.38);
   text-decoration: none;
@@ -1176,6 +1181,400 @@ body.nav-open {
 
 .nav-socials__link:hover {
   color: rgba(255, 255, 255, 0.78);
+}
+
+/* =========================
+   MARQUEE — "TV scroll" ticker
+========================= */
+
+.marquee {
+  --marquee-duration: 32s;
+  --marquee-gap: clamp(1.75rem, 5vw, 3.5rem);
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--marquee-gap);
+  padding-right: var(--marquee-gap);
+  min-width: 100%;
+  animation: marquee-scroll var(--marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* =========================
+   SMOKE PANEL — white at rest, heavy smoke rolls in on hover
+   All tuning lives here (durations, density, tint) so pages never
+   re-declare the effect. Freezes to a plain white card under
+   prefers-reduced-motion via the global animation reset.
+========================= */
+
+.smoke-panel {
+  /* --- tunables --- */
+  --smoke-in: 1750ms; /* how long the haze takes to fully settle */
+  --smoke-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --smoke-density: 0.9; /* opacity of the dark bed that carries the text */
+  --smoke-haze: 16px; /* softness the smoke materialises through */
+  --smoke-tint: var(--app-primary-40); /* warm wisps threaded through it */
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(15rem, 22vw, 21rem);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  border: 1px solid var(--app-border);
+  border-radius: var(--radius-card);
+  background: var(--app-surface-solid);
+  color: var(--app-text);
+  transition:
+    transform 700ms var(--smoke-ease),
+    border-color 700ms ease,
+    box-shadow 700ms ease,
+    color 620ms ease 260ms;
+}
+
+.smoke-panel:hover,
+.smoke-panel:focus-visible {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--app-primary) 42%, transparent);
+  box-shadow: 0 44px 130px -44px rgba(0, 0, 0, 0.5);
+  color: var(--app-on-dark);
+  outline: none;
+}
+
+/* Real content rides above the smoke — no per-element z-index needed. */
+.smoke-panel > :not(.smoke-panel__smoke) {
+  position: relative;
+  z-index: 1;
+}
+
+.smoke-panel__eyebrow {
+  font-family: var(--font-sans, sans-serif);
+  font-size: var(--type-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--app-primary-dark);
+  transition: color 600ms ease 300ms;
+}
+
+.smoke-panel__title {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-sans, sans-serif);
+  font-size: var(--type-heading-lg);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.smoke-panel__body {
+  margin: 1rem 0 0;
+  max-width: 46ch;
+  font-family: var(--font-sans, sans-serif);
+  font-size: var(--type-body-md);
+  line-height: 1.8;
+  color: var(--app-muted);
+  transition: color 700ms ease 340ms;
+}
+
+.smoke-panel:hover .smoke-panel__eyebrow,
+.smoke-panel:focus-visible .smoke-panel__eyebrow {
+  color: var(--app-primary-light);
+}
+
+.smoke-panel:hover .smoke-panel__body,
+.smoke-panel:focus-visible .smoke-panel__body {
+  color: color-mix(in srgb, var(--app-on-dark) 74%, transparent);
+}
+
+@media (min-width: 640px) {
+  .smoke-panel__title {
+    font-size: var(--type-display-sm);
+  }
+}
+
+/* --- the smoke itself --------------------------------------------------- */
+
+.smoke-panel__smoke {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transform: translateY(20%) scale(1.08);
+  filter: blur(var(--smoke-haze)) saturate(1.05);
+  transition:
+    opacity 720ms ease,
+    filter var(--smoke-in) var(--smoke-ease),
+    transform var(--smoke-in) var(--smoke-ease);
+  /* Soft bed — bottom-weighted so the text (which sits at the foot of the
+     card) always has contrast, dissolving to nothing up top so the card
+     never reads as a hard dark block. */
+  background:
+    radial-gradient(
+      150% 118% at 50% 128%,
+      rgba(10, 9, 14, var(--smoke-density)),
+      rgba(10, 9, 14, 0.55) 46%,
+      rgba(10, 9, 14, 0.12) 72%,
+      transparent 90%
+    ),
+    linear-gradient(
+      180deg,
+      transparent,
+      rgba(9, 8, 12, 0.28) 45%,
+      rgba(8, 7, 11, 0.72)
+    );
+}
+
+.smoke-panel__smoke::before,
+.smoke-panel__smoke::after {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  will-change: transform, filter;
+}
+
+/* Warm, slow-curling haze */
+.smoke-panel__smoke::before {
+  background: radial-gradient(
+    circle at 36% 64%,
+    var(--smoke-tint),
+    transparent 60%
+  );
+  filter: blur(80px);
+  animation: smoke-churn 26s ease-in-out infinite alternate;
+}
+
+/* Cool counter-drift so it billows instead of glowing flatly */
+.smoke-panel__smoke::after {
+  background: radial-gradient(
+    circle at 66% 40%,
+    rgba(206, 216, 255, 0.12),
+    transparent 58%
+  );
+  filter: blur(92px);
+  animation: smoke-churn 34s ease-in-out infinite alternate-reverse;
+}
+
+.smoke-panel:hover .smoke-panel__smoke,
+.smoke-panel:focus-visible .smoke-panel__smoke {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(4px) saturate(1.05);
+}
+
+/* Individual wisps — rendered as <i> children. They drift constantly, so on
+   hover they are already in motion; staggered entry delays give the slow
+   "the haze creeps in" cue rather than a single hard fade. */
+.smoke-panel__smoke > i {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 1400ms ease;
+}
+
+.smoke-panel:hover .smoke-panel__smoke > i,
+.smoke-panel:focus-visible .smoke-panel__smoke > i {
+  opacity: 1;
+}
+
+/* Idle = no work. The whole smoke system only animates while engaged. */
+.smoke-panel__smoke::before,
+.smoke-panel__smoke::after,
+.smoke-panel__smoke > i {
+  animation-play-state: paused;
+}
+
+.smoke-panel:hover .smoke-panel__smoke::before,
+.smoke-panel:hover .smoke-panel__smoke::after,
+.smoke-panel:hover .smoke-panel__smoke > i,
+.smoke-panel:focus-visible .smoke-panel__smoke::before,
+.smoke-panel:focus-visible .smoke-panel__smoke::after,
+.smoke-panel:focus-visible .smoke-panel__smoke > i {
+  animation-play-state: running;
+}
+
+.smoke-panel__smoke > i:nth-child(1) {
+  left: -24%;
+  bottom: -34%;
+  width: 82%;
+  height: 104%;
+  background: radial-gradient(
+    circle at 42% 60%,
+    rgba(255, 255, 255, 0.16),
+    transparent 66%
+  );
+  filter: blur(66px);
+  animation: smoke-wisp-a 20s ease-in-out infinite alternate;
+  transition-delay: 0ms;
+}
+
+.smoke-panel__smoke > i:nth-child(2) {
+  right: -26%;
+  bottom: -40%;
+  width: 90%;
+  height: 112%;
+  background: radial-gradient(
+    circle at 55% 55%,
+    var(--smoke-tint),
+    transparent 62%
+  );
+  filter: blur(74px);
+  animation: smoke-wisp-b 25s ease-in-out infinite alternate;
+  transition-delay: 200ms;
+}
+
+.smoke-panel__smoke > i:nth-child(3) {
+  left: 8%;
+  bottom: -52%;
+  width: 72%;
+  height: 120%;
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(255, 255, 255, 0.1),
+    transparent 60%
+  );
+  filter: blur(58px);
+  animation: smoke-wisp-c 22s ease-in-out infinite alternate;
+  transition-delay: 400ms;
+}
+
+.smoke-panel__smoke > i:nth-child(4) {
+  left: 26%;
+  top: -42%;
+  width: 80%;
+  height: 96%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--app-primary-20),
+    transparent 60%
+  );
+  filter: blur(86px);
+  animation: smoke-wisp-a 29s ease-in-out infinite alternate-reverse;
+  transition-delay: 620ms;
+}
+
+.smoke-panel__smoke > i:nth-child(5) {
+  right: -10%;
+  top: -30%;
+  width: 64%;
+  height: 88%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(216, 224, 255, 0.1),
+    transparent 58%
+  );
+  filter: blur(78px);
+  animation: smoke-wisp-b 31s ease-in-out infinite alternate-reverse;
+  transition-delay: 840ms;
+}
+
+.smoke-panel__smoke > i:nth-child(6) {
+  left: 34%;
+  bottom: -20%;
+  width: 58%;
+  height: 78%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.08),
+    transparent 58%
+  );
+  filter: blur(50px);
+  animation: smoke-wisp-c 18s ease-in-out infinite alternate;
+  transition-delay: 1050ms;
+}
+
+@keyframes smoke-churn {
+  0% {
+    transform: translate3d(-6%, 3%, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, -3%, 0) rotate(7deg) scale(1.12);
+  }
+  100% {
+    transform: translate3d(7%, -6%, 0) rotate(13deg) scale(1.22);
+  }
+}
+
+@keyframes smoke-wisp-a {
+  0% {
+    transform: translate3d(0, 10%, 0) scale(1) rotate(0deg);
+  }
+  35% {
+    transform: translate3d(5%, -2%, 0) scale(1.12) rotate(3deg);
+  }
+  70% {
+    transform: translate3d(-3%, -12%, 0) scale(1.24) rotate(-2deg);
+  }
+  100% {
+    transform: translate3d(8%, -22%, 0) scale(1.36) rotate(5deg);
+  }
+}
+
+@keyframes smoke-wisp-b {
+  0% {
+    transform: translate3d(0, 14%, 0) scale(1.05) rotate(0deg);
+  }
+  40% {
+    transform: translate3d(-7%, 0, 0) scale(1.18) rotate(-4deg);
+  }
+  75% {
+    transform: translate3d(-11%, -14%, 0) scale(1.3) rotate(2deg);
+  }
+  100% {
+    transform: translate3d(-14%, -24%, 0) scale(1.42) rotate(-5deg);
+  }
+}
+
+@keyframes smoke-wisp-c {
+  0% {
+    transform: translate3d(-8%, 16%, 0) scale(0.94) rotate(0deg);
+  }
+  45% {
+    transform: translate3d(2%, 2%, 0) scale(1.1) rotate(4deg);
+  }
+  80% {
+    transform: translate3d(7%, -12%, 0) scale(1.22) rotate(-3deg);
+  }
+  100% {
+    transform: translate3d(10%, -26%, 0) scale(1.32) rotate(6deg);
+  }
 }
 
 /* =========================
@@ -1243,65 +1642,6 @@ body.nav-open {
   }
 }
 
-/* =========================
-   UTILITIES / ANIMATION
-========================= */
-
-@keyframes header-in {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.hero-title-shadow {
-  color: #ffffff;
-  text-shadow:
-    0 6px 30px rgba(0, 0, 0, 0.82),
-    0 2px 12px rgba(0, 0, 0, 0.68);
-}
-
-.hero-text-highlight {
-  color: var(--app-primary);
-  font-size: inherit;
-  line-height: inherit;
-  text-shadow: 0 0 20px rgba(201, 150, 26, 0.4);
-}
-
-.hero-text-white-inherit {
-  color: #ffffff;
-  font-size: inherit;
-  line-height: inherit;
-}
-
-@keyframes fade-up-keyframe {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1311,481 +1651,4 @@ body.nav-open {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* =========================
-   PAGE GLOW PATTERNS
-========================= */
-
-.page-glow {
-  background:
-    radial-gradient(
-      circle at 18% 10%,
-      rgba(201, 150, 26, 0.08),
-      transparent 28%
-    ),
-    radial-gradient(circle at 90% 18%, rgba(0, 0, 0, 0.03), transparent 30%);
-}
-
-.page-glow-alt {
-  background:
-    radial-gradient(
-      circle at 20% 12%,
-      rgba(201, 150, 26, 0.08),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgba(201, 150, 26, 0.05),
-      transparent 32%
-    );
-}
-
-.page-glow-warm {
-  background:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(201, 150, 26, 0.1),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 85% 80%,
-      rgba(201, 150, 26, 0.06),
-      transparent 35%
-    ),
-    linear-gradient(
-      180deg,
-      var(--app-dark) 0%,
-      var(--app-dark-2) 50%,
-      var(--app-dark) 100%
-    );
-}
-
-.page-glow-center {
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(201, 150, 26, 0.08),
-      transparent 40%
-    ),
-    radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.03), transparent 30%);
-}
-
-/* =========================
-   CARD UTILITIES
-   Light-surface variants
-========================= */
-
-.card-base {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--app-border);
-  background: #ffffff;
-}
-
-.card-elevated {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--app-border);
-  background: #ffffff;
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-.card-interactive {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--app-border);
-  background: #ffffff;
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.card-interactive:hover {
-  transform: translateY(-4px);
-  border-color: var(--app-primary);
-  box-shadow: 0 12px 40px rgba(201, 150, 26, 0.12);
-}
-
-.card-glass {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--app-border);
-  background: rgba(255, 255, 255, 0.72);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-}
-
-/* Dark card — for intentionally dark sections (heroes, banners) */
-.card-dark {
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.card-dark:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-/* =========================
-   TYPOGRAPHY UTILITIES
-========================= */
-
-.section-label {
-  font-family: var(--font-bricolage), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--app-primary);
-}
-
-.section-title {
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
-  color: var(--app-text);
-}
-
-.section-desc {
-  font-family: var(--font-bricolage), sans-serif;
-  font-size: clamp(0.92rem, 0.25vw + 0.85rem, 1rem);
-  line-height: 1.75;
-  color: var(--app-muted);
-}
-
-.font-display {
-  font-family: var(--font-playfair), Georgia, serif;
-}
-
-.font-ui {
-  font-family: var(--font-bricolage), sans-serif;
-}
-
-.font-heading {
-  font-family: var(--font-bricolage), sans-serif;
-}
-
-/* =========================
-   BUTTON UTILITIES
-========================= */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  padding: 0 1.25rem;
-  border-radius: 999px;
-  border: none;
-  font-family: var(--font-bricolage), sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-}
-
-.btn-primary {
-  background: var(--app-primary);
-  color: #050505;
-  box-shadow: 0 10px 26px var(--app-primary-20);
-}
-
-.btn-primary:hover {
-  background: var(--app-primary-hover);
-  box-shadow: 0 14px 34px var(--app-primary-40);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--app-muted);
-  border: 1px solid transparent;
-}
-
-.btn-ghost:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: var(--app-text);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--app-text);
-  border: 1px solid var(--app-border);
-}
-
-.btn-outline:hover {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.2);
-}
-
-.btn-danger {
-  background: var(--status-error);
-  color: #fff;
-}
-
-.btn-danger:hover {
-  background: #dc2626;
-}
-
-.btn-sm {
-  min-height: 36px;
-  padding: 0 0.875rem;
-  font-size: 0.8rem;
-}
-
-.btn-lg {
-  min-height: 52px;
-  padding: 0 1.5rem;
-  font-size: 0.95rem;
-}
-
-.btn-icon {
-  width: 44px;
-  min-height: 44px;
-  padding: 0;
-}
-
-/* =========================
-   INPUT UTILITIES
-========================= */
-
-.input-base {
-  width: 100%;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--app-border);
-  background: #ffffff;
-  padding: 0.75rem 1rem;
-  font-family: var(--font-bricolage), sans-serif;
-  font-size: 0.875rem;
-  color: var(--app-text);
-  outline: none;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.input-base::placeholder {
-  color: var(--app-subtle);
-}
-
-.input-base:focus {
-  border-color: rgba(201, 150, 26, 0.7);
-  background: #ffffff;
-  box-shadow: 0 0 0 4px var(--app-primary-10);
-}
-
-/* =========================
-   FLEX / LAYOUT UTILITIES
-========================= */
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.flex-col-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.stack {
-  display: flex;
-  flex-direction: column;
-}
-
-.stack-xs {
-  gap: 0.25rem;
-}
-.stack-sm {
-  gap: 0.5rem;
-}
-.stack-md {
-  gap: 1rem;
-}
-.stack-lg {
-  gap: 1.5rem;
-}
-.stack-xl {
-  gap: 2rem;
-}
-.stack-2xl {
-  gap: 3rem;
-}
-
-/* =========================
-   IMAGE / VIDEO UTILITIES
-========================= */
-
-/* Responsive image container — always clips, never overflows */
-.img-container {
-  position: relative;
-  overflow: hidden;
-  display: block;
-  width: 100%;
-
-  img,
-  video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-}
-
-/* Fill parent with cover — use on a Next.js <Image fill> wrapper */
-.img-fill {
-  position: relative;
-  overflow: hidden;
-
-  > img,
-  > span > img {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover;
-    object-position: center;
-  }
-}
-
-/* Fill parent with contain — shows full image, no cropping, bg fills gaps */
-.img-fill-contain {
-  position: relative;
-  overflow: hidden;
-
-  > img,
-  > span > img {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain;
-    object-position: center;
-  }
-}
-
-/* Natural ratio — image at its own aspect ratio, width 100%, height auto */
-.img-natural {
-  display: block;
-  width: 100%;
-
-  img,
-  video {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-  }
-}
-
-/* Common aspect ratios */
-.img-aspect-square {
-  aspect-ratio: 1 / 1;
-}
-.img-aspect-video {
-  aspect-ratio: 16 / 9;
-}
-.img-aspect-portrait {
-  aspect-ratio: 3 / 4;
-}
-.img-aspect-wide {
-  aspect-ratio: 21 / 9;
-}
-.img-aspect-card {
-  aspect-ratio: 4 / 5;
-}
-
-/* Object-position helpers */
-.img-top {
-  object-position: center top !important;
-}
-.img-bottom {
-  object-position: center bottom !important;
-}
-.img-left {
-  object-position: left center !important;
-}
-.img-right {
-  object-position: right center !important;
-}
-
-/* Dark linear gradient overlays — apply to the container (::after pseudo) */
-.img-gradient-bottom::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.88) 0%,
-    rgba(0, 0, 0, 0.4) 45%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
-.img-gradient-top::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.7) 0%,
-    transparent 60%
-  );
-  pointer-events: none;
-}
-
-.img-gradient-left::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.4) 55%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
-.img-gradient-full::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, transparent 50%),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 40%);
-  pointer-events: none;
-}
-
-/* Hover scale effect for image cards */
-.img-hover-scale img,
-.img-hover-scale video {
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-.img-hover-scale:hover img,
-.img-hover-scale:hover video {
-  transform: scale(1.06);
 }

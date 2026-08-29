@@ -16,18 +16,11 @@ export default {
         Array.from({ length: 101 }, (_, i) => [i, (i / 100).toString()])
       ),
       fontFamily: {
+        // One typeface. `ui` / `headline` / `body` are kept as aliases so
+        // existing `font-*` utilities keep working — they all resolve to the
+        // single app sans.
         sans: [
-          'var(--font-product-sans)',
-          'Inter',
-          'SF Pro Text',
-          'Segoe UI',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
-        ],
-        serif: ['var(--font-playfair)', 'serif'],
-        body: [
-          'var(--font-product-sans)',
+          'var(--font-sans)',
           'Inter',
           'SF Pro Text',
           'Segoe UI',
@@ -36,7 +29,7 @@ export default {
           'sans-serif',
         ],
         ui: [
-          'var(--font-product-sans)',
+          'var(--font-sans)',
           'Inter',
           'SF Pro Text',
           'Segoe UI',
@@ -45,19 +38,44 @@ export default {
           'sans-serif',
         ],
         headline: [
-          'var(--font-playfair)',
-          'Georgia',
-          'Times New Roman',
-          'serif',
+          'var(--font-sans)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        body: [
+          'var(--font-sans)',
+          'Inter',
+          'SF Pro Text',
+          'Segoe UI',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
         ],
         code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontWeight: {
+        // The design runs a lighter "bold" (600) than the browser default so
+        // body/section headings in the sturdy grotesque don't read as heavy.
+        // extrabold/black stay heavy for hero display type that must command.
         bold: '600',
         extrabold: '800',
-        black: '700',
+        black: '900',
       },
       fontSize: {
+        // Fluid overrides for Tailwind's large display sizes so a bare
+        // `text-6xl` (or `sm:text-5xl`) interpolates smoothly instead of
+        // snapping to a fixed rem that overflows narrow viewports. These
+        // replace the old `!important` clamp block in globals.scss.
+        '4xl': ['clamp(1.55rem, 3vw, 2.25rem)', { lineHeight: '1.12' }],
+        '5xl': ['clamp(1.8rem, 4vw, 3rem)', { lineHeight: '1.08' }],
+        '6xl': ['clamp(2rem, 5vw, 3.75rem)', { lineHeight: '1.05' }],
+        '7xl': ['clamp(2rem, 6vw, 4.5rem)', { lineHeight: '1.05' }],
+        '8xl': ['clamp(2.2rem, 7vw, 6rem)', { lineHeight: '1.05' }],
+        '9xl': ['clamp(2.4rem, 9vw, 8rem)', { lineHeight: '1.05' }],
         'display-xl': 'var(--type-display-xl)',
         'display-lg': 'var(--type-display-lg)',
         'display-md': 'var(--type-display-md)',
@@ -97,29 +115,7 @@ export default {
         badge: 'var(--radius-badge)',
         image: 'var(--radius-image)',
       },
-      keyframes: {
-        'accordion-down': {
-          from: {
-            height: '0',
-          },
-          to: {
-            height: 'var(--radix-accordion-content-height)',
-          },
-        },
-        'accordion-up': {
-          from: {
-            height: 'var(--radix-accordion-content-height)',
-          },
-          to: {
-            height: '0',
-          },
-        },
-      },
-      animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
-      },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [],
 } satisfies Config;

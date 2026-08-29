@@ -6,12 +6,9 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { IMAGE_QUALITY } from '@/shared/constants';
-import {
-  EditorialContainer,
-  EditorialHeader,
-  EditorialSection,
-} from '@/shared/ui/editorial';
-import { staggerViewport } from '@/shared/ui/motion/staggerReveal';
+import { Container, SectionHeader, Section } from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
+import { staggerViewport } from '@/shared/ui/motion';
 
 const slides = [
   {
@@ -51,10 +48,10 @@ export default function Conversations() {
   }, [move, reduceMotion]);
 
   return (
-    <EditorialSection tone="canvas" className="overflow-hidden">
-      <EditorialContainer>
+    <Section tone="canvas" className="overflow-hidden">
+      <Container>
         <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16 xl:gap-20">
-          <EditorialHeader
+          <SectionHeader
             eyebrow="Conversations"
             title="Real people. Real faith."
             accent="Real stories."
@@ -73,8 +70,8 @@ export default function Conversations() {
                 to just the image) so it can't stretch to cover the nav
                 buttons below it on large screens. */}
             <div className="relative lg:pb-7 lg:pr-7">
-              <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-[var(--app-ink)]/8 bg-[var(--app-surface)] lg:block" />
-              <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-[var(--app-ink)]/10 bg-[var(--app-canvas-2)] lg:block" />
+              <div className="absolute inset-x-8 bottom-0 top-8 hidden translate-x-7 border border-[var(--app-border)] bg-[var(--app-surface)] lg:block" />
+              <div className="absolute inset-x-4 bottom-4 top-4 hidden translate-x-4 border border-[var(--app-border)] bg-[var(--app-canvas-2)] lg:block" />
 
               <div className="relative h-[300px] overflow-hidden bg-[var(--app-dark-3)] sm:h-[390px] lg:h-[450px]">
                 <AnimatePresence initial={false} mode="popLayout">
@@ -122,7 +119,7 @@ export default function Conversations() {
                 type="button"
                 onClick={() => move(-1)}
                 aria-label="Previous conversation image"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--app-ink)]/18 text-[var(--app-ink)] transition duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--app-border)] text-[var(--app-ink)] transition duration-200 hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)]"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
@@ -130,14 +127,14 @@ export default function Conversations() {
                 type="button"
                 onClick={() => move(1)}
                 aria-label="Next conversation image"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--app-primary)] text-black transition duration-200 hover:bg-[var(--app-primary-light)]"
+                className={buttonClass('primary', 'icon', '!rounded-full')}
               >
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
           </motion.div>
         </div>
-      </EditorialContainer>
-    </EditorialSection>
+      </Container>
+    </Section>
   );
 }

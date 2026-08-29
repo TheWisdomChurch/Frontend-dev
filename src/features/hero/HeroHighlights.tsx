@@ -15,17 +15,18 @@ import {
   Users,
 } from 'lucide-react';
 
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
+import { buttonClass } from '@/shared/ui/button';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
-import { Container } from '@/shared/layout';
-import { Button } from '@/shared/utils/buttons';
+import { Container } from '@/shared/ui/Container';
+import { Button } from '@/shared/ui/button';
 import { Caption } from '@/shared/text';
 import { apiClient } from '@/lib/api';
 import {
   staggerContainer,
   staggerItem,
   staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+} from '@/shared/ui/motion';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { PhoneNumberField } from '@/shared/ui/forms';
 import {
@@ -84,13 +85,13 @@ const ACTIONS = [
 ───────────────────────────────────────────────────────── */
 
 const inputClass =
-  'w-full border border-white/12 bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/45 hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:bg-white/[0.08] focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-white/[0.06] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--app-subtle)] hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:bg-white/[0.08] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const selectClass =
-  'w-full border border-white/12 bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-white/20 focus:border-[var(--app-primary)]/70 focus:ring-2 focus:ring-[var(--app-primary)]/12';
+  'w-full border border-[var(--app-border)] bg-[var(--app-dark-input)] px-4 py-3 text-sm text-white outline-none transition hover:border-[var(--app-border)] focus:border-[color-mix(in_srgb,var(--app-primary)_70%,transparent)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_12%,transparent)]';
 
 const fieldLabelClass =
-  'font-ui text-caption font-bold uppercase tracking-[0.15em] text-white/45';
+  'font-ui text-caption font-bold uppercase tracking-[0.15em] text-[var(--app-subtle)]';
 
 /* ─────────────────────────────────────────────────────────
    Modal shell
@@ -328,14 +329,14 @@ export default function HeroHighlights({
     <>
       {/* ── Editorial belief strip ────────────────────────────── */}
       {!modalOnly ? (
-        <section className="overflow-hidden min-w-0 border-t border-[var(--app-ink)]/8 bg-[var(--app-canvas)]">
-          <Container size="xl">
+        <section className="overflow-hidden min-w-0 border-t border-[var(--app-border)] bg-[var(--app-canvas)]">
+          <Container>
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="show"
               viewport={staggerViewport}
-              className="grid grid-cols-1 divide-y divide-[var(--app-ink)]/8 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+              className="grid grid-cols-1 divide-y divide-[var(--app-border)] sm:grid-cols-3 sm:divide-x sm:divide-y-0"
             >
               {ACTIONS.map(action => {
                 const Icon = action.icon;
@@ -358,10 +359,10 @@ export default function HeroHighlights({
                       <span className="relative">
                         <span
                           aria-hidden="true"
-                          className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[var(--app-primary)]/0 blur-lg transition-colors duration-300 group-hover:bg-[var(--app-primary)]/20"
+                          className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_0%,transparent)] blur-lg transition-colors duration-300 group-hover:bg-[color-mix(in_srgb,var(--app-primary)_20%,transparent)]"
                         />
                         <Icon
-                          className="h-4 w-4 text-[var(--app-ink)]/60 transition duration-200 group-hover:text-[var(--app-primary)]"
+                          className="h-4 w-4 text-[var(--app-muted)] transition duration-200 group-hover:text-[var(--app-primary)]"
                           aria-hidden="true"
                         />
                       </span>
@@ -375,7 +376,7 @@ export default function HeroHighlights({
                       <p className="font-headline text-heading-sm font-normal leading-snug text-[var(--app-ink)]">
                         {action.label}
                       </p>
-                      <p className="mt-1 font-ui text-label text-[var(--app-ink)]/50">
+                      <p className="mt-1 font-ui text-label text-[var(--app-subtle)]">
                         {action.sub}
                       </p>
                     </div>
@@ -403,10 +404,10 @@ export default function HeroHighlights({
         icon={<CalendarClock />}
       >
         <form className="min-w-0 space-y-5 pb-1" onSubmit={onSubmitVisit}>
-          <div className="relative min-w-0 overflow-hidden rounded-card border border-[var(--app-primary)]/20 bg-[var(--app-primary-10)] p-4 sm:p-5">
-            <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[var(--app-primary)]/15 blur-3xl" />
+          <div className="relative min-w-0 overflow-hidden rounded-card border border-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] bg-[var(--app-primary-10)] p-4 sm:p-5">
+            <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_15%,transparent)] blur-3xl" />
             <div className="relative flex min-w-0 items-start gap-3 sm:gap-4">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[var(--app-primary)]/25 bg-black/25 text-[var(--app-primary)] sm:h-11 sm:w-11 sm:rounded-2xl">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-black/25 text-[var(--app-primary)] sm:h-11 sm:w-11 sm:rounded-2xl">
                 <CalendarClock className="h-5 w-5" />
               </div>
               <div className="min-w-0 break-words">
@@ -415,11 +416,11 @@ export default function HeroHighlights({
                 </p>
                 <p className="mt-1 break-words font-headline text-lg leading-tight text-white sm:text-xl">
                   {SERVICE_INFO.sunday.time}{' '}
-                  <span className="font-ui text-xs text-white/45 sm:text-sm">
+                  <span className="font-ui text-xs text-[var(--app-subtle)] sm:text-sm">
                     {SERVICE_INFO.sunday.timezone}
                   </span>
                 </p>
-                <p className="mt-1.5 max-w-lg break-words font-ui text-xs leading-5 text-white/55">
+                <p className="mt-1.5 max-w-lg break-words font-ui text-xs leading-5 text-[var(--app-muted)]">
                   {SERVICE_INFO.venue.full}
                 </p>
               </div>
@@ -442,7 +443,7 @@ export default function HeroHighlights({
             />
             {!scheduleLoading && !scheduleVerified ? (
               <div className="mt-3 flex min-w-0 flex-col items-start gap-2 rounded-card border border-[var(--status-warning)]/20 bg-[var(--status-warning)]/[0.06] px-4 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
-                <p className="font-ui text-xs leading-5 text-white/70">
+                <p className="font-ui text-xs leading-5 text-[var(--app-muted)]">
                   Booking is paused until the live service calendar is verified.
                 </p>
                 <button
@@ -544,7 +545,7 @@ export default function HeroHighlights({
             />
           </label>
 
-          <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/8 bg-white/[0.025] p-3.5">
+          <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--app-border)] bg-white/[0.025] p-3.5">
             <input
               id="visit-reminder-opt-in"
               name="reminderOptIn"
@@ -558,7 +559,7 @@ export default function HeroHighlights({
               }
               className="mt-0.5 h-4 w-4 accent-[var(--app-primary)]"
             />
-            <span className="font-ui text-xs leading-5 text-white/50">
+            <span className="font-ui text-xs leading-5 text-[var(--app-subtle)]">
               Send me one reminder before this service. Your booking
               confirmation is transactional and will still be sent.
             </span>
@@ -573,10 +574,10 @@ export default function HeroHighlights({
             </p>
           ) : null}
 
-          <div className="min-w-0 rounded-2xl border border-white/8 bg-white/[0.025] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5 sm:p-5">
+          <div className="min-w-0 rounded-2xl border border-[var(--app-border)] bg-white/[0.025] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5 sm:p-5">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-success)]" />
-              <p className="min-w-0 break-words font-ui text-xs leading-5 text-white/45">
+              <p className="min-w-0 break-words font-ui text-xs leading-5 text-[var(--app-subtle)]">
                 We’ll email your confirmation, directions, and a reminder before
                 service.
               </p>
@@ -609,15 +610,15 @@ export default function HeroHighlights({
         icon={<Headphones />}
       >
         <form className="space-y-4" onSubmit={onSubmitWatch}>
-          <div className="flex items-start gap-3 border border-white/10 bg-white/[0.03] p-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-primary)]/25 bg-[var(--app-primary)]/10 text-[var(--app-primary)]">
+          <div className="flex items-start gap-3 border border-[var(--app-border)] bg-white/[0.03] p-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[color-mix(in_srgb,var(--app-primary)_25%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]">
               <Headphones className="h-4 w-4" />
             </div>
             <div>
               <p className="font-ui text-body-sm font-semibold text-white">
                 Service reminder
               </p>
-              <p className="mt-1 font-ui text-label leading-[1.6] text-white/50">
+              <p className="mt-1 font-ui text-label leading-[1.6] text-[var(--app-subtle)]">
                 We'll notify you before live service and direct you to the
                 active stream.
               </p>
@@ -660,7 +661,7 @@ export default function HeroHighlights({
               {submissionError}
             </p>
           ) : null}
-          <Caption className="text-center text-white/40">
+          <Caption className="text-center text-[var(--app-subtle)]">
             Service reminders only. No spam.
           </Caption>
         </form>
@@ -691,13 +692,13 @@ export default function HeroHighlights({
             <h2 className="mt-2 break-words font-headline text-2xl leading-tight text-white sm:text-3xl">
               We’re expecting you.
             </h2>
-            <p className="mx-auto mt-3 max-w-sm font-ui text-sm leading-6 text-white/55">
+            <p className="mx-auto mt-3 max-w-sm font-ui text-sm leading-6 text-[var(--app-muted)]">
               {visitConfirmation.reminderOptIn
                 ? 'Your confirmation is saved, the welcome team has been notified, and your reminder is scheduled.'
                 : 'Your confirmation is saved and the welcome team has been notified.'}
             </p>
-            <div className="mt-6 min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left sm:rounded-3xl sm:p-5">
-              <p className="break-words font-ui text-xs font-bold uppercase tracking-[0.12em] text-white/40 sm:tracking-[0.16em]">
+            <div className="mt-6 min-w-0 rounded-2xl border border-[var(--app-border)] bg-white/[0.04] p-4 text-left sm:rounded-3xl sm:p-5">
+              <p className="break-words font-ui text-xs font-bold uppercase tracking-[0.12em] text-[var(--app-subtle)] sm:tracking-[0.16em]">
                 {visitConfirmation.serviceType}
               </p>
               <p className="mt-2 break-words font-headline text-lg leading-snug text-white sm:text-xl">
@@ -709,12 +710,12 @@ export default function HeroHighlights({
                   timeZone: 'Africa/Lagos',
                 }).format(new Date(visitConfirmation.serviceAt))}
               </p>
-              <p className="mt-1 font-ui text-sm text-white/55">
+              <p className="mt-1 font-ui text-sm text-[var(--app-muted)]">
                 {SERVICE_INFO.sunday.time} {SERVICE_INFO.sunday.timezone} ·{' '}
                 {visitConfirmation.attendance}{' '}
                 {visitConfirmation.attendance === 1 ? 'guest' : 'guests'}
               </p>
-              <p className="mt-4 break-all border-t border-white/8 pt-4 font-mono text-[10px] uppercase tracking-[0.08em] text-white/35 sm:tracking-[0.12em]">
+              <p className="mt-4 break-all border-t border-[var(--app-border)] pt-4 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--app-subtle)] sm:tracking-[0.12em]">
                 Reference {visitConfirmation.id}
               </p>
             </div>
@@ -726,14 +727,14 @@ export default function HeroHighlights({
                 })}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--app-primary)] px-5 font-ui text-sm font-bold text-black transition hover:brightness-110"
+                className={buttonClass('primary')}
               >
                 <Navigation className="h-4 w-4" /> Get directions
               </a>
               <button
                 type="button"
                 onClick={() => setVisitConfirmation(null)}
-                className="min-h-12 rounded-full border border-white/12 px-5 font-ui text-sm font-bold text-white transition hover:bg-white/[0.06]"
+                className="min-h-12 rounded-full border border-[var(--app-border)] px-5 font-ui text-sm font-bold text-white transition hover:bg-white/[0.06]"
               >
                 Done
               </button>

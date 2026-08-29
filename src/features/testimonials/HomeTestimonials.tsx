@@ -3,20 +3,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import { AnimatePresence, motion } from '@/lib/safe-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialSection,
-  editorialActionClass,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Section,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 import {
   staggerContainer,
   staggerItem,
   staggerViewport,
-} from '@/shared/ui/motion/staggerReveal';
+} from '@/shared/ui/motion';
 import apiClient from '@/lib/api';
 import type { Testimonial as ApiTestimonial } from '@/lib/apiTypes';
 
@@ -155,15 +155,15 @@ export default function HomeTestimonials() {
   const q = quotes[current];
 
   return (
-    <EditorialSection tone="muted">
-      <EditorialContainer>
+    <Section tone="muted">
+      <Container>
         <div
           className="grid gap-8 md:gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-6 xl:gap-x-20"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Intro column */}
-          <EditorialHeader
+          <SectionHeader
             eyebrow="Testimonies"
             title="Real stories,"
             accent="real breakthroughs."
@@ -188,14 +188,14 @@ export default function HomeTestimonials() {
               </div>
             </div>
           ) : !q ? (
-            <EditorialEmptyState
+            <SectionEmpty
               title="Testimonies coming soon."
               description="Be the first to share your story."
               className="lg:col-start-2 lg:row-start-1 lg:row-span-2"
               action={
                 <Link
                   href="/forms/share-testimony"
-                  className={editorialActionClass.primary}
+                  className={buttonClass('primary')}
                 >
                   Share your story <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -203,7 +203,7 @@ export default function HomeTestimonials() {
             />
           ) : (
             <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_240px] lg:col-start-2 lg:row-start-1 lg:row-span-2">
-              <article className="relative flex min-h-[340px] flex-col overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-white p-6 sm:p-8">
+              <article className="relative flex min-h-[340px] flex-col overflow-hidden border border-[color-mix(in_srgb,var(--app-ink)_10%,transparent)] bg-[var(--app-surface)] p-6 sm:p-8">
                 <span
                   className="pointer-events-none absolute -right-2 -top-10 select-none font-headline text-[9rem] leading-none text-[var(--app-primary)] opacity-[0.08]"
                   aria-hidden="true"
@@ -343,7 +343,7 @@ export default function HomeTestimonials() {
             </motion.div>
           ) : null}
         </div>
-      </EditorialContainer>
-    </EditorialSection>
+      </Container>
+    </Section>
   );
 }

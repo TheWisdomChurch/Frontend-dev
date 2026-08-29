@@ -16,11 +16,11 @@ import {
 } from 'lucide-react';
 import { useAppDispatch } from '@/shared/utils/hooks/redux';
 import { addToCart } from '@/lib/store/slices/cartSlice';
-import { Button } from '@/shared/utils/buttons';
+import { Button } from '@/shared/ui/button';
 import { H4, BodyMD, RegularText, MediumText, Caption } from '@/shared/text';
-import { FlexboxLayout } from '@/shared/layout';
+import { Flex } from '@/shared/ui/Flex';
 import { cn } from '@/lib/cn';
-import { BaseModal } from '@/shared/ui/modals/Base';
+import { BaseModal } from '@/shared/ui/modals/Modal';
 import { Media } from '@/shared/ui/Media';
 import type { Product } from '@/domain/store/types';
 
@@ -143,18 +143,16 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       >
         <motion.div
           variants={contentItem}
-          className="relative w-full aspect-square h-auto lg:aspect-auto lg:h-full rounded-2xl overflow-hidden bg-[var(--color-surface-dark)]"
+          className="relative w-full aspect-square h-auto lg:aspect-auto lg:h-full rounded-2xl overflow-hidden bg-[var(--app-dark-2)]"
         >
           <Media
             src={product.image}
             alt={product.name}
             fit="contain"
             className="p-4 transition duration-500 hover:scale-105 sm:p-6"
-            frameClassName="bg-[var(--color-surface-dark)]"
+            frameClassName="bg-[var(--app-dark-2)]"
             sizes="(max-width: 768px) 100vw, 50vw"
-            fallback={
-              <ShoppingBag className="h-12 w-12 text-[var(--color-text-disabled)]" />
-            }
+            fallback={<ShoppingBag className="h-12 w-12 text-white/40" />}
           />
 
           <div className="absolute right-3 top-3 flex gap-2">
@@ -169,8 +167,8 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
               className={cn(
                 'grid h-10 w-10 place-items-center rounded-full border backdrop-blur-md transition',
                 wishlisted
-                  ? 'border-[var(--color-wishlist-border)] bg-[var(--color-wishlist-bg)] text-[var(--color-wishlist-text)]'
-                  : 'border-[var(--color-border-subtle)] bg-[var(--color-overlay-dark)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+                  ? 'border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary)]'
+                  : 'border-white/12 bg-white/[0.04] text-white/70 hover:text-white'
               )}
             >
               <Heart className={cn('h-4 w-4', wishlisted && 'fill-current')} />
@@ -182,7 +180,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                 whileTap={{ scale: 0.85 }}
                 onClick={handleShare}
                 aria-label="Share this product"
-                className="grid h-10 w-10 place-items-center rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-overlay-dark)] text-[var(--color-text-secondary)] backdrop-blur-md transition hover:text-[var(--color-text-primary)]"
+                className="grid h-10 w-10 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-white/70 backdrop-blur-md transition hover:text-white"
               >
                 <Share2 className="h-4 w-4" />
               </motion.button>
@@ -193,7 +191,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 4 }}
-                    className="absolute right-0 top-12 whitespace-nowrap rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-3 py-1 text-xs font-semibold text-[var(--color-text-primary)] shadow-lg"
+                    className="absolute right-0 top-12 whitespace-nowrap rounded-full border border-white/12 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-white shadow-lg"
                   >
                     Link copied
                   </motion.span>
@@ -203,7 +201,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
           </div>
 
           {lowStock ? (
-            <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full border border-[var(--color-warning-border)] bg-[var(--color-warning-bg)] px-3 py-1 text-xs font-bold text-[var(--color-warning-text)] backdrop-blur-md">
+            <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full border border-[var(--status-warning)]/40 bg-[var(--status-warning)]/10 px-3 py-1 text-xs font-bold text-[var(--status-warning)] backdrop-blur-md">
               <motion.span
                 animate={{ opacity: [1, 0.4, 1] }}
                 transition={{ duration: 1.4, repeat: Infinity }}
@@ -217,17 +215,11 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
 
         <motion.div variants={contentItem} className="space-y-4">
           <div>
-            <H4 className="mb-1 text-[var(--color-text-primary)]">
-              {product.name}
-            </H4>
-            <Caption className="text-[var(--color-text-secondary)]">
-              {product.category}
-            </Caption>
+            <H4 className="mb-1 text-white">{product.name}</H4>
+            <Caption className="text-white/70">{product.category}</Caption>
           </div>
 
-          <BodyMD className="text-[var(--color-text-secondary)]">
-            {product.description}
-          </BodyMD>
+          <BodyMD className="text-white/70">{product.description}</BodyMD>
 
           <div className="flex items-center gap-3">
             <AnimatePresence mode="popLayout">
@@ -238,19 +230,19 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                 exit={{ opacity: 0, y: 6 }}
                 transition={{ duration: 0.2 }}
               >
-                <MediumText className="text-xl text-[var(--color-text-primary)]">
+                <MediumText className="text-xl text-white">
                   {currencyPrefix}
                   {totalPrice.toFixed(2)}
                 </MediumText>
               </motion.span>
             </AnimatePresence>
             {product.originalPrice && (
-              <RegularText className="line-through text-[var(--color-text-disabled)]">
+              <RegularText className="line-through text-white/40">
                 {product.originalPrice}
               </RegularText>
             )}
             {quantity > 1 && (
-              <Caption className="text-[var(--color-text-disabled)]">
+              <Caption className="text-white/40">
                 ({currencyPrefix}
                 {unitPrice.toFixed(2)} each)
               </Caption>
@@ -261,7 +253,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
             {trustBadges.map(({ icon: Icon, label }) => (
               <span
                 key={label}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)]"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-white/70"
               >
                 <Icon className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                 {label}
@@ -271,9 +263,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
 
           {product.sizes.length > 0 && (
             <div>
-              <Caption className="mb-2 text-[var(--color-text-secondary)]">
-                Select Size
-              </Caption>
+              <Caption className="mb-2 text-white/70">Select Size</Caption>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map(size => {
                   const selected = selectedSize === size;
@@ -285,14 +275,14 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                       className={cn(
                         'relative overflow-hidden rounded-full border px-3 py-1.5 text-sm font-medium transition',
                         selected
-                          ? 'border-[var(--color-accent)] text-[var(--color-accent-text)]'
-                          : 'border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:border-[var(--color-border)]'
+                          ? 'border-[var(--app-primary)] text-[var(--app-primary)]'
+                          : 'border-white/12 text-white/70 hover:border-white/25'
                       )}
                     >
                       {selected && (
                         <motion.span
                           layoutId="size-highlight"
-                          className="absolute inset-0 bg-[var(--color-accent-bg)]"
+                          className="absolute inset-0 bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]"
                           transition={{
                             type: 'spring',
                             stiffness: 500,
@@ -313,9 +303,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
 
           {product.colors.length > 0 && (
             <div>
-              <Caption className="mb-2 text-[var(--color-text-secondary)]">
-                Select Color
-              </Caption>
+              <Caption className="mb-2 text-white/70">Select Color</Caption>
               <div className="flex flex-wrap gap-2">
                 {product.colors.map(color => {
                   const selected = selectedColor === color;
@@ -327,14 +315,14 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                       className={cn(
                         'relative flex items-center gap-2 overflow-hidden rounded-full border px-3 py-1.5 text-sm font-medium transition',
                         selected
-                          ? 'border-[var(--color-accent)] text-[var(--color-accent-text)]'
-                          : 'border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:border-[var(--color-border)]'
+                          ? 'border-[var(--app-primary)] text-[var(--app-primary)]'
+                          : 'border-white/12 text-white/70 hover:border-white/25'
                       )}
                     >
                       {selected && (
                         <motion.span
                           layoutId="color-highlight"
-                          className="absolute inset-0 bg-[var(--color-accent-bg)]"
+                          className="absolute inset-0 bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)]"
                           transition={{
                             type: 'spring',
                             stiffness: 500,
@@ -345,7 +333,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                       <span
                         // eslint-disable-next-line no-restricted-syntax -- CSS named-color lookup driven by admin-entered color name, not expressible as a Tailwind class
                         style={{ backgroundColor: color.toLowerCase() }}
-                        className="relative h-3 w-3 shrink-0 rounded-full border border-[var(--color-border-subtle)]"
+                        className="relative h-3 w-3 shrink-0 rounded-full border border-white/12"
                         aria-hidden="true"
                       />
                       <span className="relative">{color}</span>
@@ -356,20 +344,18 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
             </div>
           )}
 
-          <FlexboxLayout justify="between" align="center" className="gap-3">
-            <Caption className="text-[var(--color-text-secondary)]">
-              Quantity
-            </Caption>
+          <Flex justify="between" align="center" className="gap-3">
+            <Caption className="text-white/70">Quantity</Caption>
             <div className="flex items-center gap-2">
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                curvature="full"
+
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
                 disabled={quantity <= 1}
                 aria-label="Decrease quantity"
-                className="h-9 w-9 border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:border-[var(--color-border)]"
+                className="h-9 w-9 border border-white/12 text-white/70 hover:border-white/25"
               >
                 <Minus className="h-4 w-4" />
               </Button>
@@ -380,7 +366,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.6 }}
                   transition={{ duration: 0.15 }}
-                  className="min-w-[32px] text-center text-[var(--color-text-primary)]"
+                  className="min-w-[32px] text-center text-white"
                 >
                   {quantity}
                 </motion.span>
@@ -389,21 +375,25 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
                 type="button"
                 variant="ghost"
                 size="icon"
-                curvature="full"
+
                 onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
                 disabled={quantity >= product.stock}
                 aria-label="Increase quantity"
-                className="h-9 w-9 border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:border-[var(--color-border)]"
+                className="h-9 w-9 border border-white/12 text-white/70 hover:border-white/25"
               >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-          </FlexboxLayout>
+          </Flex>
 
           <Button
-            variant={justAdded ? 'success' : 'primary'}
+            variant="primary"
             size="md"
-            className="w-full"
+            className={
+              justAdded
+                ? 'w-full !bg-[var(--status-success)] !text-white'
+                : 'w-full'
+            }
             onClick={handleAddToCart}
             disabled={soldOut}
             leftIcon={

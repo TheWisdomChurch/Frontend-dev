@@ -10,13 +10,14 @@ import CheckoutForm from '@/features/store/Store/checkoutForm';
 import SiteHero from '@/features/hero/SiteHero';
 import ReduxProvider from '@/shared/providers/ReduxProvider';
 import {
-  EditorialContainer,
-  EditorialEmptyState,
-  EditorialHeader,
-  EditorialPage,
-  EditorialPanel,
-  EditorialSection,
-} from '@/shared/ui/editorial';
+  Container,
+  SectionEmpty,
+  SectionHeader,
+  Page,
+  Panel,
+  Section,
+} from '@/shared/ui/layout';
+import { buttonClass } from '@/shared/ui/button';
 
 function CheckoutPageContent() {
   const router = useRouter();
@@ -25,24 +26,31 @@ function CheckoutPageContent() {
   useEffect(() => {
     gsap.fromTo(
       '.checkout-section',
-      { opacity: 0, y: 18 },
-      { opacity: 1, y: 0, duration: 0.55, stagger: 0.12, ease: 'power3.out' }
+      { opacity: 0, y: 40, scale: 0.97 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        stagger: 0.14,
+        ease: 'expo.out',
+      }
     );
   }, []);
 
   if (items.length === 0) {
     return (
-      <EditorialPage tone="dark">
+      <Page tone="dark">
         <SiteHero
+          backgroundImage="/Picflow/DSC00064 copy.webp"
           title="Checkout"
           subtitle="Complete your order securely."
           description="Review your items and finalize your purchase."
-          compact
         />
 
-        <EditorialSection tone="dark">
-          <EditorialContainer>
-            <EditorialEmptyState
+        <Section tone="dark">
+          <Container>
+            <SectionEmpty
               className="checkout-section mx-auto max-w-xl"
               title="Your cart is empty"
               description="Add some resources from the store before proceeding to checkout."
@@ -51,30 +59,29 @@ function CheckoutPageContent() {
                 <button
                   type="button"
                   onClick={() => router.push('/resources/store')}
-                  className="inline-flex min-h-12 items-center justify-center rounded-button bg-[var(--app-primary)] px-7 font-ui text-label font-bold uppercase tracking-widest text-[var(--app-ink)]"
+                  className={buttonClass('primary')}
                 >
                   <ShoppingBag className="mr-2 h-4 w-4" /> Back to store
                 </button>
               }
             />
-          </EditorialContainer>
-        </EditorialSection>
-      </EditorialPage>
+          </Container>
+        </Section>
+      </Page>
     );
   }
 
   return (
-    <EditorialPage tone="dark">
+    <Page tone="dark">
       <SiteHero
         title="Checkout"
         subtitle="Complete your order securely."
         description="Review your items and finalize your purchase."
-        compact
       />
 
-      <EditorialSection tone="dark">
-        <EditorialContainer>
-          <EditorialHeader
+      <Section tone="dark">
+        <Container>
+          <SectionHeader
             eyebrow="Secure checkout"
             title="Complete your order with confidence."
             description="Confirm your details and complete your purchase securely."
@@ -82,15 +89,12 @@ function CheckoutPageContent() {
             className="checkout-section mx-auto mb-10 max-w-3xl text-center"
           />
 
-          <EditorialPanel
-            tone="dark"
-            className="checkout-section p-4 sm:p-6 lg:p-8"
-          >
+          <Panel tone="dark" className="checkout-section p-4 sm:p-6 lg:p-8">
             <CheckoutForm />
-          </EditorialPanel>
-        </EditorialContainer>
-      </EditorialSection>
-    </EditorialPage>
+          </Panel>
+        </Container>
+      </Section>
+    </Page>
   );
 }
 
