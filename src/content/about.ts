@@ -15,15 +15,15 @@ export const ABOUT_CONTENT = {
       'We introduce people to Jesus and the balanced doctrine of the Spirit—equipping them with the wisdom and power of God to flourish in every facet of life.',
     images: [
       {
-        src: '/Picflow/DSC00268 copy.webp',
+        src: '/Picflow/DSC00268-copy.webp',
         alt: 'Worship at The Wisdom Church',
       },
       {
-        src: '/Picflow/DSC00268 copy.webp',
+        src: '/Picflow/DSC00268-copy.webp',
         alt: 'The Word being taught at The Wisdom Church',
       },
       {
-        src: '/Picflow/DSC00019 copy.webp',
+        src: '/Picflow/DSC00019-copy.webp',
         alt: 'Community at The Wisdom Church',
       },
     ],

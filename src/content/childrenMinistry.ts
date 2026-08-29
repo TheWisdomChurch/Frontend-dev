@@ -9,7 +9,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Where little ones meet Jesus.',
     description:
       'Safe, joyful, and built around families — from nursery through pre-teen years.',
-    image: '/Picflow/DSC00049 copy.webp',
+    image: '/Picflow/DSC00049-copy.webp',
   },
   primaryCta: { label: 'Connect my family', href: '/contact' },
   introduction: {
@@ -42,7 +42,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Caring for every child by name, every week.',
     body: 'Our team is built around safety and warmth — trained leaders who know each child, teach with joy, and keep parents informed and confident every time they come in.',
     image: {
-      src: '/Picflow/DSC00011 copy.webp',
+      src: '/Picflow/DSC00011-copy.webp',
       alt: "A children's ministry leader at The Wisdom Church",
     },
   },

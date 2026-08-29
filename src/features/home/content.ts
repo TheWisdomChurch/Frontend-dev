@@ -113,7 +113,7 @@ export const HOME_BELIEFS: {
   {
     title: 'Prayer',
     body: "We seek God's presence and power through faithful prayer.",
-    image: '/Picflow/DSC06712 copy.webp',
+    image: '/Picflow/DSC06712-copy.webp',
     imageAlt: 'A member deep in prayer at The Wisdom Church',
     imagePosition: 'object-center',
     layoutClass: 'lg:col-span-5',
@@ -122,7 +122,7 @@ export const HOME_BELIEFS: {
   {
     title: 'Worship',
     body: 'We worship wholeheartedly and make room for renewed lives.',
-    image: '/Picflow/DSC00019 copy.webp',
+    image: '/Picflow/DSC00019-copy.webp',
     imageAlt: 'Worship on stage at The Wisdom Church',
     imagePosition: 'object-[center_18%]',
     layoutClass: 'lg:col-span-5',
@@ -131,7 +131,7 @@ export const HOME_BELIEFS: {
   {
     title: 'Community',
     body: 'We grow together, serve one another, and share life.',
-    image: '/Picflow/DSC00268 copy.webp',
+    image: '/Picflow/DSC00268-copy.webp',
     imageAlt: 'Members embracing in fellowship at The Wisdom Church',
     imagePosition: 'object-center',
     layoutClass: 'lg:col-span-7',
@@ -170,7 +170,7 @@ export const HOME_IMAGES = {
 
 export const HOME_COMMUNITY_GALLERY = [
   {
-    src: '/Picflow/DSC00054 copy.webp',
+    src: '/Picflow/DSC00054-copy.webp',
     alt: 'A mother and child at The Wisdom Church',
     position: 'object-[center_32%]',
     unoptimized: true,
@@ -182,7 +182,7 @@ export const HOME_COMMUNITY_GALLERY = [
     unoptimized: false,
   },
   {
-    src: '/Picflow/DSC00268 copy.webp',
+    src: '/Picflow/DSC00268-copy.webp',
     alt: 'A volunteer serving during worship',
     position: 'object-[52%_center]',
     unoptimized: false,

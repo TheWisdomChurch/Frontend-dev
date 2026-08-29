@@ -54,7 +54,7 @@ export default function UpcomingPage() {
   return (
     <Page>
       <SiteHero
-        backgroundImage="/Picflow/DSC00054 copy.webp"
+        backgroundImage="/Picflow/DSC00054-copy.webp"
         eyebrow="Upcoming Events"
         title="What's next at Wisdom Church."
         subtitle="Special gatherings, conferences, and programs coming up — plan ahead."

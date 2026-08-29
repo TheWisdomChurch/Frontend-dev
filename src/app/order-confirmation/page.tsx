@@ -65,7 +65,7 @@ function SimpleConfirmation() {
   return (
     <Page tone="dark">
       <SiteHero
-        backgroundImage="/Picflow/DSC00090 copy.webp"
+        backgroundImage="/Picflow/DSC00090-copy.webp"
         title="Order Confirmation"
         subtitle="Thank you for supporting the ministry."
         description="Your order is confirmed and a receipt has been sent to your email."

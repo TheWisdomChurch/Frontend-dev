@@ -10,7 +10,7 @@ export const YOUTH_MINISTRY_CONTENT: MinistryContent = {
     title: 'A generation on fire for God.',
     description:
       'Building young people who know what they believe, why they believe it, and how to live it — confidently.',
-    image: '/Picflow/DSC00006 copy.webp',
+    image: '/Picflow/DSC00006-copy.webp',
   },
   primaryCta: { label: 'Join the youth ministry', href: '/contact' },
   introduction: {
@@ -18,7 +18,7 @@ export const YOUTH_MINISTRY_CONTENT: MinistryContent = {
     title: 'Formation, truth, and healthy community — not just energy.',
     body: 'The youth ministry exists to help young people build a strong spiritual foundation early, ask honest questions, and develop a life of faith that is steady under pressure. Clarity, belonging, and real guidance — this is what this ministry is built to give.',
     image: {
-      src: '/Picflow/DSC00268 copy.webp',
+      src: '/Picflow/DSC00268-copy.webp',
       alt: 'Young people worshipping together at The Wisdom Church',
     },
   },
@@ -43,7 +43,7 @@ export const YOUTH_MINISTRY_CONTENT: MinistryContent = {
     title: 'Walking with young people through the questions that matter.',
     body: 'At the heart of this ministry is a commitment to know each young person, take their questions seriously, and help them move from simply attending into real ownership of their faith.',
     image: {
-      src: '/Picflow/DSC00064 copy.webp',
+      src: '/Picflow/DSC00064-copy.webp',
       alt: 'The youth ministry convener at The Wisdom Church',
     },
   },

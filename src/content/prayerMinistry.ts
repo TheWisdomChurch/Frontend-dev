@@ -6,7 +6,7 @@ export const PRAYER_MINISTRY_CONTENT: MinistryContent = {
     title: 'A church that prays before it moves.',
     description:
       'A community giving itself to prayer — interceding for the church, the city, and one another, and keeping the altar burning.',
-    image: '/Picflow/DSC06712 copy.webp',
+    image: '/Picflow/DSC06712-copy.webp',
   },
   primaryCta: { label: 'Join the prayer team', href: '/contact' },
   introduction: {
@@ -14,7 +14,7 @@ export const PRAYER_MINISTRY_CONTENT: MinistryContent = {
     title: 'Prayer is not a programme here — it is the foundation.',
     body: 'The prayer ministry exists to keep the church anchored in the presence of God. We gather to intercede, to wait on the Lord, and to carry the burdens of the church and the world before Him — so that everything else the church does flows from time spent with God.',
     image: {
-      src: '/Picflow/DSC00049 copy.webp',
+      src: '/Picflow/DSC00049-copy.webp',
       alt: 'Members in prayer at The Wisdom Church',
     },
     imageFrameClassName: 'aspect-[4/5] sm:aspect-[3/4]',
@@ -41,7 +41,7 @@ export const PRAYER_MINISTRY_CONTENT: MinistryContent = {
     title: 'Keeping the altar burning for the whole church.',
     body: 'Our team organises the rhythm of prayer — daily prayer, prayer chains, and intercession for specific needs — and helps every member grow in a personal life of prayer.',
     image: {
-      src: '/Picflow/DSC00057 copy.webp',
+      src: '/Picflow/DSC00057-copy.webp',
       alt: 'A prayer ministry leader at The Wisdom Church',
     },
   },

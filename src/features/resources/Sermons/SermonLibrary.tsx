@@ -298,7 +298,7 @@ export default function SermonLibrary({
   return (
     <>
       <SiteHero
-        backgroundImage="/Picflow/DSC00082 copy.webp"
+        backgroundImage="/Picflow/DSC00082-copy.webp"
         imagePositionClassName="object-[center_12%] sm:object-[center_18%]"
         eyebrow="Wisdom Church Media"
         title="Truth for every season."

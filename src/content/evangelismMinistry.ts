@@ -9,7 +9,7 @@ export const EVANGELISM_MINISTRY_CONTENT: MinistryContent = {
     title: 'Taking the good news beyond the walls.',
     description:
       'Sharing the gospel with clarity and courage, and expressing the love of Christ through practical care in the communities around us.',
-    image: '/Picflow/DSC00007 copy.webp',
+    image: '/Picflow/DSC00007-copy.webp',
   },
   primaryCta: { label: 'Join the evangelism team', href: '/contact' },
   introduction: {
@@ -42,7 +42,7 @@ export const EVANGELISM_MINISTRY_CONTENT: MinistryContent = {
     title: 'Helping the church witness to its city with consistency.',
     body: 'Our team plans, prepares, and carries out evangelism and outreach with humility and care — so that every initiative treats people with dignity and points clearly to Christ.',
     image: {
-      src: '/Picflow/DSC00009 copy.webp',
+      src: '/Picflow/DSC00009-copy.webp',
       alt: 'An evangelism ministry leader at The Wisdom Church',
     },
   },

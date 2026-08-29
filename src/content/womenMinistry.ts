@@ -20,7 +20,7 @@ export const WOMEN_MINISTRY_CONTENT = {
     title: 'Equipping women to lead with faith, wisdom, and courage.',
     body: 'At the heart of this community is a commitment to help every woman recognise her God-given capacity, grow through meaningful mentorship, and step boldly into every space she is called to influence.',
     image: {
-      src: '/Picflow/DSC00012 copy.webp',
+      src: '/Picflow/DSC00012-copy.webp',
       alt: "Head Convener of The Wisdom Church Women's Ministry speaking at the conference",
     },
   },
