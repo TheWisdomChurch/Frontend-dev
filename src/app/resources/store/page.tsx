@@ -201,7 +201,7 @@ function StorePageContent() {
   return (
     <Page tone="dark">
       <SiteHero
-        backgroundImage="/Picflow/DSC06903 copy.webp"
+        backgroundImage="/Picflow/DSC00009-copy-2.webp"
         title="Wisdom Church Store"
         subtitle="Wear Your Faith, Share The Message"
         description="Discover our exclusive collection of merchandise designed to inspire and uplift. Each item carries a message of faith, hope, and wisdom for your daily journey."

@@ -127,7 +127,7 @@ export default function TermsPage() {
   return (
     <Page>
       <SiteHero
-        backgroundImage="/Picflow/DSC00019 copy.webp"
+        backgroundImage="/Picflow/DSC00019-copy.webp"
         eyebrow="Legal · Terms"
         title="Terms of Use"
         subtitle="These terms govern your access to our website, livestreams, registrations, forms, and related digital services."

@@ -1,14 +1,13 @@
 import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
-import type { LeadershipRole } from '@/domain/leadership/types';
+import type {
+  LeadershipMember,
+  LeadershipRole,
+} from '@/domain/leadership/types';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
-import {
-  LeaderCard,
-  ROLE_LABEL,
-  initials,
-} from '@/features/leadership/LeadershipCards';
+import { LeaderCard, ROLE_LABEL } from '@/features/leadership/LeadershipCards';
 import {
   Container,
   Page,
@@ -29,15 +28,59 @@ const SENIOR_ROLES: LeadershipRole[] = [
 ];
 const BOARD_ROLES: LeadershipRole[] = ['deacon', 'deaconess'];
 
-/* ── Empty state ────────────────────────────────────────── */
+const ROLE_RANK: Record<LeadershipRole, number> = {
+  senior_pastor: 0,
+  associate_pastor: 1,
+  reverend: 2,
+  deacon: 3,
+  deaconess: 4,
+};
 
-function EmptyState({ dark }: { dark?: boolean }) {
+function byRoleThenName(a: LeadershipMember, b: LeadershipMember) {
+  const rank = ROLE_RANK[a.role] - ROLE_RANK[b.role];
+  if (rank !== 0) return rank;
+  return `${a.firstName} ${a.lastName}`.localeCompare(
+    `${b.firstName} ${b.lastName}`
+  );
+}
+
+/* ── One leader group: header + premium portrait grid ───── */
+
+function LeaderGroup({
+  eyebrow,
+  title,
+  accent,
+  description,
+  leaders,
+  tone,
+}: {
+  eyebrow: string;
+  title: string;
+  accent?: string;
+  description?: string;
+  leaders: LeadershipMember[];
+  tone: 'dark' | 'canvas';
+}) {
+  if (leaders.length === 0) return null;
   return (
-    <SectionEmpty
-      title="Leadership listings coming soon."
-      description="Our leadership directory will be published here shortly."
-      tone={dark ? 'dark' : 'light'}
-    />
+    <Section tone={tone}>
+      <Container>
+        <SectionHeader
+          eyebrow={eyebrow}
+          title={title}
+          accent={accent}
+          description={description}
+          tone={tone === 'dark' ? 'dark' : undefined}
+        />
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {leaders.map((leader, i) => (
+            <ScrollFadeIn key={leader.id} delay={Math.min(i, 5) * 0.06}>
+              <LeaderCard leader={leader} tone={tone} />
+            </ScrollFadeIn>
+          ))}
+        </div>
+      </Container>
+    </Section>
   );
 }
 
@@ -47,10 +90,15 @@ export default async function LeadershipPage() {
   // The directory is CMS-managed and often empty in non-production. A transport
   // failure (API unreachable, cold start, rate limit) should fall back to the
   // "coming soon" empty state rather than crash the route to its error page.
-  const leaders = await apiClient.listLeadership().catch(() => []);
+  const leaders = (await apiClient.listLeadership().catch(() => [])).sort(
+    byRoleThenName
+  );
 
   const seniorTeam = leaders.filter(l => SENIOR_ROLES.includes(l.role));
   const board = leaders.filter(l => BOARD_ROLES.includes(l.role));
+  const others = leaders.filter(
+    l => !SENIOR_ROLES.includes(l.role) && !BOARD_ROLES.includes(l.role)
+  );
 
   return (
     <Page>
@@ -76,98 +124,71 @@ export default async function LeadershipPage() {
 
       {/* ── 1. Hero ──────────────────────────────────────────── */}
       <SiteHero
-        backgroundImage="/Picflow/menleaders.webp"
+        backgroundImage="/Picflow/DSC00058-copy.webp"
+        imagePositionClassName="object-center"
         eyebrow="Leadership"
         title="The people who shepherd this church."
         subtitle="Called, committed, and accountable — meet the team that serves the Wisdom Church community."
       />
 
-      {/* ── 2. Senior leadership ─────────────────────────────── */}
-      <Section tone="dark">
-        <Container>
-          <SectionHeader
-            eyebrow="Pastoral leadership"
-            title="Shepherds of the"
-            accent="Word and community."
-            tone="dark"
-          />
-
-          {seniorTeam.length === 0 ? (
-            <div className="mt-10">
-              <EmptyState dark />
-            </div>
-          ) : (
-            <div className="mt-10 grid gap-px bg-[var(--app-border)] sm:mt-12 lg:grid-cols-2">
-              {seniorTeam.map((leader, i) => {
-                const isTrailingOdd =
-                  seniorTeam.length % 2 === 1 && i === seniorTeam.length - 1;
-                return (
-                  <ScrollFadeIn
-                    key={leader.id}
-                    delay={i * 0.07}
-                    className={isTrailingOdd ? 'lg:col-span-2' : ''}
-                  >
-                    <LeaderCard leader={leader} tone="canvas" />
-                  </ScrollFadeIn>
-                );
-              })}
-            </div>
-          )}
-        </Container>
-      </Section>
-
-      {/* ── 3. Board of leaders — canvas ─────────────────────── */}
-      {board.length > 0 && (
-        <Section tone="canvas">
+      {/* ── 2. Directory ─────────────────────────────────────── */}
+      {leaders.length === 0 ? (
+        <Section tone="dark">
           <Container>
             <SectionHeader
-              eyebrow="Board of leaders"
-              title="Deacons & Deaconesses."
+              eyebrow="Our leadership"
+              title="Shepherds of the"
+              accent="Word and community."
+              tone="dark"
             />
-
-            <div className="mt-10 divide-y divide-[var(--app-border)] border-y border-[var(--app-border)]">
-              {board.map((leader, i) => (
-                <ScrollFadeIn key={leader.id} delay={i * 0.035}>
-                  <div className="grid items-center gap-3 py-6 sm:grid-cols-[1fr_auto] sm:gap-10">
-                    <div className="flex items-center gap-5">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--app-border)] bg-[var(--app-canvas-2)] font-ui text-label font-bold text-[var(--app-muted)]">
-                        {initials(leader.firstName, leader.lastName)}
-                      </div>
-                      <div>
-                        <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
-                          {leader.firstName} {leader.lastName}
-                        </p>
-                        {leader.bio && (
-                          <p className="mt-0.5 font-ui text-label text-[var(--app-subtle)] line-clamp-1">
-                            {leader.bio}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <span className="self-start border border-[var(--app-border)] px-3 py-1 font-ui text-eyebrow uppercase tracking-[0.14em] text-[var(--app-muted)] sm:self-auto">
-                      {ROLE_LABEL[leader.role]}
-                    </span>
-                  </div>
-                </ScrollFadeIn>
-              ))}
+            <div className="mt-10">
+              <SectionEmpty
+                title="Leadership listings coming soon."
+                description="Our leadership directory will be published here shortly."
+                tone="dark"
+              />
             </div>
           </Container>
         </Section>
+      ) : (
+        <>
+          <LeaderGroup
+            tone="dark"
+            eyebrow="Pastoral leadership"
+            title="Shepherds of the"
+            accent="Word and community."
+            description="The pastors who carry the vision, teach the Word, and give spiritual oversight to the church."
+            leaders={seniorTeam}
+          />
+          <LeaderGroup
+            tone="canvas"
+            eyebrow="Board of leaders"
+            title="Deacons & Deaconesses."
+            description="Trusted men and women who serve the day-to-day life of the church and care for the congregation."
+            leaders={board}
+          />
+          <LeaderGroup
+            tone="canvas"
+            eyebrow="Ministry leadership"
+            title="Serving across the church."
+            leaders={others}
+          />
+        </>
       )}
 
-      {/* ── 4. CTA ───────────────────────────────────────────── */}
-      <Section tone="dark">
-        <Container>
+      {/* ── 3. CTA ───────────────────────────────────────────── */}
+      <Section tone="brand">
+        <Container className="text-center">
           <SectionHeader
             align="center"
             eyebrow="Serve with us"
             title="Leadership is an invitation,"
             accent="not just a title."
             description="If you feel called to serve the church in a meaningful way, we would love to have a conversation with you."
-            tone="dark"
+            className="mx-auto max-w-3xl"
           />
           <div className="mt-8 flex justify-center">
-            <CtaLink href="/contact" variant="outline">
+            <CtaLink href="/contact" variant="dark">
               Get in touch
             </CtaLink>
           </div>

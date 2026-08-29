@@ -42,7 +42,7 @@ function CheckoutPageContent() {
     return (
       <Page tone="dark">
         <SiteHero
-          backgroundImage="/Picflow/DSC00064 copy.webp"
+          backgroundImage="/Picflow/DSC00064-copy.webp"
           title="Checkout"
           subtitle="Complete your order securely."
           description="Review your items and finalize your purchase."

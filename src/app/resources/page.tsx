@@ -159,7 +159,7 @@ export default function ResourcesPage() {
       />
 
       <SiteHero
-        backgroundImage="/Picflow/DSC00082 copy.webp"
+        backgroundImage="/Picflow/DSC00082-copy.webp"
         title="Resource Center"
         subtitle="Everything you need in one place."
         note="Live streams, sermons, events, publications, store, and pastoral care — curated for your growth."

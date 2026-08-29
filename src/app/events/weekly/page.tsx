@@ -84,7 +84,7 @@ export default function WeeklyPage() {
       ))}
 
       <SiteHero
-        backgroundImage="/Picflow/DSC00057 copy.webp"
+        backgroundImage="/Picflow/DSC00057-copy.webp"
         eyebrow="Weekly Services"
         title="We gather. Every week."
         subtitle="Sunday morning worship, and Daily Prayer every weekday morning — all open to everyone."

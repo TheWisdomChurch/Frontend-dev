@@ -257,6 +257,23 @@ if (/MetaPixel/.test(layout)) {
   );
 }
 
+// Oversized source images choke the Next image optimizer in production
+// (sharp OOM / timeout → 502s) and bloat the standalone image. Full-res
+// camera exports must be downscaled before they land in the tree.
+const IMAGE_BYTE_LIMIT = 1_200_000;
+const imageRoots = ['public', 'src/shared/assets'];
+for (const dir of imageRoots) {
+  for (const file of filesBelow(join(root, dir))) {
+    if (!/\.(?:png|jpe?g|webp|gif)$/i.test(file)) continue;
+    const { size } = statSync(file);
+    if (size > IMAGE_BYTE_LIMIT) {
+      violations.push(
+        `${relative(root, file)}: image is ${(size / 1e6).toFixed(1)}MB — downscale to <=2560px / <=${(IMAGE_BYTE_LIMIT / 1e6).toFixed(1)}MB before committing`
+      );
+    }
+  }
+}
+
 if (violations.length > 0) {
   console.error('Architecture checks failed:\n');
   for (const violation of violations) console.error(`  - ${violation}`);

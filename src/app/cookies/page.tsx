@@ -76,7 +76,7 @@ export default function CookiesPage() {
   return (
     <Page>
       <SiteHero
-        backgroundImage="/Picflow/DSC00019 copy.webp"
+        backgroundImage="/Picflow/DSC00019-copy.webp"
         eyebrow="Legal · Cookies"
         title="Cookies & Privacy"
         subtitle="We use only the cookies this site needs—no advertising trackers, marketing pixels, or profiling."

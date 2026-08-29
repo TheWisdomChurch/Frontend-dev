@@ -78,7 +78,7 @@ export default function PrivacyPage() {
   return (
     <Page>
       <SiteHero
-        backgroundImage="/Picflow/DSC00019 copy.webp"
+        backgroundImage="/Picflow/DSC00019-copy.webp"
         eyebrow="Legal · Privacy"
         title="Privacy Policy"
         subtitle="We handle your information with care and respect. This policy explains what we collect, why we collect it, and how we protect it—in plain language."

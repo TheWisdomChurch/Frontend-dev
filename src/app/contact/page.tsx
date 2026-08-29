@@ -228,7 +228,7 @@ function ContactPageContent() {
       />
 
       <SiteHero
-        backgroundImage="/Picflow/DSC00048 copy.webp"
+        backgroundImage="/Picflow/DSC00048-copy.webp"
         imagePositionClassName="object-[center_10%] [filter:brightness(1.06)_contrast(1.03)]"
         eyebrow="Get in touch"
         title="We'd love to hear from you."

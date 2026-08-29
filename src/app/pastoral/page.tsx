@@ -27,7 +27,7 @@ export default function PastoralPage() {
       />
 
       <SiteHero
-        backgroundImage="/Picflow/DSC00122 copy.webp"
+        backgroundImage="/Picflow/DSC00122-copy.webp"
         eyebrow="Pastoral Care"
         title="Care is always available here."
         subtitle="Prayer, confidential counseling, or booking a minister for your event — pick what you need below and we'll take it from there."

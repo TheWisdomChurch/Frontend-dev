@@ -45,7 +45,7 @@ export default function PublicationPage() {
   return (
     <Page tone="dark">
       <SiteHero
-        backgroundImage="/Picflow/DSC00018 copy.webp"
+        backgroundImage="/Picflow/DSC00018-copy.webp"
         eyebrow="Publications"
         title="Resources to help you grow between services."
         subtitle="Sermon notes, study guides, and devotional materials from The Wisdom Church."

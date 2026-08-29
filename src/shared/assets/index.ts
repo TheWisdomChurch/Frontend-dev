@@ -1,6 +1,6 @@
 import lader from './lader.jpeg';
 import lader_1 from './lader_1.jpg';
-import WhatsappCommunity from './Whatsapp (1).jpeg';
+import WhatsappCommunity from './whatsapp-1.jpeg';
 
 import Bishop from './bishopp.png';
 
@@ -33,7 +33,7 @@ import ProvidusBank from './Providus.jpg';
 import wisdomShirt_1 from './WisdomShirt__1_.png';
 
 // images
-import Img_1 from './img (2).jpg';
+import Img_1 from './img-2.jpg';
 import Children_head from './Moji.jpeg';
 import Min_Adura from './Aduragbemi.jpg';
 

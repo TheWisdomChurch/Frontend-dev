@@ -118,7 +118,7 @@ export default function CalendarPage() {
   return (
     <Page>
       <SiteHero
-        backgroundImage="/Picflow/DSC00048 copy.webp"
+        backgroundImage="/Picflow/DSC00048-copy.webp"
         eyebrow="Church Calendar"
         title="Every event, every month."
         subtitle="Browse the full calendar of services, programs, and special gatherings."
