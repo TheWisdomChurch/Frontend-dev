@@ -414,7 +414,7 @@ export default function EventsShowcase() {
     <Section tone="surface">
       <Container>
         {/* ── Header ──────────────────────────────────────── */}
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <SectionHeader
             eyebrow="Events & Programs"
             title="What's"
@@ -422,7 +422,7 @@ export default function EventsShowcase() {
             size="sm"
           />
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex shrink-0 flex-wrap items-center gap-3">
             <CategoryToggle value={category} onChange={setCategory} />
             {hasContent ? (
               <Link

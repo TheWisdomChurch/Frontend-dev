@@ -245,67 +245,71 @@ export default function ResourceSection() {
     <Section ref={sectionRef} id="resources" tone="surface" flush>
       <div className="relative overflow-hidden bg-[var(--app-dark)]">
         <Container className="relative py-section-sm">
-          <div className="grid items-center gap-8 md:gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 xl:gap-20">
-            <div>
-              <SectionHeader
-                eyebrow="Latest Message"
-                title="Hear the"
-                accent="Word."
-                tone="dark"
-              />
+          <div className="grid items-center gap-10 sm:gap-12 md:gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 xl:gap-20">
+            <div className="contents lg:block lg:min-w-0">
+              <div className="order-1 min-w-0 lg:order-none">
+                <SectionHeader
+                  eyebrow="Latest Message"
+                  title="Hear the"
+                  accent="Word."
+                  tone="dark"
+                />
 
-              <div className="mt-8 flex flex-wrap gap-2.5">
-                <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
-                  {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
-                </span>
-                <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
-                  {SERVICE_INFO.dailyPrayer.label} ·{' '}
-                  {SERVICE_INFO.dailyPrayer.time}
-                </span>
+                <div className="mt-8 flex flex-wrap gap-2.5">
+                  <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
+                    {SERVICE_INFO.sunday.day}s · {SERVICE_INFO.sunday.time}
+                  </span>
+                  <span className="rounded-badge border border-[var(--app-border)] bg-white/[0.045] px-4 py-2 font-ui text-label font-semibold text-[var(--app-muted)]">
+                    {SERVICE_INFO.dailyPrayer.label} ·{' '}
+                    {SERVICE_INFO.dailyPrayer.time}
+                  </span>
+                </div>
+
+                <div className="mt-10 min-h-28 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-6">
+                  {loading ? (
+                    <div
+                      className="space-y-4"
+                      aria-label="Loading latest message"
+                    >
+                      <div className="h-7 w-4/5 animate-pulse rounded bg-white/10" />
+                      <div className="h-4 w-2/5 animate-pulse rounded bg-white/[0.06]" />
+                    </div>
+                  ) : recentVideo ? (
+                    <>
+                      <h3 className="line-clamp-3 font-headline text-heading-lg font-semibold leading-tight !text-white">
+                        {recentVideoTitle}
+                      </h3>
+                      <p className="mt-3 font-ui text-body-sm text-[var(--app-subtle)]">
+                        The Wisdom Church
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="font-headline text-heading-md font-semibold !text-white">
+                        Message coming soon
+                      </h3>
+                      <p className="mt-3 max-w-md font-ui text-body-sm leading-7 text-[var(--app-subtle)]">
+                        Our latest teaching will appear here as soon as it is
+                        published.
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-10 min-h-28 border-l border-[color-mix(in_srgb,var(--app-primary)_60%,transparent)] pl-6">
-                {loading ? (
-                  <div
-                    className="space-y-4"
-                    aria-label="Loading latest message"
-                  >
-                    <div className="h-7 w-4/5 animate-pulse rounded bg-white/10" />
-                    <div className="h-4 w-2/5 animate-pulse rounded bg-white/[0.06]" />
-                  </div>
-                ) : recentVideo ? (
-                  <>
-                    <h3 className="line-clamp-3 font-headline text-heading-lg font-semibold leading-tight !text-white">
-                      {recentVideoTitle}
-                    </h3>
-                    <p className="mt-3 font-ui text-body-sm text-[var(--app-subtle)]">
-                      The Wisdom Church
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="font-headline text-heading-md font-semibold !text-white">
-                      Message coming soon
-                    </h3>
-                    <p className="mt-3 max-w-md font-ui text-body-sm leading-7 text-[var(--app-subtle)]">
-                      Our latest teaching will appear here as soon as it is
-                      published.
-                    </p>
-                  </>
-                )}
+              <div className="order-3 lg:order-none lg:mt-9">
+                <Link
+                  href="/resources/sermons"
+                  className={buttonClass('primary', 'md')}
+                >
+                  Explore sermons <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
-
-              <Link
-                href="/resources/sermons"
-                className={buttonClass('primary', 'md', 'mt-9')}
-              >
-                Explore sermons <ArrowRight className="h-4 w-4" />
-              </Link>
             </div>
 
             <div
               data-gsap="reveal"
-              className="relative aspect-video w-full overflow-hidden rounded-image border border-[var(--app-border)] bg-white/[0.035] shadow-2xl shadow-black/30"
+              className="order-2 relative aspect-video w-full overflow-hidden rounded-image border border-[var(--app-border)] bg-white/[0.035] shadow-2xl shadow-black/30 lg:order-none"
             >
               {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
