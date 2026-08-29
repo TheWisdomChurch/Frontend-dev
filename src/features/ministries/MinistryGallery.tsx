@@ -9,13 +9,18 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 
 type GalleryImage = { src: string; alt: string };
 
-const INTERVAL_MS = 5000;
+const INTERVAL_MS = 5500;
+const FALLBACK_RATIO = 1.4;
+// Keep the frame sane if a stray panorama or very tall portrait shows up.
+const MIN_RATIO = 0.62;
+const MAX_RATIO = 2;
 
 /**
- * Auto-advancing photo slideshow. Every image is shown in full (`object-contain`)
- * over a blurred copy of itself, so nothing is ever cropped and the frame is
- * never letterboxed. Pauses on hover / focus, and stops auto-advancing when the
- * viewer prefers reduced motion.
+ * Auto-advancing slideshow whose frame resizes to match each photo's real
+ * aspect ratio — so `object-cover` fills the frame edge to edge with no
+ * cropping and no letterbox bars, whatever mix of portrait / landscape /
+ * square photos it is given. Pauses on hover / focus; stops auto-advancing
+ * under reduced motion.
  */
 export default function MinistryGallery({
   images,
@@ -24,6 +29,7 @@ export default function MinistryGallery({
 }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [ratios, setRatios] = useState<Record<number, number>>({});
   const count = images.length;
 
   const go = useCallback(
@@ -48,6 +54,9 @@ export default function MinistryGallery({
 
   if (count === 0) return null;
 
+  const raw = ratios[index] ?? FALLBACK_RATIO;
+  const ratio = Math.min(MAX_RATIO, Math.max(MIN_RATIO, raw));
+
   return (
     <div
       className="select-none"
@@ -57,41 +66,36 @@ export default function MinistryGallery({
       onBlurCapture={() => setPaused(false)}
     >
       <div
-        className="relative aspect-[4/3] overflow-hidden rounded-image bg-[var(--app-dark-2)] sm:aspect-[16/10]"
+        className="relative aspect-[var(--frame-ratio)] w-full overflow-hidden rounded-image bg-[var(--app-dark-2)] transition-[aspect-ratio] duration-500 ease-out"
+        style={{ '--frame-ratio': String(ratio) } as CSSProperties}
         role="group"
         aria-roledescription="carousel"
         aria-label="Ministry photographs"
       >
         {images.map((image, i) => (
-          <div
+          <Image
             key={image.src}
-            aria-hidden={i !== index}
+            src={image.src}
+            alt={i === index ? image.alt : ''}
+            fill
+            priority={i === 0}
+            sizes="(max-width: 1023px) 100vw, 55vw"
+            quality={IMAGE_QUALITY}
+            onLoad={event => {
+              const el = event.currentTarget;
+              if (el.naturalWidth && el.naturalHeight) {
+                setRatios(current =>
+                  current[i]
+                    ? current
+                    : { ...current, [i]: el.naturalWidth / el.naturalHeight }
+                );
+              }
+            }}
             className={cn(
-              'absolute inset-0 transition-opacity duration-[800ms] ease-out motion-reduce:transition-none',
+              'object-cover transition-opacity duration-700 ease-out motion-reduce:transition-none',
               i === index ? 'opacity-100' : 'opacity-0'
             )}
-          >
-            {/* Blurred fill — removes the letterbox bars */}
-            <Image
-              src={image.src}
-              alt=""
-              aria-hidden
-              fill
-              sizes="12vw"
-              quality={20}
-              className="scale-110 object-cover blur-2xl opacity-40"
-            />
-            {/* The photo itself — always fully visible */}
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              priority={i === 0}
-              sizes="(max-width: 1023px) 100vw, 60vw"
-              quality={IMAGE_QUALITY}
-              className="object-contain"
-            />
-          </div>
+          />
         ))}
 
         {count > 1 ? (

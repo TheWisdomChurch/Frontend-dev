@@ -14,7 +14,7 @@ export const MEN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Where truth, challenge, and brotherhood work together.',
     body: 'This ministry exists to help men develop biblical strength, spiritual discipline, and the kind of maturity that produces faithful leadership in every area of life. We want men who are clear in conviction, stable in character, and genuinely accountable in community.',
     image: {
-      src: '/Picflow/men2.webp',
+      src: '/Picflow/men1.webp',
       alt: "Men in fellowship at The Wisdom Church men's gathering",
     },
   },

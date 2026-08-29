@@ -473,46 +473,26 @@ export function Figure({
   className,
   imageClassName,
   parallax = false,
-  fit = 'cover',
   ...props
 }: Omit<ComponentProps<typeof Image>, 'quality'> & {
   imageClassName?: string;
   parallax?: boolean;
-  /**
-   * `cover` (default) fills the frame and crops. `contain` shows the whole
-   * image with no crop, over a blurred copy of itself so the frame is never
-   * letterboxed — use it wherever the full photo needs to stay visible.
-   */
-  fit?: 'cover' | 'contain';
 }) {
-  const contain = fit === 'contain';
   return (
     <div
-      data-parallax-global={parallax && !contain ? '0.18' : undefined}
+      data-parallax-global={parallax ? '0.18' : undefined}
       className={cn(
         'relative overflow-hidden rounded-image bg-[var(--app-surface-2)]',
         className
       )}
     >
-      {contain && props.fill ? (
-        <Image
-          src={props.src}
-          alt=""
-          aria-hidden
-          fill
-          sizes="12vw"
-          quality={20}
-          className="scale-110 object-cover blur-2xl opacity-35"
-        />
-      ) : null}
       <Image
         {...props}
         alt={alt}
         quality={IMAGE_QUALITY}
         className={cn(
-          'transition-transform duration-[900ms] ease-out',
-          contain ? 'object-contain' : 'object-cover',
-          parallax && !contain && 'scale-[1.08]',
+          'object-cover transition-transform duration-[900ms] ease-out',
+          parallax && 'scale-[1.08]',
           imageClassName
         )}
       />

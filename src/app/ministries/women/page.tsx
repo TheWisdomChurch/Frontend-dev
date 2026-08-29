@@ -99,8 +99,8 @@ export default function WomenMinistryPage() {
                 alt={content.headConvener.image.alt}
                 fill
                 sizes="(max-width: 1023px) 100vw, 45vw"
-                className="aspect-[4/5]"
-                imageClassName="object-[50%_22%]"
+                className="aspect-[4/5] sm:aspect-[3/4]"
+                imageClassName="object-top"
               />
             </div>
             <SectionHeader

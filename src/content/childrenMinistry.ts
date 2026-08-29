@@ -18,7 +18,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Church as a place of safety, joy, and truth.',
     body: "The children's ministry exists to help young people know God early, feel genuinely cared for at church, and build spiritual foundations that support growth well into their teenage years and beyond.",
     image: {
-      src: '/Picflow/DSC00123 copy.webp',
+      src: '/Picflow/Conv_4.webp',
       alt: 'Children being taught at The Wisdom Church',
     },
   },

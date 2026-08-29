@@ -30,8 +30,8 @@ const ministries = [
     description:
       'A Christ-centred community where a new generation is grounded in Scripture, prayer, purpose, and godly friendships.',
     href: '/ministries/youth',
-    image: '/Picflow/DSC00268 copy.webp',
-    position: 'object-[center_32%]',
+    image: '/Picflow/DSC00122 copy.webp',
+    position: 'object-top',
   },
   {
     title: "Women's Ministry",
@@ -40,7 +40,7 @@ const ministries = [
       'Women growing together in the Word, prayer, fellowship, and the grace to live faithfully in every season.',
     href: '/ministries/women',
     image: '/Picflow/DSC00054 copy.webp',
-    position: 'object-[center_28%]',
+    position: 'object-top',
   },
   {
     title: "Men's Ministry",
@@ -49,7 +49,7 @@ const ministries = [
       'A brotherhood forming men of conviction, spiritual discipline, integrity, and servant leadership.',
     href: '/ministries/men',
     image: '/Picflow/menleaders.webp',
-    position: 'object-center',
+    position: 'object-top',
   },
   {
     title: "Children's Ministry",
@@ -58,7 +58,7 @@ const ministries = [
       'A safe, joyful place where children are known, cared for, and taught the truth of God’s Word at their level.',
     href: '/ministries/children',
     image: '/Picflow/DSC00123 copy.webp',
-    position: 'object-[center_35%]',
+    position: 'object-top',
   },
   {
     title: 'Outreach & Missions',
@@ -67,7 +67,7 @@ const ministries = [
       'Serving our neighbours, sharing the gospel, and expressing the love of Christ through practical care.',
     href: '/ministries/outreach',
     image: '/Picflow/DSC00019 copy.webp',
-    position: 'object-[center_42%]',
+    position: 'object-top',
   },
 ] as const;
 

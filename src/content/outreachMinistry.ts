@@ -17,7 +17,7 @@ export const OUTREACH_MINISTRY_CONTENT: MinistryContent = {
     title: 'The compassion of Christ and the wisdom to serve people well.',
     body: 'This ministry exists to meet practical needs, strengthen human dignity, and create meaningful opportunities for the church to serve its city with love and clarity. Mission is not occasional here — it is part of how Wisdom Church lives.',
     image: {
-      src: '/Picflow/DSC00019 copy.webp',
+      src: '/Picflow/Conv_3.webp',
       alt: 'The Wisdom Church community serving together',
     },
   },
