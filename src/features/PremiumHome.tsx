@@ -24,6 +24,7 @@ import {
   CtaLink,
   Section,
   Split,
+  SplitFeature,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 
@@ -63,34 +64,38 @@ export default function PremiumHome() {
 
       <Section>
         <Container>
-          <Split>
-            <div>
+          <SplitFeature
+            text={
               <SectionHeader
                 eyebrow={HOME_COPY.welcome.eyebrow}
                 title={HOME_COPY.welcome.title}
                 accent={HOME_COPY.welcome.accent}
                 description={HOME_COPY.welcome.description}
               />
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            }
+            media={
+              <Figure
+                parallax
+                src={HOME_IMAGES.welcome.src}
+                alt={HOME_IMAGES.welcome.alt}
+                fill
+                priority
+                sizes="(max-width: 1023px) 100vw, 50vw"
+                className="aspect-[4/3] sm:aspect-[16/11]"
+                imageClassName={HOME_IMAGES.welcome.position}
+              />
+            }
+            actions={
+              <>
                 <CtaLink href="/about" variant="dark">
                   {HOME_COPY.actions.discoverStory}
                 </CtaLink>
                 <CommunityJoinTrigger icon={false}>
                   {HOME_COPY.actions.joinCommunity}
                 </CommunityJoinTrigger>
-              </div>
-            </div>
-            <Figure
-              parallax
-              src={HOME_IMAGES.welcome.src}
-              alt={HOME_IMAGES.welcome.alt}
-              fill
-              priority
-              sizes="(max-width: 1023px) 100vw, 50vw"
-              className="aspect-[4/3] sm:aspect-[16/11]"
-              imageClassName={HOME_IMAGES.welcome.position}
-            />
-          </Split>
+              </>
+            }
+          />
         </Container>
       </Section>
 
@@ -153,45 +158,52 @@ export default function PremiumHome() {
 
       <Section>
         <Container>
-          <Split reverse>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-image bg-[var(--app-surface-2)] sm:aspect-[16/11]">
-              <Image
-                src={HOME_IMAGES.service.desktopSrc}
-                alt={HOME_IMAGES.service.alt}
-                fill
-                unoptimized
-                quality={IMAGE_QUALITY}
-                sizes="(max-width: 1023px) 100vw, 50vw"
-                className="object-cover object-center"
-              />
-            </div>
-            <div>
-              <SectionHeader
-                eyebrow={HOME_COPY.service.eyebrow}
-                title={HOME_COPY.service.title}
-                accent={HOME_COPY.service.accent}
-              />
-              <div className="mt-10 space-y-5 border-y border-[var(--app-border)] py-7 font-ui text-body-md">
-                <p className="flex items-center gap-4">
-                  <CalendarDays className="h-5 w-5 text-[var(--app-primary-dark)]" />
-                  <strong>
-                    {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}{' '}
-                    {SERVICE_INFO.sunday.timezone}
-                  </strong>
-                </p>
-                <p className="flex items-start gap-4">
-                  <MapPin className="mt-1 h-5 w-5 shrink-0 text-[var(--app-primary-dark)]" />
-                  <strong>{SERVICE_INFO.venue.full}</strong>
-                </p>
+          <SplitFeature
+            reverse
+            media={
+              <div className="relative aspect-[4/3] overflow-hidden rounded-image bg-[var(--app-surface-2)] sm:aspect-[16/11]">
+                <Image
+                  src={HOME_IMAGES.service.desktopSrc}
+                  alt={HOME_IMAGES.service.alt}
+                  fill
+                  unoptimized
+                  quality={IMAGE_QUALITY}
+                  sizes="(max-width: 1023px) 100vw, 50vw"
+                  className="object-cover object-center"
+                />
               </div>
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            }
+            text={
+              <>
+                <SectionHeader
+                  eyebrow={HOME_COPY.service.eyebrow}
+                  title={HOME_COPY.service.title}
+                  accent={HOME_COPY.service.accent}
+                />
+                <div className="mt-10 space-y-5 border-y border-[var(--app-border)] py-7 font-ui text-body-md">
+                  <p className="flex items-center gap-4">
+                    <CalendarDays className="h-5 w-5 text-[var(--app-primary-dark)]" />
+                    <strong>
+                      {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}{' '}
+                      {SERVICE_INFO.sunday.timezone}
+                    </strong>
+                  </p>
+                  <p className="flex items-start gap-4">
+                    <MapPin className="mt-1 h-5 w-5 shrink-0 text-[var(--app-primary-dark)]" />
+                    <strong>{SERVICE_INFO.venue.full}</strong>
+                  </p>
+                </div>
+              </>
+            }
+            actions={
+              <>
                 <TakeMeToChurchButton />
                 <PlanVisitTrigger icon={false} variant="outline">
                   {HOME_COPY.actions.planFirstVisit}
                 </PlanVisitTrigger>
-              </div>
-            </div>
-          </Split>
+              </>
+            }
+          />
         </Container>
       </Section>
 
@@ -282,38 +294,40 @@ export default function PremiumHome() {
 
       <Section tone="dark">
         <Container>
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+          <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-x-16 lg:gap-y-14">
             <SectionHeader
               eyebrow={HOME_COPY.cellFellowship.eyebrow}
               title={HOME_COPY.cellFellowship.title}
               accent={HOME_COPY.cellFellowship.accent}
               description={HOME_COPY.cellFellowship.description}
               tone="dark"
+              className="order-1 lg:order-none"
             />
-            <div className="shrink-0">
+
+            <div className="order-2 grid gap-px overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-border)] sm:grid-cols-3 lg:order-none lg:col-span-2">
+              {HOME_COPY.cellFellowship.points.map(point => (
+                <article
+                  key={point.title}
+                  data-gsap="reveal"
+                  className="tone-dark bg-[var(--app-dark)] p-6 sm:p-8"
+                >
+                  <span
+                    className="block h-[1.5px] w-8 bg-[color-mix(in_srgb,var(--app-primary)_60%,transparent)]"
+                    aria-hidden="true"
+                  />
+                  <h3 className="mt-4 font-ui text-heading-sm font-semibold text-[var(--app-text)]">
+                    {point.title}
+                  </h3>
+                  <p className="mt-2 font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
+                    {point.body}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div className="order-3 lg:order-none lg:shrink-0">
               <CellFellowshipCta label="Join a Cell Fellowship" />
             </div>
-          </div>
-
-          <div className="mt-12 grid gap-px overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-border)] sm:mt-14 sm:grid-cols-3">
-            {HOME_COPY.cellFellowship.points.map(point => (
-              <article
-                key={point.title}
-                data-gsap="reveal"
-                className="tone-dark bg-[var(--app-dark)] p-6 sm:p-8"
-              >
-                <span
-                  className="block h-[1.5px] w-8 bg-[color-mix(in_srgb,var(--app-primary)_60%,transparent)]"
-                  aria-hidden="true"
-                />
-                <h3 className="mt-4 font-ui text-heading-sm font-semibold text-[var(--app-text)]">
-                  {point.title}
-                </h3>
-                <p className="mt-2 font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
-                  {point.body}
-                </p>
-              </article>
-            ))}
           </div>
         </Container>
       </Section>

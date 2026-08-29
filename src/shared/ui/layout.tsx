@@ -371,6 +371,54 @@ export function Split({
   );
 }
 
+/**
+ * A two-column feature block whose call-to-action buttons must always sit at
+ * the FOOT of the stack on mobile — after the media, never wedged between the
+ * heading and the image. On `lg` the layout is identical to `<Split>`: the
+ * heading and actions share the text column (buttons directly under the copy),
+ * with the media centred alongside.
+ *
+ * `text` = heading/copy, `media` = the image/figure, `actions` = the buttons.
+ * One DOM node each, no duplication — on mobile the text wrapper collapses
+ * (`display: contents`) so heading / media / actions are siblings that reorder
+ * with `order`; on `lg` the wrapper is a normal grid cell again.
+ */
+export function SplitFeature({
+  text,
+  media,
+  actions,
+  reverse = false,
+  className,
+}: {
+  text: ReactNode;
+  media: ReactNode;
+  actions?: ReactNode;
+  reverse?: boolean;
+  className?: string;
+}) {
+  return (
+    <div
+      data-motion-group
+      className={cn(
+        'grid gap-10 sm:gap-12 lg:grid-cols-2 lg:items-center lg:gap-20 xl:gap-24',
+        reverse && 'lg:[&>*:first-child]:order-2',
+        className
+      )}
+    >
+      <div className="contents lg:block lg:min-w-0">
+        <div className="order-1 min-w-0 lg:order-none">{text}</div>
+        {actions ? (
+          <div className="order-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:order-none lg:mt-10">
+            {actions}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="order-2 min-w-0 lg:order-none">{media}</div>
+    </div>
+  );
+}
+
 export function CardRail({
   children,
   columns = 3,
