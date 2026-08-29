@@ -138,9 +138,9 @@ export default function MinistryPageTemplate({
                 src={introduction.image.src}
                 alt={introduction.image.alt}
                 fill
+                fit="contain"
                 sizes="(max-width: 1023px) 100vw, 56vw"
                 className="aspect-[4/3] sm:aspect-[16/10]"
-                imageClassName="object-center"
               />
             </div>
           </Split>
@@ -191,9 +191,9 @@ export default function MinistryPageTemplate({
                   src={leader.image.src}
                   alt={leader.image.alt}
                   fill
+                  fit="contain"
                   sizes="(max-width: 1023px) 100vw, 45vw"
                   className="aspect-[4/5]"
-                  imageClassName="object-[50%_22%]"
                 />
               </div>
               <SectionHeader

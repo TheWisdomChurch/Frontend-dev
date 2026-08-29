@@ -39,7 +39,7 @@ export const MEN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Walking with men toward maturity, conviction, and service.',
     body: 'At the centre of this community is a commitment to help every man grow in the Word, build honest friendships, and carry responsibility well in every place God has placed him.',
     image: {
-      src: '/Picflow/men3.webp',
+      src: '/Picflow/menleaders.webp',
       alt: "Leader of The Wisdom Church Men's Ministry",
     },
   },
