@@ -92,6 +92,7 @@ export default function MinistryPageTemplate({
                   eyebrow={conference.eyebrow}
                   title={heading(conference.heading)}
                   description={conference.description}
+                  size="sm"
                 />
                 <Link
                   href="/contact"
@@ -129,6 +130,7 @@ export default function MinistryPageTemplate({
               eyebrow="Our mission"
               title={heading(mission.heading)}
               description={mission.body}
+              size="sm"
             />
           </ScrollFadeIn>
         </Container>
@@ -140,6 +142,7 @@ export default function MinistryPageTemplate({
             <SectionHeader
               eyebrow="What we do"
               title={heading(activities.heading)}
+              size="sm"
             />
           </ScrollFadeIn>
 
@@ -169,6 +172,7 @@ export default function MinistryPageTemplate({
             <SectionHeader
               eyebrow={values.eyebrow ?? 'What shapes us'}
               title={heading(values.heading)}
+              size="sm"
               className="border-b border-current/10 pb-8 sm:pb-10"
             />
           </ScrollFadeIn>
@@ -198,6 +202,7 @@ export default function MinistryPageTemplate({
               eyebrow={cta.eyebrow ?? 'Join the ministry'}
               title={heading(cta.heading)}
               description={cta.body}
+              size="sm"
               align="center"
             />
             <div className="flex flex-col gap-3 sm:flex-row">

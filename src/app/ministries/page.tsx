@@ -10,7 +10,6 @@ import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import {
   CardRail,
   Container,
-  Eyebrow,
   Page,
   Section,
   SectionHeader,
@@ -125,6 +124,7 @@ export default function MinistriesPage() {
             <SectionHeader
               eyebrow="More than a Sunday crowd"
               title="We grow best when we walk with others."
+              size="sm"
             />
             <div className="border-l-2 border-[var(--app-primary)]/55 pl-5 sm:pl-7">
               <p className="max-w-2xl font-ui text-body-md leading-[1.85] text-[var(--app-muted)]">
@@ -148,6 +148,7 @@ export default function MinistriesPage() {
               eyebrow="Find your community"
               title="Explore our ministries"
               tone="dark"
+              size="sm"
             />
             <p className="max-w-md font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
               Choose a ministry to learn what happens, who it serves, and how to
@@ -173,24 +174,24 @@ export default function MinistriesPage() {
                     className={`object-cover ${ministry.position} transition-transform duration-[900ms] ease-out motion-safe:group-hover:scale-[1.05] motion-reduce:transition-none`}
                   />
 
-                  {/* Linear dark gradients — top scrim for the header, deeper
-                      bottom scrim that grows on hover to seat the description. */}
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-[linear-gradient(to_bottom,var(--app-dark),transparent)] opacity-90" />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-[linear-gradient(to_top,var(--app-dark),transparent)] opacity-95 transition-[height] duration-700 ease-out group-hover:h-[78%]" />
+                  {/* Linear dark gradients — light top scrim for the eyebrow,
+                      deeper bottom scrim that lifts on hover behind the copy. */}
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-[linear-gradient(to_bottom,var(--app-dark),transparent)] opacity-80" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-[linear-gradient(to_top,var(--app-dark),transparent)] opacity-95 transition-[height] duration-700 ease-out group-hover:h-[72%]" />
 
-                  {/* Content — header pinned top, detail + CTA at the bottom */}
-                  <div className="relative flex flex-1 flex-col justify-between gap-8 p-6 sm:p-7 lg:p-8">
+                  {/* Content — eyebrow + title top, description + CTA at the foot */}
+                  <div className="relative flex flex-1 flex-col justify-between gap-10 p-6 sm:p-7 lg:p-8">
                     <div>
-                      <p className="font-ui text-eyebrow font-semibold uppercase tracking-[0.22em] text-[var(--app-primary-light)]">
+                      <p className="font-ui text-eyebrow font-semibold uppercase tracking-[0.2em] text-[var(--app-primary-light)]">
                         {ministry.label}
                       </p>
-                      <h3 className="mt-3.5 font-ui text-heading-lg font-semibold leading-tight text-white sm:text-display-sm">
+                      <h3 className="mt-3 font-ui text-heading-md font-semibold leading-snug text-white sm:text-heading-lg">
                         {ministry.title}
                       </h3>
                     </div>
 
                     <div>
-                      <p className="max-w-sm font-ui text-body-sm leading-[1.8] text-white/80 transition-all duration-500 ease-out motion-reduce:transition-none md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus-visible:translate-y-0 md:group-focus-visible:opacity-100">
+                      <p className="max-w-[42ch] font-ui text-body-sm leading-[1.7] text-white/75 line-clamp-3 transition-colors duration-300 group-hover:text-white/90">
                         {ministry.description}
                       </p>
                       <span className="mt-5 inline-flex items-center gap-2 font-ui text-label font-bold uppercase tracking-[0.14em] text-white">
@@ -211,6 +212,7 @@ export default function MinistriesPage() {
           <SectionHeader
             eyebrow="Your next step"
             title="A simple path from visiting to belonging."
+            size="sm"
           />
           <div className="mt-10 grid border-y border-[var(--app-border)] md:grid-cols-3 md:divide-x md:divide-[var(--app-border)]">
             {pathway.map(step => (
@@ -232,17 +234,14 @@ export default function MinistriesPage() {
       <Section tone="dark">
         <Container>
           <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <Eyebrow>We will help you connect</Eyebrow>
-              <h2 className="mt-4 max-w-2xl font-ui text-heading-md font-medium leading-[1.05] tracking-[-0.04em] text-white sm:text-heading-lg lg:text-display-sm">
-                Not sure where you belong yet?
-              </h2>
-              <p className="mt-5 max-w-xl font-ui text-body-sm leading-[1.85] text-white/78">
-                Tell us a little about yourself. Our welcome team will listen,
-                answer your questions, and personally guide you to the right
-                ministry—without pressure.
-              </p>
-            </div>
+            <SectionHeader
+              eyebrow="We will help you connect"
+              title="Not sure where you belong yet?"
+              description="Tell us a little about yourself. Our welcome team will listen, answer your questions, and personally guide you to the right ministry — without pressure."
+              tone="dark"
+              size="sm"
+              className="max-w-2xl"
+            />
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <Link
                 href="/contact?topic=connect"
