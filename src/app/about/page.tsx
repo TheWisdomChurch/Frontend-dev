@@ -6,7 +6,7 @@ import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import { resolveAboutContent } from '@/content/about';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
-import { CanvasCard, DarkCard } from '@/features/leadership/LeadershipCards';
+import { DarkCard } from '@/features/leadership/LeadershipCards';
 import type {
   LeadershipMember,
   LeadershipRole,
@@ -232,10 +232,15 @@ export default async function AboutPage() {
         </Container>
       </Section>
       {leaders.length ? (
-        <div className="grid lg:grid-cols-2">
-          <CanvasCard leader={leaders[0]} />
-          {leaders[1] ? <DarkCard leader={leaders[1]} /> : null}
-        </div>
+        <Section tone="dark" className="pt-0">
+          <Container>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {leaders.slice(0, 2).map(leader => (
+                <DarkCard key={leader.id} leader={leader} />
+              ))}
+            </div>
+          </Container>
+        </Section>
       ) : null}
 
       <Section tone="brand">

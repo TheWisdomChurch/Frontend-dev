@@ -3,7 +3,6 @@ import type {
   LeadershipRole,
 } from '@/domain/leadership/types';
 import { Media } from '@/shared/ui/Media';
-import { Eyebrow } from '@/shared/ui/layout';
 
 // Shared between /leadership (the full directory) and About's leadership
 // spotlight — one definition of what a leader card looks like, so the two
@@ -22,9 +21,10 @@ export function initials(first = '', last = '') {
 }
 
 /* ── Leader card ───────────────────────────────────────────
-   One layout, two tones. Compact horizontal card (image beside
-   the text) through tablet so a portrait never balloons to the
-   full viewport width; full-bleed vertical portrait from lg up. */
+   One editorial portrait card, two tones. A framed 4:5 photo
+   sits above a captioned block: role eyebrow, name, a gold
+   hairline, and the bio. Missing photos resolve to a tinted
+   monogram — never a broken frame. */
 
 type LeaderCardProps = { leader: LeadershipMember; tone?: 'canvas' | 'dark' };
 
@@ -35,39 +35,42 @@ export function LeaderCard({ leader, tone = 'canvas' }: LeaderCardProps) {
   return (
     <article
       className={[
-        'group flex h-full min-h-[190px] flex-row overflow-hidden lg:min-h-0 lg:flex-col',
-        dark ? 'tone-dark bg-[var(--app-dark)]' : 'bg-[var(--app-canvas)]',
+        'group relative flex h-full flex-col overflow-hidden rounded-card border transition-[transform,border-color,box-shadow] duration-500 ease-out',
+        'motion-safe:hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/20',
+        dark
+          ? 'tone-dark border-[var(--app-border)] bg-[var(--app-dark-2)] hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)]'
+          : 'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)]',
       ].join(' ')}
     >
-      {/* Image */}
-      <div className="relative w-[38%] shrink-0 self-stretch overflow-hidden bg-[var(--app-canvas-2)] sm:w-[34%] lg:aspect-[4/5] lg:w-full">
+      {/* Portrait */}
+      <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-[var(--app-canvas-2)]">
         <Media
           src={leader.imageUrl}
           alt={name}
-          sizes="(max-width: 640px) 40vw, (max-width: 1024px) 34vw, 40vw"
-          className="object-top transition duration-700 group-hover:scale-[1.03]"
+          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+          className="object-top transition duration-700 ease-out group-hover:scale-[1.04]"
           fallback={
-            <span className="font-headline text-display-md font-normal leading-none text-[var(--app-border)] lg:text-display-xl">
-              {initials(leader.firstName, leader.lastName)}
-            </span>
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(150deg,var(--app-canvas-2),var(--app-canvas-3))]">
+              <span className="font-headline text-display-lg font-normal leading-none text-[color-mix(in_srgb,var(--app-primary)_60%,transparent)]">
+                {initials(leader.firstName, leader.lastName)}
+              </span>
+            </div>
           }
         />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-16 bg-gradient-to-t from-[var(--app-canvas)] to-transparent lg:block" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--app-dark)_55%,transparent),transparent)]" />
       </div>
 
-      {/* Content */}
-      <div
-        className={[
-          'flex flex-1 flex-col justify-center px-5 py-5 sm:px-7 sm:py-7 lg:justify-start lg:border-t lg:border-[var(--app-border)] lg:px-9 lg:py-8',
-        ].join(' ')}
-      >
-        <Eyebrow>{ROLE_LABEL[leader.role]}</Eyebrow>
-        <h3 className="mt-2 font-headline text-heading-sm font-normal leading-snug text-current lg:text-heading-md">
+      {/* Caption */}
+      <div className="flex flex-1 flex-col px-6 py-6 sm:px-7 sm:py-7">
+        <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
+          {ROLE_LABEL[leader.role]}
+        </p>
+        <h3 className="mt-2.5 font-headline text-heading-md font-normal leading-tight text-[var(--app-ink)]">
           {name}
         </h3>
-        <div className="mt-3 h-[1.5px] w-8 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
+        <div className="mt-3.5 h-px w-10 bg-[color-mix(in_srgb,var(--app-primary)_55%,transparent)]" />
         {leader.bio && (
-          <p className="mt-3 font-ui text-body-sm leading-[1.8] text-[var(--app-muted)] line-clamp-4 sm:mt-4 sm:leading-[1.9] lg:line-clamp-none">
+          <p className="mt-4 font-ui text-body-sm leading-[1.85] text-[var(--app-muted)] line-clamp-4">
             {leader.bio}
           </p>
         )}
