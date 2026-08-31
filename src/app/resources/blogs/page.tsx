@@ -27,7 +27,7 @@ export default function BlogPage() {
   return (
     <Page tone="dark">
       <SiteHero
-        backgroundImage="/Picflow/DSC00123-copy.webp"
+        backgroundImage="/Picflow/DSC00019-copy.webp"
         eyebrow="Blog & Devotionals"
         title="Insights, reflections, and devotionals from the church."
         subtitle="Written content to encourage, teach, and equip you between Sundays."

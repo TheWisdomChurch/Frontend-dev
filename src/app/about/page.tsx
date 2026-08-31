@@ -2,7 +2,13 @@ import type { Metadata } from 'next';
 import { ArrowRight, Church, HeartHandshake, MapPin, Play } from 'lucide-react';
 
 import { apiClient } from '@/lib/api';
-import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
+import {
+  buildBreadcrumbSchema,
+  buildPageMetadata,
+  canonicalUrl,
+  ORG_ID,
+  SITE_LOGO,
+} from '@/lib/seo';
 import { resolveAboutContent } from '@/content/about';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
@@ -33,8 +39,15 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = buildPageMetadata({
   title: 'About The Wisdom Church',
   description:
-    'Discover the vision, mission, five pillars, and identity of The Wisdom Church in Lagos.',
+    'The vision, mission, five pillars, and identity of The Wisdom Church (Wisdom House) — a Spirit-filled church in Lekki-Epe, Lagos led by pastors devoted to the Word, prayer, and community.',
   path: '/about',
+  keywords: [
+    'about The Wisdom Church',
+    'Wisdom House vision mission',
+    'Wisdom Church pastors',
+    'church beliefs Lagos',
+    'what we believe',
+  ],
 });
 
 const SENIOR_ROLES: LeadershipRole[] = [
@@ -80,6 +93,16 @@ export default async function AboutPage() {
           { name: 'Home', path: '/' },
           { name: 'About', path: '/about' },
         ])}
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'AboutPage',
+          name: 'About The Wisdom Church',
+          url: canonicalUrl('/about'),
+          primaryImageOfPage: SITE_LOGO,
+          mainEntity: { '@id': ORG_ID },
+        }}
       />
 
       <SiteHero

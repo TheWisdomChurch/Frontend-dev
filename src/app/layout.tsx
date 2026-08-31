@@ -8,13 +8,18 @@ import '@/app/globals.scss';
 import { dmSans } from '@/shared/fonts/fonts';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
-import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
-import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
+import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import {
   SITE_URL,
   SITE_NAME,
+  SITE_ALT_NAME,
+  SITE_TAGLINE,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
   DEFAULT_OG_IMAGE as OG_IMAGE,
   buildHreflangAlternates,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
 } from '@/lib/seo';
 import HeroHighlights from '@/features/hero/HeroHighlights';
 import CommunityJoinModal from '@/features/community/CommunityJoinModalLoader';
@@ -26,27 +31,33 @@ export const metadata: Metadata = {
     languages: buildHreflangAlternates('/'),
   },
   title: {
-    default: 'The Wisdom Church | Experience God’s Transforming Power',
+    default: `${SITE_NAME} (${SITE_ALT_NAME}) | Experience God’s Transforming Power in Lagos`,
     template: `%s | ${SITE_NAME}`,
   },
-  description:
-    'A vibrant, Spirit-filled church in Lagos where lives are transformed through worship, biblical teaching, and authentic community. Join us this Sunday.',
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
   applicationName: SITE_NAME,
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
-  openGraph: {
+  manifest: '/manifest.webmanifest',
+  formatDetection: { telephone: true, email: true, address: true },
+  appleWebApp: {
+    capable: true,
     title: SITE_NAME,
-    description:
-      'Experience God’s transforming power in a loving, vibrant community.',
+    statusBarStyle: 'black-translucent',
+  },
+  openGraph: {
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
     images: [
       {
         url: OG_IMAGE,
-        width: 1200,
+        width: 638,
         height: 630,
-        alt: `${SITE_NAME} - Welcome Home`,
+        alt: `${SITE_NAME} (${SITE_ALT_NAME}) logo`,
         type: 'image/webp',
       },
     ],
@@ -55,9 +66,9 @@ export const metadata: Metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary_large_image',
-    title: SITE_NAME,
-    description: 'Join us for powerful worship and life-changing messages.',
+    card: 'summary',
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
     images: [OG_IMAGE],
     creator: SOCIAL_LINKS.handle,
     site: SOCIAL_LINKS.handle,
@@ -78,9 +89,12 @@ export const metadata: Metadata = {
     google: 'uOPR3Lh4dhAVkY-jD_5e6cFGtrW2NTpy4TDCtU93-sY',
   },
   icons: {
-    icon: '/logo.webp',
-    shortcut: '/logo.webp',
-    apple: '/logo.webp',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/OIP.webp', type: 'image/webp' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/OIP.webp',
   },
   other: {
     'msvalidate.01': 'CDC0BA45440A0A1BB38769D83C132EBB',
@@ -108,43 +122,8 @@ const productionAnalyticsEnabled =
   process.env.ANALYTICS_ENABLED === 'true';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const orgSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Church',
-    name: SITE_NAME,
-    url: SITE_URL,
-    logo: OG_IMAGE,
-    sameAs: [
-      SOCIAL_LINKS.facebook,
-      SOCIAL_LINKS.youtube,
-      SOCIAL_LINKS.instagram,
-    ],
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'customer service',
-      telephone: CONTACT_INFO.phone,
-      email: CONTACT_INFO.email,
-      availableLanguage: ['English'],
-    },
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: `${SERVICE_INFO.venue.name}, ${SERVICE_INFO.venue.streetAddress}`,
-      addressLocality: SERVICE_INFO.venue.locality,
-      addressCountry: SERVICE_INFO.venue.country,
-    },
-  };
-
-  const websiteSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: SITE_NAME,
-    url: SITE_URL,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${SITE_URL}/resources?search={search_term_string}`,
-      'query-input': 'required name=search_term_string',
-    },
-  };
+  const orgSchema = buildOrganizationSchema();
+  const websiteSchema = buildWebSiteSchema();
 
   return (
     <html

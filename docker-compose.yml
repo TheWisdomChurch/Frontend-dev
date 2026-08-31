@@ -28,12 +28,16 @@ services:
       - frontend_node_modules:/app/node_modules
       - frontend_next:/app/.next
     working_dir: /app
-    # The source tree is bind-mounted while node_modules lives in a persistent
-    # volume. Sync it on startup so newly added packages are not hidden by an
-    # older volume created by Portainer/Docker Compose.
+    # The source tree is bind-mounted (often read-only under Portainer / remote
+    # Docker hosts) while node_modules lives in a persistent named volume that is
+    # seeded from the image build. On startup, top up any packages added since
+    # the volume was created — but never write to the bind-mounted source tree:
+    # `--no-package-lock` / `--no-save` keep npm off `/app/package-lock.json` and
+    # `/app/package.json`, and the step is non-fatal so a read-only mount or an
+    # offline registry can't block the dev server.
     command: >-
-      sh -c "npm install --ignore-scripts --no-audit --no-fund &&
-      npm run dev -- --hostname 0.0.0.0 --port 2000"
+      sh -c "npm install --no-package-lock --no-save --ignore-scripts --no-audit --no-fund --prefer-offline || echo '[dev] skipping npm install — using node_modules from the image';
+      exec npm run dev -- --hostname 0.0.0.0 --port 2000"
     stdin_open: true
     tty: true
     healthcheck:
