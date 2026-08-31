@@ -18,7 +18,12 @@ import Arrow from '@/shared/ui/icons/Arrow';
 import SiteHero from '@/features/hero/SiteHero';
 import { LocationMap } from '@/shared/ui/LocationMap';
 import JsonLd from '@/shared/seo/JsonLd';
-import { buildBreadcrumbSchema } from '@/lib/seo';
+import {
+  buildBreadcrumbSchema,
+  canonicalUrl,
+  ORG_ID,
+  SITE_NAME,
+} from '@/lib/seo';
 import apiClient, { mapValidationErrors } from '@/lib/api';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
@@ -225,6 +230,16 @@ function ContactPageContent() {
           { name: 'Home', path: '/' },
           { name: 'Contact', path: '/contact' },
         ])}
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'ContactPage',
+          name: `Contact ${SITE_NAME}`,
+          url: canonicalUrl('/contact'),
+          about: { '@id': ORG_ID },
+          mainEntity: { '@id': ORG_ID },
+        }}
       />
 
       <SiteHero

@@ -10,10 +10,10 @@ export const CONTACT_INFO = {
 } as const;
 
 export const SOCIAL_LINKS = {
-  facebook: 'https://www.facebook.com/wisdomhousehq',
-  instagram: 'https://www.instagram.com/wisdomhousehq',
+  facebook: 'https://www.facebook.com/wisdomchurchhq',
+  instagram: 'https://www.instagram.com/wisdomchurchhq',
   youtube: 'https://www.youtube.com/@wisdomchurchhq',
-  x: 'https://x.com/wisdomhousehq',
+  x: 'https://x.com/wisdomchurchhq',
   whatsapp: 'https://wa.me/2347069995333',
   // Twitter/X handle used for openGraph/twitter meta tags, not a profile link.
   handle: '@wisdomchurchhq',

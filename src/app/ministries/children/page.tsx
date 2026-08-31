@@ -19,9 +19,6 @@ export const metadata: Metadata = buildPageMetadata({
   title: "Children's Ministry",
   description: DESCRIPTION,
   path: PATH,
-  image: '/og/children.webp',
-  imageAlt:
-    "Children at The Wisdom Church Children's Ministry — nurturing wise, excellent, Godly leaders for Christ",
   keywords: [
     "children's ministry Lagos",
     "children's church Lagos",
@@ -38,7 +35,7 @@ const ministrySchema = buildMinistrySchema({
   name: "Children's Ministry",
   description: DESCRIPTION,
   path: PATH,
-  image: '/og/children.webp',
+  image: '/Picflow/children-hero.webp',
   leader: {
     name: 'Mrs Mojisola Oladejo',
     role: "Children's Ministry Director",
