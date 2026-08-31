@@ -14,6 +14,19 @@ interface PageMetadataInput {
   title: string;
   description: string;
   path: string;
+  /** Comma-free list of focus keywords for this page. */
+  keywords?: string[];
+  /** Page-specific OG/Twitter image (absolute or root-relative). Falls back to
+   *  the site card. A 1200×630 image is expected. */
+  image?: string;
+  imageAlt?: string;
+  ogType?: 'website' | 'article' | 'profile';
+}
+
+function absoluteImage(image?: string): string {
+  if (!image) return DEFAULT_OG_IMAGE;
+  if (/^https?:\/\//i.test(image)) return image;
+  return `${SITE_URL}${image.startsWith('/') ? '' : '/'}${image}`;
 }
 
 // Standard OG/Twitter/canonical block for pages that only declared a bare
@@ -35,10 +48,17 @@ export function buildPageMetadata({
   title,
   description,
   path,
+  keywords,
+  image,
+  imageAlt,
+  ogType = 'website',
 }: PageMetadataInput) {
+  const ogImage = absoluteImage(image);
+  const alt = imageAlt ?? `${title} — ${SITE_NAME}`;
   return {
     title,
     description,
+    keywords,
     alternates: {
       canonical: canonicalUrl(path),
       languages: buildHreflangAlternates(path),
@@ -48,15 +68,15 @@ export function buildPageMetadata({
       description,
       url: canonicalUrl(path),
       siteName: SITE_NAME,
-      images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt }],
       locale: 'en_US',
-      type: 'website' as const,
+      type: ogType,
     },
     twitter: {
       card: 'summary_large_image' as const,
       title,
       description,
-      images: [DEFAULT_OG_IMAGE],
+      images: [{ url: ogImage, alt }],
     },
   };
 }
@@ -187,6 +207,48 @@ interface PersonSchemaInput {
   bio?: string;
   imageUrl?: string;
   path?: string;
+}
+
+interface MinistrySchemaInput {
+  name: string;
+  description: string;
+  path: string;
+  image?: string;
+  leader?: { name: string; role?: string; image?: string };
+}
+
+// A church ministry modelled as a department of the parent Organization, with
+// its lead as a member. Emitted per ministry page for richer entity coverage.
+export function buildMinistrySchema({
+  name,
+  description,
+  path,
+  image,
+  leader,
+}: MinistrySchemaInput) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: `${SITE_NAME} — ${name}`,
+    description,
+    url: canonicalUrl(path),
+    image: image ? absoluteImage(image) : undefined,
+    parentOrganization: {
+      '@type': 'Church',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    ...(leader
+      ? {
+          member: {
+            '@type': 'Person',
+            name: leader.name,
+            jobTitle: leader.role || undefined,
+            image: leader.image ? absoluteImage(leader.image) : undefined,
+          },
+        }
+      : {}),
+  };
 }
 
 export function buildPersonSchema(person: PersonSchemaInput) {

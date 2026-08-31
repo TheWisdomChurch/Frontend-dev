@@ -112,12 +112,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     '@context': 'https://schema.org',
     '@type': 'Church',
     name: SITE_NAME,
+    alternateName: 'Wisdom House',
     url: SITE_URL,
-    logo: OG_IMAGE,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/logo.webp`,
+      width: 638,
+      height: 630,
+    },
+    image: OG_IMAGE,
     sameAs: [
       SOCIAL_LINKS.facebook,
       SOCIAL_LINKS.youtube,
       SOCIAL_LINKS.instagram,
+      SOCIAL_LINKS.x,
     ],
     contactPoint: {
       '@type': 'ContactPoint',

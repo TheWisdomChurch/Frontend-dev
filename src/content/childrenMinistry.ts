@@ -1,66 +1,70 @@
 import type { MinistryContent } from '@/features/ministries/MinistryPageTemplate';
 
-// NOTE: the in-page carousel (ChildrenGallery, passed as `extra`) uses the real
-// children's-ministry photos. Hero / intro / leader use church-library photos.
+// Photos: hero + intro use the real children's-ministry group photos
+// (`children-hero`, `children-group`), the intro/nursery frame uses `child`,
+// and the leader is the ministry director, Mrs Mojisola Oladejo
+// (`children-convener`). The in-page carousel (ChildrenGallery, passed as
+// `extra`) keeps its own set.
 
 export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
   hero: {
     eyebrow: "Children's Ministry",
-    title: 'Where little ones meet Jesus.',
+    title: 'Nurturing wise, excellent, Godly leaders for Christ.',
     description:
-      'Safe, joyful, and built around families — from nursery through pre-teen years.',
-    image: '/Picflow/DSC00049-copy.webp',
+      'Every child known, taught the truth, and equipped to transform their world for Christ — from nursery through the pre-teen years.',
+    image: '/Picflow/children-hero.webp',
+    imagePosition: 'object-center',
   },
   primaryCta: { label: 'Connect my family', href: '/contact' },
   introduction: {
     label: 'A place built for children',
-    title: 'Church as a place of safety, joy, and truth.',
-    body: "The children's ministry exists to help young people know God early, feel genuinely cared for at church, and build spiritual foundations that support growth well into their teenage years and beyond.",
+    title: 'Deep roots. Clear thinking. Real growth.',
+    body: 'We believe every child has the potential to make a lasting impact. So we partner with families to cultivate deep spiritual roots, intellectual clarity, and a commitment to personal growth — embedding faith and character into everything we do.',
     image: {
-      src: '/Picflow/Conv_4.webp',
-      alt: 'Children being taught at The Wisdom Church',
+      src: '/Picflow/children-group.webp',
+      alt: "Children at The Wisdom Church children's ministry",
     },
   },
   pillars: {
     eyebrow: 'What guides us',
-    title: 'Known, cared for, and taught the truth.',
+    title: 'Rooted in faith. Built for impact.',
     items: [
       {
         label: 'Our vision',
         title: 'Children who know God early and grow up sure of His love.',
-        body: 'To see every child form a real, age-appropriate faith in a place they feel safe, known, and glad to return to each week.',
+        body: 'To see every child form a real, age-appropriate faith in a place they feel safe, known, and glad to return to each week — a foundation that holds well into their teenage years and beyond.',
       },
       {
         label: 'Our mission',
-        title: 'Protect. Teach. Delight. Partner.',
-        body: 'To care for children with trained, attentive leaders, teach the Bible clearly at their level, and keep families connected to what their children are learning.',
+        title: 'Partnering with families to raise Godly leaders.',
+        body: 'To partner with families to cultivate deep spiritual roots, intellectual clarity, and a commitment to personal growth. By embedding faith and character into everything we do, we are actively equipping a generation of Godly, wise, and excellent leaders to positively transform their world for Christ.',
       },
     ],
   },
   leader: {
-    label: 'Children’s Ministry Lead',
-    title: 'Caring for every child by name, every week.',
-    body: 'Our team is built around safety and warmth — trained leaders who know each child, teach with joy, and keep parents informed and confident every time they come in.',
+    label: "Children's Ministry Director",
+    title: 'Led by Mrs Mojisola Oladejo.',
+    body: 'Mrs Mojisola Oladejo leads a team built around safety and warmth — trained leaders who know each child by name, teach the Bible with joy, and keep parents informed and confident every time they come in.',
     image: {
-      src: '/Picflow/DSC00011-copy.webp',
-      alt: "A children's ministry leader at The Wisdom Church",
+      src: '/Picflow/children-convener.webp',
+      alt: "Mrs Mojisola Oladejo, Children's Ministry Director at The Wisdom Church",
     },
   },
   focus: {
-    eyebrow: 'A word to parents',
-    title: 'Safe. Joyful. Grounded.',
+    eyebrow: 'What we build',
+    title: 'Godly character. Wisdom. Excellence.',
     items: [
       {
-        title: 'Safe',
-        body: 'Every child is supervised, known by name, and cared for in an environment parents can fully trust.',
+        title: 'Godly Character',
+        body: 'Anchoring hearts in faith, biblical truth, and Christ-like love.',
       },
       {
-        title: 'Joyful',
-        body: 'We build experiences children actually look forward to — worship, stories, and moments they carry home.',
+        title: 'Wisdom',
+        body: 'Developing critical thinking, sound judgment, and life-ready discernment.',
       },
       {
-        title: 'Grounded',
-        body: 'Biblical truth taught at the right level — not watered down, just made real and accessible for young hearts.',
+        title: 'Excellence',
+        body: 'Inspiring children to give their absolute best in academics, talents, and service to God.',
       },
     ],
   },

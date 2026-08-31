@@ -3,13 +3,25 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import img1 from '@/shared/assets/wisdomChild_1.jpeg';
-import img2 from '@/shared/assets/WisdomChild_2.jpeg';
 import { IMAGE_QUALITY } from '@/shared/constants';
 
 const slides = [
-  { src: img1, alt: 'Children in ministry at Wisdom Church' },
-  { src: img2, alt: "Children's gathering at Wisdom Church" },
+  {
+    src: '/Picflow/children-hero.webp',
+    alt: "Children cheering at The Wisdom Church children's ministry",
+  },
+  {
+    src: '/Picflow/child.webp',
+    alt: 'A young child cared for in the nursery at The Wisdom Church',
+  },
+  {
+    src: '/Picflow/children-group.webp',
+    alt: "Children gathered together at The Wisdom Church children's ministry",
+  },
+  {
+    src: '/Picflow/child2.webp',
+    alt: 'A toddler at The Wisdom Church children’s ministry',
+  },
 ];
 
 function ChevronLeft() {
@@ -61,7 +73,7 @@ export default function ChildrenGallery() {
   return (
     <div className="relative select-none">
       {/* Slides */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[16/9] lg:aspect-[21/9]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-image sm:aspect-[16/10] lg:aspect-[16/9]">
         {slides.map((slide, i) => (
           <div
             key={i}
@@ -73,7 +85,7 @@ export default function ChildrenGallery() {
               src={slide.src}
               alt={slide.alt}
               fill
-              className="object-cover object-[center_25%] sm:object-center"
+              className="object-cover object-[center_28%]"
               priority={i === 0}
               sizes="100vw"
               quality={IMAGE_QUALITY}
