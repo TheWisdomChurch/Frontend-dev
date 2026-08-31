@@ -17,10 +17,20 @@ echo "┌───────────────────────�
 echo "│  pre-push: full repository validation …                     │"
 echo "└─────────────────────────────────────────────────────────────┘"
 
+# `next build` (step 4) rewrites next-env.d.ts to point at whatever distDir is
+# active — here .next-prepush, which is deleted on exit. Left as-is it would
+# leave dangling `import "./.next-prepush/types/..."` lines that break editors,
+# `tsc`, and the Docker dev container (they all use the default .next). Snapshot
+# it now and restore it on exit.
+NEXT_ENV_SNAPSHOT="$(cat next-env.d.ts 2>/dev/null || true)"
+
 # Artifact cleanup on exit
 cleanup() {
   if [[ "${KEEP_PREPUSH_ARTIFACTS:-0}" != "1" ]]; then
     rm -rf .next-prepush
+    if [[ -n "$NEXT_ENV_SNAPSHOT" ]]; then
+      printf '%s\n' "$NEXT_ENV_SNAPSHOT" > next-env.d.ts 2>/dev/null || true
+    fi
   fi
 }
 trap cleanup EXIT
