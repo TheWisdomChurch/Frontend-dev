@@ -91,6 +91,7 @@ export function FormShell({
                 <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[var(--app-canvas-3)]">
                   <div
                     className="h-full rounded-full bg-[var(--app-primary)] transition-[width] duration-500 ease-out"
+                    // eslint-disable-next-line no-restricted-syntax -- dynamic completion width
                     style={{ width: `${pct}%` }}
                   />
                 </div>
