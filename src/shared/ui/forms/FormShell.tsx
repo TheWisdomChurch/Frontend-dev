@@ -106,7 +106,7 @@ export function FormShell({
       {actionBar ? (
         <div
           className={cn(
-            'fixed inset-x-0 bottom-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]',
+            'fixed inset-x-0 bottom-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 shadow-[0_-4px_20px_color-mix(in_srgb,black_8%,transparent)]',
             'sm:hidden'
           )}
         >

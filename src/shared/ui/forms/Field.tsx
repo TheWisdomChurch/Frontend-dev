@@ -13,7 +13,7 @@ import { cn } from '@/lib/cn';
 
 /** 44px control surface, single focus-ring recipe, shared by input/select/textarea. */
 export const controlClass =
-  'w-full min-h-11 rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 py-2.5 font-ui text-body-sm text-[var(--app-ink)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition placeholder:text-[var(--app-subtle)] focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_18%,transparent)] disabled:cursor-not-allowed disabled:opacity-60';
+  'w-full min-h-11 rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 py-2.5 font-ui text-body-sm text-[var(--app-ink)] shadow-sm shadow-black/[0.04] outline-none transition placeholder:text-[var(--app-subtle)] focus:border-[var(--app-primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--app-primary)_18%,transparent)] disabled:cursor-not-allowed disabled:opacity-60';
 
 export const controlErrorClass =
   'border-[var(--status-error)] focus:border-[var(--status-error)] focus:ring-[color-mix(in_srgb,var(--status-error)_16%,transparent)]';
@@ -60,9 +60,12 @@ export function Field({
   const helpId = htmlFor && help ? `${htmlFor}-help` : undefined;
 
   const LabelTag = as;
+  // A <legend> is only meaningful inside a <fieldset>; grouped choice controls
+  // (radio/checkbox groups) pass as="legend" and get the fieldset wrapper.
+  const Wrapper = as === 'legend' ? 'fieldset' : 'div';
 
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
+    <Wrapper className={cn('flex flex-col gap-1.5', className)}>
       <div className="flex items-baseline justify-between gap-3">
         <LabelTag
           {...(as === 'label' && htmlFor ? { htmlFor } : {})}
@@ -100,6 +103,6 @@ export function Field({
           {error}
         </p>
       ) : null}
-    </div>
+    </Wrapper>
   );
 }
