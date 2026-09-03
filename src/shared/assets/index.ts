@@ -11,7 +11,7 @@ import WhatWeDo_3 from './teaching.svg';
 import WhatWedo_4 from './prayer_gathering.svg';
 
 // Logo
-import WisdomeHouseLogo from './OIP.webp';
+import WisdomChurchLogo from './OIP.webp';
 import EventBannerMobile from './mobile.jpg.jpeg';
 import EventBannerDesktop from './Container.webp';
 
@@ -49,7 +49,7 @@ export {
   Deacon_2_wide,
   Children_head,
   Min_Adura,
-  WisdomeHouseLogo,
+  WisdomChurchLogo,
   EventBannerMobile,
   EventBannerDesktop,
   PstKenny_1,

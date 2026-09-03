@@ -19,7 +19,7 @@ import { buttonClass } from '@/shared/ui/button';
 export const metadata: Metadata = buildPageMetadata({
   title: 'Ministries — Find Your Place',
   description:
-    "Prayer, Youth, Men's, Women's, Evangelism, and Children's ministries at The Wisdom Church (Wisdom House), Lagos — find a community for every season of life and take a clear next step into fellowship, discipleship, and service.",
+    "Prayer, Youth, Men's, Women's, Evangelism, and Children's ministries at The Wisdom Church, Lagos — find a community for every season of life and take a clear next step into fellowship, discipleship, and service.",
   path: '/ministries',
   keywords: [
     'church ministries Lagos',

@@ -29,12 +29,12 @@ export const HOME_COPY = {
     connect: 'Connect with us',
   },
   hero: {
-    eyebrow: 'Welcome home to The Wisdom Church',
+    eyebrow: 'The Wisdom Church · A Spirit-filled church in Lekki-Epe, Lagos',
     titleLead: 'Raising ',
     titleAccent: 'Believers',
     titleTail: ' for a life of Impact',
     description:
-      'A Spirit-filled family where the Word works, prayer is a lifestyle, and every believer is equipped for greatness.',
+      'The Wisdom Church is a Spirit-filled family in Lagos, Nigeria where the Word works, prayer is a lifestyle, and every believer is equipped for greatness. Join us in person or online this Sunday.',
   },
   welcome: {
     eyebrow: 'Welcome home',

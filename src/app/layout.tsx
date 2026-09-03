@@ -12,7 +12,6 @@ import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import {
   SITE_URL,
   SITE_NAME,
-  SITE_ALT_NAME,
   SITE_TAGLINE,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
@@ -31,7 +30,7 @@ export const metadata: Metadata = {
     languages: buildHreflangAlternates('/'),
   },
   title: {
-    default: `${SITE_NAME} (${SITE_ALT_NAME}) | Experience God’s Transforming Power in Lagos`,
+    default: `${SITE_NAME} | Experience God’s Transforming Power in Lagos`,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -57,7 +56,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 638,
         height: 630,
-        alt: `${SITE_NAME} (${SITE_ALT_NAME}) logo`,
+        alt: `${SITE_NAME} logo`,
         type: 'image/webp',
       },
     ],
