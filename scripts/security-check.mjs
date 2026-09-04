@@ -37,11 +37,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const isTransient = text => TRANSIENT.some(sig => text.includes(sig));
 
 function runAudit() {
-  const res = spawnSync(
-    'npm',
-    ['audit', '--omit=dev', '--json'],
-    { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 }
-  );
+  const res = spawnSync('npm', ['audit', '--omit=dev', '--json'], {
+    encoding: 'utf8',
+    maxBuffer: 32 * 1024 * 1024,
+    shell: process.platform === 'win32',
+  });
   return {
     stdout: res.stdout || '',
     stderr: res.stderr || '',
