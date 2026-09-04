@@ -23,6 +23,9 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
       src: '/Picflow/children-group.webp',
       alt: "The children's class at The Wisdom Church",
     },
+    // `children-group.webp` is ~5:4; match the frame so nothing is cropped.
+    imageFrameClassName: 'aspect-[5/4]',
+    imagePositionClassName: 'object-center',
   },
   pillars: {
     eyebrow: 'What guides us',

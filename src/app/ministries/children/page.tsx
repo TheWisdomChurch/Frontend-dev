@@ -9,11 +9,11 @@ import {
 } from '@/lib/seo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
+import MinistryGallery from '@/features/ministries/MinistryGallery';
 import {
   RegisterChildButton,
   RegisterChildModal,
 } from '@/features/ministries/RegisterChild';
-import ChildrenGallery from './ChildrenGallery';
 
 const PATH = '/ministries/children';
 const DESCRIPTION =
@@ -82,8 +82,27 @@ const extraSections = (
           title="A glimpse of what Sunday looks like for your child."
           size="sm"
         />
-        <div className="pt-8 lg:pt-10">
-          <ChildrenGallery />
+        <div className="mx-auto max-w-3xl pt-8 lg:pt-10">
+          <MinistryGallery
+            images={[
+              {
+                src: '/Picflow/children-group.webp',
+                alt: "The children's class at The Wisdom Church, Lagos",
+              },
+              {
+                src: '/Picflow/child.webp',
+                alt: 'A toddler at play in the nursery at The Wisdom Church',
+              },
+              {
+                src: '/Picflow/child2.webp',
+                alt: 'A child dressed for Sunday at The Wisdom Church children’s ministry',
+              },
+              {
+                src: '/Picflow/children-hero.webp',
+                alt: 'A young girl in her Sunday best at The Wisdom Church',
+              },
+            ]}
+          />
         </div>
       </Container>
     </Section>
