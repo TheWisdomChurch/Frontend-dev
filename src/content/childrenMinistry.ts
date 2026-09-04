@@ -12,7 +12,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     description:
       'Every child known, taught the truth, and equipped to transform their world for Christ — from nursery through the pre-teen years.',
     image: '/Picflow/children-hero.webp',
-    imagePosition: 'object-[center_18%]',
+    imagePosition: 'object-[center_30%]',
   },
   primaryCta: { label: 'Register your child', href: '#register-child' },
   introduction: {
