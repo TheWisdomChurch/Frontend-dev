@@ -1,63 +1,47 @@
 export type FellowshipCenter = {
   id: string;
+  /** Center name. */
   name: string;
+  /** Short neighbourhood label for the card eyebrow. */
   area: string;
+  /** Full meeting address. */
   address: string;
-  /** Display format. */
+  /** When the center meets, e.g. "Every Saturday · 5:00 – 6:00 PM". */
+  meetingTime: string;
+  /** Display phone number. */
   phone: string;
-  /** tel: href. */
+  /** `tel:` href (E.164). */
   phoneHref: string;
 };
 
-// MOCK DATA — replace with the real centers directory (or an API feed) when it
-// is ready. Shape is stable; only the values change.
+// Live centers directory. Update here (or swap for an API feed) as centers open.
 export const FELLOWSHIP_CENTERS: readonly FellowshipCenter[] = [
   {
-    id: 'lekki-phase-1',
-    name: 'Fellowship Center 1',
-    area: 'Lekki Phase 1',
-    address: '12 Admiralty Way, Lekki Phase 1, Lagos',
-    phone: '0809 001 2345',
-    phoneHref: 'tel:+2348090012345',
+    id: 'rehoboth',
+    name: 'Rehoboth',
+    area: 'Abraham Adesanya',
+    address:
+      'Ojaja Mall, opposite Lekki Scheme 2, Ogombo Road, Abraham Adesanya, Lagos',
+    meetingTime: 'Every Saturday · 5:00 – 6:00 PM',
+    phone: '0703 210 4344',
+    phoneHref: 'tel:+2347032104344',
   },
   {
-    id: 'ajah',
-    name: 'Fellowship Center 2',
-    area: 'Ajah',
-    address: '5 Addo Road, Ajah, Lagos',
-    phone: '0809 002 3456',
-    phoneHref: 'tel:+2348090023456',
+    id: 'greatness-centre',
+    name: 'Greatness Centre',
+    area: 'Olokonla',
+    address: 'Brosis Apartments, University View Estate, Olokonla, Lagos',
+    meetingTime: 'Every Friday · 6:00 – 7:00 PM',
+    phone: '0806 537 3956',
+    phoneHref: 'tel:+2348065373956',
   },
   {
-    id: 'sangotedo',
-    name: 'Fellowship Center 3',
-    area: 'Sangotedo',
-    address: '9 Monastery Road, Sangotedo, Lagos',
-    phone: '0809 003 4567',
-    phoneHref: 'tel:+2348090034567',
-  },
-  {
-    id: 'ikota',
-    name: 'Fellowship Center 4',
-    area: 'Ikota',
-    address: '3 Ikota Villa Estate, Lekki, Lagos',
-    phone: '0809 004 5678',
-    phoneHref: 'tel:+2348090045678',
-  },
-  {
-    id: 'chevron',
-    name: 'Fellowship Center 5',
-    area: 'Chevron Drive',
-    address: '21 Chevron Drive, Lekki, Lagos',
-    phone: '0809 005 6789',
-    phoneHref: 'tel:+2348090056789',
-  },
-  {
-    id: 'awoyaya',
-    name: 'Fellowship Center 6',
-    area: 'Awoyaya',
-    address: '7 Eputu Road, Awoyaya, Lekki-Epe, Lagos',
-    phone: '0809 006 7890',
-    phoneHref: 'tel:+2348090067890',
+    id: 'maranatha',
+    name: 'Maranatha',
+    area: 'Goodnews Estate',
+    address: 'Plot 4, Pastor Monday Street, Goodnews Estate, Lagos',
+    meetingTime: '6:00 – 7:00 PM',
+    phone: '0814 460 7363',
+    phoneHref: 'tel:+2348144607363',
   },
 ] as const;

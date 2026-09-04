@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, MapPin, Phone } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Phone } from 'lucide-react';
 
 import apiClient from '@/lib/api';
 import { buttonClass } from '@/shared/ui/button';
@@ -82,50 +82,61 @@ export function CellFellowshipCta({ label }: { label: string }) {
         onClose={close}
         title="Find a Cell Fellowship center"
         subtitle="Pick the center closest to you — then leave your details and we'll connect you."
-        maxWidth="max-w-2xl"
+        maxWidth="max-w-3xl"
       >
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FELLOWSHIP_CENTERS.map(item => (
             <li
               key={item.id}
-              className="flex flex-col gap-3 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-4"
+              className="group flex flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] transition-[border-color,box-shadow] duration-300 hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:shadow-lg hover:shadow-black/5"
             >
-              <div>
+              <div className="border-b border-[var(--app-border)] bg-[var(--app-surface-2)] px-5 pb-4 pt-5">
                 <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-primary-dark)]">
                   {item.area}
                 </p>
-                <h3 className="mt-1 font-ui text-heading-sm font-semibold text-[var(--app-text)]">
+                <h3 className="mt-1 font-headline text-heading-sm font-normal leading-tight text-[var(--app-text)]">
                   {item.name}
                 </h3>
               </div>
-              <p className="flex items-start gap-2 font-ui text-body-sm leading-[1.6] text-[var(--app-muted)]">
-                <MapPin
-                  className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
-                  aria-hidden="true"
-                />
-                {item.address}
-              </p>
-              <a
-                href={item.phoneHref}
-                className="inline-flex items-center gap-2 font-ui text-body-sm font-semibold text-[var(--app-text)] transition hover:text-[var(--app-primary-dark)]"
-              >
-                <Phone
-                  className="h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
-                  aria-hidden="true"
-                />
-                {item.phone}
-              </a>
-              <button
-                type="button"
-                onClick={() => {
-                  setCenter(item);
-                  setError(null);
-                  setView('form');
-                }}
-                className={buttonClass('outline', 'sm', 'mt-1 self-start')}
-              >
-                Join this center
-              </button>
+
+              <div className="flex flex-1 flex-col gap-3.5 px-5 py-5">
+                <p className="flex items-start gap-2.5 font-ui text-body-sm leading-[1.65] text-[var(--app-muted)]">
+                  <MapPin
+                    className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
+                    aria-hidden="true"
+                  />
+                  {item.address}
+                </p>
+                <p className="flex items-start gap-2.5 font-ui text-body-sm font-medium leading-[1.6] text-[var(--app-text)]">
+                  <Clock
+                    className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
+                    aria-hidden="true"
+                  />
+                  {item.meetingTime}
+                </p>
+                <a
+                  href={item.phoneHref}
+                  className="inline-flex items-center gap-2.5 font-ui text-body-sm font-semibold text-[var(--app-text)] transition hover:text-[var(--app-primary-dark)]"
+                >
+                  <Phone
+                    className="h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
+                    aria-hidden="true"
+                  />
+                  {item.phone}
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCenter(item);
+                    setError(null);
+                    setView('form');
+                  }}
+                  className={buttonClass('outline', 'sm', 'mt-auto w-full')}
+                >
+                  Join this center <Arrow />
+                </button>
+              </div>
             </li>
           ))}
         </ul>
@@ -138,7 +149,7 @@ export function CellFellowshipCta({ label }: { label: string }) {
         title={center ? `Join ${center.name}` : 'Join a Cell Fellowship'}
         subtitle={
           center
-            ? `${center.area} · ${center.address}`
+            ? `${center.meetingTime} · ${center.address}`
             : 'Leave your details and we will connect you.'
         }
         maxWidth="max-w-md"
@@ -210,7 +221,7 @@ export function CellFellowshipCta({ label }: { label: string }) {
         title="We've got your details"
         message={
           center
-            ? `Thank you. The ${center.name} team will reach out to welcome you and share the meeting details.`
+            ? `Thank you. The ${center.name} team will reach out to welcome you — they meet ${center.meetingTime.toLowerCase()}.`
             : 'Thank you. Our team will reach out and connect you to a Cell Fellowship center near you.'
         }
         actionLabel="Done"

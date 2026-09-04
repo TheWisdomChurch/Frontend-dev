@@ -182,6 +182,24 @@ export interface GivingIntentData {
   metadata?: Record<string, unknown>;
 }
 
+export interface ChildRegistrationData {
+  childFullName: string;
+  /** ISO date, YYYY-MM-DD. */
+  dateOfBirth: string;
+  /** Human-readable age at time of registration, e.g. "2 years, 4 months old". */
+  age?: string;
+  gender: string;
+  homeAddress: string;
+  parentOrGuardianName: string;
+  primaryPhoneNumber: string;
+  emergencyContact: string;
+  authorizedPickupName: string;
+  medicalCondition?: string;
+  /** Consent to use the child's photo/video in church media. */
+  photoMediaRelease: boolean;
+  sourceChannel?: string;
+}
+
 export interface ContactMessageData {
   firstName: string;
   lastName: string;
