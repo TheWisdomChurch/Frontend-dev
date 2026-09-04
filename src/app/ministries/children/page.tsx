@@ -9,8 +9,11 @@ import {
 } from '@/lib/seo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
-import RegisterChildCta from '@/features/ministries/RegisterChildCta';
-import ChildrenGallery from './ChildrenGallery';
+import MinistryGallery from '@/features/ministries/MinistryGallery';
+import {
+  RegisterChildButton,
+  RegisterChildModal,
+} from '@/features/ministries/RegisterChild';
 
 const PATH = '/ministries/children';
 const DESCRIPTION =
@@ -52,6 +55,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
 const extraSections = (
   <>
+    <RegisterChildModal />
+
     <Section tone="dark" id="register-child" className="scroll-mt-24">
       <Container>
         <div className="grid gap-8 lg:grid-cols-[1.1fr_auto] lg:items-end lg:gap-16">
@@ -64,7 +69,7 @@ const extraSections = (
             size="sm"
           />
           <div className="lg:shrink-0">
-            <RegisterChildCta label="Register your child" />
+            <RegisterChildButton label="Register your child" />
           </div>
         </div>
       </Container>
@@ -77,8 +82,27 @@ const extraSections = (
           title="A glimpse of what Sunday looks like for your child."
           size="sm"
         />
-        <div className="pt-8 lg:pt-10">
-          <ChildrenGallery />
+        <div className="mx-auto max-w-3xl pt-8 lg:pt-10">
+          <MinistryGallery
+            images={[
+              {
+                src: '/Picflow/children-group.webp',
+                alt: "The children's class at The Wisdom Church, Lagos",
+              },
+              {
+                src: '/Picflow/child.webp',
+                alt: 'A toddler at play in the nursery at The Wisdom Church',
+              },
+              {
+                src: '/Picflow/child2.webp',
+                alt: 'A child dressed for Sunday at The Wisdom Church children’s ministry',
+              },
+              {
+                src: '/Picflow/children-hero.webp',
+                alt: 'A young girl in her Sunday best at The Wisdom Church',
+              },
+            ]}
+          />
         </div>
       </Container>
     </Section>
@@ -93,7 +117,9 @@ export default function ChildrenMinistryPage() {
       <MinistryPageTemplate
         content={content}
         extra={extraSections}
-        heroActions={<RegisterChildCta label="Register your child" />}
+        heroActions={
+          <RegisterChildButton label="Register your child" size="lg" />
+        }
       />
     </>
   );
