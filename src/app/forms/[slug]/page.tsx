@@ -28,6 +28,11 @@ import {
   resolveMaxWords,
   splitE164,
 } from '@/lib/forms/fieldValue';
+import {
+  clearFormDraft,
+  readFormDraft,
+  writeFormDraft,
+} from '@/lib/forms/formDraft';
 import { Button } from '@/shared/ui/button';
 import { Notice } from '@/shared/ui/layout';
 import {
@@ -110,6 +115,7 @@ export default function PublicFormPage() {
   const [submitted, setSubmitted] = useState(false);
   const [consentAccepted, setConsentAccepted] = useState(false);
   const [consentError, setConsentError] = useState('');
+  const [draftRestored, setDraftRestored] = useState(false);
 
   const isTestimonialForm = useMemo(() => {
     const slug = (formSlug || '').toLowerCase();
@@ -191,7 +197,10 @@ export default function PublicFormPage() {
                 : '';
         });
 
-        setAnswers(current => ({ ...defaults, ...current }));
+        const draft = readFormDraft(formSlug);
+        if (draft) setDraftRestored(true);
+
+        setAnswers(current => ({ ...defaults, ...draft, ...current }));
         setFieldErrors({});
       } catch (err: unknown) {
         if (!mounted) return;
@@ -220,6 +229,18 @@ export default function PublicFormPage() {
       mounted = false;
     };
   }, [formSlug]);
+
+  // Mirror answers to the device as the member types — a refresh, a network
+  // drop, or an accidental tab close never loses what they entered.
+  useEffect(() => {
+    if (!formSlug || loading || submitted) return undefined;
+
+    const timer = window.setTimeout(() => {
+      writeFormDraft(formSlug, answers);
+    }, 400);
+
+    return () => window.clearTimeout(timer);
+  }, [formSlug, answers, loading, submitted]);
 
   const presentation = useMemo(() => {
     const settings = form?.settings;
@@ -442,6 +463,7 @@ export default function PublicFormPage() {
       payloadValues._consentVersion = consent.version;
 
       await apiClient.submitPublicForm(formSlug, { values: payloadValues });
+      clearFormDraft(formSlug);
       setSubmitted(true);
     } catch (err: unknown) {
       setError(
@@ -560,6 +582,12 @@ export default function PublicFormPage() {
         <form id="public-form" onSubmit={handleSubmit} className="space-y-8">
           {presentation.headerNote ? (
             <Notice status="brand">{presentation.headerNote}</Notice>
+          ) : null}
+
+          {draftRestored ? (
+            <Notice status="brand">
+              We restored your answers from where you left off.
+            </Notice>
           ) : null}
 
           {hasIntro ? (

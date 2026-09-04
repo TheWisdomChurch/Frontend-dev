@@ -102,7 +102,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Connect your child to a community that cares.',
     body: 'Reach out and we will help your family understand what to expect, meet the team, and settle comfortably into the ministry.',
     primaryLabel: 'Register your child',
-    primaryHref: '#register-child',
+    primaryHref: CHILDREN_REGISTRATION_URL,
     secondaryLabel: 'See service times',
     secondaryHref: '/events/weekly',
   },
