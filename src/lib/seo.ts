@@ -3,10 +3,12 @@ import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
 export const SITE_URL = 'https://wisdomchurchhq.org';
 export const SITE_NAME = 'The Wisdom Church';
-export const SITE_ALT_NAME = 'Wisdom House';
+// The only alternate is the same name without the article — what people
+// actually type. There is no separate "Wisdom House" brand.
+export const SITE_ALT_NAME = 'Wisdom Church';
 export const SITE_TAGLINE = 'Experience God’s transforming power';
 export const SITE_DESCRIPTION =
-  'The Wisdom Church (Wisdom House) is a vibrant, Spirit-filled church in Lekki-Epe, Lagos, Nigeria — where lives are transformed through worship, sound biblical teaching, prayer, and authentic community. Join us in person or online this Sunday.';
+  'The Wisdom Church is a vibrant, Spirit-filled church in Lekki-Epe, Lagos, Nigeria — where lives are transformed through worship, sound biblical teaching, prayer, and authentic community. Join us in person or online this Sunday.';
 
 // The church brand mark, used for the Organization `logo` in structured data
 // and as the shared social preview image. The user asked for this exact file.
@@ -20,8 +22,8 @@ export const WEBSITE_ID = `${SITE_URL}/#website`;
 // Site-wide focus keywords. Page keywords are merged on top of these.
 export const SITE_KEYWORDS = [
   'The Wisdom Church',
-  'Wisdom House',
-  'Wisdom House HQ',
+  'Wisdom Church',
+  'Wisdom Church Lagos',
   'church in Lagos',
   'church in Lekki',
   'Lekki-Epe church',
@@ -68,7 +70,7 @@ export function buildOrganizationSchema() {
     '@type': ['Church', 'PlaceOfWorship'],
     '@id': ORG_ID,
     name: SITE_NAME,
-    alternateName: [SITE_ALT_NAME, 'Wisdom House HQ'],
+    alternateName: SITE_ALT_NAME,
     legalName: SITE_NAME,
     slogan: SITE_TAGLINE,
     description: SITE_DESCRIPTION,

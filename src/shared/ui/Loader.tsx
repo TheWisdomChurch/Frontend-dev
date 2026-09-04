@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { IMAGE_QUALITY } from '@/shared/constants';
-import { WisdomeHouseLogo } from '@/shared/assets';
+import { WisdomChurchLogo } from '@/shared/assets';
 
 interface LoaderProps {
   label?: string;
@@ -67,7 +67,7 @@ export default function Loader({
           <div className="relative grid h-20 w-20 place-items-center rounded-[1.75rem] border border-white/[0.08] bg-black/50 shadow-2xl shadow-black/40 backdrop-blur-xl sm:h-[5.5rem] sm:w-[5.5rem]">
             <Image
               quality={IMAGE_QUALITY}
-              src={WisdomeHouseLogo}
+              src={WisdomChurchLogo}
               alt="The Wisdom Church"
               width={60}
               height={60}

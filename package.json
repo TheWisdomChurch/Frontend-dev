@@ -17,7 +17,7 @@
     "lint:fix": "node --max-old-space-size=4096 ./node_modules/eslint/bin/eslint.js . --ext .ts,.tsx,.js,.jsx --cache --cache-location .cache/eslint/ --fix --no-warn-ignored",
     "type-check": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc --noEmit",
     "architecture:check": "node scripts/check-architecture.mjs",
-    "security:check": "npm audit --omit=dev --audit-level=high",
+    "security:check": "node scripts/security-check.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "prettier": "prettier --check .",
@@ -87,5 +87,9 @@
     "tailwindcss": "^3.4.0",
     "typescript": "5.9.3",
     "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "fast-uri": "^3.1.7",
+    "js-yaml": "^4.3.2"
   }
 }

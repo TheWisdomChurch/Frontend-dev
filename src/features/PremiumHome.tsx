@@ -35,6 +35,7 @@ export default function PremiumHome() {
         size="home"
         align="center"
         priority
+        eyebrow={HOME_COPY.hero.eyebrow}
         title={`${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}${HOME_COPY.hero.titleTail}`}
         titleLines={[
           `${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}`.trim(),

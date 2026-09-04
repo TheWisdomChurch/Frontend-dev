@@ -14,12 +14,12 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: 'Sermons & Teachings',
   description:
-    'Watch and listen to the latest sermons, messages, and teaching series from The Wisdom Church (Wisdom House), Lagos — new messages every week.',
+    'Watch and listen to the latest sermons, messages, and teaching series from The Wisdom Church, Lagos — new messages every week.',
   path: '/resources/sermons',
   keywords: [
     'sermons Lagos',
     'The Wisdom Church sermons',
-    'Wisdom House sermons',
+    'Wisdom Church sermons',
     'watch sermons online',
     'Christian teaching Nigeria',
     'bible teaching video',

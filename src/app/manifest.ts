@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { SITE_NAME, SITE_ALT_NAME, SITE_DESCRIPTION } from '@/lib/seo';
+import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/seo';
 
 // Served at /manifest.webmanifest. A valid manifest is part of Google's
 // mobile / installability signals and lets the church site be added to a
@@ -7,8 +7,8 @@ import { SITE_NAME, SITE_ALT_NAME, SITE_DESCRIPTION } from '@/lib/seo';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: '/',
-    name: `${SITE_NAME} (${SITE_ALT_NAME})`,
-    short_name: SITE_NAME,
+    name: SITE_NAME,
+    short_name: 'Wisdom Church',
     description: SITE_DESCRIPTION,
     start_url: '/?utm_source=pwa',
     scope: '/',

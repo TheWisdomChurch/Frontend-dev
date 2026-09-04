@@ -86,6 +86,10 @@ export type PublicFormSettings = {
   successModalMessage?: string;
   layoutMode?: string;
   dateFormat?: string;
+  /** Verb shown on the submit button, e.g. "Register", "Send". Label only. */
+  submitButtonText?: string;
+  /** Optional hero image shown above the form. */
+  coverImageUrl?: string;
   sections?: PublicFormContentSection[];
   consent?: {
     enabled?: boolean;

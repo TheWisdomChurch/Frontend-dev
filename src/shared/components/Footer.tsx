@@ -8,7 +8,7 @@ import { ArrowRight, Check, Loader2, Mail, MapPin, Phone } from 'lucide-react';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { CONTACT_INFO } from '@/shared/constants/contactInfo';
-import { WisdomeHouseLogo } from '@/shared/assets';
+import { WisdomChurchLogo } from '@/shared/assets';
 import { Container } from '@/shared/ui/Container';
 import { buttonClass } from '@/shared/ui/button';
 import { SOCIAL_MARKS } from '@/shared/ui/icons/social';
@@ -172,7 +172,7 @@ export default function Footer() {
               <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-button border border-[var(--app-border)] bg-[var(--app-surface)]">
                 <Image
                   quality={IMAGE_QUALITY}
-                  src={WisdomeHouseLogo}
+                  src={WisdomChurchLogo}
                   alt=""
                   fill
                   sizes="40px"

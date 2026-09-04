@@ -469,6 +469,10 @@ function normalizePublicFormSettings(
     successModalMessage: asNonEmptyString(pick('successModalMessage')),
     layoutMode: asNonEmptyString(pick('layoutMode')),
     dateFormat: asNonEmptyString(pick('dateFormat')),
+    submitButtonText: asNonEmptyString(pick('submitButtonText')),
+    coverImageUrl:
+      asNonEmptyString(pick('coverImageUrl')) ??
+      asNonEmptyString(design?.coverImageUrl),
     sections: sections.length ? sections : undefined,
     consent,
   };
@@ -1045,6 +1049,26 @@ export const apiClient = {
       }
       throw error;
     }
+  },
+
+  /**
+   * Upload a public form attachment (member photo, etc.) to the shared,
+   * rate-limited public uploads endpoint and return its hosted URL. The form
+   * submission then stores only the URL string — the backend passes plain
+   * https URLs through `materializeSubmissionMedia` untouched.
+   */
+  async uploadPublicImage(
+    file: File
+  ): Promise<{ url: string; publicUrl?: string; key?: string }> {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('kind', 'image');
+
+    const res = await request<unknown>('/uploads/images', {
+      method: 'POST',
+      body: form,
+    });
+    return unwrapData<{ url: string; publicUrl?: string; key?: string }>(res);
   },
 };
 

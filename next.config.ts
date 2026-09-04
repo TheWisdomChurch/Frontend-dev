@@ -121,31 +121,19 @@ const nextConfig: NextConfig = {
   },
 
   async redirects() {
+    const toApex = (host: string) => ({
+      source: '/:path*',
+      has: [{ type: 'host' as const, value: host }],
+      destination: 'https://wisdomchurchhq.org/:path*',
+      permanent: true,
+    });
     return [
-      // Legacy domain — canonicalize to the current domain to avoid
-      // duplicate-content indexing of the old church URL.
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.thewisdomhousechurch.org',
-          },
-        ],
-        destination: 'https://wisdomchurchhq.org/:path*',
-        permanent: true,
-      },
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'thewisdomhousechurch.org',
-          },
-        ],
-        destination: 'https://wisdomchurchhq.org/:path*',
-        permanent: true,
-      },
+      // One canonical host. `www` and the legacy church domain 301 to the apex
+      // so Google never sees duplicate copies of the same page (a real ranking
+      // dilution — split link equity, "which URL do I show?").
+      toApex('www.wisdomchurchhq.org'),
+      toApex('www.thewisdomhousechurch.org'),
+      toApex('thewisdomhousechurch.org'),
     ];
   },
 };

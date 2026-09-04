@@ -39,11 +39,11 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = buildPageMetadata({
   title: 'About The Wisdom Church',
   description:
-    'The vision, mission, five pillars, and identity of The Wisdom Church (Wisdom House) — a Spirit-filled church in Lekki-Epe, Lagos led by pastors devoted to the Word, prayer, and community.',
+    'The vision, mission, five pillars, and identity of The Wisdom Church — a Spirit-filled church in Lekki-Epe, Lagos led by pastors devoted to the Word, prayer, and community.',
   path: '/about',
   keywords: [
     'about The Wisdom Church',
-    'Wisdom House vision mission',
+    'Wisdom Church vision mission',
     'Wisdom Church pastors',
     'church beliefs Lagos',
     'what we believe',
