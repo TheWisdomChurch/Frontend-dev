@@ -3,6 +3,7 @@ import type {
   LeadershipRole,
 } from '@/domain/leadership/types';
 import { Media } from '@/shared/ui/Media';
+import { cn } from '@/lib/cn';
 
 // Shared between /leadership (the full directory) and About's leadership
 // spotlight — one definition of what a leader card looks like, so the two
@@ -21,59 +22,71 @@ export function initials(first = '', last = '') {
 }
 
 /* ── Leader card ───────────────────────────────────────────
-   One editorial portrait card, two tones. A framed 4:5 photo
-   sits above a captioned block: role eyebrow, name, a gold
-   hairline, and the bio. Missing photos resolve to a tinted
-   monogram — never a broken frame. */
+   Image-forward: the portrait fills the frame edge to edge.
+   Role + name rest over a soft gradient; on hover (and always
+   on touch devices) a slim gold rule and the bio slide open.
+   A missing photo resolves to a gilded monogram, never a
+   broken frame. */
 
 type LeaderCardProps = { leader: LeadershipMember; tone?: 'canvas' | 'dark' };
 
-export function LeaderCard({ leader, tone = 'canvas' }: LeaderCardProps) {
+export function LeaderCard({ leader }: LeaderCardProps) {
   const name = `${leader.firstName} ${leader.lastName}`.trim();
-  const dark = tone === 'dark';
+  const role = ROLE_LABEL[leader.role];
 
   return (
     <article
-      className={[
-        'group relative flex h-full flex-col overflow-hidden rounded-card border transition-[transform,border-color,box-shadow] duration-500 ease-out',
-        'motion-safe:hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/20',
-        dark
-          ? 'tone-dark border-[var(--app-border)] bg-[var(--app-dark-2)] hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)]'
-          : 'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)]',
-      ].join(' ')}
+      className={cn(
+        'group relative isolate aspect-[4/5] overflow-hidden rounded-card bg-[var(--app-dark-2)]',
+        'ring-1 ring-inset ring-[color-mix(in_srgb,white_12%,transparent)]',
+        'transition-[transform,box-shadow] duration-500 ease-out',
+        'motion-safe:hover:-translate-y-1.5 hover:shadow-[0_30px_64px_color-mix(in_srgb,black_32%,transparent)]',
+        'hover:ring-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]'
+      )}
     >
-      {/* Portrait */}
-      <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-[var(--app-canvas-2)]">
-        <Media
-          src={leader.imageUrl}
-          alt={name}
-          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
-          className="object-top transition duration-700 ease-out group-hover:scale-[1.04]"
-          fallback={
-            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(150deg,var(--app-canvas-2),var(--app-canvas-3))]">
-              <span className="font-headline text-display-lg font-normal leading-none text-[color-mix(in_srgb,var(--app-primary)_60%,transparent)]">
-                {initials(leader.firstName, leader.lastName)}
-              </span>
-            </div>
-          }
-        />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--app-dark)_55%,transparent),transparent)]" />
-      </div>
+      <Media
+        src={leader.imageUrl}
+        alt={name}
+        sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 31vw"
+        className="object-center transition-transform duration-[900ms] ease-out will-change-transform motion-safe:group-hover:scale-[1.05] motion-reduce:transition-none"
+        fallback={
+          <div className="relative flex h-full w-full items-center justify-center bg-[linear-gradient(155deg,var(--app-dark-3),var(--app-dark-2))]">
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-[radial-gradient(55%_45%_at_50%_36%,color-mix(in_srgb,var(--app-primary)_22%,transparent),transparent_70%)]"
+            />
+            <span className="relative font-headline text-[clamp(3rem,10vw,5.5rem)] font-normal leading-none tracking-[0.02em] text-[color-mix(in_srgb,var(--app-primary)_72%,transparent)]">
+              {initials(leader.firstName, leader.lastName)}
+            </span>
+          </div>
+        }
+      />
+
+      {/* Legibility wash — deep at the foot, clear at the top. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--app-dark)_92%,transparent),color-mix(in_srgb,var(--app-dark)_34%,transparent)_46%,transparent_72%)] transition-opacity duration-500 group-hover:opacity-100 md:opacity-90"
+      />
 
       {/* Caption */}
-      <div className="flex flex-1 flex-col px-6 py-6 sm:px-7 sm:py-7">
-        <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
-          {ROLE_LABEL[leader.role]}
+      <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+        <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)] [text-shadow:0_1px_10px_black]">
+          {role}
         </p>
-        <h3 className="mt-2.5 font-headline text-heading-md font-normal leading-tight text-[var(--app-ink)]">
+        <h3 className="mt-1.5 font-headline text-heading-md font-normal leading-tight text-white [text-shadow:0_2px_16px_black]">
           {name}
         </h3>
-        <div className="mt-3.5 h-px w-10 bg-[color-mix(in_srgb,var(--app-primary)_55%,transparent)]" />
-        {leader.bio && (
-          <p className="mt-4 font-ui text-body-sm leading-[1.85] text-[var(--app-muted)] line-clamp-4">
-            {leader.bio}
-          </p>
-        )}
+
+        {leader.bio ? (
+          <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr] [@media(hover:none)]:grid-rows-[1fr]">
+            <div className="overflow-hidden">
+              <span className="mt-3 block h-px w-10 bg-[color-mix(in_srgb,var(--app-primary)_75%,transparent)]" />
+              <p className="mt-3 line-clamp-4 font-ui text-body-sm leading-[1.7] text-white/85 [text-shadow:0_1px_12px_black]">
+                {leader.bio}
+              </p>
+            </div>
+          </div>
+        ) : null}
       </div>
     </article>
   );
@@ -82,9 +95,9 @@ export function LeaderCard({ leader, tone = 'canvas' }: LeaderCardProps) {
 /* Back-compat named exports — the two pages import these directly. */
 
 export function CanvasCard({ leader }: { leader: LeadershipMember }) {
-  return <LeaderCard leader={leader} tone="canvas" />;
+  return <LeaderCard leader={leader} />;
 }
 
 export function DarkCard({ leader }: { leader: LeadershipMember }) {
-  return <LeaderCard leader={leader} tone="dark" />;
+  return <LeaderCard leader={leader} />;
 }
