@@ -2,13 +2,16 @@ export { PhoneNumberField } from './PhoneNumberField';
 export { LocationFields, type LocationValue } from './LocationFields';
 
 export {
-  Field,
+  FloatingField,
+  StaticField,
   controlClass,
+  staticControlClass,
+  controlFocusRing,
   controlErrorClass,
   fieldLabelClass,
-  fieldHintClass,
   fieldHelpClass,
-  type FieldProps,
+  type FloatingFieldProps,
+  type StaticFieldProps,
 } from './Field';
 
 export {

@@ -469,6 +469,10 @@ function normalizePublicFormSettings(
     successModalMessage: asNonEmptyString(pick('successModalMessage')),
     layoutMode: asNonEmptyString(pick('layoutMode')),
     dateFormat: asNonEmptyString(pick('dateFormat')),
+    submitButtonText: asNonEmptyString(pick('submitButtonText')),
+    coverImageUrl:
+      asNonEmptyString(pick('coverImageUrl')) ??
+      asNonEmptyString(design?.coverImageUrl),
     sections: sections.length ? sections : undefined,
     consent,
   };

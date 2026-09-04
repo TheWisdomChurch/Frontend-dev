@@ -21,6 +21,8 @@ export interface FormShellProps {
   progress?: number;
   /** Action bar (submit button + helper text). Also pinned to the foot on mobile. */
   actionBar?: ReactNode;
+  /** Optional hero image shown above the heading. */
+  coverImageUrl?: string;
   children: ReactNode;
 }
 
@@ -31,6 +33,7 @@ export function FormShell({
   metaChips = [],
   progress,
   actionBar,
+  coverImageUrl,
   children,
 }: FormShellProps) {
   const reduceMotion = useReducedMotion();
@@ -44,6 +47,22 @@ export function FormShell({
       <Section tone="canvas" flush className="pb-24 pt-10 sm:pb-16 sm:pt-14">
         <Container width="content">
           <div className="mx-auto w-full max-w-[42rem]">
+            {coverImageUrl ? (
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="mb-6 overflow-hidden rounded-card border border-[var(--app-border)]"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- CMS-supplied hero, arbitrary host */}
+                <img
+                  src={coverImageUrl}
+                  alt=""
+                  className="aspect-[16/7] w-full object-cover"
+                />
+              </motion.div>
+            ) : null}
+
             <motion.header
               initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}

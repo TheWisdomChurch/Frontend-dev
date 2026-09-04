@@ -13,7 +13,7 @@ import {
   readFileAsDataURL,
 } from '@/lib/forms/fieldValue';
 
-import { Field } from './Field';
+import { StaticField } from './Field';
 
 /* ============================================================================
    ImageField — drag-and-drop / click image picker with an instant preview.
@@ -204,7 +204,7 @@ export function ImageField({ field, value, error, onChange }: ImageFieldProps) {
     error || (current?.status === 'error' ? current.message : undefined);
 
   return (
-    <Field
+    <StaticField
       htmlFor={id}
       label={field.label}
       required={field.required}
@@ -324,6 +324,6 @@ export function ImageField({ field, value, error, onChange }: ImageFieldProps) {
           </motion.button>
         )}
       </AnimatePresence>
-    </Field>
+    </StaticField>
   );
 }

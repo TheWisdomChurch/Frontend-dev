@@ -2,6 +2,7 @@
 
 import { useId } from 'react';
 import type { CountryCode } from 'libphonenumber-js';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import { cn } from '@/lib/cn';
 import type { PublicFormField } from '@/lib/apiTypes';
@@ -17,12 +18,19 @@ import {
   toDDMM,
 } from '@/lib/forms/fieldValue';
 
-import { Field, controlClass, controlErrorClass } from './Field';
+import {
+  FloatingField,
+  StaticField,
+  controlClass,
+  controlErrorClass,
+  controlFocusRing,
+  staticControlClass,
+} from './Field';
 import { PhoneNumberField } from './PhoneNumberField';
 
 /* ============================================================================
-   Field renderers — one per control type. Each owns its own <Field> shell and
-   accessible wiring; the renderer only supplies value / error / onChange.
+   Field renderers — one per control type. Each owns its <Field> shell, focus
+   styling, and accessible wiring; the renderer only supplies value/error/change.
 ============================================================================ */
 
 export interface FieldControlProps {
@@ -33,11 +41,28 @@ export interface FieldControlProps {
 }
 
 const choiceClass =
-  'flex min-h-11 cursor-pointer items-center gap-2.5 rounded-input border border-[var(--app-border)] bg-[var(--app-canvas)] px-3.5 py-2 font-ui text-body-sm text-[var(--app-muted)] transition hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:bg-[var(--app-surface)] has-[:checked]:border-[var(--app-primary)] has-[:checked]:bg-[var(--app-primary-10)] has-[:checked]:text-[var(--app-ink)]';
+  'flex min-h-11 cursor-pointer select-none items-center gap-2.5 rounded-input border border-[var(--app-border)] bg-[var(--app-canvas)] px-3.5 py-2 font-ui text-body-sm text-[var(--app-muted)] transition-[border-color,background-color,color,transform] duration-150 hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:bg-[var(--app-surface)] active:scale-[0.99] has-[:checked]:border-[var(--app-primary)] has-[:checked]:bg-[var(--app-primary-10)] has-[:checked]:text-[var(--app-ink)] has-[:focus-visible]:shadow-[0_0_0_4px_color-mix(in_srgb,var(--app-primary)_16%,transparent)]';
 
 function useFieldId(field: PublicFormField) {
   const generated = useId();
   return `ff-${field.key || generated}`;
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 20 20"
+      className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-subtle)] transition-transform duration-200 peer-focus:rotate-180 peer-focus:text-[var(--app-primary-dark)]"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m5 7.5 5 5 5-5" />
+    </svg>
+  );
 }
 
 export function TextField({
@@ -47,24 +72,34 @@ export function TextField({
   onChange,
 }: FieldControlProps) {
   const id = useFieldId(field);
+  const text = typeof value === 'string' ? value : '';
 
   return (
-    <Field
-      htmlFor={id}
+    <FloatingField
+      id={id}
       label={field.label}
       required={field.required}
+      filled={text.length > 0}
       error={error}
+      help={field.placeholder}
     >
-      <input
-        id={id}
-        type={getFieldInputType(field)}
-        className={cn(controlClass, error && controlErrorClass)}
-        placeholder={field.placeholder}
-        value={typeof value === 'string' ? value : ''}
-        aria-invalid={Boolean(error)}
-        onChange={event => onChange(event.target.value)}
-      />
-    </Field>
+      {({ onFocus, onBlur, ...aria }) => (
+        <input
+          id={id}
+          type={getFieldInputType(field)}
+          className={cn(
+            controlClass,
+            controlFocusRing,
+            error && controlErrorClass
+          )}
+          value={text}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={event => onChange(event.target.value)}
+          {...aria}
+        />
+      )}
+    </FloatingField>
   );
 }
 
@@ -78,37 +113,43 @@ export function TextareaField({
   const maxWords = resolveMaxWords(field);
   const text = typeof value === 'string' ? value : '';
   const words = countWords(text);
+  const over = typeof maxWords === 'number' && words > maxWords;
 
   return (
-    <Field
-      htmlFor={id}
+    <FloatingField
+      id={id}
       label={field.label}
       required={field.required}
+      filled={text.length > 0}
       error={error}
-      labelAside={
+      help={field.placeholder}
+      align="top"
+      aside={
         typeof maxWords === 'number' ? (
-          <span
-            className={words > maxWords ? 'text-[var(--status-error)]' : ''}
-          >
-            {words}/{maxWords} words
+          <span className={over ? 'text-[var(--status-error)]' : undefined}>
+            {words}/{maxWords}
           </span>
         ) : undefined
       }
     >
-      <textarea
-        id={id}
-        rows={5}
-        className={cn(
-          controlClass,
-          'min-h-[8.5rem] resize-y leading-7',
-          error && controlErrorClass
-        )}
-        placeholder={field.placeholder}
-        value={text}
-        aria-invalid={Boolean(error)}
-        onChange={event => onChange(event.target.value)}
-      />
-    </Field>
+      {({ onFocus, onBlur, ...aria }) => (
+        <textarea
+          id={id}
+          rows={5}
+          className={cn(
+            controlClass,
+            controlFocusRing,
+            'min-h-[8.5rem] resize-y leading-7',
+            error && controlErrorClass
+          )}
+          value={text}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={event => onChange(event.target.value)}
+          {...aria}
+        />
+      )}
+    </FloatingField>
   );
 }
 
@@ -119,35 +160,97 @@ export function SelectField({
   onChange,
 }: FieldControlProps) {
   const id = useFieldId(field);
+  const current = typeof value === 'string' ? value : '';
 
   return (
-    <Field
-      htmlFor={id}
+    <FloatingField
+      id={id}
       label={field.label}
       required={field.required}
+      filled={current.length > 0}
       error={error}
     >
-      <select
-        id={id}
+      {({ onFocus, onBlur, ...aria }) => (
+        <div className="relative">
+          <select
+            id={id}
+            className={cn(
+              controlClass,
+              controlFocusRing,
+              'cursor-pointer appearance-none pr-10',
+              error && controlErrorClass
+            )}
+            value={current}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onChange={event => onChange(event.target.value)}
+            {...aria}
+          >
+            <option value="" disabled hidden />
+            {field.options?.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDownIcon />
+        </div>
+      )}
+    </FloatingField>
+  );
+}
+
+function AnimatedChoice({
+  type,
+  name,
+  checked,
+  onChange,
+  label,
+}: {
+  type: 'radio' | 'checkbox';
+  name?: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+}) {
+  const reduceMotion = useReducedMotion();
+  return (
+    <label className={choiceClass}>
+      <input
+        type={type}
+        name={name}
+        checked={checked}
+        className="peer sr-only"
+        onChange={event => onChange(event.target.checked)}
+      />
+      <span
         className={cn(
-          controlClass,
-          'cursor-pointer',
-          error && controlErrorClass
+          'grid h-[1.15rem] w-[1.15rem] shrink-0 place-items-center border-[1.5px] border-[var(--app-muted)] text-white transition-colors',
+          type === 'radio' ? 'rounded-full' : 'rounded-md',
+          checked && 'border-[var(--app-primary)] bg-[var(--app-primary)]'
         )}
-        value={typeof value === 'string' ? value : ''}
-        aria-invalid={Boolean(error)}
-        onChange={event => onChange(event.target.value)}
       >
-        <option value="" disabled>
-          {field.placeholder || 'Select an option'}
-        </option>
-        {field.options?.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </Field>
+        <motion.svg
+          viewBox="0 0 14 14"
+          className="h-3 w-3"
+          initial={false}
+          animate={{ scale: checked ? 1 : 0, opacity: checked ? 1 : 0 }}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { type: 'spring', stiffness: 500, damping: 25 }
+          }
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m2.5 7.5 3 3 6-6.5" />
+        </motion.svg>
+      </span>
+      {label}
+    </label>
   );
 }
 
@@ -158,29 +261,26 @@ export function RadioGroupField({
   onChange,
 }: FieldControlProps) {
   return (
-    <Field
+    <StaticField
       as="legend"
       label={field.label}
       required={field.required}
       error={error}
       showOptional={false}
     >
-      <div className="mt-1 grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-2">
         {field.options?.map(option => (
-          <label key={option.value} className={choiceClass}>
-            <input
-              type="radio"
-              name={field.key}
-              value={option.value}
-              checked={value === option.value}
-              className="h-4 w-4 accent-[var(--app-primary)]"
-              onChange={event => onChange(event.target.value)}
-            />
-            {option.label}
-          </label>
+          <AnimatedChoice
+            key={option.value}
+            type="radio"
+            name={field.key}
+            checked={value === option.value}
+            onChange={() => onChange(option.value)}
+            label={option.label}
+          />
         ))}
       </div>
-    </Field>
+    </StaticField>
   );
 }
 
@@ -192,36 +292,32 @@ export function CheckboxGroupField({
 }: FieldControlProps) {
   const selected = Array.isArray(value) ? (value as string[]) : [];
 
-  const toggle = (optionValue: string, checked: boolean) => {
-    onChange(
-      checked
-        ? [...selected, optionValue]
-        : selected.filter(item => item !== optionValue)
-    );
-  };
-
   return (
-    <Field
+    <StaticField
       as="legend"
       label={field.label}
       required={field.required}
       error={error}
       showOptional={false}
     >
-      <div className="mt-1 grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-2">
         {field.options?.map(option => (
-          <label key={option.value} className={choiceClass}>
-            <input
-              type="checkbox"
-              checked={selected.includes(option.value)}
-              className="h-4 w-4 accent-[var(--app-primary)]"
-              onChange={event => toggle(option.value, event.target.checked)}
-            />
-            {option.label}
-          </label>
+          <AnimatedChoice
+            key={option.value}
+            type="checkbox"
+            checked={selected.includes(option.value)}
+            onChange={checked =>
+              onChange(
+                checked
+                  ? [...selected, option.value]
+                  : selected.filter(item => item !== option.value)
+              )
+            }
+            label={option.label}
+          />
         ))}
       </div>
-    </Field>
+    </StaticField>
   );
 }
 
@@ -282,7 +378,7 @@ export function PhoneField({
   const currentNational = parsed?.national ?? '';
 
   return (
-    <Field
+    <StaticField
       htmlFor={id}
       label={field.label}
       required={field.required}
@@ -303,11 +399,15 @@ export function PhoneField({
         onNumberChange={number =>
           onChange(`${currentDial}${number.replace(/\D/g, '')}`)
         }
-        inputClassName={cn(controlClass, error && controlErrorClass)}
-        selectClassName={cn(controlClass, 'cursor-pointer px-2')}
+        inputClassName={cn(
+          staticControlClass,
+          controlFocusRing,
+          error && controlErrorClass
+        )}
+        selectClassName={cn(staticControlClass, 'cursor-pointer px-2')}
         placeholder={field.placeholder || '8012345678'}
       />
-    </Field>
+    </StaticField>
   );
 }
 
@@ -327,8 +427,15 @@ export function DateField({
     (_, index) => String(index + 1).padStart(2, '0')
   );
 
+  const selectClass = cn(
+    staticControlClass,
+    controlFocusRing,
+    'cursor-pointer appearance-none pr-9',
+    error && controlErrorClass
+  );
+
   return (
-    <Field
+    <StaticField
       htmlFor={id}
       label={field.label}
       required={field.required}
@@ -336,44 +443,44 @@ export function DateField({
       help="Day and month only."
     >
       <div className="grid grid-cols-2 gap-2">
-        <select
-          id={id}
-          aria-label={`${field.label} — day`}
-          className={cn(
-            controlClass,
-            'cursor-pointer',
-            error && controlErrorClass
-          )}
-          value={selectedDay}
-          onChange={event =>
-            onChange(toDDMM(event.target.value, selectedMonth))
-          }
-        >
-          <option value="">Day</option>
-          {availableDays.map(day => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label={`${field.label} — month`}
-          className={cn(
-            controlClass,
-            'cursor-pointer',
-            error && controlErrorClass
-          )}
-          value={selectedMonth}
-          onChange={event => onChange(toDDMM(selectedDay, event.target.value))}
-        >
-          <option value="">Month</option>
-          {MONTH_OPTIONS.map(month => (
-            <option key={month.value} value={month.value}>
-              {month.label}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            id={id}
+            aria-label={`${field.label} — day`}
+            className={selectClass}
+            value={selectedDay}
+            onChange={event =>
+              onChange(toDDMM(event.target.value, selectedMonth))
+            }
+          >
+            <option value="">Day</option>
+            {availableDays.map(day => (
+              <option key={day} value={day}>
+                {day}
+              </option>
+            ))}
+          </select>
+          <ChevronDownIcon />
+        </div>
+        <div className="relative">
+          <select
+            aria-label={`${field.label} — month`}
+            className={selectClass}
+            value={selectedMonth}
+            onChange={event =>
+              onChange(toDDMM(selectedDay, event.target.value))
+            }
+          >
+            <option value="">Month</option>
+            {MONTH_OPTIONS.map(month => (
+              <option key={month.value} value={month.value}>
+                {month.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDownIcon />
+        </div>
       </div>
-    </Field>
+    </StaticField>
   );
 }

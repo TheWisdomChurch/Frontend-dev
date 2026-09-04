@@ -52,6 +52,20 @@ import {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const FIELD_GRID_VARIANTS = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.045, delayChildren: 0.04 } },
+};
+
+const FIELD_ITEM_VARIANTS = {
+  hidden: { opacity: 0, y: 12 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: [0.19, 1, 0.22, 1] as const },
+  },
+};
+
 function estimateMinutes(fieldCount: number): number {
   return Math.max(1, Math.round(fieldCount * 0.4));
 }
@@ -475,14 +489,21 @@ export default function PublicFormPage() {
     else control = <TextField {...shared} />;
 
     return (
-      <div key={field.key} className={fullWidth ? 'sm:col-span-2' : undefined}>
+      <motion.div
+        key={field.key}
+        layout={!reduceMotion}
+        variants={FIELD_ITEM_VARIANTS}
+        className={fullWidth ? 'sm:col-span-2' : undefined}
+      >
         {control}
-      </div>
+      </motion.div>
     );
   };
 
   const hasIntro =
     presentation.detailItems.length > 0 || presentation.sections.length > 0;
+
+  const submitLabel = form?.settings?.submitButtonText?.trim() || 'Submit form';
 
   const actionBar = (
     <div className="flex flex-col gap-2">
@@ -494,7 +515,7 @@ export default function PublicFormPage() {
         loading={submitting}
         fullWidth
       >
-        {submitting ? 'Submitting…' : 'Submit form'}
+        {submitting ? 'Submitting…' : submitLabel}
       </Button>
       <p className="text-center font-ui text-caption text-[var(--app-subtle)]">
         We will follow up using the details you provide.
@@ -541,6 +562,7 @@ export default function PublicFormPage() {
         metaChips={metaChips}
         progress={progress}
         actionBar={actionBar}
+        coverImageUrl={form.settings?.coverImageUrl}
       >
         <form id="public-form" onSubmit={handleSubmit} className="space-y-8">
           {presentation.headerNote ? (
@@ -626,9 +648,9 @@ export default function PublicFormPage() {
           ) : null}
 
           <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.05 }}
+            initial={reduceMotion ? false : 'hidden'}
+            animate="show"
+            variants={FIELD_GRID_VARIANTS}
             className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2"
           >
             {visibleFields.map(renderField)}
