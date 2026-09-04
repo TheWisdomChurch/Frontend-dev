@@ -28,6 +28,11 @@ import {
   resolveMaxWords,
   splitE164,
 } from '@/lib/forms/fieldValue';
+import {
+  clearFormDraft,
+  readFormDraft,
+  writeFormDraft,
+} from '@/lib/forms/formDraft';
 import { Button } from '@/shared/ui/button';
 import { Notice } from '@/shared/ui/layout';
 import {
@@ -110,6 +115,7 @@ export default function PublicFormPage() {
   const [submitted, setSubmitted] = useState(false);
   const [consentAccepted, setConsentAccepted] = useState(false);
   const [consentError, setConsentError] = useState('');
+  const [draftRestored, setDraftRestored] = useState(false);
 
   const isTestimonialForm = useMemo(() => {
     const slug = (formSlug || '').toLowerCase();
@@ -191,7 +197,10 @@ export default function PublicFormPage() {
                 : '';
         });
 
-        setAnswers(current => ({ ...defaults, ...current }));
+        const draft = readFormDraft(formSlug);
+        if (draft) setDraftRestored(true);
+
+        setAnswers(current => ({ ...defaults, ...draft, ...current }));
         setFieldErrors({});
       } catch (err: unknown) {
         if (!mounted) return;
