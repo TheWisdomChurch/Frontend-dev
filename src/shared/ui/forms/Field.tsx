@@ -1,37 +1,28 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 
 /* ============================================================================
-   Field shells for the public-form kit.
-
-   - FloatingField : label rests inside the control and animates up to a caption
-     on focus/fill. Used by text / textarea / select / phone / date inputs.
-   - StaticField   : conventional label above. Used by option groups and the
-     image picker where a floating label makes no sense.
-
-   Both share one control recipe, one focus treatment, and one animated error
-   row so every field on a form reads as a single system.
+   Field — the one shell for every public-form control. Label sits above the
+   field (works with the long, question-style labels these forms use), with a
+   shared control recipe, an animated focus ring, and a shake + slide-in error.
 ============================================================================ */
 
-/** Base control surface. Height + top padding leave room for the floated label. */
 export const controlClass =
-  'peer w-full rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 pb-2 pt-6 font-ui text-body-sm text-[var(--app-ink)] outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out placeholder:text-transparent disabled:cursor-not-allowed disabled:opacity-60';
+  'w-full min-h-12 rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 py-3 font-ui text-body-sm text-[var(--app-ink)] outline-none transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-[var(--app-subtle)] disabled:cursor-not-allowed disabled:opacity-60';
 
-/** Control recipe for StaticField children (no floated label → normal padding). */
-export const staticControlClass =
-  'w-full min-h-11 rounded-input border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 py-2.5 font-ui text-body-sm text-[var(--app-ink)] outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out placeholder:text-[var(--app-subtle)] disabled:cursor-not-allowed disabled:opacity-60';
-
-/** Focus ring, applied on `:focus` — pair with `controlClass`. */
 export const controlFocusRing =
-  'focus:border-[var(--app-primary)] focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--app-primary)_16%,transparent)]';
+  'focus:border-[var(--app-primary)] focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--app-primary)_15%,transparent)]';
 
 export const controlErrorClass =
-  'border-[var(--status-error)] shadow-[0_0_0_4px_color-mix(in_srgb,var(--status-error)_14%,transparent)] focus:border-[var(--status-error)] focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--status-error)_14%,transparent)]';
+  'border-[var(--status-error)] focus:border-[var(--status-error)] focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--status-error)_14%,transparent)]';
+
+/** Alias kept for older imports. */
+export const staticControlClass = controlClass;
 
 export const fieldLabelClass =
   'font-ui text-body-sm font-semibold leading-snug text-[var(--app-ink)]';
@@ -39,179 +30,70 @@ export const fieldLabelClass =
 export const fieldHelpClass =
   'font-ui text-caption leading-relaxed text-[var(--app-subtle)]';
 
-function ErrorRow({ id, error }: { id?: string; error?: string }) {
-  const reduceMotion = useReducedMotion();
-
-  return (
-    <AnimatePresence initial={false}>
-      {error ? (
-        <motion.p
-          id={id}
-          role="alert"
-          initial={reduceMotion ? false : { opacity: 0, height: 0, y: -4 }}
-          animate={{ opacity: 1, height: 'auto', y: 0 }}
-          exit={reduceMotion ? undefined : { opacity: 0, height: 0, y: -4 }}
-          transition={{ duration: 0.18 }}
-          className="flex items-center gap-1.5 overflow-hidden font-ui text-caption font-medium text-[var(--status-error)]"
-        >
-          <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          {error}
-        </motion.p>
-      ) : null}
-    </AnimatePresence>
-  );
-}
-
-/* ---------------------------------------------------------------------------
-   FloatingField
---------------------------------------------------------------------------- */
-
-interface FloatingChildArgs {
-  onFocus: () => void;
-  onBlur: () => void;
-  'aria-invalid': boolean;
-  'aria-describedby': string | undefined;
-}
-
-export interface FloatingFieldProps {
-  id: string;
-  label: ReactNode;
-  required?: boolean;
-  /** Whether the control currently holds a value (drives the label position). */
-  filled: boolean;
-  error?: string;
-  help?: ReactNode;
-  /** Right-aligned adornment shown once the label has floated, e.g. a counter. */
-  aside?: ReactNode;
-  /** Resting label position — `top` for tall controls (textarea). */
-  align?: 'center' | 'top';
-  className?: string;
-  children: (args: FloatingChildArgs) => ReactNode;
-}
-
-export function FloatingField({
-  id,
-  label,
-  required = false,
-  filled,
-  error,
-  help,
-  aside,
-  align = 'center',
-  className,
-  children,
-}: FloatingFieldProps) {
-  const [focused, setFocused] = useState(false);
-  const reduceMotion = useReducedMotion();
-  const floated = focused || filled;
-
-  const errorId = error ? `${id}-error` : undefined;
-  const helpId = help ? `${id}-help` : undefined;
-  const describedBy = errorId ?? (focused ? helpId : undefined);
-
-  return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
-      <motion.div
-        className="relative"
-        animate={
-          error && !reduceMotion ? { x: [0, -4, 4, -3, 3, 0] } : { x: 0 }
-        }
-        transition={{ duration: 0.32 }}
-      >
-        {children({
-          onFocus: () => setFocused(true),
-          onBlur: () => setFocused(false),
-          'aria-invalid': Boolean(error),
-          'aria-describedby': describedBy,
-        })}
-
-        <label
-          htmlFor={id}
-          className={cn(
-            'pointer-events-none absolute left-3.5 origin-left font-ui transition-all duration-200 ease-out',
-            floated
-              ? 'top-2 text-[0.6875rem] font-semibold uppercase tracking-[0.08em]'
-              : align === 'top'
-                ? 'top-[1.15rem] text-body-sm'
-                : 'top-1/2 -translate-y-1/2 text-body-sm',
-            error
-              ? 'text-[var(--status-error)]'
-              : focused
-                ? 'text-[var(--app-primary-dark)]'
-                : 'text-[var(--app-subtle)]'
-          )}
-        >
-          {label}
-          {required ? <span aria-hidden="true"> *</span> : null}
-        </label>
-
-        {aside && floated ? (
-          <span className="pointer-events-none absolute right-3.5 top-2 font-ui text-[0.6875rem] font-medium text-[var(--app-subtle)]">
-            {aside}
-          </span>
-        ) : null}
-      </motion.div>
-
-      {help && focused && !error ? (
-        <p id={helpId} className={fieldHelpClass}>
-          {help}
-        </p>
-      ) : null}
-
-      <ErrorRow id={errorId} error={error} />
-    </div>
-  );
-}
-
-/* ---------------------------------------------------------------------------
-   StaticField
---------------------------------------------------------------------------- */
-
-export interface StaticFieldProps {
+export interface FieldProps {
   htmlFor?: string;
   label: ReactNode;
   required?: boolean;
-  showOptional?: boolean;
+  /** Show a muted "(optional)" when not required. */
+  optional?: boolean;
   help?: ReactNode;
   error?: string;
+  /** Right-aligned adornment beside the label (e.g. a word counter). */
+  aside?: ReactNode;
   as?: 'label' | 'legend';
   className?: string;
   children: ReactNode;
 }
 
-export function StaticField({
+export function Field({
   htmlFor,
   label,
   required = false,
-  showOptional = true,
+  optional = true,
   help,
   error,
+  aside,
   as = 'label',
   className,
   children,
-}: StaticFieldProps) {
+}: FieldProps) {
+  const reduceMotion = useReducedMotion();
+  const Wrapper = as === 'legend' ? 'fieldset' : 'div';
+  const LabelTag = as;
   const errorId = htmlFor && error ? `${htmlFor}-error` : undefined;
   const helpId = htmlFor && help ? `${htmlFor}-help` : undefined;
-  const LabelTag = as;
-  const Wrapper = as === 'legend' ? 'fieldset' : 'div';
 
   return (
-    <Wrapper className={cn('flex flex-col gap-2', className)}>
-      <LabelTag
-        {...(as === 'label' && htmlFor ? { htmlFor } : {})}
-        className={fieldLabelClass}
-      >
-        {label}
-        {required ? (
-          <span className="text-[var(--app-primary-dark)]"> *</span>
-        ) : showOptional ? (
-          <span className="ml-1.5 font-ui text-caption font-normal normal-case tracking-normal text-[var(--app-subtle)]">
-            (optional)
+    <Wrapper className={cn('flex flex-col gap-1.5', className)}>
+      <div className="flex items-baseline justify-between gap-3">
+        <LabelTag
+          {...(as === 'label' && htmlFor ? { htmlFor } : {})}
+          className={fieldLabelClass}
+        >
+          {label}
+          {required ? (
+            <span className="text-[var(--app-primary-dark)]"> *</span>
+          ) : optional ? (
+            <span className="ml-1.5 font-ui text-caption font-normal normal-case tracking-normal text-[var(--app-subtle)]">
+              (optional)
+            </span>
+          ) : null}
+        </LabelTag>
+        {aside ? (
+          <span className="shrink-0 font-ui text-caption text-[var(--app-subtle)]">
+            {aside}
           </span>
         ) : null}
-      </LabelTag>
+      </div>
 
-      {children}
+      <motion.div
+        animate={
+          error && !reduceMotion ? { x: [0, -4, 4, -3, 3, 0] } : { x: 0 }
+        }
+        transition={{ duration: 0.3 }}
+      >
+        {children}
+      </motion.div>
 
       {help && !error ? (
         <p id={helpId} className={fieldHelpClass}>
@@ -219,7 +101,26 @@ export function StaticField({
         </p>
       ) : null}
 
-      <ErrorRow id={errorId} error={error} />
+      <AnimatePresence initial={false}>
+        {error ? (
+          <motion.p
+            id={errorId}
+            role="alert"
+            initial={reduceMotion ? false : { opacity: 0, height: 0, y: -4 }}
+            animate={{ opacity: 1, height: 'auto', y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, height: 0, y: -4 }}
+            transition={{ duration: 0.18 }}
+            className="flex items-center gap-1.5 overflow-hidden font-ui text-caption font-medium text-[var(--status-error)]"
+          >
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            {error}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
     </Wrapper>
   );
 }
+
+/** Backwards-compatible alias — StaticField and Field are the same now. */
+export const StaticField = Field;
+export type StaticFieldProps = FieldProps;

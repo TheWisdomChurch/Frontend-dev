@@ -462,12 +462,6 @@ export default function PublicFormPage() {
       onChange: (value: unknown) => handleChange(field.key, value),
     };
 
-    const fullWidth =
-      field.type === 'textarea' ||
-      field.type === 'radio' ||
-      field.type === 'checkbox' ||
-      field.type === 'image';
-
     let control: ReactNode;
     if (field.type === 'textarea') control = <TextareaField {...shared} />;
     else if (field.type === 'select') control = <SelectField {...shared} />;
@@ -493,7 +487,6 @@ export default function PublicFormPage() {
         key={field.key}
         layout={!reduceMotion}
         variants={FIELD_ITEM_VARIANTS}
-        className={fullWidth ? 'sm:col-span-2' : undefined}
       >
         {control}
       </motion.div>
@@ -651,7 +644,7 @@ export default function PublicFormPage() {
             initial={reduceMotion ? false : 'hidden'}
             animate="show"
             variants={FIELD_GRID_VARIANTS}
-            className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2"
+            className="flex flex-col gap-5"
           >
             {visibleFields.map(renderField)}
           </motion.div>

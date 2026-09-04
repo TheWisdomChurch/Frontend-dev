@@ -2,7 +2,7 @@ export { PhoneNumberField } from './PhoneNumberField';
 export { LocationFields, type LocationValue } from './LocationFields';
 
 export {
-  FloatingField,
+  Field,
   StaticField,
   controlClass,
   staticControlClass,
@@ -10,7 +10,7 @@ export {
   controlErrorClass,
   fieldLabelClass,
   fieldHelpClass,
-  type FloatingFieldProps,
+  type FieldProps,
   type StaticFieldProps,
 } from './Field';
 

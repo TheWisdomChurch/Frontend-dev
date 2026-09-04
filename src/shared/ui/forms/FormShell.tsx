@@ -46,7 +46,7 @@ export function FormShell({
     <Page tone="canvas">
       <Section tone="canvas" flush className="pb-24 pt-10 sm:pb-16 sm:pt-14">
         <Container width="content">
-          <div className="mx-auto w-full max-w-[42rem]">
+          <div className="mx-auto w-full max-w-[37rem]">
             {coverImageUrl ? (
               <motion.div
                 initial={reduceMotion ? false : { opacity: 0, scale: 1.02 }}
@@ -96,28 +96,22 @@ export function FormShell({
 
             {pct !== null ? (
               <div
-                className="sticky top-0 z-20 -mx-4 mt-6 border-b border-[var(--app-border)] bg-[var(--app-canvas)] px-4 py-3 sm:mx-0 sm:rounded-input sm:border-x sm:px-4"
+                className="mt-6 h-1 overflow-hidden rounded-full bg-[var(--app-canvas-3)]"
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-label="Form completion"
               >
-                <div className="flex items-center justify-between font-ui text-caption text-[var(--app-subtle)]">
-                  <span>Your progress</span>
-                  <span>{pct}%</span>
-                </div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[var(--app-canvas-3)]">
-                  <div
-                    className="h-full rounded-full bg-[var(--app-primary)] transition-[width] duration-500 ease-out"
-                    // eslint-disable-next-line no-restricted-syntax -- dynamic completion width
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
+                <div
+                  className="h-full rounded-full bg-[var(--app-primary)] transition-[width] duration-500 ease-out"
+                  // eslint-disable-next-line no-restricted-syntax -- dynamic completion width
+                  style={{ width: `${pct}%` }}
+                />
               </div>
             ) : null}
 
-            <div className="mt-8">{children}</div>
+            <div className="mt-7">{children}</div>
           </div>
         </Container>
       </Section>
@@ -129,7 +123,7 @@ export function FormShell({
             'sm:hidden'
           )}
         >
-          <div className="mx-auto w-full max-w-[42rem]">{actionBar}</div>
+          <div className="mx-auto w-full max-w-[37rem]">{actionBar}</div>
         </div>
       ) : null}
     </Page>
