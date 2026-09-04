@@ -463,6 +463,7 @@ export default function PublicFormPage() {
       payloadValues._consentVersion = consent.version;
 
       await apiClient.submitPublicForm(formSlug, { values: payloadValues });
+      clearFormDraft(formSlug);
       setSubmitted(true);
     } catch (err: unknown) {
       setError(
@@ -581,6 +582,12 @@ export default function PublicFormPage() {
         <form id="public-form" onSubmit={handleSubmit} className="space-y-8">
           {presentation.headerNote ? (
             <Notice status="brand">{presentation.headerNote}</Notice>
+          ) : null}
+
+          {draftRestored ? (
+            <Notice status="brand">
+              We restored your answers from where you left off.
+            </Notice>
           ) : null}
 
           {hasIntro ? (
