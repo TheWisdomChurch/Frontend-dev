@@ -105,7 +105,9 @@ async function main() {
     if (!isTransient(combined) && attempt === 1) {
       // Non-transient and not a report → surface it once, then still retry
       // in case it's a partial/garbled response.
-      console.warn(`⚠  security:check — unexpected audit output:\n${lastReason}`);
+      console.warn(
+        `⚠  security:check — unexpected audit output:\n${lastReason}`
+      );
     }
 
     if (attempt < MAX_ATTEMPTS) {
