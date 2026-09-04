@@ -1,16 +1,43 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 
 import apiClient from '@/lib/api';
+import { CONTACT_INFO } from '@/shared/constants/contactInfo';
 import { buttonClass } from '@/shared/ui/button';
 import { BaseModal, modalStyles } from '@/shared/ui/modals/Modal';
 import { SuccessModal } from '@/shared/ui/modals/SuccessModal';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { cn } from '@/lib/cn';
 
-const FORM_SLUG = 'children-registration';
+// The draft is mirrored to the device on every keystroke so a network drop,
+// a refresh, or an accidental close can never lose what a parent typed. It is
+// cleared only after a confirmed submit.
+const DRAFT_KEY = 'wc:child-registration:draft';
+
+function readDraft(): Partial<Fields> | null {
+  try {
+    const raw = window.localStorage.getItem(DRAFT_KEY);
+    return raw ? (JSON.parse(raw) as Partial<Fields>) : null;
+  } catch {
+    return null;
+  }
+}
+function writeDraft(fields: Fields) {
+  try {
+    window.localStorage.setItem(DRAFT_KEY, JSON.stringify(fields));
+  } catch {
+    /* private mode / quota — the in-memory form still holds the entries */
+  }
+}
+function clearDraft() {
+  try {
+    window.localStorage.removeItem(DRAFT_KEY);
+  } catch {
+    /* no-op */
+  }
+}
 
 type Fields = {
   childName: string;
@@ -65,10 +92,13 @@ function SectionLabel({ children }: { children: string }) {
 }
 
 /**
- * "Register a child" — a single premium modal form for the children's
- * ministry. Posts through the audited public-form pipeline
- * (`/forms/children-registration/submissions`), which stores the record,
- * surfaces it to the admin, and emails the parent a confirmation.
+ * "Register your child" — a single premium modal form for the children's
+ * ministry. Posts a structured record via `apiClient.registerChild`, which
+ * hits the dedicated `/children/registrations` endpoint (so the admin portal
+ * can count children and query by date of birth) and falls back to the audited
+ * form pipeline if that endpoint is not yet live. Every keystroke is mirrored
+ * to `localStorage` so a submit failure, refresh, or accidental close never
+ * loses the parent's entries.
  */
 export function RegisterChildCta({
   label = 'Register your child',
@@ -81,9 +111,30 @@ export function RegisterChildCta({
   const [form, setForm] = useState<Fields>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedLocally, setSavedLocally] = useState(false);
   const [done, setDone] = useState(false);
 
   const age = useMemo(() => ageLabel(form.dob), [form.dob]);
+  const hasEntries = useMemo(
+    () => Object.values(form).some(v => v !== ''),
+    [form]
+  );
+
+  // Mirror the form to the device as it changes so nothing is lost on a
+  // refresh, an accidental close, or a failed submit.
+  useEffect(() => {
+    if (open && hasEntries) writeDraft(form);
+  }, [form, open, hasEntries]);
+
+  const openModal = () => {
+    setError(null);
+    const draft = readDraft();
+    if (draft) {
+      setForm(current => ({ ...current, ...draft }));
+      setSavedLocally(true);
+    }
+    setOpen(true);
+  };
 
   const set =
     (field: keyof Fields) =>
@@ -110,29 +161,31 @@ export function RegisterChildCta({
     setSubmitting(true);
     setError(null);
     try {
-      await apiClient.submitPublicForm(FORM_SLUG, {
-        values: {
-          child_full_name: form.childName.trim(),
-          child_date_of_birth: form.dob,
-          child_age: age,
-          gender: form.gender,
-          home_address: form.address.trim(),
-          parent_or_guardian_name: form.guardianName.trim(),
-          primary_phone_number: form.primaryPhone.trim(),
-          emergency_contact: form.emergencyContact.trim(),
-          authorized_pickup_name: form.authorizedPickup.trim(),
-          medical_condition: form.medical.trim() || 'None reported',
-          photo_media_release: form.mediaRelease,
-          _source: FORM_SLUG,
-        },
+      await apiClient.registerChild({
+        childFullName: form.childName.trim(),
+        dateOfBirth: form.dob,
+        age,
+        gender: form.gender,
+        homeAddress: form.address.trim(),
+        parentOrGuardianName: form.guardianName.trim(),
+        primaryPhoneNumber: form.primaryPhone.trim(),
+        emergencyContact: form.emergencyContact.trim(),
+        authorizedPickupName: form.authorizedPickup.trim(),
+        medicalCondition: form.medical.trim() || 'None reported',
+        photoMediaRelease: form.mediaRelease === 'yes',
+        sourceChannel: 'frontend:web:children-registration',
       });
+      clearDraft();
       setForm(EMPTY);
+      setSavedLocally(false);
       setOpen(false);
       setDone(true);
     } catch {
+      // The entries are still in the form AND on the device — nothing is lost.
       setError(
-        'We could not submit the registration right now. Your entries are still here — please try again.'
+        `We couldn't reach the church system just now. Your entry is saved on this device — reopen this form to try again, or call us on ${CONTACT_INFO.phone} and we'll register your child.`
       );
+      setSavedLocally(true);
     } finally {
       setSubmitting(false);
     }
@@ -142,10 +195,7 @@ export function RegisterChildCta({
     <>
       <button
         type="button"
-        onClick={() => {
-          setError(null);
-          setOpen(true);
-        }}
+        onClick={openModal}
         className={buttonClass(variant)}
       >
         {label} <Arrow />
@@ -161,6 +211,16 @@ export function RegisterChildCta({
         forceBottomSheet
       >
         <form onSubmit={submit} className="space-y-6">
+          {savedLocally ? (
+            <p className="flex items-center gap-2 rounded-md bg-[var(--app-primary-10)] px-3 py-2 font-ui text-caption font-medium text-[var(--app-primary-dark)]">
+              <ShieldCheck
+                className="h-3.5 w-3.5 shrink-0"
+                aria-hidden="true"
+              />
+              Your entries are saved on this device.
+            </p>
+          ) : null}
+
           {/* ── The child ─────────────────────────────────── */}
           <fieldset className="space-y-4">
             <SectionLabel>The child</SectionLabel>

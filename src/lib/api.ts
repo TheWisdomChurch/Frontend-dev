@@ -23,6 +23,7 @@ import type {
   VisitRequestConfirmation,
   VisitServiceOption,
   PrayerRequestData,
+  ChildRegistrationData,
 } from './types';
 import type {
   LeadershipApplicationRequest,
@@ -929,6 +930,70 @@ export const apiClient = {
       body: JSON.stringify(body),
     });
     return unwrapData<unknown>(res);
+  },
+
+  /**
+   * Children's-ministry registration. Posts a structured record to the
+   * dedicated `/children/registrations` endpoint so the admin portal can count
+   * children and query by date of birth. If that endpoint is not yet deployed
+   * (404/405), it falls back to the audited public-form pipeline
+   * (`/forms/children-registration/submissions`), which still reaches the admin
+   * and emails the parent — so no submission is ever dropped on the floor.
+   */
+  async registerChild(payload: ChildRegistrationData): Promise<unknown> {
+    const body = {
+      childFullName: payload.childFullName,
+      dateOfBirth: payload.dateOfBirth,
+      age: payload.age,
+      gender: payload.gender,
+      homeAddress: payload.homeAddress,
+      parentOrGuardianName: payload.parentOrGuardianName,
+      primaryPhoneNumber: payload.primaryPhoneNumber,
+      emergencyContact: payload.emergencyContact,
+      authorizedPickupName: payload.authorizedPickupName,
+      medicalCondition: payload.medicalCondition || 'None reported',
+      photoMediaRelease: payload.photoMediaRelease,
+      sourceChannel:
+        payload.sourceChannel ?? 'frontend:web:children-registration',
+    };
+
+    try {
+      const res = await request<unknown>('/children/registrations', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      return unwrapData<unknown>(res);
+    } catch (error) {
+      if (
+        isApiError(error) &&
+        (error.statusCode === 404 || error.statusCode === 405)
+      ) {
+        const res = await request<unknown>(
+          '/forms/children-registration/submissions',
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              values: {
+                child_full_name: payload.childFullName,
+                child_date_of_birth: payload.dateOfBirth,
+                child_age: payload.age,
+                gender: payload.gender,
+                home_address: payload.homeAddress,
+                parent_or_guardian_name: payload.parentOrGuardianName,
+                primary_phone_number: payload.primaryPhoneNumber,
+                emergency_contact: payload.emergencyContact,
+                authorized_pickup_name: payload.authorizedPickupName,
+                medical_condition: payload.medicalCondition || 'None reported',
+                photo_media_release: payload.photoMediaRelease ? 'yes' : 'no',
+                _source: 'children-registration',
+              },
+            }),
+          }
+        );
+        return unwrapData<unknown>(res);
+      }
+      throw error;
+    }
   },
 
   async submitGivingIntent(payload: GivingIntentData): Promise<unknown> {

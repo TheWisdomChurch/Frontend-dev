@@ -52,7 +52,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
 const extraSections = (
   <>
-    <Section tone="dark">
+    <Section tone="dark" id="register-child" className="scroll-mt-24">
       <Container>
         <div className="grid gap-8 lg:grid-cols-[1.1fr_auto] lg:items-end lg:gap-16">
           <SectionHeader
@@ -90,7 +90,11 @@ export default function ChildrenMinistryPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={ministrySchema} />
-      <MinistryPageTemplate content={content} extra={extraSections} />
+      <MinistryPageTemplate
+        content={content}
+        extra={extraSections}
+        heroActions={<RegisterChildCta label="Register your child" />}
+      />
     </>
   );
 }

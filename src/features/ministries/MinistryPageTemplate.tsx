@@ -112,10 +112,13 @@ export type MinistryContent = {
 export default function MinistryPageTemplate({
   content,
   extra,
+  heroActions,
 }: {
   content: MinistryContent;
   /** Slot for a page-specific section (e.g. the children's photo carousel). */
   extra?: ReactNode;
+  /** Replace the default hero CTA link — e.g. a modal trigger. */
+  heroActions?: ReactNode;
 }) {
   const {
     hero,
@@ -140,9 +143,11 @@ export default function MinistryPageTemplate({
         imagePositionClassName={hero.imagePosition}
         priority
         actions={
-          <CtaLink href={primaryCta.href}>
-            {primaryCta.label} <ArrowRight className="ml-2 h-4 w-4" />
-          </CtaLink>
+          heroActions ?? (
+            <CtaLink href={primaryCta.href}>
+              {primaryCta.label} <ArrowRight className="ml-2 h-4 w-4" />
+            </CtaLink>
+          )
         }
       />
 
