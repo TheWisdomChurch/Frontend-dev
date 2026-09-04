@@ -209,7 +209,6 @@ export function ImageField({ field, value, error, onChange }: ImageFieldProps) {
       label={field.label}
       required={field.required}
       error={showError}
-      help={help}
     >
       <input
         ref={inputRef}
