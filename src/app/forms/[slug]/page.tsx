@@ -230,6 +230,18 @@ export default function PublicFormPage() {
     };
   }, [formSlug]);
 
+  // Mirror answers to the device as the member types — a refresh, a network
+  // drop, or an accidental tab close never loses what they entered.
+  useEffect(() => {
+    if (!formSlug || loading || submitted) return undefined;
+
+    const timer = window.setTimeout(() => {
+      writeFormDraft(formSlug, answers);
+    }, 400);
+
+    return () => window.clearTimeout(timer);
+  }, [formSlug, answers, loading, submitted]);
+
   const presentation = useMemo(() => {
     const settings = form?.settings;
     const formTitle = form?.title || 'Form';
