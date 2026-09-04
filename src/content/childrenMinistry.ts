@@ -1,4 +1,5 @@
 import type { MinistryContent } from '@/features/ministries/MinistryPageTemplate';
+import { CHILDREN_REGISTRATION_URL } from '@/features/ministries/childrenRegistrationLink';
 
 // Photos: real children's-ministry photos — `children-hero` (a child in her
 // Sunday best) is the hero, `children-group` (the class at the church banner)
@@ -14,7 +15,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     image: '/Picflow/children-hero.webp',
     imagePosition: 'object-[center_30%]',
   },
-  primaryCta: { label: 'Register your child', href: '#register-child' },
+  primaryCta: { label: 'Register your child', href: CHILDREN_REGISTRATION_URL },
   introduction: {
     label: 'A place built for children',
     title: 'Deep roots. Clear thinking. Real growth.',
