@@ -9,7 +9,10 @@ import {
 } from '@/lib/seo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
-import RegisterChildCta from '@/features/ministries/RegisterChildCta';
+import {
+  RegisterChildButton,
+  RegisterChildModal,
+} from '@/features/ministries/RegisterChild';
 import ChildrenGallery from './ChildrenGallery';
 
 const PATH = '/ministries/children';
@@ -52,6 +55,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
 const extraSections = (
   <>
+    <RegisterChildModal />
+
     <Section tone="dark" id="register-child" className="scroll-mt-24">
       <Container>
         <div className="grid gap-8 lg:grid-cols-[1.1fr_auto] lg:items-end lg:gap-16">
@@ -64,7 +69,7 @@ const extraSections = (
             size="sm"
           />
           <div className="lg:shrink-0">
-            <RegisterChildCta label="Register your child" />
+            <RegisterChildButton label="Register your child" />
           </div>
         </div>
       </Container>
@@ -93,7 +98,9 @@ export default function ChildrenMinistryPage() {
       <MinistryPageTemplate
         content={content}
         extra={extraSections}
-        heroActions={<RegisterChildCta label="Register your child" />}
+        heroActions={
+          <RegisterChildButton label="Register your child" size="lg" />
+        }
       />
     </>
   );

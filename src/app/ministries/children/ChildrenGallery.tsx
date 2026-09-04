@@ -7,20 +7,20 @@ import { IMAGE_QUALITY } from '@/shared/constants';
 
 const slides = [
   {
-    src: '/Picflow/children-hero.webp',
-    alt: "Children cheering at The Wisdom Church children's ministry",
+    src: '/Picflow/children-group.webp',
+    alt: "The children's class at The Wisdom Church, Lagos",
   },
   {
     src: '/Picflow/child.webp',
-    alt: 'A young child cared for in the nursery at The Wisdom Church',
-  },
-  {
-    src: '/Picflow/children-group.webp',
-    alt: "Children gathered together at The Wisdom Church children's ministry",
+    alt: 'A toddler at play in the nursery at The Wisdom Church',
   },
   {
     src: '/Picflow/child2.webp',
-    alt: 'A toddler at The Wisdom Church children’s ministry',
+    alt: 'A child dressed for Sunday at The Wisdom Church children’s ministry',
+  },
+  {
+    src: '/Picflow/children-hero.webp',
+    alt: 'A young girl in her Sunday best at The Wisdom Church',
   },
 ];
 

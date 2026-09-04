@@ -85,7 +85,7 @@ const ministries = [
       'A safe, joyful place where children are known, cared for, and taught the truth of God’s Word at their level.',
     href: '/ministries/children',
     image: '/Picflow/children-hero.webp',
-    position: 'object-center',
+    position: 'object-[center_20%]',
   },
 ] as const;
 

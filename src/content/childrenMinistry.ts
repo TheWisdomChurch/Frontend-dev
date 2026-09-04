@@ -1,10 +1,9 @@
 import type { MinistryContent } from '@/features/ministries/MinistryPageTemplate';
 
-// Photos: hero + intro use the real children's-ministry group photos
-// (`children-hero`, `children-group`), the intro/nursery frame uses `child`,
-// and the leader is the ministry director, Mrs Mojisola Oladejo
-// (`children-convener`). The in-page carousel (ChildrenGallery, passed as
-// `extra`) keeps its own set.
+// Photos: real children's-ministry photos — `children-hero` (a child in her
+// Sunday best) is the hero, `children-group` (the class at the church banner)
+// is the intro, and `child` / `child2` round out the gallery. The leader is the
+// ministry director, Mrs Mojisola Oladejo (`children-convener`).
 
 export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
   hero: {
@@ -13,7 +12,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     description:
       'Every child known, taught the truth, and equipped to transform their world for Christ — from nursery through the pre-teen years.',
     image: '/Picflow/children-hero.webp',
-    imagePosition: 'object-center',
+    imagePosition: 'object-[center_18%]',
   },
   primaryCta: { label: 'Register your child', href: '#register-child' },
   introduction: {
@@ -22,7 +21,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     body: 'We believe every child has the potential to make a lasting impact. So we partner with families to cultivate deep spiritual roots, intellectual clarity, and a commitment to personal growth — embedding faith and character into everything we do.',
     image: {
       src: '/Picflow/children-group.webp',
-      alt: "Children at The Wisdom Church children's ministry",
+      alt: "The children's class at The Wisdom Church",
     },
   },
   pillars: {

@@ -192,7 +192,8 @@ export interface ChildRegistrationData {
   homeAddress: string;
   parentOrGuardianName: string;
   primaryPhoneNumber: string;
-  emergencyContact: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
   authorizedPickupName: string;
   medicalCondition?: string;
   /** Consent to use the child's photo/video in church media. */
