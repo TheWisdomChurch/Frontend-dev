@@ -9,6 +9,7 @@ import {
 } from '@/lib/seo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
+import RegisterChildCta from '@/features/ministries/RegisterChildCta';
 import ChildrenGallery from './ChildrenGallery';
 
 const PATH = '/ministries/children';
@@ -49,19 +50,39 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   { name: "Children's Ministry", path: PATH },
 ]);
 
-const gallerySection = (
-  <Section tone="canvas">
-    <Container>
-      <SectionHeader
-        eyebrow="Life in our ministry"
-        title="A glimpse of what Sunday looks like for your child."
-        size="sm"
-      />
-      <div className="pt-8 lg:pt-10">
-        <ChildrenGallery />
-      </div>
-    </Container>
-  </Section>
+const extraSections = (
+  <>
+    <Section tone="dark">
+      <Container>
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_auto] lg:items-end lg:gap-16">
+          <SectionHeader
+            eyebrow="New here?"
+            title="Register your child in a"
+            accent="few minutes."
+            description="Tell us a little about your child — name, age, who may collect them, and any medical needs — so our trained team can care for them from their very first Sunday."
+            tone="dark"
+            size="sm"
+          />
+          <div className="lg:shrink-0">
+            <RegisterChildCta label="Register your child" />
+          </div>
+        </div>
+      </Container>
+    </Section>
+
+    <Section tone="canvas">
+      <Container>
+        <SectionHeader
+          eyebrow="Life in our ministry"
+          title="A glimpse of what Sunday looks like for your child."
+          size="sm"
+        />
+        <div className="pt-8 lg:pt-10">
+          <ChildrenGallery />
+        </div>
+      </Container>
+    </Section>
+  </>
 );
 
 export default function ChildrenMinistryPage() {
@@ -69,7 +90,7 @@ export default function ChildrenMinistryPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={ministrySchema} />
-      <MinistryPageTemplate content={content} extra={gallerySection} />
+      <MinistryPageTemplate content={content} extra={extraSections} />
     </>
   );
 }
