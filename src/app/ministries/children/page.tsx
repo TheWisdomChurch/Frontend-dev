@@ -10,9 +10,12 @@ import {
 import JsonLd from '@/shared/seo/JsonLd';
 import { ArrowRight } from 'lucide-react';
 
-import { Container, CtaLink, Section, SectionHeader } from '@/shared/ui/layout';
+import { Container, Section, SectionHeader } from '@/shared/ui/layout';
 import MinistryGallery from '@/features/ministries/MinistryGallery';
-import { CHILDREN_REGISTRATION_URL } from '@/features/ministries/childrenRegistrationLink';
+import {
+  RegisterChildButton,
+  RegisterChildModalHost,
+} from '@/features/ministries/RegisterChildModal';
 
 const PATH = '/ministries/children';
 const DESCRIPTION =
@@ -66,9 +69,9 @@ const extraSections = (
             size="sm"
           />
           <div className="lg:shrink-0">
-            <CtaLink href={CHILDREN_REGISTRATION_URL}>
+            <RegisterChildButton>
               Register your child <ArrowRight className="ml-2 h-4 w-4" />
-            </CtaLink>
+            </RegisterChildButton>
           </div>
         </div>
       </Container>
@@ -113,7 +116,16 @@ export default function ChildrenMinistryPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={ministrySchema} />
-      <MinistryPageTemplate content={content} extra={extraSections} />
+      <MinistryPageTemplate
+        content={content}
+        extra={extraSections}
+        heroActions={
+          <RegisterChildButton>
+            Register your child <ArrowRight className="ml-2 h-4 w-4" />
+          </RegisterChildButton>
+        }
+      />
+      <RegisterChildModalHost />
     </>
   );
 }
