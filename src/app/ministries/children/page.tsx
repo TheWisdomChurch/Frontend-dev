@@ -11,7 +11,7 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { ArrowRight } from 'lucide-react';
 
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
-import MinistryGallery from '@/features/ministries/MinistryGallery';
+import ChildrenPhotoStory from '@/features/ministries/ChildrenPhotoStory';
 import {
   RegisterChildButton,
   RegisterChildModalHost,
@@ -57,6 +57,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
 const extraSections = (
   <>
+    <ChildrenPhotoStory />
+
     <Section tone="dark" id="register-child" className="scroll-mt-24">
       <Container>
         <div className="grid gap-8 lg:grid-cols-[1.1fr_auto] lg:items-end lg:gap-16">
@@ -73,38 +75,6 @@ const extraSections = (
               Register your child <ArrowRight className="ml-2 h-4 w-4" />
             </RegisterChildButton>
           </div>
-        </div>
-      </Container>
-    </Section>
-
-    <Section tone="canvas">
-      <Container>
-        <SectionHeader
-          eyebrow="Life in our ministry"
-          title="A glimpse of what Sunday looks like for your child."
-          size="sm"
-        />
-        <div className="mx-auto max-w-3xl pt-8 lg:pt-10">
-          <MinistryGallery
-            images={[
-              {
-                src: '/Picflow/children-group.webp',
-                alt: "The children's class at The Wisdom Church, Lagos",
-              },
-              {
-                src: '/Picflow/child.webp',
-                alt: 'A toddler at play in the nursery at The Wisdom Church',
-              },
-              {
-                src: '/Picflow/child2.webp',
-                alt: 'A child dressed for Sunday at The Wisdom Church children’s ministry',
-              },
-              {
-                src: '/Picflow/children-hero.webp',
-                alt: 'A young girl in her Sunday best at The Wisdom Church',
-              },
-            ]}
-          />
         </div>
       </Container>
     </Section>

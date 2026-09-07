@@ -78,15 +78,20 @@
    * TYPE SCALE  (bridged to Tailwind `text-*` utilities in config)     *
    * Compact editorial scale: body ~15–16px, headings restrained. Buttons  *
    * keep their own size scale in button.tsx.                             *
+   *                                                                    *
+   * Every step is `clamp(min, <rem> + <vw>, max)` — the rem floor means  *
+   * the text still scales with browser zoom / user font settings, and    *
+   * the modest vw term keeps growth gentle so nothing balloons on        *
+   * tablets or wide screens. Maxima are deliberately conservative.       *
    * ------------------------------------------------------------------ */
-  --type-display-xl: clamp(2.75rem, 6vw, 5rem);
-  --type-display-lg: clamp(2.4rem, 4.6vw, 3.9rem);
-  --type-display-md: clamp(1.95rem, 3.2vw, 2.9rem);
-  --type-display-sm: clamp(1.6rem, 2.4vw, 2.2rem);
-  --type-heading-lg: clamp(1.35rem, 1.15rem + 1vw, 1.8rem);
-  --type-heading-md: clamp(1.18rem, 1.05rem + 0.65vw, 1.45rem);
-  --type-heading-sm: clamp(1.05rem, 0.98rem + 0.32vw, 1.2rem);
-  --type-lead: clamp(1rem, 0.95rem + 0.35vw, 1.18rem);
+  --type-display-xl: clamp(2.25rem, 1.5rem + 3.5vw, 3.85rem);
+  --type-display-lg: clamp(2rem, 1.55rem + 2.1vw, 3.05rem);
+  --type-display-md: clamp(1.7rem, 1.45rem + 1.35vw, 2.4rem);
+  --type-display-sm: clamp(1.45rem, 1.33rem + 0.65vw, 1.85rem);
+  --type-heading-lg: clamp(1.3rem, 1.18rem + 0.6vw, 1.7rem);
+  --type-heading-md: clamp(1.15rem, 1.06rem + 0.42vw, 1.4rem);
+  --type-heading-sm: clamp(1.03rem, 0.97rem + 0.28vw, 1.18rem);
+  --type-lead: clamp(1rem, 0.96rem + 0.3vw, 1.15rem);
   --type-body-lg: clamp(0.9375rem, 0.92rem + 0.15vw, 1rem);
   --type-body-md: clamp(0.9rem, 0.88rem + 0.12vw, 0.9688rem);
   --type-body-sm: clamp(0.8438rem, 0.83rem + 0.08vw, 0.9rem);

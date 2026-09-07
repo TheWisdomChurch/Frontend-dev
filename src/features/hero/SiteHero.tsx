@@ -110,10 +110,10 @@ export default function SiteHero({
 
           <h1
             className={cn(
-              'w-full max-w-full font-ui font-black leading-[0.96] tracking-[-0.03em] text-white [text-shadow:0_2px_28px_black] [text-wrap:balance]',
+              'w-full max-w-full font-ui font-black leading-[1.02] tracking-[-0.03em] text-white [text-shadow:0_2px_28px_black] [text-wrap:balance] [overflow-wrap:anywhere]',
               isHome
-                ? 'text-[clamp(2.35rem,8vw,5.5rem)] 2xl:text-[6.25rem]'
-                : 'text-[clamp(2.15rem,7vw,5rem)] 2xl:text-[5.5rem]'
+                ? 'text-[clamp(2.1rem,1.15rem+4.3vw,3.9rem)] 2xl:text-[4.25rem]'
+                : 'text-[clamp(2rem,1.2rem+3.6vw,3.35rem)] 2xl:text-[3.6rem]'
             )}
           >
             {lines.map((line, index) => (

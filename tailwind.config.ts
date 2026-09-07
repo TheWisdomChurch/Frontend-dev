@@ -68,14 +68,25 @@ export default {
       fontSize: {
         // Fluid overrides for Tailwind's large display sizes so a bare
         // `text-6xl` (or `sm:text-5xl`) interpolates smoothly instead of
-        // snapping to a fixed rem that overflows narrow viewports. These
-        // replace the old `!important` clamp block in globals.scss.
-        '4xl': ['clamp(1.55rem, 3vw, 2.25rem)', { lineHeight: '1.12' }],
-        '5xl': ['clamp(1.8rem, 4vw, 3rem)', { lineHeight: '1.08' }],
-        '6xl': ['clamp(2rem, 5vw, 3.75rem)', { lineHeight: '1.05' }],
-        '7xl': ['clamp(2rem, 6vw, 4.5rem)', { lineHeight: '1.05' }],
-        '8xl': ['clamp(2.2rem, 7vw, 6rem)', { lineHeight: '1.05' }],
-        '9xl': ['clamp(2.4rem, 9vw, 8rem)', { lineHeight: '1.05' }],
+        // snapping to a fixed rem that overflows narrow viewports. Each is
+        // `clamp(min, <rem> + <vw>, max)` — a rem floor so the size still
+        // responds to browser zoom, a gentle vw term so it never balloons
+        // on tablets/wide screens, and a conservative max.
+        '4xl': ['clamp(1.5rem, 1.3rem + 1vw, 2rem)', { lineHeight: '1.15' }],
+        '5xl': [
+          'clamp(1.7rem, 1.42rem + 1.4vw, 2.45rem)',
+          { lineHeight: '1.1' },
+        ],
+        '6xl': ['clamp(1.9rem, 1.5rem + 2vw, 3rem)', { lineHeight: '1.08' }],
+        '7xl': [
+          'clamp(2.05rem, 1.6rem + 2.5vw, 3.5rem)',
+          { lineHeight: '1.06' },
+        ],
+        '8xl': [
+          'clamp(2.2rem, 1.7rem + 3.1vw, 4.15rem)',
+          { lineHeight: '1.04' },
+        ],
+        '9xl': ['clamp(2.4rem, 1.8rem + 3.9vw, 5rem)', { lineHeight: '1.03' }],
         'display-xl': 'var(--type-display-xl)',
         'display-lg': 'var(--type-display-lg)',
         'display-md': 'var(--type-display-md)',
