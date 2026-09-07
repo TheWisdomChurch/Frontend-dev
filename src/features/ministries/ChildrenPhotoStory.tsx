@@ -1,111 +1,168 @@
 import Image from 'next/image';
-import type { CSSProperties } from 'react';
+import type { ReactNode } from 'react';
 
 import { cn } from '@/lib/cn';
 import { IMAGE_QUALITY } from '@/shared/constants';
-import { Container, Section, SectionHeader, Split } from '@/shared/ui/layout';
+import { Container, Section, eyebrowClass } from '@/shared/ui/layout';
 
 /* ============================================================================
    CHILDREN'S MINISTRY — PHOTO STORY
 
    A four-chapter photo essay of one Sunday morning: the welcome at the door,
    the lesson in the classroom, the questions that follow, and the joy that
-   runs through all of it.
+   runs through all of it — closed by a contact-sheet of the whole morning.
 
-   Sizing discipline — every photograph is rendered through <StoryFrame>, which
-   locks it into a fixed aspect-ratio box and fills it with `object-cover`. No
-   raw <img>, no intrinsic-size layout: within any row the frames share one
-   ratio so their heights match exactly, whatever mix of portrait and landscape
-   originals they were shot in.
+   Sizing discipline — every photograph is an overlay <StoryCard>. On desktop
+   the cards are laid into a 12-column mosaic with fixed row heights, so a mix
+   of portrait and landscape originals still tiles flush with no ragged edges.
+   Below `lg` the mosaic collapses to two columns, then one, and the captions
+   sit permanently on the image instead of revealing on hover.
 
-   Motion is opt-in and handled globally (GlobalScrollEffects):
-   - `data-motion-group` → direct children reveal in a stagger on scroll-in.
-   - hover lifts a slow `scale` on the image, inside the clipped frame.
-   Both collapse under `prefers-reduced-motion`.
+   Motion (all opt-in, handled by GlobalScrollEffects, all reduced-motion safe):
+   - `data-gsap="reveal"`        → staggered fade / rise as each block scrolls in
+   - `data-parallax-global`      → slow vertical drift on the framed image
+   - hover / focus (desktop)     → image scale + caption slide-up over a scrim
 ============================================================================ */
 
-type Ratio = 'wide' | 'landscape' | 'portrait' | 'square';
-
-const ratioClass: Record<Ratio, string> = {
-  wide: 'aspect-[16/10] sm:aspect-[16/9]',
-  landscape: 'aspect-[4/3]',
-  portrait: 'aspect-[4/5]',
-  square: 'aspect-square',
-};
+type Tone = 'light' | 'dark';
 
 type StoryPhoto = {
   src: string;
   alt: string;
-  caption?: string;
+  caption: string;
+  /** object-position for the crop inside the fixed frame. */
+  position?: string;
 };
 
-function StoryFrame({
+/* ── Overlay photo card ───────────────────────────────────────────────── */
+
+function StoryCard({
   photo,
-  ratio,
   sizes,
-  priority = false,
   className,
-  style,
+  depth = 0.12,
+  priority = false,
+  tone = 'light',
 }: {
   photo: StoryPhoto;
-  ratio: Ratio;
   sizes: string;
-  priority?: boolean;
   className?: string;
-  style?: CSSProperties;
+  depth?: number;
+  priority?: boolean;
+  tone?: Tone;
 }) {
   return (
     <figure
-      className={cn('group/frame flex flex-col', className)}
-      style={style}
+      tabIndex={0}
+      data-gsap="reveal"
+      className={cn(
+        'group relative isolate flex min-h-[17rem] overflow-hidden rounded-image bg-[var(--app-surface-2)] outline-none ring-[var(--app-primary)] transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-offset-4 sm:min-h-[20rem]',
+        tone === 'dark'
+          ? 'focus-visible:ring-offset-[var(--app-dark)]'
+          : 'focus-visible:ring-offset-[var(--app-canvas)]',
+        className
+      )}
     >
       <div
-        className={cn(
-          'relative w-full overflow-hidden rounded-image bg-[var(--app-surface-2)] ring-1 ring-inset ring-[var(--app-border)]',
-          ratioClass[ratio]
-        )}
+        data-parallax-global={depth}
+        className="absolute inset-x-0 -inset-y-[6%]"
       >
         <Image
           src={photo.src}
           alt={photo.alt}
           fill
           priority={priority}
-          sizes={sizes}
           quality={IMAGE_QUALITY}
-          className="object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover/frame:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover/frame:scale-100"
-        />
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover/frame:opacity-100"
+          sizes={sizes}
+          className={cn(
+            'object-cover transition-transform duration-[900ms] ease-out will-change-transform motion-reduce:transition-none md:group-hover:scale-[1.045] md:group-focus:scale-[1.045]',
+            photo.position ?? 'object-center'
+          )}
         />
       </div>
-      {photo.caption ? (
-        <figcaption className="mt-3 font-ui text-caption leading-relaxed text-[var(--app-subtle)]">
+
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent transition-opacity duration-500 motion-reduce:transition-none md:from-black/80 md:opacity-0 md:group-hover:opacity-100 md:group-focus:opacity-100"
+      />
+
+      <figcaption className="relative z-10 mt-auto w-full p-5 transition-all duration-500 ease-out motion-reduce:transition-none sm:p-6 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus:translate-y-0 md:group-focus:opacity-100 lg:p-7">
+        <p className="max-w-sm font-ui text-body-sm leading-relaxed text-white sm:text-body-md">
           {photo.caption}
-        </figcaption>
-      ) : null}
+        </p>
+      </figcaption>
     </figure>
   );
 }
 
-/* ── Photographs, grouped by chapter ──────────────────────────────────── */
+/* ── Chapter marker ──────────────────────────────────────────────────── */
 
-const WELCOME: StoryPhoto = {
-  src: '/Picflow/children-welcome-highfive.webp',
-  alt: 'Two boys with backpacks sharing a high-five as they arrive for children’s church at The Wisdom Church',
-  caption: 'The first hello — every child greeted by name at the door.',
-};
+function ChapterHeader({
+  index,
+  kicker,
+  title,
+  lede,
+  tone = 'light',
+  className,
+}: {
+  index: string;
+  kicker: string;
+  title: ReactNode;
+  lede?: string;
+  tone?: Tone;
+  className?: string;
+}) {
+  return (
+    <div
+      data-gsap="reveal"
+      className={cn(tone === 'dark' && 'tone-dark', className)}
+    >
+      <div className="flex items-center gap-4 text-current">
+        <span
+          className={cn(
+            'font-ui text-[2.1rem] font-semibold leading-none tracking-[-0.04em] sm:text-[2.75rem]',
+            tone === 'dark'
+              ? 'text-[var(--app-primary)]/45'
+              : 'text-[var(--app-primary)]/30'
+          )}
+        >
+          {index}
+        </span>
+        <span aria-hidden="true" className="h-px flex-1 bg-current/15" />
+        <span className={eyebrowClass}>{kicker}</span>
+      </div>
+      <h2 className="mt-5 text-balance font-ui text-heading-md font-semibold leading-[1.12] tracking-[-0.025em] text-current sm:text-heading-lg">
+        {title}
+      </h2>
+      {lede ? (
+        <p className="mt-4 max-w-[54ch] font-ui text-body-md leading-[1.7] text-[var(--app-muted)]">
+          {lede}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/* ── Photographs, grouped by chapter ─────────────────────────────────── */
 
 const ARRIVAL: readonly StoryPhoto[] = [
   {
+    src: '/Picflow/children-welcome-highfive.webp',
+    alt: 'Two boys with backpacks sharing a high-five as they arrive for children’s church at The Wisdom Church',
+    caption: 'The first hello — every child greeted by name at the door.',
+    position: 'object-center',
+  },
+  {
     src: '/Picflow/children-arrival-banner.webp',
     alt: 'A boy with a backpack walking past the children’s ministry banner reading “Equipping and Empowering for Greatness”',
-    caption: 'Signed in and pointed the right way.',
+    caption: 'Signed in, and pointed the right way.',
+    position: 'object-[center_25%]',
   },
   {
     src: '/Picflow/children-arrival-walk.webp',
     alt: 'A young boy carrying his bag into the children’s ministry space at The Wisdom Church',
     caption: 'Walking in on his own — settled, unhurried.',
+    position: 'object-[center_20%]',
   },
 ];
 
@@ -113,36 +170,56 @@ const LESSON: readonly StoryPhoto[] = [
   {
     src: '/Picflow/children-lesson-armor-group.webp',
     alt: 'A group of children colouring “The Armor of God” worksheets together at a low table',
-    caption: 'This week: the Armor of God.',
-  },
-  {
-    src: '/Picflow/children-lesson-worksheets.webp',
-    alt: 'Close-up of children’s hands colouring “The Armor of God” activity sheets with crayons',
-    caption: 'Scripture they can hold, colour, and take home.',
-  },
-  {
-    src: '/Picflow/children-lesson-coloring.webp',
-    alt: 'A girl in a denim shirt concentrating on colouring her worksheet at an orange table',
-    caption: 'Heads down, fully in it.',
+    caption: 'This week: the Armor of God, worked through together.',
+    position: 'object-center',
   },
   {
     src: '/Picflow/children-classroom-circle.webp',
     alt: 'Children gathered around a table in the children’s ministry classroom, working and talking together',
     caption: 'Small tables, trained leaders, every child known.',
+    position: 'object-[center_30%]',
+  },
+  {
+    src: '/Picflow/children-lesson-worksheets.webp',
+    alt: 'Close-up of children’s hands colouring “The Armor of God” activity sheets with crayons',
+    caption: 'Scripture they can hold, colour, and carry home.',
+    position: 'object-center',
+  },
+  {
+    src: '/Picflow/children-lesson-coloring.webp',
+    alt: 'A girl in a denim shirt concentrating on colouring her worksheet at an orange table',
+    caption: 'Heads down, fully in it.',
+    position: 'object-[center_35%]',
   },
 ];
 
 const DISCUSSION: StoryPhoto = {
   src: '/Picflow/children-discussion.webp',
   alt: 'A girl in a denim shirt mid-sentence, talking with the other children around her table',
-  caption: 'The questions that come after the lesson.',
+  caption:
+    'The questions that come after the lesson — and the room to ask them.',
+  position: 'object-[center_30%]',
 };
 
 const JOY: StoryPhoto = {
   src: '/Picflow/children-joy-wave.webp',
   alt: 'A toddler in a pink tulle dress raising her hand with a wave on the play mat',
-  caption: 'And, always, the joy of just being here.',
+  caption: 'And, running through all of it, the joy of just being here.',
+  position: 'object-[center_15%]',
 };
+
+/** Every frame from the morning, in sequence — the contact sheet. */
+const CONTACT_SHEET: readonly StoryPhoto[] = [
+  ARRIVAL[0],
+  ARRIVAL[1],
+  ARRIVAL[2],
+  LESSON[1],
+  LESSON[0],
+  LESSON[2],
+  LESSON[3],
+  DISCUSSION,
+  JOY,
+];
 
 export default function ChildrenPhotoStory() {
   return (
@@ -150,33 +227,33 @@ export default function ChildrenPhotoStory() {
       {/* ── Chapter 1 — Arrival ─────────────────────────────────── */}
       <Section tone="canvas">
         <Container>
-          <SectionHeader
-            eyebrow="Life in our ministry"
+          <ChapterHeader
+            index="01"
+            kicker="The welcome"
             title="A Sunday morning, from the first hello."
-            description="This is an ordinary week in the children’s ministry — the welcome at the door, the lesson at the table, and everything that grows out of it."
-            size="sm"
+            lede="An ordinary week in the children’s ministry — the welcome at the door, the lesson at the table, and everything that grows out of it."
           />
 
-          <div
-            className="mt-10 space-y-4 sm:space-y-6 lg:mt-14"
-            data-motion-group
-          >
-            <StoryFrame
-              photo={WELCOME}
-              ratio="wide"
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:mt-14 lg:grid-cols-12 lg:auto-rows-[clamp(20rem,24vw,24rem)]">
+            <StoryCard
+              photo={ARRIVAL[0]}
               priority
-              sizes="(min-width: 1280px) 1120px, 100vw"
+              depth={0.1}
+              sizes="(max-width: 1023px) 100vw, 58vw"
+              className="sm:col-span-2 sm:min-h-[24rem] lg:col-span-7 lg:row-span-2 lg:h-full"
             />
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-              {ARRIVAL.map(photo => (
-                <StoryFrame
-                  key={photo.src}
-                  photo={photo}
-                  ratio="portrait"
-                  sizes="(min-width: 640px) 50vw, 100vw"
-                />
-              ))}
-            </div>
+            <StoryCard
+              photo={ARRIVAL[1]}
+              depth={0.16}
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 42vw"
+              className="lg:col-span-5 lg:h-full"
+            />
+            <StoryCard
+              photo={ARRIVAL[2]}
+              depth={0.13}
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 42vw"
+              className="lg:col-span-5 lg:h-full"
+            />
           </div>
         </Container>
       </Section>
@@ -184,26 +261,43 @@ export default function ChildrenPhotoStory() {
       {/* ── Chapter 2 — The lesson ──────────────────────────────── */}
       <Section tone="dark">
         <Container>
-          <SectionHeader
-            eyebrow="In the classroom"
+          <ChapterHeader
+            index="02"
+            kicker="In the classroom"
             title="The Bible, brought to life at their level."
-            description="Scripture is taught in a way young minds can hold on to — engaging, hands-on, and built to be remembered long after Sunday."
+            lede="Scripture is taught in a way young minds can hold on to — engaging, hands-on, and built to be remembered long after Sunday."
             tone="dark"
-            size="sm"
           />
 
-          <div
-            className="mt-10 grid gap-4 sm:grid-cols-2 sm:gap-6 lg:mt-14"
-            data-motion-group
-          >
-            {LESSON.map(photo => (
-              <StoryFrame
-                key={photo.src}
-                photo={photo}
-                ratio="landscape"
-                sizes="(min-width: 640px) 46vw, 100vw"
-              />
-            ))}
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:mt-14 lg:grid-cols-12 lg:auto-rows-[clamp(18rem,21vw,21rem)]">
+            <StoryCard
+              photo={LESSON[0]}
+              tone="dark"
+              depth={0.1}
+              sizes="(max-width: 1023px) 100vw, 66vw"
+              className="sm:col-span-2 lg:col-span-8 lg:h-full"
+            />
+            <StoryCard
+              photo={LESSON[1]}
+              tone="dark"
+              depth={0.17}
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+              className="sm:row-span-2 sm:min-h-full lg:col-span-4 lg:row-span-2 lg:h-full"
+            />
+            <StoryCard
+              photo={LESSON[2]}
+              tone="dark"
+              depth={0.13}
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+              className="lg:col-span-4 lg:h-full"
+            />
+            <StoryCard
+              photo={LESSON[3]}
+              tone="dark"
+              depth={0.15}
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+              className="lg:col-span-4 lg:h-full"
+            />
           </div>
         </Container>
       </Section>
@@ -211,43 +305,80 @@ export default function ChildrenPhotoStory() {
       {/* ── Chapter 3 — The questions ───────────────────────────── */}
       <Section tone="surface">
         <Container>
-          <Split className="lg:grid-cols-[0.85fr_1.15fr]">
-            <SectionHeader
-              eyebrow="Learning to think"
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+            <ChapterHeader
+              index="03"
+              kicker="Learning to think"
               title="Room to ask, wonder, and talk it through."
-              description="We want children to do more than memorise. Around these tables they learn to ask good questions, listen to each other, and reason through what they’re being taught."
-              size="sm"
+              lede="We want children to do more than memorise. Around these tables they learn to ask good questions, listen to one another, and reason through what they are taught."
+              className="lg:col-span-4"
             />
-            <div data-motion-group>
-              <StoryFrame
+            <div className="lg:col-span-8">
+              <StoryCard
                 photo={DISCUSSION}
-                ratio="landscape"
-                sizes="(min-width: 1024px) 60vw, 100vw"
+                depth={0.12}
+                sizes="(max-width: 1023px) 100vw, 62vw"
+                className="min-h-[20rem] sm:min-h-[26rem] lg:h-[clamp(24rem,38vw,32rem)]"
               />
             </div>
-          </Split>
+          </div>
         </Container>
       </Section>
 
       {/* ── Chapter 4 — The joy ─────────────────────────────────── */}
       <Section tone="canvas">
         <Container>
-          <Split reverse className="lg:grid-cols-[1.15fr_0.85fr]">
-            <div data-motion-group>
-              <StoryFrame
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+            <div className="order-2 lg:order-none lg:col-span-5">
+              <StoryCard
                 photo={JOY}
-                ratio="portrait"
-                sizes="(min-width: 1024px) 42vw, 100vw"
-                className="mx-auto max-w-md lg:mx-0"
+                depth={0.14}
+                sizes="(max-width: 1023px) 100vw, 40vw"
+                className="mx-auto min-h-[24rem] max-w-md sm:min-h-[30rem] lg:h-[clamp(26rem,40vw,34rem)] lg:max-w-none"
               />
             </div>
-            <SectionHeader
-              eyebrow="Every single week"
+            <ChapterHeader
+              index="04"
+              kicker="Every single week"
               title="And there is so much joy."
-              description="For all the structure, what children remember most is that this is a place they’re glad to come back to. That’s the point — a faith they’re happy to grow up inside."
-              size="sm"
+              lede="For all the structure, what children remember most is that this is a place they are glad to come back to. That is the point — a faith they are happy to grow up inside."
+              className="order-1 lg:order-none lg:col-span-7"
             />
-          </Split>
+          </div>
+        </Container>
+      </Section>
+
+      {/* ── Contact sheet — the whole morning ───────────────────── */}
+      <Section tone="dark" className="bg-[var(--app-dark-2)]" compact>
+        <Container>
+          <div className="flex items-center gap-4" data-gsap="reveal">
+            <span className={eyebrowClass}>The whole morning</span>
+            <span aria-hidden="true" className="h-px flex-1 bg-white/15" />
+          </div>
+
+          <div
+            data-gsap="reveal"
+            className="mt-6 -mx-[var(--page-gutter)] flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-[var(--page-gutter)] pb-3 [scrollbar-width:thin] sm:gap-4"
+          >
+            {CONTACT_SHEET.map(photo => (
+              <figure
+                key={photo.src}
+                className="group relative aspect-[3/4] w-[9.5rem] shrink-0 snap-start overflow-hidden rounded-image bg-[var(--app-surface-2)] ring-1 ring-inset ring-white/10 sm:w-[12rem] lg:w-[13.5rem]"
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  quality={IMAGE_QUALITY}
+                  sizes="(max-width: 639px) 40vw, 13.5rem"
+                  className={cn(
+                    'object-cover transition-transform duration-700 ease-out motion-reduce:transition-none md:group-hover:scale-[1.06]',
+                    photo.position ?? 'object-center'
+                  )}
+                />
+              </figure>
+            ))}
+          </div>
         </Container>
       </Section>
     </>
