@@ -15,7 +15,7 @@ import SiteHero from '@/features/hero/SiteHero';
 import { DarkCard } from '@/features/leadership/LeadershipCards';
 import type {
   LeadershipMember,
-  LeadershipRole,
+  LeadershipRoleSlug,
 } from '@/domain/leadership/types';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
@@ -50,7 +50,7 @@ export const metadata: Metadata = buildPageMetadata({
   ],
 });
 
-const SENIOR_ROLES: LeadershipRole[] = [
+const SENIOR_ROLES: LeadershipRoleSlug[] = [
   'senior_pastor',
   'associate_pastor',
   'reverend',
@@ -83,7 +83,7 @@ export default async function AboutPage() {
       ? leadershipResult.value
       : ([] as LeadershipMember[])
   )
-    .filter(leader => SENIOR_ROLES.includes(leader.role))
+    .filter(leader => (SENIOR_ROLES as string[]).includes(leader.role))
     .slice(0, 2);
 
   return (
