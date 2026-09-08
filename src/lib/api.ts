@@ -294,14 +294,6 @@ function resolveMediaUrl(url: string | null | undefined): string | null {
   return `${API_ORIGIN}${value.startsWith('/') ? '' : '/'}${value}`;
 }
 
-const LEADERSHIP_ROLES: readonly LeadershipRole[] = [
-  'senior_pastor',
-  'associate_pastor',
-  'deacon',
-  'deaconess',
-  'reverend',
-];
-
 function mapBackendLeader(input: unknown): LeadershipMember | null {
   if (!isRecord(input)) return null;
 
@@ -312,12 +304,8 @@ function mapBackendLeader(input: unknown): LeadershipMember | null {
     asNonEmptyString(input.lastName) ?? asNonEmptyString(input.last_name);
   if (!id || (!firstName && !lastName)) return null;
 
-  const rawRole = asNonEmptyString(input.role);
-  const role: LeadershipRole = LEADERSHIP_ROLES.includes(
-    rawRole as LeadershipRole
-  )
-    ? (rawRole as LeadershipRole)
-    : 'deacon';
+  // Role is free text entered by the applicant — keep it exactly as stored.
+  const role: LeadershipRole = asNonEmptyString(input.role) ?? 'Leadership';
 
   const status =
     (asNonEmptyString(input.status) as LeadershipStatus | undefined) ??

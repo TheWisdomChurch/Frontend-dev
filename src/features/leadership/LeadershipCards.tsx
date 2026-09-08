@@ -1,21 +1,11 @@
-import type {
-  LeadershipMember,
-  LeadershipRole,
-} from '@/domain/leadership/types';
+import type { LeadershipMember } from '@/domain/leadership/types';
+import { formatLeadershipRole } from '@/domain/leadership/types';
 import { Media } from '@/shared/ui/Media';
 import { cn } from '@/lib/cn';
 
 // Shared between /leadership (the full directory) and About's leadership
 // spotlight — one definition of what a leader card looks like, so the two
 // pages can never visually or structurally drift apart.
-
-export const ROLE_LABEL: Record<LeadershipRole, string> = {
-  senior_pastor: 'Senior Pastor',
-  associate_pastor: 'Associate Pastor',
-  deacon: 'Deacon',
-  deaconess: 'Deaconess',
-  reverend: 'Reverend',
-};
 
 export function initials(first = '', last = '') {
   return `${first.trim()[0] ?? ''}${last.trim()[0] ?? ''}`.toUpperCase() || '—';
@@ -32,7 +22,7 @@ type LeaderCardProps = { leader: LeadershipMember; tone?: 'canvas' | 'dark' };
 
 export function LeaderCard({ leader }: LeaderCardProps) {
   const name = `${leader.firstName} ${leader.lastName}`.trim();
-  const role = ROLE_LABEL[leader.role];
+  const role = formatLeadershipRole(leader.role);
 
   return (
     <article

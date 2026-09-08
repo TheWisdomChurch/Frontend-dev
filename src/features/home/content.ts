@@ -29,7 +29,7 @@ export const HOME_COPY = {
     connect: 'Connect with us',
   },
   hero: {
-    eyebrow: 'The Wisdom Church · A Spirit-filled church in Lekki-Epe, Lagos',
+    eyebrow: 'The Wisdom Church · A Spirit-filled wave of Greatness',
     titleLead: 'Raising ',
     titleAccent: 'Believers',
     titleTail: ' for a life of Impact',

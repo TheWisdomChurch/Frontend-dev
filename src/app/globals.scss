@@ -78,15 +78,20 @@
    * TYPE SCALE  (bridged to Tailwind `text-*` utilities in config)     *
    * Compact editorial scale: body ~15–16px, headings restrained. Buttons  *
    * keep their own size scale in button.tsx.                             *
+   *                                                                    *
+   * Every step is `clamp(min, <rem> + <vw>, max)` — the rem floor means  *
+   * the text still scales with browser zoom / user font settings, and    *
+   * the modest vw term keeps growth gentle so nothing balloons on        *
+   * tablets or wide screens. Maxima are deliberately conservative.       *
    * ------------------------------------------------------------------ */
-  --type-display-xl: clamp(2.75rem, 6vw, 5rem);
-  --type-display-lg: clamp(2.4rem, 4.6vw, 3.9rem);
-  --type-display-md: clamp(1.95rem, 3.2vw, 2.9rem);
-  --type-display-sm: clamp(1.6rem, 2.4vw, 2.2rem);
-  --type-heading-lg: clamp(1.35rem, 1.15rem + 1vw, 1.8rem);
-  --type-heading-md: clamp(1.18rem, 1.05rem + 0.65vw, 1.45rem);
-  --type-heading-sm: clamp(1.05rem, 0.98rem + 0.32vw, 1.2rem);
-  --type-lead: clamp(1rem, 0.95rem + 0.35vw, 1.18rem);
+  --type-display-xl: clamp(2.05rem, 1.5rem + 2.6vw, 3.4rem);
+  --type-display-lg: clamp(1.85rem, 1.52rem + 1.6vw, 2.75rem);
+  --type-display-md: clamp(1.6rem, 1.42rem + 0.95vw, 2.2rem);
+  --type-display-sm: clamp(1.38rem, 1.29rem + 0.5vw, 1.72rem);
+  --type-heading-lg: clamp(1.22rem, 1.13rem + 0.44vw, 1.55rem);
+  --type-heading-md: clamp(1.1rem, 1.04rem + 0.32vw, 1.32rem);
+  --type-heading-sm: clamp(1rem, 0.96rem + 0.22vw, 1.14rem);
+  --type-lead: clamp(0.98rem, 0.95rem + 0.24vw, 1.1rem);
   --type-body-lg: clamp(0.9375rem, 0.92rem + 0.15vw, 1rem);
   --type-body-md: clamp(0.9rem, 0.88rem + 0.12vw, 0.9688rem);
   --type-body-sm: clamp(0.8438rem, 0.83rem + 0.08vw, 0.9rem);
@@ -1004,7 +1009,9 @@ body.nav-open {
 
 .nav-item__link {
   font-family: var(--font-sans, sans-serif);
-  font-size: clamp(2.1rem, 4.5vw, 3.6rem);
+  /* rem floor + gentle vw so the overlay menu scales with zoom and never
+     overgrows on wide screens. */
+  font-size: clamp(1.9rem, 1.45rem + 2.2vw, 3rem);
   font-weight: 400;
   line-height: 1;
   color: rgba(255, 255, 255, 0.88);
@@ -1634,11 +1641,110 @@ body.nav-open {
   }
 
   .nav-item__link {
-    font-size: clamp(1.8rem, 8vw, 2.4rem);
+    font-size: clamp(1.55rem, 1.15rem + 2vw, 2.15rem);
   }
 
   .nav-overlay__close-label {
     display: none;
+  }
+}
+
+/* =========================
+   HERO — headline sheen + ambient motion
+   Every SiteHero headline carries the same slow light sweep: a gold
+   sheen on the accent line, a soft specular glint on the white lines.
+   A faint aurora drifts behind the copy. All ambient (never demand
+   attention), all frozen by the reduced-motion reset below.
+========================= */
+
+/* Static fallbacks — the headline is always fully legible even if
+   background-clip:text is unsupported or the animation is frozen. */
+.hero-accent {
+  color: var(--app-primary-light);
+}
+.hero-headline-sheen {
+  color: #fff;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-accent,
+  .hero-headline-sheen {
+    background-repeat: no-repeat;
+    background-size: 260% 100%;
+    background-position: 130% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: hero-sheen 11s ease-in-out 1.2s infinite;
+  }
+
+  .hero-accent {
+    background-image: linear-gradient(
+      100deg,
+      var(--app-primary-light) 0%,
+      var(--app-primary-light) 34%,
+      var(--app-primary-hover) 47%,
+      #fff7dc 50%,
+      var(--app-primary-hover) 53%,
+      var(--app-primary-light) 66%,
+      var(--app-primary-light) 100%
+    );
+  }
+
+  /* White text can't get brighter than #fff, so the glint dips to ~84%
+     then peaks — a wave of light rather than a hotspot. */
+  .hero-headline-sheen {
+    background-image: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.84) 0%,
+      rgba(255, 255, 255, 0.84) 40%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(255, 255, 255, 0.84) 60%,
+      rgba(255, 255, 255, 0.84) 100%
+    );
+  }
+}
+
+@keyframes hero-sheen {
+  0%,
+  12% {
+    background-position: 130% 0;
+  }
+  42%,
+  100% {
+    background-position: -30% 0;
+  }
+}
+
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      42% 38% at 22% 78%,
+      color-mix(in srgb, var(--app-primary) 20%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      36% 32% at 82% 62%,
+      color-mix(in srgb, var(--app-primary-light) 14%, transparent),
+      transparent 72%
+    );
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  animation: hero-aurora-drift 16s ease-in-out infinite alternate;
+}
+
+@keyframes hero-aurora-drift {
+  0% {
+    transform: translate3d(-2%, 1.5%, 0) scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(3%, -2%, 0) scale(1.12);
+    opacity: 0.62;
   }
 }
 
@@ -1650,5 +1756,16 @@ body.nav-open {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .hero-aurora {
+    display: none;
+  }
+
+  .hero-accent,
+  .hero-headline-sheen {
+    /* Drop the clipped gradient so the plain color shows. */
+    background-image: none;
+    -webkit-text-fill-color: currentcolor;
   }
 }

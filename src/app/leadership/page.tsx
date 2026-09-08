@@ -3,11 +3,12 @@ import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
 import type {
   LeadershipMember,
-  LeadershipRole,
+  LeadershipRoleSlug,
 } from '@/domain/leadership/types';
+import { formatLeadershipRole } from '@/domain/leadership/types';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
-import { LeaderCard, ROLE_LABEL } from '@/features/leadership/LeadershipCards';
+import { LeaderCard } from '@/features/leadership/LeadershipCards';
 import {
   Container,
   Page,
@@ -21,14 +22,14 @@ import {
 // production build cannot freeze an empty or outdated directory indefinitely.
 export const dynamic = 'force-dynamic';
 
-const SENIOR_ROLES: LeadershipRole[] = [
+const SENIOR_ROLES: LeadershipRoleSlug[] = [
   'senior_pastor',
   'associate_pastor',
   'reverend',
 ];
-const BOARD_ROLES: LeadershipRole[] = ['deacon', 'deaconess'];
+const BOARD_ROLES: LeadershipRoleSlug[] = ['deacon', 'deaconess'];
 
-const ROLE_RANK: Record<LeadershipRole, number> = {
+const ROLE_RANK: Record<string, number> = {
   senior_pastor: 0,
   associate_pastor: 1,
   reverend: 2,
@@ -36,9 +37,22 @@ const ROLE_RANK: Record<LeadershipRole, number> = {
   deaconess: 4,
 };
 
+function isSeniorRole(role: string) {
+  return (SENIOR_ROLES as string[]).includes(role);
+}
+function isBoardRole(role: string) {
+  return (BOARD_ROLES as string[]).includes(role);
+}
+
 function byRoleThenName(a: LeadershipMember, b: LeadershipMember) {
-  const rank = ROLE_RANK[a.role] - ROLE_RANK[b.role];
-  if (rank !== 0) return rank;
+  // Unknown (free-text) roles rank after the canonical ones, then alphabetically.
+  const rankA = ROLE_RANK[a.role] ?? 90;
+  const rankB = ROLE_RANK[b.role] ?? 90;
+  if (rankA !== rankB) return rankA - rankB;
+  const roleCompare = formatLeadershipRole(a.role).localeCompare(
+    formatLeadershipRole(b.role)
+  );
+  if (roleCompare !== 0) return roleCompare;
   return `${a.firstName} ${a.lastName}`.localeCompare(
     `${b.firstName} ${b.lastName}`
   );
@@ -94,10 +108,10 @@ export default async function LeadershipPage() {
     byRoleThenName
   );
 
-  const seniorTeam = leaders.filter(l => SENIOR_ROLES.includes(l.role));
-  const board = leaders.filter(l => BOARD_ROLES.includes(l.role));
+  const seniorTeam = leaders.filter(l => isSeniorRole(l.role));
+  const board = leaders.filter(l => isBoardRole(l.role));
   const others = leaders.filter(
-    l => !SENIOR_ROLES.includes(l.role) && !BOARD_ROLES.includes(l.role)
+    l => !isSeniorRole(l.role) && !isBoardRole(l.role)
   );
 
   return (
@@ -114,7 +128,7 @@ export default async function LeadershipPage() {
           key={leader.id}
           data={buildPersonSchema({
             name: `${leader.firstName} ${leader.lastName}`.trim(),
-            role: ROLE_LABEL[leader.role],
+            role: formatLeadershipRole(leader.role),
             bio: leader.bio || undefined,
             imageUrl: leader.imageUrl || undefined,
             path: '/leadership',
