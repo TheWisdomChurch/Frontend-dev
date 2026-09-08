@@ -72,21 +72,27 @@ export default {
         // `clamp(min, <rem> + <vw>, max)` — a rem floor so the size still
         // responds to browser zoom, a gentle vw term so it never balloons
         // on tablets/wide screens, and a conservative max.
-        '4xl': ['clamp(1.5rem, 1.3rem + 1vw, 2rem)', { lineHeight: '1.15' }],
-        '5xl': [
-          'clamp(1.7rem, 1.42rem + 1.4vw, 2.45rem)',
-          { lineHeight: '1.1' },
+        '4xl': [
+          'clamp(1.45rem, 1.3rem + 0.75vw, 1.85rem)',
+          { lineHeight: '1.16' },
         ],
-        '6xl': ['clamp(1.9rem, 1.5rem + 2vw, 3rem)', { lineHeight: '1.08' }],
+        '5xl': [
+          'clamp(1.62rem, 1.42rem + 1vw, 2.2rem)',
+          { lineHeight: '1.12' },
+        ],
+        '6xl': [
+          'clamp(1.8rem, 1.5rem + 1.5vw, 2.7rem)',
+          { lineHeight: '1.09' },
+        ],
         '7xl': [
-          'clamp(2.05rem, 1.6rem + 2.5vw, 3.5rem)',
-          { lineHeight: '1.06' },
+          'clamp(1.95rem, 1.6rem + 1.9vw, 3.1rem)',
+          { lineHeight: '1.07' },
         ],
         '8xl': [
-          'clamp(2.2rem, 1.7rem + 3.1vw, 4.15rem)',
-          { lineHeight: '1.04' },
+          'clamp(2.1rem, 1.7rem + 2.4vw, 3.7rem)',
+          { lineHeight: '1.05' },
         ],
-        '9xl': ['clamp(2.4rem, 1.8rem + 3.9vw, 5rem)', { lineHeight: '1.03' }],
+        '9xl': ['clamp(2.25rem, 1.8rem + 3vw, 4.4rem)', { lineHeight: '1.04' }],
         'display-xl': 'var(--type-display-xl)',
         'display-lg': 'var(--type-display-lg)',
         'display-md': 'var(--type-display-md)',

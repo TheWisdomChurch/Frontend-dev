@@ -87,6 +87,9 @@ export default function SiteHero({
         data-hero-overlay
         className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,var(--app-dark)_0%,color-mix(in_srgb,var(--app-dark)_78%,transparent)_26%,color-mix(in_srgb,var(--app-dark)_36%,transparent)_46%,transparent_68%)]"
       />
+      {/* Ambient aurora — a slow gold drift behind the copy. Frozen under
+          reduced-motion (see globals.scss). */}
+      <div aria-hidden="true" className="hero-aurora" />
 
       <Container className="flex flex-1 flex-col">
         <div
@@ -110,23 +113,23 @@ export default function SiteHero({
 
           <h1
             className={cn(
-              'w-full max-w-full font-ui font-black leading-[1.02] tracking-[-0.03em] text-white [text-shadow:0_2px_28px_black] [text-wrap:balance] [overflow-wrap:anywhere]',
+              'w-full max-w-full font-ui font-black leading-[1.03] tracking-[-0.03em] text-white [text-shadow:0_2px_28px_black] [text-wrap:balance] [overflow-wrap:anywhere]',
               isHome
-                ? 'text-[clamp(2.1rem,1.15rem+4.3vw,3.9rem)] 2xl:text-[4.25rem]'
-                : 'text-[clamp(2rem,1.2rem+3.6vw,3.35rem)] 2xl:text-[3.6rem]'
+                ? 'text-[clamp(1.95rem,1.1rem+3.4vw,3.25rem)] 2xl:text-[3.5rem]'
+                : 'text-[clamp(1.8rem,1.1rem+2.9vw,2.8rem)] 2xl:text-[3rem]'
             )}
           >
             {lines.map((line, index) => (
               <span
                 key={`${index}-${line}`}
-                className="block overflow-hidden pb-[0.06em]"
+                className="block overflow-hidden pb-[0.08em]"
               >
                 <span
                   data-hero-title-line
                   className={cn(
                     'block',
                     index === 1 && highlightSecondLine
-                      ? 'text-[var(--app-primary-light)]'
+                      ? 'hero-accent'
                       : 'text-white'
                   )}
                 >
