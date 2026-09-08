@@ -130,7 +130,7 @@ export default function SiteHero({
                     'block',
                     index === 1 && highlightSecondLine
                       ? 'hero-accent'
-                      : 'text-white'
+                      : 'hero-headline-sheen'
                   )}
                 >
                   {line}
