@@ -49,7 +49,7 @@ export const CHILDREN_MINISTRY_CONTENT: MinistryContent = {
     title: 'Led by Mrs Mojisola Oladejo.',
     body: 'Mrs Mojisola Oladejo leads a team built around safety and warmth — trained leaders who know each child by name, teach the Bible with joy, and keep parents informed and confident every time they come in.',
     image: {
-      src: '/Picflow/children-convener.webp',
+      src: '/Picflow/leader.webp',
       alt: "Mrs Mojisola Oladejo, Children's Ministry Director at The Wisdom Church",
     },
   },
