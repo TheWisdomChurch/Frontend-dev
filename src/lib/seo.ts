@@ -24,6 +24,22 @@ export function asciiMeta(value: string): string {
   );
 }
 
+/** Recursively apply `asciiMeta` to every string in a JSON-LD object before it
+ *  is serialized into a <script type="application/ld+json"> tag. */
+export function asciiMetaDeep<T>(value: T): T {
+  if (typeof value === 'string') return asciiMeta(value) as T;
+  if (Array.isArray(value)) return value.map(asciiMetaDeep) as unknown as T;
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+        key,
+        asciiMetaDeep(item),
+      ])
+    ) as T;
+  }
+  return value;
+}
+
 export const SITE_URL = 'https://wisdomchurchhq.org';
 export const SITE_NAME = 'The Wisdom Church';
 // The only alternate is the same name without the article - what people
