@@ -8,7 +8,7 @@ export const SITE_NAME = 'The Wisdom Church';
 export const SITE_ALT_NAME = 'Wisdom Church';
 export const SITE_TAGLINE = 'Experience God’s transforming power';
 export const SITE_DESCRIPTION =
-  'The Wisdom Church is a vibrant, Spirit-filled church in Lekki-Epe, Lagos, Nigeria — where lives are transformed through worship, sound biblical teaching, prayer, and authentic community. Join us in person or online this Sunday.';
+  'The Wisdom Church is a vibrant, Spirit-filled family in Lagos, Nigeria — a wave of Greatness raising believers through worship, sound biblical teaching, prayer, and authentic community. Join us in person or online this Sunday.';
 
 // The church brand mark, used for the Organization `logo` in structured data
 // and as the shared social preview image. The user asked for this exact file.
@@ -25,8 +25,7 @@ export const SITE_KEYWORDS = [
   'Wisdom Church',
   'Wisdom Church Lagos',
   'church in Lagos',
-  'church in Lekki',
-  'Lekki-Epe church',
+  'churches in Lagos',
   'Spirit-filled church Lagos',
   'Pentecostal church Nigeria',
   'Sunday service Lagos',

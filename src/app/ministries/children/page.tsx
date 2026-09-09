@@ -32,7 +32,7 @@ export const metadata: Metadata = buildPageMetadata({
     'kids church Nigeria',
     'Christian children ministry',
     'The Wisdom Church children',
-    'childrens ministry Lekki',
+    'childrens ministry Lagos',
     'nursery and kids church',
   ],
 });
