@@ -610,6 +610,12 @@ function normalizePublicFormField(
           typeof rawValidation.min === 'number' ? rawValidation.min : undefined,
         max:
           typeof rawValidation.max === 'number' ? rawValidation.max : undefined,
+        dateMode:
+          rawValidation.dateMode === 'full'
+            ? ('full' as const)
+            : rawValidation.dateMode === 'day-month'
+              ? ('day-month' as const)
+              : undefined,
       }
     : undefined;
   const options = Array.isArray(rawOptions)

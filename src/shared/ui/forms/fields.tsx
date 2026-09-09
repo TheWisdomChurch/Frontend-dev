@@ -9,13 +9,15 @@ import type { PublicFormField } from '@/lib/apiTypes';
 import { DEFAULT_PHONE_COUNTRY, PHONE_COUNTRIES } from '@/lib/validation/phone';
 import {
   countWords,
-  daysInMonth,
+  daysInMonthForYear,
   getFieldInputType,
+  isFullDateField,
   MONTH_OPTIONS,
-  parseDDMMPartial,
+  parseDateParts,
   resolveMaxWords,
   splitE164,
   toDDMM,
+  toFullDate,
 } from '@/lib/forms/fieldValue';
 
 import {
@@ -406,14 +408,31 @@ export function DateField({
   onChange,
 }: FieldControlProps) {
   const id = useFieldId(field);
-  const parsed = parseDDMMPartial(typeof value === 'string' ? value : '');
-  const selectedDay = parsed?.day === '00' ? '' : parsed?.day || '';
-  const selectedMonth = parsed?.month === '00' ? '' : parsed?.month || '';
+  const fullDate = isFullDateField(field);
+  const parsed = parseDateParts(typeof value === 'string' ? value : '');
+  const selectedDay = parsed?.day && parsed.day !== '00' ? parsed.day : '';
+  const selectedMonth =
+    parsed?.month && parsed.month !== '00' ? parsed.month : '';
+  const selectedYear =
+    parsed?.year && parsed.year !== '0000' ? parsed.year : '';
   const monthNumber = selectedMonth ? Number(selectedMonth) : 12;
   const availableDays = Array.from(
-    { length: daysInMonth(monthNumber) },
+    {
+      length: daysInMonthForYear(
+        monthNumber,
+        selectedYear ? Number(selectedYear) : undefined
+      ),
+    },
     (_, index) => String(index + 1).padStart(2, '0')
   );
+  const thisYear = new Date().getFullYear();
+  const availableYears = fullDate
+    ? Array.from({ length: 101 }, (_, index) => String(thisYear - index))
+    : [];
+
+  const emit = (day: string, month: string, year: string) => {
+    onChange(fullDate ? toFullDate(day, month, year) : toDDMM(day, month));
+  };
 
   const selectClass = cn(
     controlClass,
@@ -428,9 +447,11 @@ export function DateField({
       label={field.label}
       required={field.required}
       error={error}
-      help="Captured as day and month."
+      help={fullDate ? 'Day, month and year.' : 'Day and month.'}
     >
-      <div className="grid grid-cols-2 gap-3">
+      <div
+        className={cn('grid gap-3', fullDate ? 'grid-cols-3' : 'grid-cols-2')}
+      >
         <div className="relative">
           <select
             id={id}
@@ -441,7 +462,7 @@ export function DateField({
             )}
             value={selectedDay}
             onChange={event =>
-              onChange(toDDMM(event.target.value, selectedMonth))
+              emit(event.target.value, selectedMonth, selectedYear)
             }
           >
             <option value="">Day</option>
@@ -462,7 +483,7 @@ export function DateField({
             )}
             value={selectedMonth}
             onChange={event =>
-              onChange(toDDMM(selectedDay, event.target.value))
+              emit(selectedDay, event.target.value, selectedYear)
             }
           >
             <option value="">Month</option>
@@ -474,6 +495,29 @@ export function DateField({
           </select>
           <ChevronDownIcon />
         </div>
+        {fullDate ? (
+          <div className="relative">
+            <select
+              aria-label={`${field.label} — year`}
+              className={cn(
+                selectClass,
+                !selectedYear && 'text-[var(--app-subtle)]'
+              )}
+              value={selectedYear}
+              onChange={event =>
+                emit(selectedDay, selectedMonth, event.target.value)
+              }
+            >
+              <option value="">Year</option>
+              {availableYears.map(year => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <ChevronDownIcon />
+          </div>
+        ) : null}
       </div>
     </Field>
   );

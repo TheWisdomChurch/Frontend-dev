@@ -116,6 +116,66 @@ export function toDDMM(day: string, month: string): string {
   return `${day}-${month}`;
 }
 
+/* ── Full-date (with year) variants ─────────────────────────────────────────
+   A `date` field captures DD-MM-YYYY (year kept) when the admin set
+   `validation.dateMode === 'full'` OR the field is obviously a birth date
+   ("date of birth", "dob", "birth date"). Plain "birthday" stays day+month —
+   that feeds the recurring-greeting automation. Everything else is DD-MM.
+   ------------------------------------------------------------------------- */
+
+/** A field key/label that clearly means a date of birth (needs the year). */
+export const BIRTH_DATE_FIELD_RE =
+  /\b(d\.?o\.?b|date[\s_-]*of[\s_-]*birth|birth[\s_-]*date)\b/i;
+
+export function isFullDateField(
+  field: Pick<PublicFormField, 'validation' | 'key' | 'label'>
+): boolean {
+  if (field.validation?.dateMode === 'full') return true;
+  if (field.validation?.dateMode === 'day-month') return false;
+  return BIRTH_DATE_FIELD_RE.test(`${field.key ?? ''} ${field.label ?? ''}`);
+}
+
+export function daysInMonthForYear(month: number, year?: number): number {
+  if (month === 2) {
+    if (!year) return 29;
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
+  }
+  if ([4, 6, 9, 11].includes(month)) return 30;
+  return 31;
+}
+
+/** Parse a stored value in either `DD-MM` or `DD-MM-YYYY` form (partial values
+ *  allowed while the member is still choosing). */
+export function parseDateParts(
+  value: string
+): { day: string; month: string; year: string } | null {
+  if (!value || typeof value !== 'string') return null;
+  const match = /^(\d{2})-(\d{2})(?:-(\d{4}))?$/.exec(value.trim());
+  if (!match) return null;
+  return { day: match[1], month: match[2], year: match[3] ?? '' };
+}
+
+export function toFullDate(day: string, month: string, year: string): string {
+  if (!day && !month && !year) return '';
+  return `${day || '00'}-${month || '00'}-${year || '0000'}`;
+}
+
+/** Strict validator for a completed full date, returns the parsed numbers. */
+export function parseFullDate(
+  value: string
+): { day: number; month: number; year: number } | null {
+  const parts = parseDateParts(value);
+  if (!parts || !parts.year) return null;
+  const day = Number(parts.day);
+  const month = Number(parts.month);
+  const year = Number(parts.year);
+  const nextYear = new Date().getFullYear() + 1;
+  if (month < 1 || month > 12) return null;
+  if (year < 1900 || year > nextYear) return null;
+  if (day < 1 || day > daysInMonthForYear(month, year)) return null;
+  return { day, month, year };
+}
+
 export function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

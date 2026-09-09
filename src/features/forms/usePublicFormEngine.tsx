@@ -13,8 +13,10 @@ import { isFieldVisible } from '@/lib/forms/conditionalVisibility';
 import {
   applyTemplateVars,
   countWords,
+  isFullDateField,
   isPhoneLikeField,
   parseDDMM,
+  parseFullDate,
   resolveMaxWords,
   splitE164,
 } from '@/lib/forms/fieldValue';
@@ -407,9 +409,16 @@ export function usePublicFormEngine(
           }
         }
 
-        if (field.type === 'date' && !parseDDMM(value)) {
-          nextFieldErrors[field.key] = 'Choose a valid day and month';
-          continue;
+        if (field.type === 'date') {
+          if (isFullDateField(field)) {
+            if (!parseFullDate(value)) {
+              nextFieldErrors[field.key] = 'Choose a valid day, month and year';
+              continue;
+            }
+          } else if (!parseDDMM(value)) {
+            nextFieldErrors[field.key] = 'Choose a valid day and month';
+            continue;
+          }
         }
 
         const maxWords = resolveMaxWords(field);

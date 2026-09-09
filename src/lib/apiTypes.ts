@@ -51,6 +51,8 @@ export type PublicFormField = {
     pattern?: string;
     min?: number;
     max?: number;
+    /** `date` field capture mode: 'full' keeps the year (DD-MM-YYYY). */
+    dateMode?: 'full' | 'day-month';
   };
   placeholder?: string;
   conditional?: PublicFormFieldConditional;
