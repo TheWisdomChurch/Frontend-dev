@@ -495,7 +495,7 @@ export function buildMinistrySchema({
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: `${SITE_NAME} — ${name}`,
+    name: asciiMeta(`${SITE_NAME} - ${name}`),
     description,
     url: canonicalUrl(path),
     image: image ? absoluteImage(image) : SITE_LOGO,
