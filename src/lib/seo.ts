@@ -1,14 +1,37 @@
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 
+/**
+ * Fold "smart" punctuation to plain ASCII for any string emitted into a
+ * <meta> tag or JSON-LD. Pages are served UTF-8 with <meta charset> first, so
+ * conformant clients are fine — but a number of social scrapers and SEO
+ * audit tools still decode <meta content> as Windows-1252 and turn an em
+ * dash or a curly apostrophe into mojibake ("The Wisdom Church â€" Experience
+ * Godâ€™s..."). Staying ASCII in machine-facing metadata avoids all of them;
+ * visible body copy keeps its real typography.
+ */
+export function asciiMeta(value: string): string {
+  return (
+    value
+      .replace(/[‘’‚‛′]/g, "'")
+      .replace(/[“”„‟″]/g, '"')
+      .replace(/[–—―]/g, '-')
+      .replace(/…/g, '...')
+      // Non-breaking / narrow-NBSP / zero-width spaces -> a plain space.
+      // Written as escapes so this source file stays ASCII and lint-clean.
+      .replace(/[\u00A0\u2007\u202F\u200B\uFEFF]/g, ' ')
+      .replace(/\s+-\s+/g, ' - ')
+  );
+}
+
 export const SITE_URL = 'https://wisdomchurchhq.org';
 export const SITE_NAME = 'The Wisdom Church';
-// The only alternate is the same name without the article — what people
+// The only alternate is the same name without the article - what people
 // actually type. There is no separate "Wisdom House" brand.
 export const SITE_ALT_NAME = 'Wisdom Church';
-export const SITE_TAGLINE = 'Experience God’s transforming power';
+export const SITE_TAGLINE = "Experience God's transforming power";
 export const SITE_DESCRIPTION =
-  'The Wisdom Church is a vibrant, Spirit-filled family in Lagos, Nigeria — a wave of Greatness raising believers through worship, sound biblical teaching, prayer, and authentic community. Join us in person or online this Sunday.';
+  'The Wisdom Church is a vibrant, Spirit-filled family in Lagos, Nigeria - a wave of Greatness raising believers through worship, sound biblical teaching, prayer, and authentic community. Join us in person or online this Sunday.';
 
 // The church brand mark, used for the Organization `logo` in structured data
 // and as the shared social preview image. The user asked for this exact file.
@@ -266,14 +289,18 @@ export function buildPageMetadata({
   article,
 }: PageMetadataInput) {
   const ogImage = absoluteImage(image);
-  const alt = imageAlt ?? `${title} — ${SITE_NAME}`;
+  // Everything below is machine-facing (<title>, <meta>, OG, Twitter) — keep it
+  // ASCII so no scraper mangles smart punctuation. Body copy is untouched.
+  const metaTitle = asciiMeta(title);
+  const metaDescription = asciiMeta(description);
+  const alt = asciiMeta(imageAlt ?? `${title} - ${SITE_NAME}`);
   const mergedKeywords = Array.from(
-    new Set([...(keywords ?? []), ...SITE_KEYWORDS])
+    new Set([...(keywords ?? []), ...SITE_KEYWORDS].map(asciiMeta))
   );
   const isCustom = ogImage !== DEFAULT_OG_IMAGE;
   return {
-    title,
-    description,
+    title: metaTitle,
+    description: metaDescription,
     keywords: mergedKeywords,
     alternates: {
       canonical: canonicalUrl(path),
@@ -281,8 +308,8 @@ export function buildPageMetadata({
     },
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
-      title,
-      description,
+      title: metaTitle,
+      description: metaDescription,
       url: canonicalUrl(path),
       siteName: SITE_NAME,
       images: [
@@ -302,8 +329,8 @@ export function buildPageMetadata({
     },
     twitter: {
       card: isCustom ? ('summary_large_image' as const) : ('summary' as const),
-      title,
-      description,
+      title: metaTitle,
+      description: metaDescription,
       images: [{ url: ogImage, alt }],
     },
   };
