@@ -62,6 +62,12 @@ function fieldHasValue(field: PublicFormField, value: unknown): boolean {
     return Array.isArray(value) && value.length > 0;
   }
   if (field.type === 'checkbox') return Boolean(value);
+  if (field.type === 'date') {
+    if (typeof value !== 'string') return false;
+    return isFullDateField(field)
+      ? parseFullDate(value) !== null
+      : parseDDMM(value) !== null;
+  }
   return typeof value === 'string' ? value.trim().length > 0 : Boolean(value);
 }
 

@@ -9,10 +9,14 @@ import {
   daysInMonthForYear,
 } from '@/lib/forms/fieldValue';
 
-function dateField(mode?: 'full' | 'day-month'): PublicFormField {
+function dateField(
+  mode?: 'full' | 'day-month',
+  label = "Child's date of birth",
+  key = 'child_date_of_birth'
+): PublicFormField {
   return {
-    key: 'child_date_of_birth',
-    label: "Child's date of birth",
+    key,
+    label,
     type: 'date',
     required: true,
     order: 1,
@@ -21,10 +25,36 @@ function dateField(mode?: 'full' | 'day-month'): PublicFormField {
 }
 
 describe('full-date helpers', () => {
-  it('isFullDateField only true when validation.dateMode is full', () => {
+  it('isFullDateField: explicit dateMode wins', () => {
     expect(isFullDateField(dateField('full'))).toBe(true);
-    expect(isFullDateField(dateField('day-month'))).toBe(false);
-    expect(isFullDateField(dateField())).toBe(false);
+    // "day-month" is an explicit override even for a birth-date label
+    expect(isFullDateField(dateField('day-month', 'Date of Birth'))).toBe(
+      false
+    );
+  });
+
+  it('isFullDateField: birth-date fields auto-detect (keep the year)', () => {
+    expect(isFullDateField(dateField(undefined, 'Date of Birth'))).toBe(true);
+    expect(
+      isFullDateField(dateField(undefined, "Child's D.O.B", 'child_dob'))
+    ).toBe(true);
+    expect(
+      isFullDateField(dateField(undefined, 'Birth date', 'birthdate'))
+    ).toBe(true);
+  });
+
+  it('isFullDateField: plain birthday / anniversary stay day+month', () => {
+    expect(isFullDateField(dateField(undefined, 'Birthday', 'birthday'))).toBe(
+      false
+    );
+    expect(
+      isFullDateField(
+        dateField(undefined, 'Wedding anniversary', 'anniversary')
+      )
+    ).toBe(false);
+    expect(
+      isFullDateField(dateField(undefined, 'Preferred date', 'preferred_date'))
+    ).toBe(false);
   });
 
   it('parseDateParts reads DD-MM and DD-MM-YYYY', () => {
