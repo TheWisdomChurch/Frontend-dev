@@ -9,13 +9,9 @@ import type { PublicFormField } from '@/lib/apiTypes';
 import { DEFAULT_PHONE_COUNTRY, PHONE_COUNTRIES } from '@/lib/validation/phone';
 import {
   countWords,
-  daysInMonth,
   getFieldInputType,
-  MONTH_OPTIONS,
-  parseDDMMPartial,
   resolveMaxWords,
   splitE164,
-  toDDMM,
 } from '@/lib/forms/fieldValue';
 
 import {
@@ -395,86 +391,6 @@ export function PhoneField({
         )}
         placeholder={field.placeholder || '801 234 5678'}
       />
-    </Field>
-  );
-}
-
-export function DateField({
-  field,
-  value,
-  error,
-  onChange,
-}: FieldControlProps) {
-  const id = useFieldId(field);
-  const parsed = parseDDMMPartial(typeof value === 'string' ? value : '');
-  const selectedDay = parsed?.day === '00' ? '' : parsed?.day || '';
-  const selectedMonth = parsed?.month === '00' ? '' : parsed?.month || '';
-  const monthNumber = selectedMonth ? Number(selectedMonth) : 12;
-  const availableDays = Array.from(
-    { length: daysInMonth(monthNumber) },
-    (_, index) => String(index + 1).padStart(2, '0')
-  );
-
-  const selectClass = cn(
-    controlClass,
-    controlFocusRing,
-    'cursor-pointer appearance-none pr-9',
-    error && controlErrorClass
-  );
-
-  return (
-    <Field
-      htmlFor={id}
-      label={field.label}
-      required={field.required}
-      error={error}
-      help="Captured as day and month."
-    >
-      <div className="grid grid-cols-2 gap-3">
-        <div className="relative">
-          <select
-            id={id}
-            aria-label={`${field.label} — day`}
-            className={cn(
-              selectClass,
-              !selectedDay && 'text-[var(--app-subtle)]'
-            )}
-            value={selectedDay}
-            onChange={event =>
-              onChange(toDDMM(event.target.value, selectedMonth))
-            }
-          >
-            <option value="">Day</option>
-            {availableDays.map(day => (
-              <option key={day} value={day}>
-                {day}
-              </option>
-            ))}
-          </select>
-          <ChevronDownIcon />
-        </div>
-        <div className="relative">
-          <select
-            aria-label={`${field.label} — month`}
-            className={cn(
-              selectClass,
-              !selectedMonth && 'text-[var(--app-subtle)]'
-            )}
-            value={selectedMonth}
-            onChange={event =>
-              onChange(toDDMM(selectedDay, event.target.value))
-            }
-          >
-            <option value="">Month</option>
-            {MONTH_OPTIONS.map(month => (
-              <option key={month.value} value={month.value}>
-                {month.label}
-              </option>
-            ))}
-          </select>
-          <ChevronDownIcon />
-        </div>
-      </div>
     </Field>
   );
 }

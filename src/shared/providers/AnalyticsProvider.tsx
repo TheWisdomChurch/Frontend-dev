@@ -2,7 +2,6 @@
 'use client';
 
 import {
-  Suspense,
   useEffect,
   createContext,
   useContext,
@@ -12,7 +11,7 @@ import {
   useState,
   useMemo,
 } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import {
   type AnalyticsCoreConfig,
   analyticsCore,
@@ -56,16 +55,16 @@ function AnalyticsPageTracker({
   previousPageRef: React.MutableRefObject<string>;
 }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!isReady) return;
     if (typeof window === 'undefined' || typeof document === 'undefined')
       return;
 
-    const currentPath =
-      pathname +
-      (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+    // Read the query string from the live URL rather than `useSearchParams()`
+    // — that hook forces the enclosing Suspense boundary to client-render
+    // (BAILOUT_TO_CLIENT_SIDE_RENDERING) on every statically rendered route.
+    const currentPath = pathname + window.location.search;
 
     if (previousPageRef.current === currentPath) return;
     previousPageRef.current = currentPath;
@@ -79,7 +78,7 @@ function AnalyticsPageTracker({
     }, 100);
 
     return () => window.clearTimeout(timeout);
-  }, [pathname, searchParams, isReady, debug, previousPageRef]);
+  }, [pathname, isReady, debug, previousPageRef]);
 
   return null;
 }
@@ -249,13 +248,11 @@ export function AnalyticsProvider({
 
   return (
     <AnalyticsContext.Provider value={contextValue}>
-      <Suspense fallback={null}>
-        <AnalyticsPageTracker
-          isReady={isReady}
-          debug={debug}
-          previousPageRef={previousPageRef}
-        />
-      </Suspense>
+      <AnalyticsPageTracker
+        isReady={isReady}
+        debug={debug}
+        previousPageRef={previousPageRef}
+      />
       {children}
     </AnalyticsContext.Provider>
   );

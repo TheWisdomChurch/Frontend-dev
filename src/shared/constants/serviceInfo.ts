@@ -20,8 +20,11 @@ export const SERVICE_INFO = {
   },
   venue: {
     name: 'Honor Gardens',
-    area: 'Lekki-Epe',
-    short: 'Honor Gardens, Lekki-Epe',
+    area: 'Lagos',
+    // Short display label (nav chips, "church home", event locations). The
+    // precise street address lives in `full` / `streetAddress` below and is
+    // what maps/directions and JSON-LD use.
+    short: 'Honor Gardens, Lagos',
     full: 'Honor Gardens, opposite Dominion City, Alasia, Lekki-Epe Expressway, Lagos, Nigeria',
     streetAddress: 'Opposite Dominion City, Alasia, Lekki-Epe Expressway',
     locality: 'Lagos',

@@ -6,14 +6,14 @@ import { buildPageMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildPageMetadata({
   title: 'Contact & Service Times',
   description:
-    'Plan your visit to The Wisdom Church in Lekki-Epe, Lagos. Sunday service times, directions to Honor Gardens, phone, email, and prayer requests.',
+    'Plan your visit to The Wisdom Church in Lagos. Sunday service times, directions to Honor Gardens, phone, email, and prayer requests.',
   path: '/contact',
   keywords: [
     'The Wisdom Church contact',
     'Wisdom Church Lagos address',
     'Wisdom Church service time',
-    'church near me Lekki',
-    'Honor Gardens Lekki-Epe',
+    'church near me Lagos',
+    'Honor Gardens Lagos',
     'plan a visit Wisdom Church',
     'church directions Lagos',
   ],

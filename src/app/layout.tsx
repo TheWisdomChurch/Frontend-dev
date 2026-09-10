@@ -16,10 +16,19 @@ import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
   DEFAULT_OG_IMAGE as OG_IMAGE,
+  asciiMeta,
+  asciiMetaDeep,
   buildHreflangAlternates,
   buildOrganizationSchema,
   buildWebSiteSchema,
 } from '@/lib/seo';
+
+// Machine-facing strings stay ASCII so scrapers that ignore the page charset
+// can't turn a curly apostrophe / em dash into mojibake.
+const OG_TITLE = asciiMeta(`${SITE_NAME} - ${SITE_TAGLINE}`);
+const HOME_TITLE = asciiMeta(
+  `${SITE_NAME} | Experience God's Transforming Power in Lagos`
+);
 import HeroHighlights from '@/features/hero/HeroHighlights';
 import CommunityJoinModal from '@/features/community/CommunityJoinModalLoader';
 
@@ -30,7 +39,7 @@ export const metadata: Metadata = {
     languages: buildHreflangAlternates('/'),
   },
   title: {
-    default: `${SITE_NAME} | Experience God’s Transforming Power in Lagos`,
+    default: HOME_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -47,7 +56,7 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
   },
   openGraph: {
-    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    title: OG_TITLE,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -66,7 +75,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    title: OG_TITLE,
     description: SITE_DESCRIPTION,
     images: [OG_IMAGE],
     creator: SOCIAL_LINKS.handle,
@@ -121,8 +130,8 @@ const productionAnalyticsEnabled =
   process.env.ANALYTICS_ENABLED === 'true';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const orgSchema = buildOrganizationSchema();
-  const websiteSchema = buildWebSiteSchema();
+  const orgSchema = asciiMetaDeep(buildOrganizationSchema());
+  const websiteSchema = asciiMetaDeep(buildWebSiteSchema());
 
   return (
     <html

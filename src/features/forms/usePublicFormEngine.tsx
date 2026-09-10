@@ -13,8 +13,10 @@ import { isFieldVisible } from '@/lib/forms/conditionalVisibility';
 import {
   applyTemplateVars,
   countWords,
+  isFullDateField,
   isPhoneLikeField,
   parseDDMM,
+  parseFullDate,
   resolveMaxWords,
   splitE164,
 } from '@/lib/forms/fieldValue';
@@ -60,6 +62,12 @@ function fieldHasValue(field: PublicFormField, value: unknown): boolean {
     return Array.isArray(value) && value.length > 0;
   }
   if (field.type === 'checkbox') return Boolean(value);
+  if (field.type === 'date') {
+    if (typeof value !== 'string') return false;
+    return isFullDateField(field)
+      ? parseFullDate(value) !== null
+      : parseDDMM(value) !== null;
+  }
   return typeof value === 'string' ? value.trim().length > 0 : Boolean(value);
 }
 
@@ -407,9 +415,16 @@ export function usePublicFormEngine(
           }
         }
 
-        if (field.type === 'date' && !parseDDMM(value)) {
-          nextFieldErrors[field.key] = 'Choose a valid day and month';
-          continue;
+        if (field.type === 'date') {
+          if (isFullDateField(field)) {
+            if (!parseFullDate(value)) {
+              nextFieldErrors[field.key] = 'Choose a valid day, month and year';
+              continue;
+            }
+          } else if (!parseDDMM(value)) {
+            nextFieldErrors[field.key] = 'Choose a valid day and month';
+            continue;
+          }
         }
 
         const maxWords = resolveMaxWords(field);
