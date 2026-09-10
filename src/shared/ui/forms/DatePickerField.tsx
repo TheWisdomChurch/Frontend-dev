@@ -229,7 +229,7 @@ export function DatePickerField({
                   : { opacity: 0, y: -6, scale: 0.98 }
               }
               transition={{ duration: 0.16, ease: 'easeOut' }}
-              className="absolute left-0 z-50 mt-2 w-[19rem] max-w-[calc(100vw-2rem)] rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3 shadow-[0_20px_45px_-15px_rgba(15,23,42,0.35)]"
+              className="absolute left-0 z-50 mt-2 w-[19rem] max-w-[calc(100vw-2rem)] rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3 shadow-[0_20px_45px_-15px_color-mix(in_srgb,black_28%,transparent)]"
             >
               <div className="flex items-center gap-2">
                 <button
