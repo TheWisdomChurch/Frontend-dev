@@ -22,9 +22,13 @@ export {
   CheckboxGroupField,
   CheckboxField,
   PhoneField,
-  DateField,
   type FieldControlProps,
 } from './fields';
+
+export {
+  DatePickerField,
+  DatePickerField as DateField,
+} from './DatePickerField';
 
 export {
   ImageField,

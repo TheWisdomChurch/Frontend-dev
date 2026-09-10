@@ -9,15 +9,9 @@ import type { PublicFormField } from '@/lib/apiTypes';
 import { DEFAULT_PHONE_COUNTRY, PHONE_COUNTRIES } from '@/lib/validation/phone';
 import {
   countWords,
-  daysInMonthForYear,
   getFieldInputType,
-  isFullDateField,
-  MONTH_OPTIONS,
-  parseDateParts,
   resolveMaxWords,
   splitE164,
-  toDDMM,
-  toFullDate,
 } from '@/lib/forms/fieldValue';
 
 import {
@@ -397,128 +391,6 @@ export function PhoneField({
         )}
         placeholder={field.placeholder || '801 234 5678'}
       />
-    </Field>
-  );
-}
-
-export function DateField({
-  field,
-  value,
-  error,
-  onChange,
-}: FieldControlProps) {
-  const id = useFieldId(field);
-  const fullDate = isFullDateField(field);
-  const parsed = parseDateParts(typeof value === 'string' ? value : '');
-  const selectedDay = parsed?.day && parsed.day !== '00' ? parsed.day : '';
-  const selectedMonth =
-    parsed?.month && parsed.month !== '00' ? parsed.month : '';
-  const selectedYear =
-    parsed?.year && parsed.year !== '0000' ? parsed.year : '';
-  const monthNumber = selectedMonth ? Number(selectedMonth) : 12;
-  const availableDays = Array.from(
-    {
-      length: daysInMonthForYear(
-        monthNumber,
-        selectedYear ? Number(selectedYear) : undefined
-      ),
-    },
-    (_, index) => String(index + 1).padStart(2, '0')
-  );
-  const thisYear = new Date().getFullYear();
-  const availableYears = fullDate
-    ? Array.from({ length: 101 }, (_, index) => String(thisYear - index))
-    : [];
-
-  const emit = (day: string, month: string, year: string) => {
-    onChange(fullDate ? toFullDate(day, month, year) : toDDMM(day, month));
-  };
-
-  const selectClass = cn(
-    controlClass,
-    controlFocusRing,
-    'cursor-pointer appearance-none pr-9',
-    error && controlErrorClass
-  );
-
-  return (
-    <Field
-      htmlFor={id}
-      label={field.label}
-      required={field.required}
-      error={error}
-      help={fullDate ? 'Day, month and year.' : 'Day and month.'}
-    >
-      <div
-        className={cn('grid gap-3', fullDate ? 'grid-cols-3' : 'grid-cols-2')}
-      >
-        <div className="relative">
-          <select
-            id={id}
-            aria-label={`${field.label} — day`}
-            className={cn(
-              selectClass,
-              !selectedDay && 'text-[var(--app-subtle)]'
-            )}
-            value={selectedDay}
-            onChange={event =>
-              emit(event.target.value, selectedMonth, selectedYear)
-            }
-          >
-            <option value="">Day</option>
-            {availableDays.map(day => (
-              <option key={day} value={day}>
-                {day}
-              </option>
-            ))}
-          </select>
-          <ChevronDownIcon />
-        </div>
-        <div className="relative">
-          <select
-            aria-label={`${field.label} — month`}
-            className={cn(
-              selectClass,
-              !selectedMonth && 'text-[var(--app-subtle)]'
-            )}
-            value={selectedMonth}
-            onChange={event =>
-              emit(selectedDay, event.target.value, selectedYear)
-            }
-          >
-            <option value="">Month</option>
-            {MONTH_OPTIONS.map(month => (
-              <option key={month.value} value={month.value}>
-                {month.label}
-              </option>
-            ))}
-          </select>
-          <ChevronDownIcon />
-        </div>
-        {fullDate ? (
-          <div className="relative">
-            <select
-              aria-label={`${field.label} — year`}
-              className={cn(
-                selectClass,
-                !selectedYear && 'text-[var(--app-subtle)]'
-              )}
-              value={selectedYear}
-              onChange={event =>
-                emit(selectedDay, selectedMonth, event.target.value)
-              }
-            >
-              <option value="">Year</option>
-              {availableYears.map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-            <ChevronDownIcon />
-          </div>
-        ) : null}
-      </div>
     </Field>
   );
 }
