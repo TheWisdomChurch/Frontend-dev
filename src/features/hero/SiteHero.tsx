@@ -128,9 +128,7 @@ export default function SiteHero({
                   data-hero-title-line
                   className={cn(
                     'block',
-                    index === 1 && highlightSecondLine
-                      ? 'hero-accent'
-                      : 'hero-headline-sheen'
+                    index === 1 && highlightSecondLine && 'hero-accent'
                   )}
                 >
                   {line}
