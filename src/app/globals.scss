@@ -1650,69 +1650,54 @@ body.nav-open {
 }
 
 /* =========================
-   HERO — headline sheen + ambient motion
-   Every SiteHero headline carries the same slow light sweep: a gold
-   sheen on the accent line, a soft specular glint on the white lines.
-   A faint aurora drifts behind the copy. All ambient (never demand
-   attention), all frozen by the reduced-motion reset below.
+   HERO — accent glow + ambient motion
+   Legibility over decoration: headline text (both the plain white lines
+   and the gold accent line) is always rendered at full, solid opacity —
+   nothing ever clips or fades the glyphs themselves, so the animation
+   can never fight reading. The gold accent line instead gets a warm,
+   *static* glow behind its letters (a richer text-shadow, not a moving
+   gradient) plus one brief, one-shot light catch right after the
+   entrance reveal — never loops, so it never competes with the page's
+   own copy afterward. A faint aurora drifts behind the whole headline,
+   kept soft enough to never wash out the black legibility shadow. All
+   frozen by the reduced-motion reset below.
 ========================= */
 
-/* Static fallbacks — the headline is always fully legible even if
-   background-clip:text is unsupported or the animation is frozen. */
 .hero-accent {
+  position: relative;
   color: var(--app-primary-light);
-}
-.hero-headline-sheen {
-  color: #fff;
+  /* Stacks with the base black legibility shadow on the h1 — a soft gold
+     halo, always on, that reads as warmth rather than motion. */
+  text-shadow:
+    0 2px 28px black,
+    0 0 22px color-mix(in srgb, var(--app-primary) 55%, transparent);
 }
 
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .hero-accent,
-  .hero-headline-sheen {
-    background-repeat: no-repeat;
-    background-size: 260% 100%;
-    background-position: 130% 0;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: hero-sheen 11s ease-in-out 1.2s infinite;
-  }
-
-  .hero-accent {
-    background-image: linear-gradient(
-      100deg,
-      var(--app-primary-light) 0%,
-      var(--app-primary-light) 34%,
-      var(--app-primary-hover) 47%,
-      #fff7dc 50%,
-      var(--app-primary-hover) 53%,
-      var(--app-primary-light) 66%,
-      var(--app-primary-light) 100%
-    );
-  }
-
-  /* White text can't get brighter than #fff, so the glint dips to ~84%
-     then peaks — a wave of light rather than a hotspot. */
-  .hero-headline-sheen {
-    background-image: linear-gradient(
-      100deg,
-      rgba(255, 255, 255, 0.84) 0%,
-      rgba(255, 255, 255, 0.84) 40%,
-      rgba(255, 255, 255, 1) 50%,
-      rgba(255, 255, 255, 0.84) 60%,
-      rgba(255, 255, 255, 0.84) 100%
-    );
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-accent {
+      background-image: linear-gradient(
+        100deg,
+        var(--app-primary-light) 0%,
+        var(--app-primary-light) 42%,
+        #fff7dc 50%,
+        var(--app-primary-light) 58%,
+        var(--app-primary-light) 100%
+      );
+      background-repeat: no-repeat;
+      background-size: 220% 100%;
+      background-position: 160% 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: hero-accent-catch 1.8s ease-out 1.3s 1 both;
+    }
   }
 }
 
-@keyframes hero-sheen {
-  0%,
-  12% {
-    background-position: 130% 0;
-  }
-  42%,
-  100% {
-    background-position: -30% 0;
+@keyframes hero-accent-catch {
+  to {
+    background-position: -20% 0;
   }
 }
 
@@ -1723,28 +1708,28 @@ body.nav-open {
   pointer-events: none;
   background:
     radial-gradient(
-      42% 38% at 22% 78%,
-      color-mix(in srgb, var(--app-primary) 20%, transparent),
+      40% 34% at 14% 88%,
+      color-mix(in srgb, var(--app-primary) 14%, transparent),
       transparent 70%
     ),
     radial-gradient(
-      36% 32% at 82% 62%,
-      color-mix(in srgb, var(--app-primary-light) 14%, transparent),
+      34% 28% at 88% 78%,
+      color-mix(in srgb, var(--app-primary-light) 10%, transparent),
       transparent 72%
     );
-  opacity: 0.55;
+  opacity: 0.4;
   mix-blend-mode: screen;
-  animation: hero-aurora-drift 16s ease-in-out infinite alternate;
+  animation: hero-aurora-drift 18s ease-in-out infinite alternate;
 }
 
 @keyframes hero-aurora-drift {
   0% {
-    transform: translate3d(-2%, 1.5%, 0) scale(1);
-    opacity: 0.4;
+    transform: translate3d(-2%, 1%, 0) scale(1);
+    opacity: 0.24;
   }
   100% {
-    transform: translate3d(3%, -2%, 0) scale(1.12);
-    opacity: 0.62;
+    transform: translate3d(2%, -1.5%, 0) scale(1.1);
+    opacity: 0.42;
   }
 }
 
@@ -1760,12 +1745,5 @@ body.nav-open {
 
   .hero-aurora {
     display: none;
-  }
-
-  .hero-accent,
-  .hero-headline-sheen {
-    /* Drop the clipped gradient so the plain color shows. */
-    background-image: none;
-    -webkit-text-fill-color: currentcolor;
   }
 }
