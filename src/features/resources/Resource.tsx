@@ -1,9 +1,10 @@
-﻿'use client';
+'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/cn';
 import {
   ArrowRight,
   BookOpen,
@@ -73,35 +74,13 @@ const ALL_RESOURCES = [
 /* ── Resource Carousel component ────────────────────── */
 
 function ResourceCarousel() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [translateX, setTranslateX] = useState(0);
-  const [maxTranslate, setMaxTranslate] = useState(0);
+  const [index, setIndex] = useState(0);
 
-  const updateMax = () => {
-    if (!trackRef.current?.parentElement) return;
-    const max =
-      trackRef.current.scrollWidth - trackRef.current.parentElement.clientWidth;
-    setMaxTranslate(Math.max(0, max));
-  };
+  const prev = () => setIndex(i => Math.max(0, i - 1));
+  const next = () => setIndex(i => Math.min(ALL_RESOURCES.length - 1, i + 1));
 
-  useEffect(() => {
-    updateMax();
-    window.addEventListener('resize', updateMax);
-    return () => window.removeEventListener('resize', updateMax);
-  }, []);
-
-  const stepSize = () => {
-    const card = trackRef.current?.children[0] as HTMLElement | undefined;
-    if (!card) return 300;
-    // gap-5 = 20px
-    return card.offsetWidth + 20;
-  };
-
-  const prev = () => setTranslateX(p => Math.max(0, p - stepSize()));
-  const next = () => setTranslateX(p => Math.min(maxTranslate, p + stepSize()));
-
-  const canPrev = translateX > 0;
-  const canNext = translateX < maxTranslate;
+  const canPrev = index > 0;
+  const canNext = index < ALL_RESOURCES.length - 1;
 
   return (
     <div>
@@ -114,17 +93,17 @@ function ResourceCarousel() {
           size="sm"
         />
 
-        {/* Navigation arrows */}
-        <div className="flex shrink-0 items-center gap-2">
+        {/* Navigation arrows (visible on mobile/tablet, hidden on desktop where all 4 cards show) */}
+        <div className="flex shrink-0 items-center gap-2 lg:hidden">
           <motion.button
             type="button"
             onClick={prev}
             disabled={!canPrev}
-            aria-label="Previous"
+            aria-label="Previous resource"
             whileHover={canPrev ? { scale: 1.08 } : undefined}
             whileTap={canPrev ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
           </motion.button>
@@ -132,41 +111,49 @@ function ResourceCarousel() {
             type="button"
             onClick={next}
             disabled={!canNext}
-            aria-label="Next"
+            aria-label="Next resource"
             whileHover={canNext ? { scale: 1.08 } : undefined}
             whileTap={canNext ? { scale: 0.94 } : undefined}
             transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-10 w-10 items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
+            className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
           </motion.button>
         </div>
       </div>
 
-      {/* Carousel track */}
-      <div className="overflow-hidden">
-        <div
-          ref={trackRef}
-          className="flex gap-5 transition-transform duration-500 ease-in-out"
-          // eslint-disable-next-line no-restricted-syntax
-          style={{ transform: `translateX(-${translateX}px)` }}
-        >
-          {ALL_RESOURCES.map(item => {
+      {/* Cards: 1-card slide on mobile, 2-card on tablet, 4-card grid on desktop */}
+      <div className="w-full overflow-hidden">
+        <div className="flex gap-5 sm:gap-5 lg:grid lg:grid-cols-4">
+          {ALL_RESOURCES.map((item, i) => {
             const Icon = item.icon;
+            const isMobileVisible = i === index;
+            const isTabletVisible =
+              index === ALL_RESOURCES.length - 1
+                ? i === index || i === index - 1
+                : i === index || i === index + 1;
+
             return (
               <Link
                 key={item.title}
                 href={item.href}
-                className="group relative flex aspect-[4/5] min-h-[360px] w-full shrink-0 flex-col justify-end overflow-hidden sm:aspect-[3/4] sm:w-[calc(50%-0.625rem)] lg:aspect-[4/5] lg:w-[calc(33.333%-0.833rem)]"
+                className={cn(
+                  'group relative aspect-[4/5] min-h-[360px] flex-col justify-end overflow-hidden',
+                  isMobileVisible ? 'flex w-full' : 'hidden',
+                  isTabletVisible
+                    ? 'sm:flex sm:w-[calc(50%-0.625rem)]'
+                    : 'sm:hidden',
+                  'lg:flex lg:w-full'
+                )}
               >
                 {/* Background image — covers card fully, no gaps */}
                 <Image
                   src={item.img}
                   alt={item.title}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   quality={IMAGE_QUALITY}
-                  className="object-cover object-[center_20%] sm:object-center transition-transform duration-700 group-hover:scale-[1.04]"
+                  className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-[1.04] sm:object-center"
                 />
                 {/* Bottom-up gradient so text is readable, top stays bright */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/5" />
