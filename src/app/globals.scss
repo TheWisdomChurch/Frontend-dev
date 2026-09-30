@@ -244,6 +244,7 @@
 }
 
 html {
+  font-size: 100%;
   min-width: 320px;
   overflow-x: clip;
 }
@@ -302,6 +303,7 @@ body {
 }
 
 html {
+  font-size: 100%;
   width: 100%;
   min-height: 100%;
   overflow-x: clip;
@@ -463,11 +465,24 @@ a {
   text-decoration: none;
 }
 
+a,
+button,
+[role='button'] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
 button,
 input,
 textarea,
 select {
   font: inherit;
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
 }
 
 button {
@@ -570,7 +585,8 @@ body[data-scrolled='true'] .site-header {
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: 36px;
+  min-height: 44px;
+  height: 44px;
   padding: 0 0.95rem;
   font-family: var(--font-sans, sans-serif);
   font-size: 0.82rem;
@@ -618,6 +634,9 @@ body[data-scrolled='true'] .site-header {
   gap: 0.65rem;
   color: #ffffff;
   text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.25rem 0;
 }
 
 .site-header__logo {
@@ -658,9 +677,12 @@ body[data-scrolled='true'] .site-header {
 .site-header__give {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
-  height: 38px;
-  padding: 0 1.1rem;
+  min-height: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 1.25rem;
   border: 1px solid var(--app-primary);
   border-radius: var(--radius-button);
   background: var(--app-primary);
@@ -694,9 +716,12 @@ body[data-scrolled='true'] .site-header {
 .site-header__toggle {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
-  height: 38px;
-  padding: 0 0.85rem 0 0.75rem;
+  min-height: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 1rem 0 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-button);
   background: rgba(255, 255, 255, 0.04);
@@ -826,6 +851,9 @@ body.nav-open {
   gap: 0.6rem;
   color: #ffffff;
   text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.25rem 0;
 }
 
 .nav-overlay__brand-logo {
@@ -861,9 +889,12 @@ body.nav-open {
 .nav-overlay__close {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
-  height: 38px;
-  padding: 0 0.9rem 0 0.75rem;
+  min-height: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 1.1rem 0 0.95rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 4px;
   background: transparent;
@@ -1018,6 +1049,8 @@ body.nav-open {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
+  min-width: 44px;
   gap: 0.45rem;
   transition:
     color 180ms ease,
@@ -1061,14 +1094,23 @@ body.nav-open {
 }
 
 .nav-item__sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
   margin: 0.45rem 0 0;
   font-family: var(--font-sans, sans-serif);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.32);
 }
 
 .nav-item__sub-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.35rem 0.55rem;
   color: inherit;
   text-decoration: none;
   transition: color 150ms ease;
@@ -1647,6 +1689,15 @@ body.nav-open {
   .nav-overlay__close-label {
     display: none;
   }
+
+  .nav-overlay__close {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
 }
 
 /* =========================
@@ -1704,6 +1755,9 @@ body.nav-open {
 .hero-aurora {
   position: absolute;
   inset: 0;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
   z-index: -10;
   pointer-events: none;
   background:
@@ -1724,11 +1778,11 @@ body.nav-open {
 
 @keyframes hero-aurora-drift {
   0% {
-    transform: translate3d(-2%, 1%, 0) scale(1);
+    transform: translate3d(0, 1%, 0);
     opacity: 0.24;
   }
   100% {
-    transform: translate3d(2%, -1.5%, 0) scale(1.1);
+    transform: translate3d(0, -1.5%, 0);
     opacity: 0.42;
   }
 }

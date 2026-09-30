@@ -128,10 +128,10 @@ export default function GlobalScrollEffects() {
           if (media) {
             heroTimeline.fromTo(
               media,
-              { scale: isMobile ? 1.12 : 1.2, yPercent: -1.5 },
+              { yPercent: isMobile ? -2 : -3, autoAlpha: 0.9 },
               {
-                scale: isMobile ? 1.04 : 1.06,
                 yPercent: 0,
+                autoAlpha: 1,
                 duration: isMobile ? 1.7 : 2.4,
                 ease: 'power2.out',
               },
@@ -186,7 +186,7 @@ export default function GlobalScrollEffects() {
           if (!isMobile) {
             if (media) {
               gsap.to(media, {
-                scale: 1.16,
+                yPercent: 8,
                 ease: 'none',
                 immediateRender: false,
                 scrollTrigger: {

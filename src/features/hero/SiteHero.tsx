@@ -54,7 +54,7 @@ export default function SiteHero({
   return (
     <section
       data-site-hero
-      className="tone-dark relative isolate flex flex-col overflow-hidden bg-[var(--app-dark)] text-white"
+      className="tone-dark relative isolate flex w-full max-w-full flex-col overflow-hidden overflow-x-clip bg-[var(--app-dark)] text-white"
     >
       <Image
         src={backgroundImage}
@@ -65,7 +65,7 @@ export default function SiteHero({
         sizes="100vw"
         data-hero-media
         className={cn(
-          '-z-20 object-cover object-[center_25%] will-change-transform',
+          '-z-20 max-w-full object-cover object-[center_25%] will-change-transform',
           imagePositionClassName
         )}
       />

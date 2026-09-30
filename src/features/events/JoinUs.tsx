@@ -391,11 +391,11 @@ export default function JoinWorkforce() {
           </div>
 
           {/* ── Why serve ─────────────────────────────────────── */}
-          <div className="-mx-5 mt-9 flex snap-x snap-mandatory gap-3 overflow-x-auto border-t border-[var(--app-border)] px-5 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pt-9 sm:gap-8">
+          <div className="mt-9 grid grid-cols-1 gap-3 border-t border-[var(--app-border)] pt-7 sm:grid-cols-3 sm:gap-8 sm:pt-9">
             {valuePillars.map(pillar => (
               <div
                 key={pillar.title}
-                className="flex min-w-[76vw] snap-center items-start gap-3.5 border border-[var(--app-border)] bg-white/[0.035] p-4 sm:min-w-0 sm:border-0 sm:bg-transparent sm:p-0"
+                className="flex w-full items-start gap-3.5 border border-[var(--app-border)] bg-white/[0.035] p-4 sm:border-0 sm:bg-transparent sm:p-0"
               >
                 <pillar.icon className="mt-0.5 h-[1.15rem] w-[1.15rem] flex-none text-[var(--app-primary)]" />
                 <div>
