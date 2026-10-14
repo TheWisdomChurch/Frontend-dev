@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -111,6 +111,7 @@ function StorePageContent() {
     if (!productsRef.current) return;
 
     const productCards = productsRef.current.querySelectorAll('.product-card');
+    if (productCards.length === 0) return;
 
     gsap.fromTo(
       productCards,

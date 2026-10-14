@@ -5,12 +5,12 @@ import { formatLeadershipRole } from '@/domain/leadership/types';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
 import { Page } from '@/shared/ui/layout';
+import { LeadershipDirectory } from '@/features/leadership/LeadershipDirectory';
 import {
-  LeadershipDirectory,
   CANONICAL_SENIOR_PASTORS,
   CANONICAL_CO_MINISTERS,
   CANONICAL_DEACONS,
-} from '@/features/leadership/LeadershipDirectory';
+} from '@/features/leadership/canonicalData';
 
 // Approved leadership is CMS-managed content. Render it per request so a
 // production build cannot freeze an empty or outdated directory indefinitely.

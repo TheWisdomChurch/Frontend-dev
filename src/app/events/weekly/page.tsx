@@ -117,7 +117,7 @@ export default function WeeklyPage() {
               description="No pressure, no expectations—just come and experience the community. Our welcome team will be right there when you arrive."
               tone="dark"
             />
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-row flex-wrap items-center gap-3 sm:gap-4">
               <PlanVisitTrigger icon={false} size="lg">
                 Let us know you're coming <Arrow />
               </PlanVisitTrigger>

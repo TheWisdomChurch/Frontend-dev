@@ -260,7 +260,7 @@ export default function MinistriesPage() {
               size="sm"
               className="max-w-2xl"
             />
-            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+            <div className="flex flex-row flex-wrap items-center gap-3 sm:gap-4 lg:flex-col lg:items-start">
               <Link
                 href="/contact?topic=connect"
                 className={buttonClass('primary')}

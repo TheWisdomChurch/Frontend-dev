@@ -135,32 +135,36 @@ export default function Header() {
             className="site-header__brand"
             aria-label="The Wisdom Church — home"
           >
-            <Image
-              quality={IMAGE_QUALITY}
-              src="/logo.webp"
-              alt=""
-              width={36}
-              height={36}
-              className="site-header__logo"
-            />
+            <span className="site-header__logo-wrap">
+              <Image
+                quality={IMAGE_QUALITY}
+                src="/logo.webp"
+                alt=""
+                width={38}
+                height={38}
+                className="site-header__logo"
+              />
+            </span>
             <span className="site-header__wordmark" aria-hidden="true">
-              <span>The Wisdom</span>
-              <strong>Church</strong>
+              <span className="site-header__wordmark-sub">The Wisdom</span>
+              <strong className="site-header__wordmark-title">Church</strong>
             </span>
           </Link>
 
           {/* Desktop nav links — hidden on mobile, handled by overlay */}
           <nav className="site-header__nav" aria-label="Primary navigation">
-            {DESKTOP_NAV.map(item => (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={false}
-                className={`site-header__nav-link${isActive(item.href) ? ' is-active' : ''}`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            <div className="site-header__nav-pill">
+              {DESKTOP_NAV.map(item => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  prefetch={false}
+                  className={`site-header__nav-link${isActive(item.href) ? ' is-active' : ''}`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </nav>
 
           <div className="site-header__actions">
@@ -169,8 +173,8 @@ export default function Header() {
               prefetch={false}
               className="site-header__give"
             >
-              <Heart aria-hidden="true" />
-              Give
+              <Heart className="site-header__give-icon" aria-hidden="true" />
+              <span>Give</span>
             </Link>
 
             <button
@@ -222,14 +226,16 @@ export default function Header() {
               tabIndex={navOpen ? 0 : -1}
               aria-label="The Wisdom Church — home"
             >
-              <Image
-                quality={IMAGE_QUALITY}
-                src="/logo.webp"
-                alt=""
-                width={30}
-                height={30}
-                className="nav-overlay__brand-logo"
-              />
+              <span className="site-header__logo-wrap">
+                <Image
+                  quality={IMAGE_QUALITY}
+                  src="/logo.webp"
+                  alt=""
+                  width={34}
+                  height={34}
+                  className="nav-overlay__brand-logo"
+                />
+              </span>
               <span className="nav-overlay__brand-wordmark">
                 <span>The Wisdom</span>
                 <strong>Church</strong>
@@ -244,16 +250,16 @@ export default function Header() {
               tabIndex={navOpen ? 0 : -1}
             >
               <svg
-                width="15"
-                height="15"
-                viewBox="0 0 15 15"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
                 fill="none"
                 aria-hidden="true"
               >
                 <path
-                  d="M1.5 1.5L13.5 13.5M13.5 1.5L1.5 13.5"
+                  d="M2 2L14 14M14 2L2 14"
                   stroke="currentColor"
-                  strokeWidth="1.75"
+                  strokeWidth="2"
                   strokeLinecap="round"
                 />
               </svg>
@@ -272,43 +278,41 @@ export default function Header() {
                   // eslint-disable-next-line no-restricted-syntax
                   style={{ '--nav-i': i } as React.CSSProperties}
                 >
-                  <Link
-                    href={item.href}
-                    prefetch={false}
-                    ref={i === 0 ? firstLinkRef : undefined}
-                    className={`nav-item__link${isActive(item.href) ? ' is-active' : ''}`}
-                    onClick={close}
-                    tabIndex={navOpen ? 0 : -1}
-                  >
-                    {item.label}
-                    <ChevronRight
-                      className="nav-item__arrow"
-                      aria-hidden="true"
-                    />
-                  </Link>
+                  <div className="nav-item__head">
+                    <span className="nav-item__num" aria-hidden="true">
+                      0{i + 1}
+                    </span>
+                    <Link
+                      href={item.href}
+                      prefetch={false}
+                      ref={i === 0 ? firstLinkRef : undefined}
+                      className={`nav-item__link${isActive(item.href) ? ' is-active' : ''}`}
+                      onClick={close}
+                      tabIndex={navOpen ? 0 : -1}
+                    >
+                      {item.label}
+                      <ChevronRight
+                        className="nav-item__arrow"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </div>
 
                   {item.children ? (
-                    <p className="nav-item__sub">
-                      {item.children.map((child, ci) => (
-                        <span key={child.href}>
-                          <Link
-                            href={child.href}
-                            prefetch={false}
-                            className="nav-item__sub-link"
-                            onClick={close}
-                            tabIndex={navOpen ? 0 : -1}
-                          >
-                            {child.label}
-                          </Link>
-                          {ci < (item.children?.length ?? 0) - 1 && (
-                            <span className="nav-item__dot" aria-hidden="true">
-                              {' '}
-                              ·{' '}
-                            </span>
-                          )}
-                        </span>
+                    <div className="nav-item__sub">
+                      {item.children.map(child => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          prefetch={false}
+                          className="nav-item__sub-link"
+                          onClick={close}
+                          tabIndex={navOpen ? 0 : -1}
+                        >
+                          {child.label}
+                        </Link>
                       ))}
-                    </p>
+                    </div>
                   ) : null}
                 </div>
               ))}
@@ -320,7 +324,7 @@ export default function Header() {
               aria-label="Service information"
             >
               <div className="nav-panel">
-                <p className="nav-panel__eyebrow">Next Service</p>
+                <p className="nav-panel__eyebrow">Next Sunday Service</p>
                 <p className="nav-panel__title">
                   This {SERVICE_INFO.sunday.day}
                 </p>
@@ -371,8 +375,8 @@ export default function Header() {
 
           {/* ── Mobile footer: service times + socials ── */}
           <div className="nav-overlay__footer">
-            <div>
-              <p className="nav-footer__label">Next Service</p>
+            <div className="nav-footer__card">
+              <p className="nav-footer__label">Next Sunday Service</p>
               <p className="nav-footer__time">
                 {SERVICE_INFO.sunday.day} · {SERVICE_INFO.sunday.time}
               </p>
@@ -388,18 +392,21 @@ export default function Header() {
               </PlanVisitTrigger>
             </div>
             <div className="nav-footer__socials">
-              {SOCIALS.map(s => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="nav-footer__social-link"
-                  tabIndex={navOpen ? 0 : -1}
-                >
-                  {s.label}
-                </a>
-              ))}
+              <span className="nav-footer__socials-label">Connect</span>
+              <div className="nav-footer__socials-row">
+                {SOCIALS.map(s => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="nav-footer__social-link"
+                    tabIndex={navOpen ? 0 : -1}
+                  >
+                    {s.label}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>

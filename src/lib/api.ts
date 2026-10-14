@@ -331,6 +331,11 @@ function mapBackendLeader(input: unknown): LeadershipMember | null {
     phone: asNonEmptyString(input.phone),
     role,
     status,
+    department:
+      asNonEmptyString(input.department) ??
+      asNonEmptyString(input.department_name) ??
+      asNonEmptyString(input.ministry) ??
+      null,
     bio: asNonEmptyString(input.bio) ?? null,
     imageUrl,
     birthday: asNonEmptyString(input.birthday),
