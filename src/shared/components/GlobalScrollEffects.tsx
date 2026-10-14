@@ -146,32 +146,36 @@ export default function GlobalScrollEffects() {
               0
             );
           }
-          heroTimeline.fromTo(
-            titleLines,
-            { yPercent: 115, autoAlpha: 0 },
-            {
-              yPercent: 0,
-              autoAlpha: 1,
-              duration: isMobile ? 1 : 1.3,
-              stagger: 0.14,
-              ease: 'expo.out',
-            },
-            0.25
-          );
-          heroTimeline.fromTo(
-            items,
-            { y: isMobile ? 20 : 32, autoAlpha: 0, filter: 'blur(6px)' },
-            {
-              y: 0,
-              autoAlpha: 1,
-              filter: 'blur(0px)',
-              duration: 1,
-              stagger: 0.12,
-              ease: 'expo.out',
-              clearProps: 'filter',
-            },
-            0.5
-          );
+          if (titleLines.length > 0) {
+            heroTimeline.fromTo(
+              titleLines,
+              { yPercent: 115, autoAlpha: 0 },
+              {
+                yPercent: 0,
+                autoAlpha: 1,
+                duration: isMobile ? 1 : 1.3,
+                stagger: 0.14,
+                ease: 'expo.out',
+              },
+              0.25
+            );
+          }
+          if (items.length > 0) {
+            heroTimeline.fromTo(
+              items,
+              { y: isMobile ? 20 : 32, autoAlpha: 0, filter: 'blur(6px)' },
+              {
+                y: 0,
+                autoAlpha: 1,
+                filter: 'blur(0px)',
+                duration: 1,
+                stagger: 0.12,
+                ease: 'expo.out',
+                clearProps: 'filter',
+              },
+              0.5
+            );
+          }
           if (cue) {
             heroTimeline.fromTo(
               cue,

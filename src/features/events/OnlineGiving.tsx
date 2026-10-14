@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -115,7 +115,7 @@ export default function OnlineGiving() {
                 </Panel>
               </div>
 
-              <div className="order-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:order-none lg:mt-8">
+              <div className="order-3 flex flex-row flex-wrap items-center gap-3 sm:gap-4 lg:order-none lg:mt-8">
                 <button
                   type="button"
                   onClick={handlePrimaryGive}

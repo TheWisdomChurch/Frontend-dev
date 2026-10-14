@@ -19,35 +19,31 @@ export type ButtonVariant = 'primary' | 'solid' | 'dark' | 'outline' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 const base =
-  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] outline-none transition-[transform,background-color,border-color,box-shadow,color] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.97]';
+  'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] outline-none transition-[transform,background-color,border-color,box-shadow,color,filter] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98]';
 
 const sizeClass: Record<ButtonSize, string> = {
-  sm: 'min-h-11 px-4 text-body-sm',
-  md: 'min-h-11 px-5 text-body-md',
-  lg: 'min-h-12 px-7 text-body-lg',
-  icon: 'h-11 w-11 p-0',
+  sm: 'min-h-10 px-4 py-2 text-caption font-semibold',
+  md: 'min-h-11 px-5 py-2.5 text-body-sm font-semibold',
+  lg: 'min-h-11 sm:min-h-12 px-6 sm:px-7 py-2.5 sm:py-3 text-body-sm sm:text-body-md font-semibold',
+  icon: 'h-11 w-11 min-h-11 min-w-11 p-0',
 };
 
 const solid =
-  'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm hover:bg-[var(--app-neutral)] hover:shadow-lg hover:shadow-black/25 active:shadow-sm';
+  'bg-[var(--app-ink)] text-[var(--app-surface-solid)] shadow-sm hover:bg-[var(--app-neutral)] hover:shadow-lg hover:shadow-black/25 active:shadow-sm active:scale-[0.98]';
 
 const variantClass: Record<ButtonVariant, string> = {
-  // Fill state; hover brightens, active dims it back.
+  // Fill state: radiant warm gold pill with luminous hover and subtle micro-lift
   primary:
-    'bg-[var(--app-primary)] text-[var(--app-dark)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-lg hover:shadow-black/15 active:bg-[var(--app-primary)] active:shadow-sm',
+    'bg-[var(--app-primary)] text-[var(--app-dark)] shadow-sm hover:bg-[var(--app-primary-light)] hover:shadow-lg hover:shadow-black/20 hover:brightness-105 active:bg-[var(--app-primary)] active:shadow-sm active:scale-[0.98]',
   solid,
   // Back-compat alias — `dark` is the same high-contrast solid button.
   dark: solid,
-  // Gold hairline at rest; hover fills the border and washes the surface gold.
-  // `--app-primary-10/20` are the same hue at 10/20% alpha, re-themed on
-  // `.tone-dark` / `.tone-brand`, so the button reads on any section — and
-  // `color-mix` for the hairline (an opacity modifier on a CSS var silently
-  // produces no rule in Tailwind 3).
+  // Modern frosted glass outline: subtle hairline, backdrop blur, gold wash on hover
   outline:
-    'border border-[color-mix(in_srgb,var(--app-primary)_55%,transparent)] bg-transparent text-current hover:border-[var(--app-primary)] hover:bg-[var(--app-primary-10)] hover:text-[var(--app-primary-dark)] hover:shadow-sm active:bg-[var(--app-primary-20)]',
-  // No background at rest; a gold border + wash appears on hover.
+    'border border-[color-mix(in_srgb,var(--app-primary)_55%,transparent)] bg-white/[0.03] backdrop-blur-sm text-current hover:border-[var(--app-primary)] hover:bg-[var(--app-primary-10)] hover:text-[var(--app-primary-dark)] hover:shadow-sm active:bg-[var(--app-primary-20)] active:scale-[0.98]',
+  // Soft ghost hover pill
   ghost:
-    'border border-transparent bg-transparent text-current hover:border-[color-mix(in_srgb,var(--app-primary)_55%,transparent)] hover:bg-[var(--app-primary-10)] hover:text-[var(--app-primary-dark)] active:bg-[var(--app-primary-20)]',
+    'border border-transparent bg-transparent text-current hover:border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] hover:bg-[var(--app-primary-10)] hover:text-[var(--app-primary-dark)] active:bg-[var(--app-primary-20)] active:scale-[0.98]',
 };
 
 export function buttonClass(

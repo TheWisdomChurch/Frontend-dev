@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -24,8 +24,11 @@ function CheckoutPageContent() {
   const { items } = useAppSelector(state => state.cart);
 
   useEffect(() => {
+    const targets = document.querySelectorAll('.checkout-section');
+    if (targets.length === 0) return;
+
     gsap.fromTo(
-      '.checkout-section',
+      targets,
       { opacity: 0, y: 40, scale: 0.97 },
       {
         opacity: 1,

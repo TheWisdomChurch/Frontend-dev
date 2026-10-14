@@ -190,8 +190,8 @@ export default function SiteHero({
             <div
               data-hero-item
               className={cn(
-                'mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap',
-                centered && 'sm:justify-center'
+                'mt-8 flex flex-row flex-wrap items-center gap-3 sm:gap-4',
+                centered ? 'justify-center' : 'justify-start'
               )}
             >
               {actions}

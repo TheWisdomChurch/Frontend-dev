@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { LeadershipMember } from '@/domain/leadership/types';
+import { apiClient } from '@/lib/api';
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { LeaderCard } from '@/features/leadership/LeadershipCards';
@@ -10,107 +11,47 @@ import { SeniorPastorsSpotlight } from '@/features/leadership/SeniorPastorsSpotl
 import { ExploreMoreBand } from '@/features/resources/ExploreMoreBand';
 import { LeadershipNewsletterSection } from '@/features/leadership/NewsletterSection';
 import {
-  Bishop,
-  PstKenny_1,
-  Associate_1,
-  Associate_2,
-  Deacon_1,
-  Deacon_2,
-  Children_head,
-} from '@/shared/assets';
-
-// Canonical fallback members ensuring complete display even if backend CMS is in cold start
-export const CANONICAL_SENIOR_PASTORS: LeadershipMember[] = [
-  {
-    id: 'canon-senior-1',
-    firstName: 'Bishop Gabriel',
-    lastName: 'Ayilara',
-    role: 'senior_pastor',
-    status: 'approved',
-    department: 'Spiritual Oversight',
-    imageUrl: Bishop.src,
-    bio: 'Bishop Gabriel Ayilara is the Senior Pastor of The Wisdom Church. An apostolic voice and compassionate teacher of the Word, he carries a divine mandate to raise believers of excellence, wisdom, and kingdom impact across Lagos and worldwide. Under his oversight, the church continues to witness radical life transformations, community outreach, and deep spiritual revival.',
-  },
-  {
-    id: 'canon-senior-2',
-    firstName: 'Pastor Kehinde',
-    lastName: 'Ayilara',
-    role: 'senior_pastor',
-    status: 'approved',
-    department: 'Spiritual Oversight',
-    imageUrl: PstKenny_1.src,
-    bio: 'Pastor Mrs Kehinde Ayilara serves as Senior Pastor, ministering with maternal grace, prayer fervor, and life-changing discipleship. She has an enduring passion for mentoring families, building authentic believers, and empowering women and youth to step boldly into God’s sovereign plan.',
-  },
-];
-
-export const CANONICAL_CO_MINISTERS: LeadershipMember[] = [
-  {
-    id: 'canon-pastor-1',
-    firstName: 'Rev. Victor',
-    lastName: 'Jimba',
-    role: 'reverend',
-    status: 'approved',
-    department: 'Resident Pastor',
-    imageUrl: Associate_2.src,
-    bio: 'Rev. Victor Jimba serves as Resident Pastor, providing steadfast pastoral administration, sound spiritual counsel, and leadership discipleship throughout the Wisdom Church family.',
-  },
-  {
-    id: 'canon-pastor-2',
-    firstName: 'Pastor',
-    lastName: 'Bamidele',
-    role: 'associate_pastor',
-    status: 'approved',
-    department: 'Associate Pastor',
-    imageUrl: Associate_1.src,
-    bio: 'Pastor Bamidele serves as Associate Pastor, actively leading youth discipleship, evangelistic outreaches, and kingdom community mentorship initiatives.',
-  },
-];
-
-export const CANONICAL_DEACONS: LeadershipMember[] = [
-  {
-    id: 'canon-deacon-1',
-    firstName: 'Deacon',
-    lastName: 'Adeyemi',
-    role: 'deacon',
-    status: 'approved',
-    department: 'Board of Deacons',
-    imageUrl: Associate_1.src,
-    bio: 'Deacon Adeyemi oversees deacon board activities, church administration, and member care ministries with excellence, integrity, and diligence.',
-  },
-  {
-    id: 'canon-deacon-2',
-    firstName: 'Deaconess Temisan',
-    lastName: 'Adeniran',
-    role: 'deaconess',
-    status: 'approved',
-    department: 'Finance & Stewardship',
-    imageUrl: Deacon_1.src,
-    bio: 'Deaconess Temisan Adeniran faithfully manages financial stewardship, church records, and biblical principles of kingdom prosperity.',
-  },
-  {
-    id: 'canon-deacon-3',
-    firstName: 'Deaconess Bimbo',
-    lastName: 'Adeyemi',
-    role: 'deaconess',
-    status: 'approved',
-    department: 'Member Care & Outreach',
-    imageUrl: Deacon_2.src,
-    bio: 'Deaconess Bimbo Adeyemi faithfully serves in hospitality coordination, family welfare, and benevolent outreach operations across the church.',
-  },
-];
+  CANONICAL_SENIOR_PASTORS,
+  CANONICAL_CO_MINISTERS,
+  CANONICAL_DEACONS,
+} from './canonicalData';
 
 interface LeadershipDirectoryProps {
   cmsLeaders: LeadershipMember[];
 }
 
+function matchesName(leader: LeadershipMember, fragment: string): boolean {
+  const full = `${leader.firstName} ${leader.lastName}`.toLowerCase();
+  return full.includes(fragment.toLowerCase());
+}
+
 export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
+  const [leaders, setLeaders] = useState<LeadershipMember[]>(cmsLeaders);
   const [selectedLeader, setSelectedLeader] = useState<LeadershipMember | null>(
     null
   );
   const [isBioOpen, setIsBioOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<
-    'all' | 'pastoral' | 'deacons' | 'departments'
-  >('all');
+  const [activeFilter, setActiveFilter] = useState<string>('all');
+
+  // Client-side revalidation: ensures fresh data from the integrated endpoint
+  // even if server-side cold start or local development network was offline during SSR.
+  useEffect(() => {
+    let cancelled = false;
+    apiClient
+      .listLeadership()
+      .then(fetched => {
+        if (!cancelled && Array.isArray(fetched) && fetched.length > 0) {
+          setLeaders(fetched);
+        }
+      })
+      .catch(() => {
+        // Retain initial SSR data gracefully
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openBio = (leader: LeadershipMember) => {
     setSelectedLeader(leader);
@@ -122,84 +63,168 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
     setSelectedLeader(null);
   };
 
-  // Merge canonical senior leaders with CMS entries if present
+  // ── 1. Senior Pastors ──────────────────────────────────────────────────────
+  // Bishop Gabriel Ayilara & Pastor Kehinde Ayilara spotlight
   const seniorPastors = useMemo(() => {
-    const cmsSeniors = cmsLeaders.filter(
+    const cmsSeniors = leaders.filter(
       l =>
         l.role === 'senior_pastor' ||
-        l.firstName.toLowerCase().includes('gabriel') ||
-        l.firstName.toLowerCase().includes('kehinde')
+        matchesName(l, 'gabriel') ||
+        matchesName(l, 'kehinde')
     );
-    if (cmsSeniors.length >= 2) return cmsSeniors;
-    return CANONICAL_SENIOR_PASTORS;
-  }, [cmsLeaders]);
 
+    const merged = CANONICAL_SENIOR_PASTORS.map(canon => {
+      const match = cmsSeniors.find(
+        c =>
+          matchesName(c, canon.lastName) ||
+          matchesName(c, canon.firstName.split(' ').pop() || '')
+      );
+      if (!match) return canon;
+      return {
+        ...canon,
+        ...match,
+        imageUrl: match.imageUrl || canon.imageUrl,
+        bio: match.bio || canon.bio,
+      };
+    });
+
+    const matchedIds = new Set(
+      CANONICAL_SENIOR_PASTORS.map(c => {
+        const m = cmsSeniors.find(
+          cs =>
+            matchesName(cs, c.lastName) ||
+            matchesName(cs, c.firstName.split(' ').pop() || '')
+        );
+        return m?.id;
+      }).filter(Boolean) as string[]
+    );
+    const extraSeniors = cmsSeniors.filter(c => !matchedIds.has(c.id));
+    return [...merged, ...extraSeniors];
+  }, [leaders]);
+
+  // ── 2. Co-Ministers & Pastoral Oversight ───────────────────────────────────
+  // Rev. Victor Jimba, Pastor Bamidele + any additional associate pastors
   const coMinisters = useMemo(() => {
-    const cmsPastors = cmsLeaders.filter(
+    const cmsPastors = leaders.filter(
       l =>
-        (l.role === 'associate_pastor' || l.role === 'reverend') &&
-        !l.firstName.toLowerCase().includes('gabriel') &&
-        !l.firstName.toLowerCase().includes('kehinde')
+        (l.role === 'associate_pastor' ||
+          l.role === 'reverend' ||
+          matchesName(l, 'jimba') ||
+          matchesName(l, 'bamidele')) &&
+        !matchesName(l, 'gabriel') &&
+        !matchesName(l, 'kehinde')
     );
-    if (cmsPastors.length > 0) return cmsPastors;
-    return CANONICAL_CO_MINISTERS;
-  }, [cmsLeaders]);
 
+    const merged = CANONICAL_CO_MINISTERS.map(canon => {
+      const match = cmsPastors.find(
+        c =>
+          matchesName(c, canon.lastName) ||
+          matchesName(c, canon.firstName.split(' ').pop() || '')
+      );
+      if (!match) return canon;
+      return {
+        ...canon,
+        ...match,
+        imageUrl: match.imageUrl || canon.imageUrl,
+        bio: match.bio || canon.bio,
+      };
+    });
+
+    const matchedIds = new Set(
+      CANONICAL_CO_MINISTERS.map(c => {
+        const m = cmsPastors.find(
+          cs =>
+            matchesName(cs, c.lastName) ||
+            matchesName(cs, c.firstName.split(' ').pop() || '')
+        );
+        return m?.id;
+      }).filter(Boolean) as string[]
+    );
+    const extraPastors = cmsPastors.filter(c => !matchedIds.has(c.id));
+    return [...merged, ...extraPastors];
+  }, [leaders]);
+
+  // ── 3. Board of Deacons & Deaconesses ──────────────────────────────────────
+  // Deacon Adeyemi, Deaconess Temisan Adeniran, Deaconess Bimbo Adeyemi + CMS deacons
   const deacons = useMemo(() => {
-    const cmsDeacons = cmsLeaders.filter(
-      l => l.role === 'deacon' || l.role === 'deaconess'
+    const cmsDeacons = leaders.filter(
+      l =>
+        l.role === 'deacon' ||
+        l.role === 'deaconess' ||
+        matchesName(l, 'temisan') ||
+        matchesName(l, 'bimbo')
     );
-    if (cmsDeacons.length > 0) return cmsDeacons;
-    return CANONICAL_DEACONS;
-  }, [cmsLeaders]);
 
-  // Ministry & departmental leaders (Children church, music, media, etc.)
+    const merged = CANONICAL_DEACONS.map(canon => {
+      const match = cmsDeacons.find(
+        c =>
+          matchesName(c, canon.lastName) ||
+          matchesName(c, canon.firstName.split(' ').pop() || '')
+      );
+      if (!match) return canon;
+      return {
+        ...canon,
+        ...match,
+        imageUrl: match.imageUrl || canon.imageUrl,
+        bio: match.bio || canon.bio,
+      };
+    });
+
+    const matchedIds = new Set(
+      CANONICAL_DEACONS.map(c => {
+        const m = cmsDeacons.find(
+          cs =>
+            matchesName(cs, c.lastName) ||
+            matchesName(cs, c.firstName.split(' ').pop() || '')
+        );
+        return m?.id;
+      }).filter(Boolean) as string[]
+    );
+    const extraDeacons = cmsDeacons.filter(c => !matchedIds.has(c.id));
+    return [...merged, ...extraDeacons];
+  }, [leaders]);
+
+  // ── 4. Departmental & Ministry Leaders (Direct from Endpoint) ──────────────
+  // All other leaders returned by apiClient.listLeadership() — NO mock data!
   const departmentLeaders: LeadershipMember[] = useMemo(() => {
-    const excludedIds = new Set([
+    const topIds = new Set([
       ...seniorPastors.map(l => l.id),
       ...coMinisters.map(l => l.id),
       ...deacons.map(l => l.id),
     ]);
-    const others = cmsLeaders.filter(l => !excludedIds.has(l.id));
 
-    if (others.length > 0) return others;
+    return leaders.filter(l => {
+      if (topIds.has(l.id)) return false;
+      if (matchesName(l, 'gabriel') || matchesName(l, 'kehinde')) return false;
+      if (matchesName(l, 'jimba') || matchesName(l, 'bamidele')) return false;
+      if (matchesName(l, 'temisan') || matchesName(l, 'bimbo')) return false;
+      if (
+        l.role === 'senior_pastor' ||
+        l.role === 'associate_pastor' ||
+        l.role === 'reverend' ||
+        l.role === 'deacon' ||
+        l.role === 'deaconess'
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [leaders, seniorPastors, coMinisters, deacons]);
 
-    // Fallback department head if CMS has no other records
-    const fallbackDept: LeadershipMember[] = [
-      {
-        id: 'canon-dept-1',
-        firstName: 'Mojisola',
-        lastName: 'Oladejo',
-        role: 'director',
-        status: 'approved',
-        department: "Children's Church",
-        imageUrl: Children_head.src,
-        bio: 'Mojisola Oladejo passionately directs the Children’s Department, cultivating a joyful, faith-filled atmosphere where kids discover Jesus and grow in godly character.',
-      },
-      {
-        id: 'canon-dept-2',
-        firstName: 'Tomide',
-        lastName: 'Akinlehin',
-        role: 'leader',
-        status: 'approved',
-        department: 'Music & Worship Ministry',
-        imageUrl: '',
-        bio: 'Tomide Akinlehin serves as Assistant Music Director, facilitating transformative worship encounters that lead the congregation into God’s intimate presence.',
-      },
-      {
-        id: 'canon-dept-3',
-        firstName: 'Kelechi',
-        lastName: 'Ntekop',
-        role: 'leader',
-        status: 'approved',
-        department: 'Protocol & Sanctuary Hospitality',
-        imageUrl: '',
-        bio: 'Kelechi Ntekop serves with devotion in sanctuary hospitality and member integration, ensuring every worshipper experiences the warmth and order of God’s house.',
-      },
-    ];
+  // Distinct department names extracted from actual endpoint leaders
+  const departmentCategories = useMemo(() => {
+    const categories = new Set<string>();
+    departmentLeaders.forEach(l => {
+      const dept = l.department?.trim();
+      if (dept) categories.add(dept);
+    });
+    return Array.from(categories);
+  }, [departmentLeaders]);
 
-    return fallbackDept;
-  }, [cmsLeaders, seniorPastors, coMinisters, deacons]);
+  const filteredDepartmentLeaders = useMemo(() => {
+    if (activeFilter === 'all') return departmentLeaders;
+    return departmentLeaders.filter(l => l.department?.trim() === activeFilter);
+  }, [departmentLeaders, activeFilter]);
 
   return (
     <>
@@ -253,7 +278,7 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
         </Container>
       </Section>
 
-      {/* ── 4. Departmental & Ministry Leaders ──────────────── */}
+      {/* ── 4. Departmental & Ministry Leaders (Dynamic from Endpoint) ── */}
       <Section
         tone="canvas"
         className="border-t border-[var(--app-border)] py-16 sm:py-24"
@@ -267,44 +292,69 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
               description="Faithful believers heading worship, children, hospitality, media, and outreach operations across the church."
             />
 
-            {/* Interactive Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2">
-              {[
-                { id: 'all', label: 'All Leaders' },
-                { id: 'departments', label: 'Department Heads' },
-              ].map(tab => (
+            {/* Department Filter Pills (Dynamic from Endpoint Data) */}
+            {departmentCategories.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2">
                 <button
-                  key={tab.id}
                   type="button"
-                  onClick={() =>
-                    setActiveFilter(tab.id as 'all' | 'departments')
-                  }
+                  onClick={() => setActiveFilter('all')}
                   className={`inline-flex min-h-[44px] items-center rounded-full px-5 font-ui text-caption font-bold uppercase tracking-wider transition-all duration-200 ${
-                    activeFilter === tab.id
+                    activeFilter === 'all'
                       ? 'bg-[var(--app-dark)] text-white shadow-sm'
                       : 'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-muted)] hover:border-[var(--app-primary)] hover:text-[var(--app-text)]'
                   }`}
                 >
-                  {tab.label}
+                  All ({departmentLeaders.length})
                 </button>
-              ))}
-            </div>
+                {departmentCategories.map(category => (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => setActiveFilter(category)}
+                    className={`inline-flex min-h-[44px] items-center rounded-full px-5 font-ui text-caption font-bold uppercase tracking-wider transition-all duration-200 ${
+                      activeFilter === category
+                        ? 'bg-[var(--app-dark)] text-white shadow-sm'
+                        : 'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-muted)] hover:border-[var(--app-primary)] hover:text-[var(--app-text)]'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {departmentLeaders.map((leader, i) => (
-              <ScrollFadeIn key={leader.id} delay={i * 0.08}>
-                <LeaderCard leader={leader} tone="canvas" onOpenBio={openBio} />
-              </ScrollFadeIn>
-            ))}
-          </div>
+          {filteredDepartmentLeaders.length > 0 ? (
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredDepartmentLeaders.map((leader, i) => (
+                <ScrollFadeIn key={leader.id} delay={i * 0.08}>
+                  <LeaderCard
+                    leader={leader}
+                    tone="canvas"
+                    onOpenBio={openBio}
+                  />
+                </ScrollFadeIn>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-12 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-8 text-center sm:p-12">
+              <p className="font-headline text-heading-md text-[var(--app-ink)]">
+                Department Heads & Ministry Leads
+              </p>
+              <p className="mx-auto mt-2 max-w-lg font-ui text-body-sm text-[var(--app-muted)]">
+                {activeFilter === 'all'
+                  ? 'Our department leaders and ministry heads are dynamically synchronized with church administration. As newly approved departmental heads are published, they will appear here.'
+                  : `No department heads found under "${activeFilter}".`}
+              </p>
+            </div>
+          )}
         </Container>
       </Section>
 
-      {/* ── 5. Replaced CTA: Explore More Band ──────────────── */}
+      {/* ── 5. Explore More Band ────────────────────────────── */}
       <ExploreMoreBand tone="canvas" />
 
-      {/* ── 6. Replaced CTA: Newsletter Band ────────────────── */}
+      {/* ── 6. Newsletter Band ──────────────────────────────── */}
       <LeadershipNewsletterSection />
 
       {/* ── 7. Full Biography Modal ─────────────────────────── */}

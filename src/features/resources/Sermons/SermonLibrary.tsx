@@ -404,7 +404,7 @@ export default function SermonLibrary({
                       series, prayer moments, and conference messages directly
                       from Wisdom Church.
                     </p>
-                    <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                    <div className="mt-8 flex flex-row flex-wrap items-center gap-3 sm:gap-4">
                       <a
                         className={buttonClass('primary')}
                         href={SOCIAL_LINKS.youtube}

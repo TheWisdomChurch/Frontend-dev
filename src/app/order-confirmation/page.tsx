@@ -48,8 +48,11 @@ const nextSteps = [
 
 function SimpleConfirmation() {
   useEffect(() => {
+    const targets = document.querySelectorAll('.confirmation-animate');
+    if (targets.length === 0) return;
+
     gsap.fromTo(
-      '.confirmation-animate',
+      targets,
       { opacity: 0, y: 44, scale: 0.955 },
       {
         opacity: 1,
@@ -103,10 +106,10 @@ function SimpleConfirmation() {
                   details and tracking information where applicable.
                 </BaseText>
 
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                <div className="mt-8 flex flex-row flex-wrap items-center justify-center gap-3 sm:gap-4">
                   <Link
                     href="/resources/store"
-                    className={`${buttonClass('primary')} w-full gap-2 sm:w-auto`}
+                    className={`${buttonClass('primary')} gap-2`}
                   >
                     <ShoppingBag className="h-5 w-5" />
                     Continue Shopping
@@ -114,7 +117,7 @@ function SimpleConfirmation() {
 
                   <Link
                     href="/"
-                    className={`${buttonClass('outline')} w-full gap-2 text-[var(--app-primary)] sm:w-auto`}
+                    className={`${buttonClass('outline')} gap-2 text-[var(--app-primary)]`}
                   >
                     <Home className="h-5 w-5" />
                     Back to Home

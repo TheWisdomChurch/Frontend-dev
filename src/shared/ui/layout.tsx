@@ -408,7 +408,7 @@ export function SplitFeature({
       <div className="contents lg:block lg:min-w-0">
         <div className="order-1 min-w-0 lg:order-none">{text}</div>
         {actions ? (
-          <div className="order-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:order-none lg:mt-10">
+          <div className="order-3 flex flex-row flex-wrap items-center gap-3 sm:gap-4 lg:order-none lg:mt-10">
             {actions}
           </div>
         ) : null}
