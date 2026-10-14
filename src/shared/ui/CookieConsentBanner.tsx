@@ -204,7 +204,7 @@ export default function CookieConsentBanner() {
                   help us improve it.{' '}
                   <Link
                     href="/cookies"
-                    className="text-[var(--app-primary)] underline-offset-3 hover:underline"
+                    className="inline-flex min-h-[44px] items-center text-[var(--app-primary)] underline-offset-3 hover:underline"
                   >
                     Learn more
                   </Link>
@@ -217,7 +217,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => setSettingsOpen(true)}
-                className="inline-flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-button border border-white/12 px-2 font-ui text-caption font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90 sm:px-3.5 sm:text-label"
+                className="inline-flex h-11 min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-button border border-white/12 px-2 font-ui text-caption font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90 sm:px-3.5 sm:text-label"
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Manage
@@ -226,7 +226,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => apply({ analytics: false, marketing: false })}
-                className="inline-flex h-9 min-w-0 items-center justify-center rounded-button border border-white/12 px-2 font-ui text-caption font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90 sm:px-3.5 sm:text-label"
+                className="inline-flex h-11 min-h-11 min-w-0 items-center justify-center rounded-button border border-white/12 px-2 font-ui text-caption font-semibold text-white/65 transition hover:border-white/22 hover:text-white/90 sm:px-3.5 sm:text-label"
               >
                 Essential only
               </button>
@@ -234,7 +234,7 @@ export default function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => apply({ analytics: true, marketing: true })}
-                className={buttonClass('primary', 'sm')}
+                className={buttonClass('primary', 'sm', 'h-11 min-h-11')}
               >
                 Accept all
               </button>

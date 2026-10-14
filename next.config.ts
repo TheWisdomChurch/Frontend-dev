@@ -111,6 +111,11 @@ const nextConfig: NextConfig = {
         value: 'strict-origin-when-cross-origin',
       },
       {
+        key: 'Permissions-Policy',
+        value:
+          'camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=()',
+      },
+      {
         key: 'Strict-Transport-Security',
         value: 'max-age=63072000; includeSubDomains; preload',
       },

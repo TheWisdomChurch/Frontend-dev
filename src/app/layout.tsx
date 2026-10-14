@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
@@ -27,7 +27,7 @@ import {
 // can't turn a curly apostrophe / em dash into mojibake.
 const OG_TITLE = asciiMeta(`${SITE_NAME} - ${SITE_TAGLINE}`);
 const HOME_TITLE = asciiMeta(
-  `${SITE_NAME} | Experience God's Transforming Power in Lagos`
+  `${SITE_NAME} | God's Transforming Power in Lagos`
 );
 import HeroHighlights from '@/features/hero/HeroHighlights';
 import CommunityJoinModal from '@/features/community/CommunityJoinModalLoader';

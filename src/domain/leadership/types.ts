@@ -50,6 +50,7 @@ export interface LeadershipMember {
   phone?: string;
   role: LeadershipRole;
   status: LeadershipStatus;
+  department?: string | null;
   bio?: string | null;
   imageUrl?: string | null;
   birthday?: string;
