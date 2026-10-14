@@ -37,10 +37,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const isTransient = text => TRANSIENT.some(sig => text.includes(sig));
 
 function runAudit() {
+  const env = {
+    ...process.env,
+    PATH: `/opt/homebrew/bin:/usr/local/bin:${process.env.PATH || ''}`,
+  };
   const res = spawnSync('npm', ['audit', '--omit=dev', '--json'], {
     encoding: 'utf8',
     maxBuffer: 32 * 1024 * 1024,
     shell: process.platform === 'win32',
+    env,
   });
   return {
     stdout: res.stdout || '',
@@ -97,8 +102,13 @@ async function main() {
     }
 
     // Not a usable report — decide whether to retry.
+    const errObj = report && report.error;
     lastReason =
-      (report && report.error && (report.error.detail || report.error)) ||
+      (errObj &&
+        (errObj.detail ||
+          errObj.summary ||
+          errObj.message ||
+          JSON.stringify(errObj))) ||
       combined.trim().split('\n').slice(-3).join(' ') ||
       'no audit report returned';
 
