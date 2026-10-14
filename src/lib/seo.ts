@@ -47,7 +47,7 @@ export const SITE_NAME = 'The Wisdom Church';
 export const SITE_ALT_NAME = 'Wisdom Church';
 export const SITE_TAGLINE = "Experience God's transforming power";
 export const SITE_DESCRIPTION =
-  'The Wisdom Church is a vibrant, Spirit-filled family in Lagos, Nigeria - a wave of Greatness raising believers through worship, sound biblical teaching, prayer, and authentic community. Join us in person or online this Sunday.';
+  'The Wisdom Church is a vibrant, Spirit-filled family in Lagos, Nigeria raising believers through worship, biblical teaching, prayer, and authentic community.';
 
 // The church brand mark, used for the Organization `logo` in structured data
 // and as the shared social preview image. The user asked for this exact file.

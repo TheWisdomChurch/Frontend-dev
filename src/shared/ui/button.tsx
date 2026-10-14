@@ -22,7 +22,7 @@ const base =
   'inline-flex shrink-0 items-center justify-center gap-2 rounded-button font-ui font-semibold leading-none tracking-[-0.01em] outline-none transition-[transform,background-color,border-color,box-shadow,color] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-primary)] disabled:pointer-events-none disabled:opacity-55 motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.97]';
 
 const sizeClass: Record<ButtonSize, string> = {
-  sm: 'min-h-9 px-4 text-body-sm',
+  sm: 'min-h-11 px-4 text-body-sm',
   md: 'min-h-11 px-5 text-body-md',
   lg: 'min-h-12 px-7 text-body-lg',
   icon: 'h-11 w-11 p-0',

@@ -103,12 +103,12 @@ export default function SiteHero({
           )}
         >
           {eyebrow ? (
-            <p
-              data-hero-item
-              className="mb-5 font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)] [text-shadow:0_1px_10px_black]"
-            >
-              {eyebrow}
-            </p>
+            <div data-hero-item className="mb-5">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] bg-[color-mix(in_srgb,black_45%,transparent)] px-4 py-1.5 font-ui text-caption font-bold uppercase tracking-[0.22em] text-[var(--app-primary-light)] backdrop-blur-md shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
+                {eyebrow}
+              </span>
+            </div>
           ) : null}
 
           <h1

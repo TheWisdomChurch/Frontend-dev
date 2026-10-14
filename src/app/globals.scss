@@ -120,7 +120,7 @@
 
   --radius: var(--radius-lg); /* Tailwind rounded-lg/md/sm base */
   --radius-badge: var(--radius-xs);
-  --radius-button: 0.5rem; /* sits between sm and md; kept until <Button> lands */
+  --radius-button: 9999px; /* modern luxury pill shape */
   --radius-input: 0.75rem; /* sits between md and lg; kept until <Field> lands */
   --radius-card: var(--radius-lg);
   --radius-image: var(--radius-lg);
