@@ -77,6 +77,7 @@ export type PublicFormContentSection = {
 
 export type PublicFormSettings = {
   formType?: string;
+  isRegistrationForm?: boolean;
   introTitle?: string;
   introSubtitle?: string;
   introBullets?: string[];
@@ -92,6 +93,16 @@ export type PublicFormSettings = {
   submitButtonText?: string;
   /** Optional hero image shown above the form. */
   coverImageUrl?: string;
+  eFlyerUrl?: string;
+  attendingBadgeSettings?: {
+    enabled?: boolean;
+    templateStyle?: 'polaroid' | 'badge' | 'glass_card' | 'minimal';
+    badgeText?: string;
+    customFlyerUrl?: string;
+    photoShape?: 'rounded' | 'square' | 'circle';
+    accentColor?: string;
+    tagline?: string;
+  };
   sections?: PublicFormContentSection[];
   consent?: {
     enabled?: boolean;
