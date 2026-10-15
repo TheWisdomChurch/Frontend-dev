@@ -75,6 +75,19 @@ export default function PublicFormPage() {
     </div>
   );
 
+  const attendeeName = useMemo(() => {
+    if (!engine.answers) return '';
+    const ans = engine.answers;
+    const candidate =
+      ans['first_name'] ||
+      ans['firstName'] ||
+      ans['firstname'] ||
+      ans['full_name'] ||
+      ans['fullName'] ||
+      ans['name'];
+    return typeof candidate === 'string' ? candidate.trim() : '';
+  }, [engine.answers]);
+
   if (loading) {
     return (
       <FormShell
@@ -137,6 +150,17 @@ export default function PublicFormPage() {
         message={presentation.successMessage}
         primaryLabel={returnLabel}
         onPrimary={() => router.push(returnPath)}
+        secondaryLabel={formSlug ? '✨ Create Your Attendee Flyer' : undefined}
+        onSecondary={
+          formSlug
+            ? () => {
+                const nameParam = attendeeName
+                  ? `?name=${encodeURIComponent(attendeeName)}`
+                  : '';
+                router.push(`/forms/${formSlug}/dp${nameParam}`);
+              }
+            : undefined
+        }
       />
     </>
   );

@@ -466,6 +466,14 @@ function normalizePublicFormSettings(
     coverImageUrl:
       asNonEmptyString(pick('coverImageUrl')) ??
       asNonEmptyString(design?.coverImageUrl),
+    eFlyerUrl:
+      asNonEmptyString(pick('eFlyerUrl')) ??
+      asNonEmptyString(pick('eflyerUrl')),
+    attendingBadgeSettings: (pick('attendingBadge') ??
+      pick(
+        'attendingBadgeSettings'
+      )) as PublicFormSettings['attendingBadgeSettings'],
+    isRegistrationForm: Boolean(pick('isRegistrationForm')),
     sections: sections.length ? sections : undefined,
     consent,
   };

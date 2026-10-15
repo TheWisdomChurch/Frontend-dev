@@ -84,7 +84,10 @@ export default function OnlineGiving() {
 
   return (
     <>
-      <Section tone="dark" className="bg-[var(--app-dark-2)]">
+      <Section
+        tone="dark"
+        className="bg-[radial-gradient(ellipse_75%_55%_at_80%_35%,color-mix(in_srgb,var(--app-primary)_12%,transparent)_0%,transparent_65%),var(--app-dark-2)]"
+      >
         <Container>
           <div className="grid items-start gap-10 sm:gap-12 md:gap-10 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:gap-14 xl:gap-20">
             <div className="contents lg:block lg:max-w-xl lg:self-start lg:sticky lg:top-28">

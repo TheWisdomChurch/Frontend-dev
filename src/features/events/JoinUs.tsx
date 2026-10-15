@@ -366,7 +366,7 @@ export default function JoinWorkforce() {
       {/* ── Banner ───────────────────────────────────────────── */}
       {/* TODO: was a photo banner (Dept_1) — source image is missing from
           the repo; needs a real photo re-uploaded to shared/assets. */}
-      <div className="relative overflow-hidden border-b border-[var(--app-border)]">
+      <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-[color-mix(in_srgb,var(--app-dark)_78%,transparent)] to-[color-mix(in_srgb,var(--app-dark)_45%,transparent)]" />
         </div>

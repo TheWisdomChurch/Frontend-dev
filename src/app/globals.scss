@@ -1894,6 +1894,300 @@ body.nav-open {
   }
 }
 
+/* ============================================================================
+   LIVING VIDEO HERO & CINEMATIC ATMOSPHERE
+   Transforms still photography into a living, breathing cinematic sanctuary scene.
+============================================================================ */
+
+.hero-cinematic-zoom-layer {
+  position: absolute;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  will-change: transform;
+  transform: scale(1) translate3d(0, 0, 0);
+  animation: hero-cinematic-zoom 28s ease-in-out infinite alternate;
+}
+
+@keyframes hero-cinematic-zoom {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  25% {
+    transform: scale(1.015) translate3d(-0.4%, -0.3%, 0);
+  }
+  50% {
+    transform: scale(1.03) translate3d(-0.2%, -0.6%, 0);
+  }
+  75% {
+    transform: scale(1.018) translate3d(0.4%, -0.2%, 0);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.hero-video-light-beam {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    65% 55% at 28% 22%,
+    color-mix(in srgb, var(--app-primary-light) 24%, transparent) 0%,
+    color-mix(in srgb, var(--app-primary) 12%, transparent) 40%,
+    transparent 75%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.8;
+  animation: hero-light-beam-sweep 18s ease-in-out infinite alternate;
+}
+
+@keyframes hero-light-beam-sweep {
+  0% {
+    transform: translate3d(-2%, -2%, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate3d(3%, 1.5%, 0) scale(1.1);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(-1%, 2.5%, 0) scale(1.04);
+    opacity: 0.65;
+  }
+}
+
+.hero-stage-flare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 55% 30%,
+    color-mix(in srgb, var(--app-primary-light) 26%, transparent) 0%,
+    color-mix(in srgb, var(--app-primary) 14%, transparent) 35%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  animation: hero-stage-flare-pulse 12s ease-in-out infinite alternate;
+}
+
+@keyframes hero-stage-flare-pulse {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.96) translate3d(-1%, 0, 0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08) translate3d(1.5%, -1%, 0);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1.02) translate3d(0, 1%, 0);
+  }
+}
+
+.hero-filmic-dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      1.2px 1.2px at 20px 30px,
+      rgba(255, 255, 255, 0.45),
+      transparent
+    ),
+    radial-gradient(
+      1.2px 1.2px at 40px 70px,
+      rgba(255, 215, 0, 0.35),
+      transparent
+    ),
+    radial-gradient(
+      1.8px 1.8px at 90px 40px,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  opacity: 0.3;
+  animation: hero-dust-drift 26s linear infinite;
+}
+
+@keyframes hero-dust-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-30px, -60px, 0);
+  }
+}
+
+.service-video-canvas {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  will-change: transform;
+  transform: scale(1.05) translate3d(0, 0, 0);
+  animation: service-cinematic-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes service-cinematic-drift {
+  0% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+  33% {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+  66% {
+    transform: scale(1.08) translate3d(1%, -1.8%, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+}
+
+.hero-eyebrow-shimmer {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-1px) scale(1.015);
+    border-color: color-mix(in srgb, var(--app-primary) 70%, transparent);
+    box-shadow:
+      0 8px 30px rgba(0, 0, 0, 0.5),
+      0 0 20px color-mix(in srgb, var(--app-primary) 25%, transparent);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 35%,
+      color-mix(in srgb, var(--app-primary-light) 40%, transparent) 50%,
+      rgba(255, 255, 255, 0.08) 65%,
+      transparent 100%
+    );
+    animation: hero-badge-shine 6s ease-in-out infinite;
+  }
+}
+
+@keyframes hero-badge-shine {
+  0%,
+  75% {
+    transform: translateX(-100%);
+  }
+  90%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.hero-directional-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+
+  .hero-btn-spotlight {
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      140px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--spotlight-color, rgba(255, 255, 255, 0.25)),
+      transparent 80%
+    );
+  }
+
+  &:hover .hero-btn-spotlight {
+    opacity: 1;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.985);
+  }
+}
+
+.hero-plan-btn {
+  --spotlight-color: color-mix(
+    in srgb,
+    var(--app-primary-light) 35%,
+    transparent
+  );
+}
+
+.hero-parallax-canvas {
+  transform: scale(1.015)
+    translate3d(
+      calc(var(--hero-mouse-x, 0) * -8px),
+      calc(var(--hero-mouse-y, 0) * -6px),
+      0
+    );
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-parallax-content {
+  transform: translate3d(
+    calc(var(--hero-mouse-x, 0) * 8px),
+    calc(var(--hero-mouse-y, 0) * 6px),
+    0
+  );
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-particle-1 {
+  animation: hero-particle-float 4s ease-in-out infinite alternate;
+}
+
+.hero-particle-2 {
+  animation: hero-particle-float 6s ease-in-out 1s infinite alternate;
+}
+
+.hero-particle-3 {
+  animation: hero-particle-float 5s ease-in-out 2s infinite alternate;
+}
+
+.hero-particle-4 {
+  animation: hero-particle-float 7s ease-in-out 0.5s infinite alternate;
+}
+
+@keyframes hero-particle-float {
+  0% {
+    opacity: 0.3;
+    transform: translate3d(0, 0, 0) scale(0.9);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate3d(4px, -6px, 0) scale(1.15);
+  }
+  100% {
+    opacity: 0.4;
+    transform: translate3d(-3px, 4px, 0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

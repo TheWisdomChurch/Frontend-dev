@@ -143,7 +143,7 @@ export const HOME_IMAGES = {
   hero: {
     src: lader,
     alt: 'The Wisdom Church worship service',
-    position: 'object-[center_32%]',
+    position: 'object-[center_14%]',
   },
   welcome: {
     src: Img_1,
