@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { CalendarDays, MapPin, Play } from 'lucide-react';
+import { CalendarDays, MapPin } from 'lucide-react';
 
 import {
   HOME_BELIEFS,
@@ -11,10 +11,9 @@ import { CellFellowshipCta } from '@/features/community/CellFellowshipCta';
 import { ConnectCommunityCta } from '@/features/community/ConnectCommunityCta';
 import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
-import SiteHero from '@/features/hero/SiteHero';
+import HomeHero from '@/features/hero/HomeHero';
 import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
 import { IMAGE_QUALITY } from '@/shared/constants';
-import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import {
   Container,
@@ -26,44 +25,17 @@ import {
   Split,
   SplitFeature,
 } from '@/shared/ui/layout';
-import { buttonClass } from '@/shared/ui/button';
 
 export default function PremiumHome() {
   return (
     <Page tone="surface">
-      <SiteHero
-        size="home"
-        align="center"
-        priority
-        eyebrow={HOME_COPY.hero.eyebrow}
-        title={`${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}${HOME_COPY.hero.titleTail}`}
-        titleLines={[
-          `${HOME_COPY.hero.titleLead}${HOME_COPY.hero.titleAccent}`.trim(),
-          HOME_COPY.hero.titleTail.trim(),
-        ]}
-        highlightSecondLine
-        subtitle={HOME_COPY.hero.description}
+      <HomeHero
         backgroundImage={HOME_IMAGES.hero.src}
         imagePositionClassName={HOME_IMAGES.hero.position}
-        actions={
-          <>
-            <a
-              href={SOCIAL_LINKS.youtube}
-              target="_blank"
-              rel="noreferrer"
-              className={buttonClass('primary', 'lg')}
-            >
-              <Play className="mr-2 h-4 w-4 fill-current" />{' '}
-              {HOME_COPY.actions.watchLive}
-            </a>
-            <PlanVisitTrigger variant="outline" size="lg">
-              {HOME_COPY.actions.planVisit}
-            </PlanVisitTrigger>
-          </>
-        }
+        priority
       />
 
-      <Section>
+      <Section id="welcome">
         <Container>
           <SplitFeature
             text={
