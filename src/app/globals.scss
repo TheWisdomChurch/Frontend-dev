@@ -1899,25 +1899,31 @@ body.nav-open {
    Transforms still photography into a living, breathing cinematic sanctuary scene.
 ============================================================================ */
 
-.hero-cinematic-canvas {
+.hero-cinematic-zoom-layer {
   position: absolute;
-  inset: -6%;
-  width: 112%;
-  height: 112%;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
   will-change: transform;
-  transform: scale(1.04) translate3d(0, 0, 0);
-  animation: hero-cinematic-zoom 26s ease-in-out infinite alternate;
+  transform: scale(1) translate3d(0, 0, 0);
+  animation: hero-cinematic-zoom 28s ease-in-out infinite alternate;
 }
 
 @keyframes hero-cinematic-zoom {
   0% {
-    transform: scale(1.04) translate3d(0, 0, 0);
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  25% {
+    transform: scale(1.015) translate3d(-0.4%, -0.3%, 0);
   }
   50% {
-    transform: scale(1.12) translate3d(-1%, -1.2%, 0);
+    transform: scale(1.03) translate3d(-0.2%, -0.6%, 0);
+  }
+  75% {
+    transform: scale(1.018) translate3d(0.4%, -0.2%, 0);
   }
   100% {
-    transform: scale(1.06) translate3d(0.8%, 0.6%, 0);
+    transform: scale(1) translate3d(0, 0, 0);
   }
 }
 
@@ -1927,13 +1933,13 @@ body.nav-open {
   pointer-events: none;
   background: radial-gradient(
     65% 55% at 28% 22%,
-    color-mix(in srgb, var(--app-primary-light) 22%, transparent) 0%,
+    color-mix(in srgb, var(--app-primary-light) 24%, transparent) 0%,
     color-mix(in srgb, var(--app-primary) 12%, transparent) 40%,
     transparent 75%
   );
   mix-blend-mode: screen;
-  opacity: 0.75;
-  animation: hero-light-beam-sweep 16s ease-in-out infinite alternate;
+  opacity: 0.8;
+  animation: hero-light-beam-sweep 18s ease-in-out infinite alternate;
 }
 
 @keyframes hero-light-beam-sweep {
@@ -1942,12 +1948,102 @@ body.nav-open {
     opacity: 0.6;
   }
   50% {
-    transform: translate3d(3%, 1.5%, 0) scale(1.08);
-    opacity: 0.9;
+    transform: translate3d(3%, 1.5%, 0) scale(1.1);
+    opacity: 0.95;
   }
   100% {
-    transform: translate3d(-1%, 2.5%, 0) scale(1.03);
+    transform: translate3d(-1%, 2.5%, 0) scale(1.04);
     opacity: 0.65;
+  }
+}
+
+.hero-stage-flare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 55% 30%,
+    color-mix(in srgb, var(--app-primary-light) 26%, transparent) 0%,
+    color-mix(in srgb, var(--app-primary) 14%, transparent) 35%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  animation: hero-stage-flare-pulse 12s ease-in-out infinite alternate;
+}
+
+@keyframes hero-stage-flare-pulse {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.96) translate3d(-1%, 0, 0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08) translate3d(1.5%, -1%, 0);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1.02) translate3d(0, 1%, 0);
+  }
+}
+
+.hero-filmic-dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      1.2px 1.2px at 20px 30px,
+      rgba(255, 255, 255, 0.45),
+      transparent
+    ),
+    radial-gradient(
+      1.2px 1.2px at 40px 70px,
+      rgba(255, 215, 0, 0.35),
+      transparent
+    ),
+    radial-gradient(
+      1.8px 1.8px at 90px 40px,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  opacity: 0.3;
+  animation: hero-dust-drift 26s linear infinite;
+}
+
+@keyframes hero-dust-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-30px, -60px, 0);
+  }
+}
+
+.service-video-canvas {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  will-change: transform;
+  transform: scale(1.05) translate3d(0, 0, 0);
+  animation: service-cinematic-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes service-cinematic-drift {
+  0% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+  33% {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+  66% {
+    transform: scale(1.08) translate3d(1%, -1.8%, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(0, 0, 0);
   }
 }
 
@@ -2043,10 +2139,10 @@ body.nav-open {
 }
 
 .hero-parallax-canvas {
-  transform: scale(1.08)
+  transform: scale(1.015)
     translate3d(
-      calc(var(--hero-mouse-x, 0) * -12px),
-      calc(var(--hero-mouse-y, 0) * -10px),
+      calc(var(--hero-mouse-x, 0) * -8px),
+      calc(var(--hero-mouse-y, 0) * -6px),
       0
     );
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);

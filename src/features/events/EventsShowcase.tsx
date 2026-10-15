@@ -411,7 +411,10 @@ export default function EventsShowcase() {
   const hasContent = !isLoading && activeSlides.length > 0;
 
   return (
-    <Section tone="surface">
+    <Section
+      tone="surface"
+      className="bg-[radial-gradient(ellipse_70%_50%_at_50%_20%,color-mix(in_srgb,var(--app-primary-10)_50%,transparent)_0%,transparent_60%),var(--app-canvas-2)]"
+    >
       <Container>
         {/* ── Header ──────────────────────────────────────── */}
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">

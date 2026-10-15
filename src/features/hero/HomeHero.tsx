@@ -70,30 +70,36 @@ export default function HomeHero({
       onMouseLeave={handleHeroMouseLeave}
       className="tone-dark relative isolate flex h-screen min-h-[100svh] w-full max-w-full flex-col justify-end overflow-hidden overflow-x-clip bg-[var(--app-dark)] text-white"
     >
-      {/* ── 1. Living Video Background Canvas (60fps Camera Drift & Light Beams) ── */}
+      {/* ── 1. Living Video Background Canvas (Ken Burns Drift, Light Beams, & Stage Flare) ── */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-20 overflow-hidden"
       >
-        <div
-          data-hero-media
-          className="hero-cinematic-canvas hero-parallax-canvas will-change-transform"
-        >
-          <Image
-            src={backgroundImage}
-            alt="The Wisdom Church worship service"
-            fill
-            priority={priority}
-            quality={IMAGE_QUALITY}
-            sizes="100vw"
-            className={cn(
-              'h-full w-full max-w-full object-cover object-[center_28%]',
-              imagePositionClassName
-            )}
-          />
+        <div className="hero-cinematic-zoom-layer will-change-transform">
+          <div
+            data-hero-media
+            className="hero-parallax-canvas relative h-full w-full will-change-transform"
+          >
+            <Image
+              src={backgroundImage}
+              alt="The Wisdom Church worship service"
+              fill
+              priority={priority}
+              quality={IMAGE_QUALITY}
+              sizes="100vw"
+              className={cn(
+                'h-full w-full max-w-full object-cover',
+                imagePositionClassName || 'object-[center_14%]'
+              )}
+            />
 
-          {/* Atmospheric Sanctuary Stage Lighting Sweep */}
-          <div className="hero-video-light-beam" />
+            {/* Atmospheric Sanctuary Stage Lighting Sweep */}
+            <div className="hero-video-light-beam" />
+            {/* Volumetric Stage Glow Pulse */}
+            <div className="hero-stage-flare" />
+            {/* Filmic Ambient Dust Particles */}
+            <div className="hero-filmic-dust" />
+          </div>
         </div>
       </div>
 
@@ -101,13 +107,19 @@ export default function HomeHero({
       {/* Top wash for clear header navbar legibility */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-black/80 via-black/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-44 bg-gradient-to-b from-black/90 via-black/50 to-transparent"
+      />
+
+      {/* Deep radial contrast vignette for ultra-rich HD focus */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_35%,transparent_35%,color-mix(in_srgb,var(--app-dark)_60%,transparent)_75%,var(--app-dark)_100%)]"
       />
 
       {/* Base high-definition gradient ensuring 100% text readability */}
       <div
         data-hero-overlay
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_top,var(--app-dark)_0%,color-mix(in_srgb,var(--app-dark)_88%,transparent)_32%,color-mix(in_srgb,var(--app-dark)_45%,transparent)_60%,transparent_80%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_top,var(--app-dark)_0%,color-mix(in_srgb,var(--app-dark)_90%,transparent)_32%,color-mix(in_srgb,var(--app-dark)_45%,transparent)_62%,transparent_85%)]"
       />
 
       {/* Subtle warm gold ambient aura */}
