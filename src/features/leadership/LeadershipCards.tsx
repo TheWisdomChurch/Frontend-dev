@@ -64,8 +64,9 @@ export function LeaderCard({
         hasBio && onOpenBio && 'cursor-pointer'
       )}
     >
-      {/* Department / Category Pill (top-left) */}
-      {leader.department ? (
+      {/* Department / Category Pill (top-left) - Never show "Board of Deacons" */}
+      {leader.department &&
+      leader.department.toLowerCase().trim() !== 'board of deacons' ? (
         <div className="absolute left-4 top-4 z-20">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/60 px-3 py-1 font-ui text-caption font-semibold uppercase tracking-wider text-white backdrop-blur-md shadow-sm">
             {leader.department}
@@ -111,10 +112,11 @@ export function LeaderCard({
           {name}
         </h3>
 
-        {/* Short Teaser / Read Bio Action */}
+        {/* Bio preview with subtle golden rule and Read more trigger */}
         {hasBio ? (
           <div className="mt-2.5">
-            <p className="line-clamp-2 font-ui text-body-sm leading-relaxed text-white/80 [text-shadow:0_1px_8px_black]">
+            <span className="block h-px w-8 bg-[color-mix(in_srgb,var(--app-primary)_70%,transparent)]" />
+            <p className="mt-2 line-clamp-2 font-ui text-body-sm leading-relaxed text-white/85 [text-shadow:0_1px_8px_black]">
               {leader.bio}
             </p>
 
@@ -126,9 +128,9 @@ export function LeaderCard({
                   onOpenBio(leader);
                 }}
                 className="mt-3 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] px-4 py-1.5 font-ui text-caption font-bold uppercase tracking-wider text-[var(--app-primary-light)] backdrop-blur-sm transition-all duration-200 hover:border-[var(--app-primary)] hover:bg-[var(--app-primary)] hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)]"
-                aria-label={`Read full biography for ${name}`}
+                aria-label={`Read more about ${name}`}
               >
-                <span>Read bio</span>
+                <span>Read more</span>
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
             ) : null}

@@ -9,11 +9,6 @@ import { LeadershipDirectory } from '@/features/leadership/LeadershipDirectory';
 import SectionFlowDock, {
   type FlowDockItem,
 } from '@/shared/components/SectionFlowDock';
-import {
-  CANONICAL_SENIOR_PASTORS,
-  CANONICAL_CO_MINISTERS,
-  CANONICAL_DEACONS,
-} from '@/features/leadership/canonicalData';
 
 // Approved leadership is CMS-managed content. Render it per request so a
 // production build cannot freeze an empty or outdated directory indefinitely.
@@ -30,9 +25,9 @@ const LEADERSHIP_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
   },
   {
     id: 'dock-resident-pastors',
-    title: 'Resident Pastors',
-    description: 'Rev. Victor Jimba & Pastor Bamidele Shepherding',
-    badge: 'Resident Pastors',
+    title: 'Pastoral Council',
+    description: 'Rev. Victor Jimba & Pastor Bamidele',
+    badge: 'Pastoral Council',
     icon: 'users',
     targetId: 'resident-pastors',
   },
@@ -59,14 +54,6 @@ export default async function LeadershipPage() {
     .listLeadership()
     .catch(() => []);
 
-  // Combined set of leaders for search engine rich snippets
-  const allLeadersForSchema = [
-    ...CANONICAL_SENIOR_PASTORS,
-    ...CANONICAL_CO_MINISTERS,
-    ...CANONICAL_DEACONS,
-    ...cmsLeaders,
-  ];
-
   return (
     <Page>
       {/* ── SEO Structured Data ──────────────────────────────── */}
@@ -77,7 +64,7 @@ export default async function LeadershipPage() {
         ])}
       />
 
-      {allLeadersForSchema.map(leader => (
+      {cmsLeaders.map(leader => (
         <JsonLd
           key={leader.id}
           data={buildPersonSchema({

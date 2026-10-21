@@ -1,17 +1,7 @@
 import type { LeadershipMember } from '@/domain/leadership/types';
-import {
-  Bishop,
-  PstKenny_1,
-  Associate_1,
-  Associate_2,
-  Deacon_1,
-  Deacon_2,
-} from '@/shared/assets';
+import { Bishop, PstKenny_1, Associate_1, Associate_2 } from '@/shared/assets';
 
-// Canonical base members for specific pastoral and board leadership
-// requested for the directory spotlights. All department heads and ministry
-// leaders are dynamically loaded from the API endpoint (apiClient.listLeadership).
-
+// Canonical base members for pastoral leadership not yet in the API
 export const CANONICAL_SENIOR_PASTORS: LeadershipMember[] = [
   {
     id: 'canon-senior-1',
@@ -42,7 +32,7 @@ export const CANONICAL_CO_MINISTERS: LeadershipMember[] = [
     lastName: 'Jimba',
     role: 'resident_pastor',
     status: 'approved',
-    department: 'Resident Pastor',
+    department: null,
     imageUrl: Associate_2.src,
     bio: 'Rev. Victor Jimba serves as Resident Pastor, providing steadfast pastoral administration, sound spiritual counsel, and leadership discipleship throughout the Wisdom Church family.',
   },
@@ -50,43 +40,10 @@ export const CANONICAL_CO_MINISTERS: LeadershipMember[] = [
     id: 'canon-pastor-2',
     firstName: 'Pastor',
     lastName: 'Bamidele',
-    role: 'resident_pastor',
+    role: 'pastor',
     status: 'approved',
-    department: 'Resident Pastor',
+    department: null,
     imageUrl: Associate_1.src,
-    bio: 'Pastor Bamidele serves as Resident Pastor, actively shepherding the congregation, leading discipleship ministries, and guiding kingdom community mentorship initiatives.',
-  },
-];
-
-export const CANONICAL_DEACONS: LeadershipMember[] = [
-  {
-    id: 'canon-deacon-1',
-    firstName: 'Deacon',
-    lastName: 'Adeyemi',
-    role: 'deacon',
-    status: 'approved',
-    department: 'Board of Deacons',
-    imageUrl: null,
-    bio: 'Deacon Adeyemi oversees deacon board activities, church administration, and member care ministries with excellence, integrity, and diligence.',
-  },
-  {
-    id: 'canon-deacon-2',
-    firstName: 'Deaconess Temisan',
-    lastName: 'Adeniran',
-    role: 'deaconess',
-    status: 'approved',
-    department: 'Finance & Stewardship',
-    imageUrl: Deacon_1.src,
-    bio: 'Deaconess Temisan Adeniran faithfully manages financial stewardship, church records, and biblical principles of kingdom prosperity.',
-  },
-  {
-    id: 'canon-deacon-3',
-    firstName: 'Deaconess Bimbo',
-    lastName: 'Adeyemi',
-    role: 'deaconess',
-    status: 'approved',
-    department: 'Member Care & Outreach',
-    imageUrl: Deacon_2.src,
-    bio: 'Deaconess Bimbo Adeyemi faithfully serves in hospitality coordination, family welfare, and benevolent outreach operations across the church.',
+    bio: 'Pastor Bamidele serves as Pastor, actively shepherding the congregation, leading discipleship ministries, and guiding kingdom community mentorship initiatives.',
   },
 ];
