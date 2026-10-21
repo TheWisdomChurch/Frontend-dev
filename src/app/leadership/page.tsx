@@ -6,29 +6,53 @@ import JsonLd from '@/shared/seo/JsonLd';
 import { buildPersonSchema, buildBreadcrumbSchema } from '@/lib/seo';
 import { Page } from '@/shared/ui/layout';
 import { LeadershipDirectory } from '@/features/leadership/LeadershipDirectory';
-import {
-  CANONICAL_SENIOR_PASTORS,
-  CANONICAL_CO_MINISTERS,
-  CANONICAL_DEACONS,
-} from '@/features/leadership/canonicalData';
+import SectionFlowDock, {
+  type FlowDockItem,
+} from '@/shared/components/SectionFlowDock';
 
 // Approved leadership is CMS-managed content. Render it per request so a
 // production build cannot freeze an empty or outdated directory indefinitely.
 export const dynamic = 'force-dynamic';
 
+const LEADERSHIP_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
+  {
+    id: 'dock-senior-pastors',
+    title: 'Senior Pastors',
+    description: 'Bishop Gabriel Ayilara & Pastor Kehinde Ayilara',
+    badge: 'Senior Pastors',
+    icon: 'church',
+    targetId: 'senior-pastor',
+  },
+  {
+    id: 'dock-resident-pastors',
+    title: 'Pastoral Council',
+    description: 'Rev. Victor Jimba & Pastor Bamidele',
+    badge: 'Pastoral Council',
+    icon: 'users',
+    targetId: 'resident-pastors',
+  },
+  {
+    id: 'dock-deacons',
+    title: 'Deacons & Deaconesses',
+    description: 'Service, administration & congregational care',
+    badge: 'Deaconate',
+    icon: 'shield-check',
+    targetId: 'deacons',
+  },
+  {
+    id: 'dock-organogram',
+    title: 'Leadership Organogram',
+    description: 'Accountable biblical governance and ministry stewards',
+    badge: 'Organogram',
+    icon: 'sparkles',
+    targetId: 'resident-pastors',
+  },
+];
+
 export default async function LeadershipPage() {
-  // Fetch dynamic CMS leadership, with graceful fallback to empty array
   const cmsLeaders: LeadershipMember[] = await apiClient
     .listLeadership()
     .catch(() => []);
-
-  // Combined set of leaders for search engine rich snippets
-  const allLeadersForSchema = [
-    ...CANONICAL_SENIOR_PASTORS,
-    ...CANONICAL_CO_MINISTERS,
-    ...CANONICAL_DEACONS,
-    ...cmsLeaders,
-  ];
 
   return (
     <Page>
@@ -40,7 +64,7 @@ export default async function LeadershipPage() {
         ])}
       />
 
-      {allLeadersForSchema.map(leader => (
+      {cmsLeaders.map(leader => (
         <JsonLd
           key={leader.id}
           data={buildPersonSchema({
@@ -60,6 +84,12 @@ export default async function LeadershipPage() {
         eyebrow="Leadership & Ministry"
         title="The people who shepherd this church."
         subtitle="Called, committed, and accountable — meet the pastors, deacons, and ministry leaders who serve the Wisdom Church family."
+      />
+
+      {/* ── 1.1 Floating Navigation Dock: Matches Growth Portal Flow ─────────── */}
+      <SectionFlowDock
+        label="Leadership Organogram"
+        items={LEADERSHIP_FLOW_DOCK_ITEMS}
       />
 
       {/* ── 2. Modern Directory & People Hierarchy ───────────── */}

@@ -36,11 +36,11 @@ const nextConfig: NextConfig = {
   },
 
   webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
+    if (dev) {
       config.watchOptions = {
-        poll: 1000,
+        poll: 800,
         aggregateTimeout: 300,
-        ignored: /node_modules/,
+        ignored: ['**/node_modules/**', '**/.git/**'],
       };
 
       if (process.env.DOCKER_ENV === 'true') {

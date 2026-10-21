@@ -1,20 +1,24 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
+import {
+  ArrowRight,
+  Compass,
+  Flame,
+  GraduationCap,
+  HeartHandshake,
+  Shield,
+  Sparkles,
+} from 'lucide-react';
 
 import SiteHero from '@/features/hero/SiteHero';
 import Arrow from '@/shared/ui/icons/Arrow';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
-import {
-  CardRail,
-  Container,
-  Page,
-  Section,
-  SectionHeader,
-} from '@/shared/ui/layout';
+import { Container, Page, Section, SectionHeader } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
+import SectionFlowDock, {
+  type FlowDockItem,
+} from '@/shared/components/SectionFlowDock';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Ministries — Find Your Place',
@@ -32,15 +36,69 @@ export const metadata: Metadata = buildPageMetadata({
   ],
 });
 
+const FLOW_DOCK_MINISTRIES: readonly FlowDockItem[] = [
+  {
+    id: 'dock-prayer',
+    title: 'Prayer Ministry',
+    description: 'The engine room · Interceding and keeping the altar burning',
+    badge: 'Weekly Altar',
+    icon: 'flame',
+    href: '/ministries/prayer',
+  },
+  {
+    id: 'dock-youth',
+    title: 'Youth Ministry',
+    description: 'Teenagers & young adults grounded in Word and purpose',
+    badge: 'Bi-Weekly',
+    icon: 'sparkles',
+    href: '/ministries/youth',
+  },
+  {
+    id: 'dock-men',
+    title: "Men's Ministry",
+    description: 'Brotherhood, conviction, spiritual discipline and leadership',
+    badge: 'Monthly',
+    icon: 'shield',
+    href: '/ministries/men',
+  },
+  {
+    id: 'dock-women',
+    title: "Women's Ministry",
+    description: 'Women growing together in the Word, grace and fellowship',
+    badge: 'Monthly',
+    icon: 'heart-handshake',
+    href: '/ministries/women',
+  },
+  {
+    id: 'dock-outreach',
+    title: 'Evangelism & Outreach',
+    description:
+      'Sharing the gospel and expressing Christ’s love in communities',
+    badge: 'Outreaches',
+    icon: 'compass',
+    href: '/ministries/outreach',
+  },
+  {
+    id: 'dock-children',
+    title: "Children's Ministry",
+    description:
+      'A safe, joyful place for nursery to pre-teens learning God’s truth',
+    badge: 'Kingdom Kids',
+    icon: 'graduation-cap',
+    href: '/ministries/children',
+  },
+];
+
 const ministries = [
   {
     title: 'Prayer Ministry',
     label: 'The engine room',
     description:
-      'A community giving itself to prayer — interceding for the church, the city, and one another, and keeping the altar burning.',
+      'A community giving itself to prayer — interceding for the church, the city, and one another, and keeping the altar burning continuously.',
     href: '/ministries/prayer',
-    image: '/Picflow/DSC06712-copy.webp',
-    position: 'object-top',
+    icon: Flame,
+    tag: 'Spiritual Altar',
+    highlights: ['Weekly Intercession', 'City-Wide Prayer', 'Altar Fire'],
   },
   {
     title: 'Youth Ministry',
@@ -48,35 +106,43 @@ const ministries = [
     description:
       'A Christ-centred community where a new generation is grounded in Scripture, prayer, purpose, and godly friendships.',
     href: '/ministries/youth',
-    image: '/Picflow/DSC00006-copy.webp',
-    position: 'object-top',
+    icon: Sparkles,
+    tag: 'Next Gen',
+    highlights: [
+      'Godly Friendships',
+      'Scripture Foundations',
+      'Purpose & Calling',
+    ],
   },
   {
     title: "Men's Ministry",
     label: 'Brotherhood & discipleship',
     description:
-      'A brotherhood forming men of conviction, spiritual discipline, integrity, and servant leadership.',
+      'A brotherhood forming men of conviction, spiritual discipline, integrity, and servant leadership across society.',
     href: '/ministries/men',
-    image: '/Picflow/menleaders.webp',
-    position: 'object-top',
+    icon: Shield,
+    tag: 'Kingdom Men',
+    highlights: ['Spiritual Discipline', 'Integrity & Family', 'Leadership'],
   },
   {
     title: "Women's Ministry",
     label: 'Women in every season',
     description:
-      'Women growing together in the Word, prayer, fellowship, and the grace to live faithfully in every season.',
+      'Women growing together in the Word, prayer, fellowship, and the grace to live faithfully in every season of life.',
     href: '/ministries/women',
-    image: '/Picflow/DSC00054-copy.webp',
-    position: 'object-top',
+    icon: HeartHandshake,
+    tag: 'Virtuous Grace',
+    highlights: ['Word & Prayer', 'Life Fellowship', 'Faithful Grace'],
   },
   {
-    title: 'Evangelism',
-    label: 'The good news, beyond our walls',
+    title: 'Evangelism Outreach',
+    label: 'Beyond our walls',
     description:
       'Sharing the gospel with clarity and courage, and expressing the love of Christ through practical care in our communities.',
     href: '/ministries/outreach',
-    image: '/Picflow/DSC00019-copy.webp',
-    position: 'object-top',
+    icon: Compass,
+    tag: 'City Mission',
+    highlights: ['Gospel Proclamation', 'Community Relief', 'Soul Winning'],
   },
   {
     title: "Children's Ministry",
@@ -84,8 +150,9 @@ const ministries = [
     description:
       'A safe, joyful place where children are known, cared for, and taught the truth of God’s Word at their level.',
     href: '/ministries/children',
-    image: '/Picflow/child2.webp',
-    position: 'object-[center_22%]',
+    icon: GraduationCap,
+    tag: 'Kingdom Kids',
+    highlights: ['Bible Lessons', 'Safe Nursery', 'Worship & Joy'],
   },
 ] as const;
 
@@ -136,6 +203,12 @@ export default function MinistriesPage() {
         }
       />
 
+      {/* ── 1. Floating Ministries Dock (Matches Growth Portal Design & Flow) ──── */}
+      <SectionFlowDock
+        label="Ministries Directory"
+        items={FLOW_DOCK_MINISTRIES}
+      />
+
       <Section tone="canvas">
         <Container>
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end lg:gap-16">
@@ -155,6 +228,7 @@ export default function MinistriesPage() {
         </Container>
       </Section>
 
+      {/* ── 2. Ministries Directory Grid (High-End Obsidian Design, No Photo Backgrounds) ─ */}
       <Section
         id="find-a-ministry"
         tone="dark"
@@ -174,54 +248,72 @@ export default function MinistriesPage() {
             </p>
           </div>
 
-          <CardRail columns={3} className="gap-5">
-            {ministries.map(ministry => (
-              <div key={ministry.title} data-gsap="reveal">
-                <Link
-                  href={ministry.href}
-                  aria-label={`Explore ${ministry.title}`}
-                  className="group relative flex min-h-[24rem] flex-col overflow-hidden rounded-image bg-[var(--app-dark)] ring-1 ring-inset ring-[var(--app-border)] transition-[transform,box-shadow,ring-color] duration-500 ease-out will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-dark)] motion-safe:hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/40 hover:ring-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] sm:min-h-[28rem] lg:min-h-[32rem]"
-                >
-                  {/* Image */}
-                  <Image
-                    src={ministry.image}
-                    alt=""
-                    fill
-                    quality={IMAGE_QUALITY}
-                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                    className={`object-cover ${ministry.position} transition-transform duration-[900ms] ease-out motion-safe:group-hover:scale-[1.05] motion-reduce:transition-none`}
-                  />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {ministries.map(ministry => {
+              const Icon = ministry.icon;
+              return (
+                <div key={ministry.title} data-gsap="reveal" className="h-full">
+                  <Link
+                    href={ministry.href}
+                    aria-label={`Explore ${ministry.title}`}
+                    className="group relative flex h-full min-h-[360px] flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[var(--app-dark-2)] via-[var(--app-dark)] to-black/95 p-6 sm:p-7 text-white shadow-xl transition-all duration-500 hover:-translate-y-2 hover:border-[var(--app-primary)]/60 hover:shadow-2xl hover:shadow-[var(--app-primary)]/10"
+                  >
+                    {/* Ambient Gold Radial Glow on Hover */}
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -inset-px -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,color-mix(in_srgb,var(--app-primary)_20%,transparent)_0%,transparent_70%)] opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+                    />
 
-                  {/* Linear dark gradients — light top scrim for the eyebrow,
-                      deeper bottom scrim that lifts on hover behind the copy. */}
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-[linear-gradient(to_bottom,var(--app-dark),transparent)] opacity-80" />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-[linear-gradient(to_top,var(--app-dark),transparent)] opacity-95 transition-[height] duration-700 ease-out group-hover:h-[72%]" />
-
-                  {/* Content — eyebrow + title top, description + CTA at the foot */}
-                  <div className="relative flex flex-1 flex-col justify-between gap-10 p-6 sm:p-7 lg:p-8">
+                    {/* Top Row: Icon badge + Tag */}
                     <div>
-                      <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)]">
-                        {ministry.label}
-                      </p>
-                      <h3 className="mt-3 font-ui text-heading-md font-semibold leading-snug text-white sm:text-heading-lg">
-                        {ministry.title}
-                      </h3>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-primary)]/40 bg-[var(--app-primary)]/15 text-[var(--app-primary-light)] transition-transform duration-500 group-hover:scale-110">
+                          <Icon className="h-6 w-6" />
+                        </div>
+                        <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--app-primary-light)]">
+                          {ministry.tag}
+                        </span>
+                      </div>
+
+                      <div className="mt-6 space-y-2">
+                        <p className="font-ui text-caption font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)]">
+                          {ministry.label}
+                        </p>
+                        <h3 className="font-ui text-heading-md font-bold text-white transition-colors group-hover:text-[var(--app-primary-light)]">
+                          {ministry.title}
+                        </h3>
+                        <p className="font-ui text-body-sm leading-relaxed text-white/75 pt-1">
+                          {ministry.description}
+                        </p>
+                      </div>
+
+                      {/* Highlights Pills */}
+                      <div className="mt-5 flex flex-wrap gap-1.5 pt-1">
+                        {ministry.highlights.map(hl => (
+                          <span
+                            key={hl}
+                            className="rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1 font-ui text-[11px] font-medium text-white/80"
+                          >
+                            {hl}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
-                    <div>
-                      <p className="max-w-[42ch] font-ui text-body-sm leading-[1.7] text-white/75 line-clamp-3 transition-colors duration-300 group-hover:text-white/90">
-                        {ministry.description}
-                      </p>
-                      <span className="mt-5 inline-flex items-center gap-2 font-ui text-label font-bold uppercase tracking-[0.14em] text-white">
-                        Learn more
-                        <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1.5" />
+                    {/* Bottom CTA Action Button */}
+                    <div className="mt-8 border-t border-white/10 pt-4 flex items-center justify-between">
+                      <span className="font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-primary-light)] group-hover:text-white transition-colors">
+                        Explore Ministry
                       </span>
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--app-primary)]/30 bg-[var(--app-primary)]/10 text-[var(--app-primary-light)] transition-all duration-300 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-dark)]">
+                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </CardRail>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
         </Container>
       </Section>
 

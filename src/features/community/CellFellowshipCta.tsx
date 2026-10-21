@@ -1,7 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Clock, MapPin, Phone } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  MapPin,
+  Phone,
+  Sparkles,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import apiClient from '@/lib/api';
 import { buttonClass } from '@/shared/ui/button';
@@ -26,10 +36,34 @@ const EMPTY = { name: '', phone: '', email: '' };
 export function CellFellowshipCta({ label }: { label: string }) {
   const [view, setView] = useState<View>('closed');
   const [center, setCenter] = useState<FellowshipCenter | null>(null);
+  const [activeCenterIndex, setActiveCenterIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
   const [form, setForm] = useState(EMPTY);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  const activeCenter =
+    FELLOWSHIP_CENTERS[activeCenterIndex] ?? FELLOWSHIP_CENTERS[0];
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setActiveCenterIndex(prev =>
+      prev === 0 ? FELLOWSHIP_CENTERS.length - 1 : prev - 1
+    );
+  };
+
+  const handleNext = () => {
+    setDirection(1);
+    setActiveCenterIndex(prev =>
+      prev === FELLOWSHIP_CENTERS.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const handleSelectIndex = (idx: number) => {
+    setDirection(idx > activeCenterIndex ? 1 : -1);
+    setActiveCenterIndex(idx);
+  };
 
   const close = () => {
     if (submitting) return;
@@ -76,70 +110,166 @@ export function CellFellowshipCta({ label }: { label: string }) {
         {label} <Arrow />
       </button>
 
-      {/* ── Step 1: centers directory ─────────────────────── */}
+      {/* ── Step 1: centers directory (Single Center at a time, with Prev/Next Toggles) ───── */}
       <BaseModal
         isOpen={view === 'centers'}
         onClose={close}
         title="Find a Cell Fellowship center"
         subtitle="Pick the center closest to you — then leave your details and we'll connect you."
-        maxWidth="max-w-3xl"
+        maxWidth="max-w-xl"
       >
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FELLOWSHIP_CENTERS.map(item => (
-            <li
-              key={item.id}
-              className="group flex flex-col overflow-hidden rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] transition-[border-color,box-shadow] duration-300 hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:shadow-lg hover:shadow-black/5"
-            >
-              <div className="border-b border-[var(--app-border)] bg-[var(--app-surface-2)] px-5 pb-4 pt-5">
-                <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.16em] text-[var(--app-primary-dark)]">
-                  {item.area}
-                </p>
-                <h3 className="mt-1 font-headline text-heading-sm font-normal leading-tight text-[var(--app-text)]">
-                  {item.name}
-                </h3>
-              </div>
+        <div className="space-y-5">
+          {/* Top Bar with Center Step indicator & Prev/Next Toggle Buttons */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-2 w-2 rounded-full bg-[var(--app-primary)]" />
+              <span className="font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-primary-light)]">
+                Center {activeCenterIndex + 1} of {FELLOWSHIP_CENTERS.length}
+              </span>
+            </div>
 
-              <div className="flex flex-1 flex-col gap-3.5 px-5 py-5">
-                <p className="flex items-start gap-2.5 font-ui text-body-sm leading-[1.65] text-[var(--app-muted)]">
-                  <MapPin
-                    className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
-                    aria-hidden="true"
-                  />
-                  {item.address}
-                </p>
-                <p className="flex items-start gap-2.5 font-ui text-body-sm font-medium leading-[1.6] text-[var(--app-text)]">
-                  <Clock
-                    className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
-                    aria-hidden="true"
-                  />
-                  {item.meetingTime}
-                </p>
-                <a
-                  href={item.phoneHref}
-                  className="inline-flex items-center gap-2.5 font-ui text-body-sm font-semibold text-[var(--app-text)] transition hover:text-[var(--app-primary-dark)]"
-                >
-                  <Phone
-                    className="h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
-                    aria-hidden="true"
-                  />
-                  {item.phone}
-                </a>
+            {/* Previous / Next Navigation Toggles */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handlePrev}
+                aria-label="Previous fellowship center"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 transition-all hover:border-[var(--app-primary)]/60 hover:bg-white/10 hover:text-white active:scale-95"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                aria-label="Next fellowship center"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 transition-all hover:border-[var(--app-primary)]/60 hover:bg-white/10 hover:text-white active:scale-95"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
 
+          {/* Quick Area Jump Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {FELLOWSHIP_CENTERS.map((item, idx) => {
+              const isSelected = activeCenterIndex === idx;
+              return (
                 <button
+                  key={item.id}
                   type="button"
-                  onClick={() => {
-                    setCenter(item);
-                    setError(null);
-                    setView('form');
-                  }}
-                  className={buttonClass('outline', 'sm', 'mt-auto w-full')}
+                  onClick={() => handleSelectIndex(idx)}
+                  className={`rounded-full px-3 py-1 font-ui text-[11px] font-semibold transition-all ${
+                    isSelected
+                      ? 'border border-[var(--app-primary)] bg-[var(--app-primary)]/20 text-[var(--app-primary-light)]'
+                      : 'border border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20 hover:text-white'
+                  }`}
                 >
-                  Join this center <Arrow />
+                  {item.area}
                 </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+              );
+            })}
+          </div>
+
+          {/* Single Center Display Card with High-End Slide Transition */}
+          <div className="relative min-h-[310px] overflow-hidden">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={activeCenter.id}
+                initial={{ opacity: 0, x: direction * 45 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * -45 }}
+                transition={{ duration: 0.35, ease: [0.19, 1, 0.22, 1] }}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-[var(--app-dark-2)] via-[var(--app-dark)] to-black/95 p-6 sm:p-7 shadow-2xl text-white"
+              >
+                {/* Ambient Gold Glow Backdrop */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-1 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,color-mix(in_srgb,var(--app-primary)_20%,transparent)_0%,transparent_75%)]"
+                />
+
+                {/* Card Header: Area Eyebrow + Name */}
+                <div className="border-b border-white/10 pb-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--app-primary)]/40 bg-[var(--app-primary)]/15 px-3 py-1 font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--app-primary-light)]">
+                      <Sparkles className="h-3 w-3 text-[var(--app-primary)]" />
+                      {activeCenter.area}
+                    </span>
+                    <span className="font-ui text-xs font-semibold text-white/40">
+                      Center {activeCenterIndex + 1}/{FELLOWSHIP_CENTERS.length}
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-ui text-heading-md sm:text-heading-lg font-bold tracking-tight text-white">
+                    {activeCenter.name}
+                  </h3>
+                </div>
+
+                {/* Card Details: Address, Time, Phone */}
+                <div className="my-5 space-y-4">
+                  <div className="flex items-start gap-3.5">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--app-primary)]/40 bg-[var(--app-primary)]/15 text-[var(--app-primary-light)]">
+                      <MapPin className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-ui text-[11px] font-bold uppercase tracking-wider text-white/50">
+                        Meeting Address
+                      </p>
+                      <p className="font-ui text-sm font-medium leading-relaxed text-white/90">
+                        {activeCenter.address}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3.5">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--app-primary)]/40 bg-[var(--app-primary)]/15 text-[var(--app-primary-light)]">
+                      <Clock className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-ui text-[11px] font-bold uppercase tracking-wider text-white/50">
+                        Fellowship Schedule
+                      </p>
+                      <p className="font-ui text-sm font-semibold text-white">
+                        {activeCenter.meetingTime}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3.5">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--app-primary)]/40 bg-[var(--app-primary)]/15 text-[var(--app-primary-light)]">
+                      <Phone className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-ui text-[11px] font-bold uppercase tracking-wider text-white/50">
+                        Coordinator Contact
+                      </p>
+                      <a
+                        href={activeCenter.phoneHref}
+                        className="font-ui text-sm font-semibold text-[var(--app-primary-light)] underline decoration-white/20 underline-offset-4 transition hover:text-white"
+                      >
+                        {activeCenter.phone}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Action Button (High-End Luminous Gold Pill) */}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCenter(activeCenter);
+                      setError(null);
+                      setView('form');
+                    }}
+                    className="group inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[var(--app-primary-dark)] via-[var(--app-primary)] to-[var(--app-primary-light)] py-3.5 px-6 font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-dark)] shadow-[0_4px_20px_color-mix(in_srgb,var(--app-primary)_40%,transparent)] transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--app-primary)_70%,transparent)] hover:brightness-105 active:scale-[0.98]"
+                  >
+                    <span>Join {activeCenter.name}</span>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
       </BaseModal>
 
       {/* ── Step 2: join form ─────────────────────────────── */}

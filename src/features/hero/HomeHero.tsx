@@ -68,7 +68,7 @@ export default function HomeHero({
       data-site-hero
       onMouseMove={handleHeroMouseMove}
       onMouseLeave={handleHeroMouseLeave}
-      className="tone-dark relative isolate flex h-screen min-h-[100svh] w-full max-w-full flex-col justify-end overflow-hidden overflow-x-clip bg-[var(--app-dark)] text-white"
+      className="tone-dark relative isolate flex min-h-[100svh] w-full max-w-full flex-col justify-end overflow-hidden overflow-x-clip bg-[var(--app-dark)] text-white"
     >
       {/* ── 1. Living Video Background Canvas (Ken Burns Drift, Light Beams, & Stage Flare) ── */}
       <div
@@ -125,8 +125,8 @@ export default function HomeHero({
       {/* Subtle warm gold ambient aura */}
       <div aria-hidden="true" className="hero-aurora" />
 
-      {/* ── 3. Hero Content: Full-Bleed Clean Layout (DCC Style) ──────────────── */}
-      <Container className="relative z-10 w-full pb-10 sm:pb-14 lg:pb-18">
+      {/* ── 3. Hero Content: Full-Bleed Clean Layout (Pushed Down) ──────────── */}
+      <Container className="relative z-10 w-full pt-36 pb-16 sm:pt-44 sm:pb-20 lg:pt-52 lg:pb-24">
         <div
           data-hero-content
           className="hero-parallax-content flex w-full max-w-4xl flex-col items-start gap-4 sm:gap-5"
@@ -138,31 +138,20 @@ export default function HomeHero({
             </span>
           </div>
 
-          {/* Headline: Clean, Punchy, High Definition */}
-          <h1 className="w-full max-w-3xl font-ui leading-[1.08] tracking-[-0.03em] text-white [text-shadow:0_4px_36px_black]">
-            <span className="block overflow-hidden pb-[0.05em]">
-              <span
-                data-hero-title-line
-                className="block text-[clamp(2.4rem,1.6rem+4.2vw,4.5rem)] font-bold tracking-[-0.03em] text-white"
-              >
-                Raising Believers
-              </span>
+          {/* Headline: Clean, Punchy, High Definition (100% visible on load, no clipping) */}
+          <h1 className="w-full max-w-4xl font-ui leading-[1.12] tracking-[-0.03em] text-white [text-shadow:0_4px_36px_black]">
+            <span className="block text-[clamp(2.3rem,1.5rem+4vw,4.4rem)] font-bold tracking-[-0.03em] text-white">
+              Empowering Believers
             </span>
-
-            <span className="block overflow-hidden pb-[0.08em]">
-              <span
-                data-hero-title-line
-                className="hero-accent block font-headline text-[clamp(2.5rem,1.7rem+4.5vw,4.8rem)] font-normal italic tracking-[-0.02em] text-[var(--app-primary-light)]"
-              >
-                for a life of Impact
-              </span>
+            <span className="block font-headline text-[clamp(2.2rem,1.4rem+3.8vw,4.2rem)] font-normal italic tracking-[-0.02em] text-[var(--app-primary-light)] [text-shadow:0_4px_32px_black,0_0_24px_color-mix(in_srgb,var(--app-primary)_50%,transparent)]">
+              for a life of impact and greatness.
             </span>
           </h1>
 
           {/* Directional Interactive Action Buttons */}
           <div
             data-hero-item
-            className="flex flex-row flex-wrap items-center gap-3.5 pt-2 sm:gap-4 sm:pt-3"
+            className="flex flex-row flex-wrap items-center gap-3.5 pt-3 sm:gap-4 sm:pt-4"
           >
             {/* Primary Live Button (DCC Style Solid Pill with Hover Direction) */}
             <a

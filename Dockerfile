@@ -16,9 +16,10 @@ RUN npm config set registry ${NPM_REGISTRY} \
 
 COPY package*.json ./
 
-# If you have a prepare script that uses git hooks, it can break in Docker.
+# If you have a prepare/postinstall script that uses git hooks, it can break in Docker.
 # Safe to run even if it doesn't exist.
-RUN npm pkg delete scripts.prepare || true
+RUN npm pkg delete scripts.prepare || true \
+ && npm pkg delete scripts.postinstall || true
 
 RUN npm ci --no-audit --no-fund
 
@@ -34,6 +35,11 @@ COPY . .
 
 ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DOCKER_ENV=true
+ENV WATCHPACK_POLLING=true
+ENV CHOKIDAR_USEPOLLING=true
+ENV NEXT_WEBPACK_USEPOLLING=1
+ENV WATCHPACK_POLLING_INTERVAL=800
 ENV PORT=2000
 EXPOSE 2000
 

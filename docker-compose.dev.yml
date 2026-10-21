@@ -1,0 +1,63 @@
+name: wisdom-frontend-dev
+
+services:
+  frontend-dev:
+    container_name: wisdom-frontend-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        NPM_REGISTRY: https://registry.npmjs.org
+    ports:
+      - '${PORT:-2000}:${PORT:-2000}'
+    env_file:
+      - path: .env.local
+        required: false
+      - path: .env
+        required: false
+    environment:
+      NODE_ENV: development
+      DOCKER_ENV: 'true'
+      HOSTNAME: 0.0.0.0
+      PORT: '${PORT:-2000}'
+      WATCHPACK_POLLING: 'true'
+      CHOKIDAR_USEPOLLING: 'true'
+      NEXT_WEBPACK_USEPOLLING: '1'
+      WATCHPACK_POLLING_INTERVAL: '800'
+      CHOKIDAR_INTERVAL: '800'
+      NEXT_TELEMETRY_DISABLED: '1'
+      API_PROXY_TARGET: '${API_PROXY_TARGET:-https://api.wisdomchurchhq.org}'
+      NODE_OPTIONS: '--unhandled-rejections=warn'
+    volumes:
+      # Mount workspace for instant Hot Reload
+      - .:/app
+      # Preserve Linux container node_modules
+      - frontend_node_modules:/app/node_modules
+      # Isolate Next.js build cache from host
+      - frontend_next:/app/.next
+    working_dir: /app
+    command: >-
+      sh -c "if [ ! -d node_modules/next ]; then
+        echo '[dev] Installing dependencies into volume...';
+        npm install --no-audit --no-fund;
+      fi;
+      exec npm run dev -- --hostname 0.0.0.0 --port $${PORT:-2000}"
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://127.0.0.1:' + (process.env.PORT || 2000) + '/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  frontend_node_modules:
+  frontend_next:

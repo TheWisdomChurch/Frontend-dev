@@ -13,6 +13,9 @@ import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import HomeHero from '@/features/hero/HomeHero';
 import TakeMeToChurchButton from '@/features/navigation/TakeMeToChurchButton';
+import SectionFlowDock, {
+  type FlowDockItem,
+} from '@/shared/components/SectionFlowDock';
 import { cn } from '@/lib/cn';
 import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
@@ -27,6 +30,49 @@ import {
   SplitFeature,
 } from '@/shared/ui/layout';
 
+const HOME_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
+  {
+    id: 'dock-sunday-worship',
+    title: 'Sunday Worship Service',
+    description: 'Sundays at 9:00 AM (WAT) · In-Person & Streaming Live',
+    badge: '9:00 AM WAT',
+    icon: 'church',
+    targetId: 'welcome',
+  },
+  {
+    id: 'dock-growth-portal',
+    title: 'Growth & Discipleship',
+    description: 'Foundations, Believers Equipping & Spiritual Maturity',
+    badge: 'Grow Portal',
+    icon: 'graduation-cap',
+    href: '/grow',
+  },
+  {
+    id: 'dock-cell-fellowships',
+    title: 'Cell Fellowship Centers',
+    description: 'Midweek fellowship in neighborhood homes across Lagos',
+    badge: 'Midweek',
+    icon: 'users',
+    targetId: 'community',
+  },
+  {
+    id: 'dock-leadership',
+    title: 'Leadership Organogram',
+    description: 'Pastoral oversight, organogram, and church stewards',
+    badge: 'Leadership',
+    icon: 'shield-check',
+    href: '/leadership',
+  },
+  {
+    id: 'dock-ministries',
+    title: 'Ministries Directory',
+    description: 'A place for men, women, youth, and kingdom children',
+    badge: 'Find Your Tribe',
+    icon: 'heart-handshake',
+    href: '/ministries',
+  },
+];
+
 export default function PremiumHome() {
   return (
     <Page
@@ -38,6 +84,12 @@ export default function PremiumHome() {
         backgroundImage={HOME_IMAGES.hero.src}
         imagePositionClassName={HOME_IMAGES.hero.position}
         priority
+      />
+
+      {/* ── 1.1 Floating Navigation Dock: Matches Growth Portal Flow ─────────── */}
+      <SectionFlowDock
+        label="The Wisdom Church Experience"
+        items={HOME_FLOW_DOCK_ITEMS}
       />
 
       {/* ── 2. Welcome Section: Warm Editorial Canvas ───────────────────────── */}

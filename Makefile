@@ -90,8 +90,8 @@ doctor: ## Verify the required local development tools
 	@echo "Node $$(node --version), npm $$(npm --version)"
 	@if command -v docker >/dev/null 2>&1; then docker --version; else echo "Docker: not installed (optional)"; fi
 
-docker-dev: ## Start the containerized development server
-	PORT=$(PORT) $(COMPOSE) --profile dev up --build frontend-dev
+docker-dev: ## Start the containerized development server with instant hot reloading
+	PORT=$(PORT) $(COMPOSE) -f docker-compose.dev.yml up --build
 
 docker-prod: ## Build and start the production container
 	PORT=$(PORT) $(COMPOSE) --profile prod up --build -d frontend-prod

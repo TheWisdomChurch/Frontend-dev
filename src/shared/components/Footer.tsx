@@ -10,7 +10,6 @@ import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { CONTACT_INFO } from '@/shared/constants/contactInfo';
 import { WisdomChurchLogo } from '@/shared/assets';
 import { Container } from '@/shared/ui/Container';
-import { buttonClass } from '@/shared/ui/button';
 import { SOCIAL_MARKS } from '@/shared/ui/icons/social';
 import { apiClient } from '@/lib/api';
 import { cn } from '@/lib/cn';
@@ -20,6 +19,7 @@ import { cn } from '@/lib/cn';
 const EXPLORE = [
   { href: '/about', label: 'About Us' },
   { href: '/leadership', label: 'Leadership' },
+  { href: '/grow', label: 'Growth Portal' },
   { href: '/events', label: 'Events' },
   { href: '/ministries', label: 'Ministries' },
   { href: '/resources/sermons', label: 'Sermons' },
@@ -78,13 +78,32 @@ export default function Footer() {
     if (!val) return;
     setSubState('loading');
     try {
-      await apiClient.subscribe({ email: val });
+      // 1. Submit to newsletter subscription endpoint
+      await apiClient.subscribe({
+        email: val,
+        source: 'footer:stay-in-the-word',
+      });
+
+      // 2. Also route notice to admin portal message inbox
+      apiClient
+        .submitContactMessage({
+          firstName: 'Newsletter',
+          lastName: 'Subscriber',
+          email: val,
+          topic: 'Newsletter Subscription (Stay in the Word)',
+          sourceChannel: 'frontend:footer:stay-in-the-word',
+          message: `New subscriber to Stay in the Word:\nEmail: ${val}\nChannel: Website Global Footer`,
+        })
+        .catch(() => {
+          // Graceful fallback if secondary notice endpoint fails
+        });
+
       setEmail('');
       setSubState('done');
-      setTimeout(() => setSubState('idle'), 3000);
+      setTimeout(() => setSubState('idle'), 4000);
     } catch {
       setSubState('err');
-      setTimeout(() => setSubState('idle'), 3000);
+      setTimeout(() => setSubState('idle'), 4000);
     }
   };
 
@@ -93,70 +112,99 @@ export default function Footer() {
       <div className="h-px w-full bg-[linear-gradient(90deg,transparent,var(--app-primary),transparent)]" />
 
       <Container className="py-section-md">
-        {/* ── Newsletter band ─────────────────────────────── */}
-        <div className="grid gap-8 border-b border-[var(--app-border)] pb-12 lg:grid-cols-[1fr_minmax(0,26rem)] lg:items-end lg:gap-16">
-          <div>
-            <p className="font-ui text-eyebrow font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
-              Stay in the loop
-            </p>
-            <h2 className="mt-3 max-w-md font-ui text-heading-md font-semibold leading-snug text-[var(--app-text)] sm:text-heading-lg">
-              Weekly encouragement, straight to your inbox.
-            </h2>
-          </div>
+        {/* ── Global "Stay in the Word" Newsletter Band (Across All Pages) ── */}
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,var(--app-dark-2),var(--app-dark-3))] p-7 sm:p-10 lg:p-12 shadow-2xl mb-12">
+          {/* Subtle gold ambient glow in top-right */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[color-mix(in_srgb,var(--app-primary)_14%,transparent)] blur-3xl"
+          />
 
-          <form onSubmit={handleSubscribe}>
-            <div
-              className={cn(
-                'flex items-center gap-1 rounded-input border bg-[var(--app-surface)] py-1 pl-4 pr-1 transition',
-                subState === 'err'
-                  ? 'border-[var(--status-error)]/50'
-                  : 'border-[var(--app-border)] focus-within:border-[color-mix(in_srgb,var(--app-primary)_50%,transparent)] focus-within:bg-[var(--app-surface-2)]'
-              )}
-            >
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="Your email"
-                aria-label="Email address"
-                disabled={subState === 'loading'}
-                className="h-10 min-w-0 flex-1 bg-transparent font-ui text-body-sm text-[var(--app-text)] outline-none placeholder:text-[var(--app-subtle)]"
-              />
-              <button
-                type="submit"
-                disabled={subState === 'loading'}
-                aria-label="Subscribe"
-                className={buttonClass('primary', 'sm', '!size-10 !px-0')}
-              >
-                {subState === 'loading' ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : subState === 'done' ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <ArrowRight className="h-4 w-4" />
-                )}
-              </button>
+          <div className="relative grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-primary)_35%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] px-3.5 py-1.5 font-ui text-caption font-bold uppercase tracking-[0.16em] text-[var(--app-primary-light)]">
+                <Mail className="h-3.5 w-3.5 text-[var(--app-primary)]" />
+                Stay in the Word
+              </div>
+
+              <h2 className="mt-4 font-headline text-heading-lg sm:text-heading-xl font-normal leading-tight text-white">
+                Spiritual growth and updates,{' '}
+                <span className="italic text-[var(--app-primary-light)]">
+                  straight to you.
+                </span>
+              </h2>
+
+              <p className="mt-3 max-w-lg font-ui text-body-md text-white/70 leading-relaxed">
+                Subscribe to receive weekly sermon devotionals, upcoming
+                ministry events, and pastoral encouragement from our leadership
+                team.
+              </p>
             </div>
-            <p
-              className="mt-2 min-h-[1.25rem] font-ui text-caption"
-              aria-live="polite"
-            >
-              {subState === 'done' ? (
-                <span className="text-[var(--status-success)]">
-                  Subscribed — thank you!
-                </span>
-              ) : subState === 'err' ? (
-                <span className="text-[var(--status-error)]">
-                  Something went wrong — please try again.
-                </span>
-              ) : (
-                <span className="text-[var(--app-subtle)]">
-                  Weekly reminders and church updates. Unsubscribe any time.
-                </span>
-              )}
-            </p>
-          </form>
+
+            <div>
+              <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
+                <div
+                  className={cn(
+                    'flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-2xl border p-2 transition duration-200',
+                    subState === 'err'
+                      ? 'border-[var(--status-error)]/60 bg-white/5'
+                      : 'border-white/15 bg-white/[0.04] focus-within:border-[var(--app-primary)] focus-within:bg-white/[0.07]'
+                  )}
+                >
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    aria-label="Email address"
+                    disabled={subState === 'loading'}
+                    className="h-11 min-h-11 min-w-0 flex-1 bg-transparent px-4 font-ui text-body-sm sm:text-body text-white outline-none placeholder:text-white/45"
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={subState === 'loading'}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--app-primary-dark)] via-[var(--app-primary)] to-[var(--app-primary-light)] px-6 py-2.5 font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-dark)] shadow-[0_4px_16px_color-mix(in_srgb,var(--app-primary)_35%,transparent)] transition-all duration-300 hover:brightness-105 active:scale-[0.98] disabled:opacity-50"
+                  >
+                    {subState === 'loading' ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Joining...</span>
+                      </>
+                    ) : subState === 'done' ? (
+                      <>
+                        <Check className="h-4 w-4" />
+                        <span>Subscribed!</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Subscribe</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div
+                  className="min-h-[1.5rem] px-2 font-ui text-caption"
+                  aria-live="polite"
+                >
+                  {subState === 'done' && (
+                    <span className="text-[var(--status-success)] font-medium">
+                      Thank you! You are now subscribed to our spiritual
+                      updates.
+                    </span>
+                  )}
+                  {subState === 'err' && (
+                    <span className="text-[var(--status-error)] font-medium">
+                      Unable to subscribe right now. Please try again shortly.
+                    </span>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
 
         {/* ── Columns ─────────────────────────────────────── */}
@@ -190,7 +238,7 @@ export default function Footer() {
             </Link>
 
             <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-muted)]">
-              A Spirit-filled community raised to carry God&apos;s glory —
+              A spirit filled community empowered by God for Greatness —
               equipping every believer with the Word, prayer, and purpose.
             </p>
 

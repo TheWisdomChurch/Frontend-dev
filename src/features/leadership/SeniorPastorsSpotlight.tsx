@@ -33,19 +33,23 @@ export function SeniorPastorsSpotlight({
           align="center"
           eyebrow="Spiritual Oversight"
           title="Our Senior"
-          accent="Pastors."
+          accent={seniorPastors.length > 1 ? 'Pastors.' : 'Pastor.'}
           description="Apostolic vision, sound biblical exposition, and a servant's heart for God's transforming move in this generation."
           tone="dark"
           size="lg"
           className="mx-auto max-w-3xl text-center"
         />
 
-        <div className="mt-14 grid gap-8 md:grid-cols-2 lg:gap-12">
-          {seniorPastors.map(pastor => {
+        <div
+          className={`mt-14 grid gap-8 ${
+            seniorPastors.length === 1 ? 'mx-auto max-w-xl' : 'md:grid-cols-2'
+          } lg:gap-12`}
+        >
+          {seniorPastors.map((pastor, index) => {
             const fullName = `${pastor.firstName} ${pastor.lastName}`.trim();
             return (
               <div
-                key={pastor.id}
+                key={pastor.id ? `${pastor.id}-${index}` : `senior-${index}`}
                 onClick={() => onOpenBio(pastor)}
                 className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/12 bg-[linear-gradient(160deg,var(--app-dark-2),var(--app-dark-3))] p-6 sm:p-8 shadow-2xl transition-all duration-500 hover:border-[var(--app-primary)] hover:shadow-[0_24px_64px_color-mix(in_srgb,var(--app-primary)_18%,transparent)] cursor-pointer"
               >
@@ -100,7 +104,7 @@ export function SeniorPastorsSpotlight({
                       }}
                       className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--app-primary)_50%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_12%,transparent)] px-4 py-2 font-ui text-caption font-bold uppercase tracking-wider text-[var(--app-primary-light)] transition-all duration-200 group-hover:border-[var(--app-primary)] group-hover:bg-[var(--app-primary)] group-hover:text-black"
                     >
-                      <span>Read biography</span>
+                      <span>Read more</span>
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </button>
 
