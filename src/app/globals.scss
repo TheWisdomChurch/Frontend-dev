@@ -1831,34 +1831,6 @@ body.nav-open {
     0 0 22px color-mix(in srgb, var(--app-primary) 55%, transparent);
 }
 
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-accent {
-      background-image: linear-gradient(
-        100deg,
-        var(--app-primary-light) 0%,
-        var(--app-primary-light) 42%,
-        #fff7dc 50%,
-        var(--app-primary-light) 58%,
-        var(--app-primary-light) 100%
-      );
-      background-repeat: no-repeat;
-      background-size: 220% 100%;
-      background-position: 160% 0;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: hero-accent-catch 1.8s ease-out 1.3s 1 both;
-    }
-  }
-}
-
-@keyframes hero-accent-catch {
-  to {
-    background-position: -20% 0;
-  }
-}
-
 .hero-aurora {
   position: absolute;
   inset: 0;
