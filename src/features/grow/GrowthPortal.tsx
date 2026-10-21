@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
@@ -210,37 +210,66 @@ export function GrowthPortal() {
     },
   ];
 
-  const scrollDock = (direction: 'left' | 'right') => {
+  // Automated scrolling state & pause controls
+  const [isPaused, setIsPaused] = useState(false);
+
+  const scrollToDockIndex = useCallback((index: number) => {
     const container = dockScrollRef.current;
     if (!container) return;
-    const cardEl = container.querySelector<HTMLElement>('[data-dock-card]');
-    const step = cardEl ? cardEl.offsetWidth + 16 : 300;
-    const targetScroll =
-      direction === 'left'
-        ? container.scrollLeft - step
-        : container.scrollLeft + step;
+    const cards = container.querySelectorAll<HTMLElement>('[data-dock-card]');
+    const targetCard = cards[index];
+    if (targetCard) {
+      const containerWidth = container.offsetWidth;
+      const cardWidth = targetCard.offsetWidth;
+      const cardLeft = targetCard.offsetLeft;
+      // Smoothly center the active card in the dock viewport
+      const targetScroll = cardLeft - containerWidth / 2 + cardWidth / 2;
+      container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    }
+    setActiveDockIndex(index);
+  }, []);
 
-    container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+  const scrollDock = (direction: 'left' | 'right') => {
+    const nextIndex =
+      direction === 'left'
+        ? Math.max(0, activeDockIndex - 1)
+        : Math.min(pathwayDockItems.length - 1, activeDockIndex + 1);
+    scrollToDockIndex(nextIndex);
   };
+
+  // Automated scroll effect: smoothly advances across pathways every 3.8s
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      setActiveDockIndex(prev => {
+        const next = (prev + 1) % pathwayDockItems.length;
+        scrollToDockIndex(next);
+        return next;
+      });
+    }, 3800);
+
+    return () => clearInterval(timer);
+  }, [isPaused, pathwayDockItems.length, scrollToDockIndex]);
 
   const handleDockScroll = () => {
     const container = dockScrollRef.current;
     if (!container) return;
-    const cardEl = container.querySelector<HTMLElement>('[data-dock-card]');
-    const step = cardEl ? cardEl.offsetWidth + 16 : 300;
-    const currentIndex = Math.round(container.scrollLeft / step);
-    setActiveDockIndex(
-      Math.min(Math.max(currentIndex, 0), pathwayDockItems.length - 1)
-    );
-  };
+    const cards = container.querySelectorAll<HTMLElement>('[data-dock-card]');
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
 
-  const scrollToDockIndex = (index: number) => {
-    const container = dockScrollRef.current;
-    if (!container) return;
-    const cardEl = container.querySelector<HTMLElement>('[data-dock-card]');
-    const step = cardEl ? cardEl.offsetWidth + 16 : 300;
-    container.scrollTo({ left: index * step, behavior: 'smooth' });
-    setActiveDockIndex(index);
+    cards.forEach((card, i) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = i;
+      }
+    });
+
+    setActiveDockIndex(closestIndex);
   };
 
   const handleOpenModal = (item: ClassItem) => {
@@ -385,11 +414,15 @@ export function GrowthPortal() {
               </div>
             </div>
 
-            {/* Scrollable / Slidable Track (Initial card visible, others smoothly slid in on scroll) */}
+            {/* Scrollable / Slidable Track (Auto-scrolled, inactive cards blurred, active card crystal clear) */}
             <div
               ref={dockScrollRef}
               onScroll={handleDockScroll}
-              className="flex gap-4 overflow-x-auto pb-3 pt-1 scroll-smooth snap-x snap-mandatory no-scrollbar"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onTouchStart={() => setIsPaused(true)}
+              onTouchEnd={() => setIsPaused(false)}
+              className="flex gap-4 overflow-x-auto px-1 py-3 scroll-smooth snap-x snap-mandatory no-scrollbar"
             >
               {pathwayDockItems.map((item, idx) => {
                 const Icon = item.icon;
@@ -404,10 +437,10 @@ export function GrowthPortal() {
                       scrollToDockIndex(idx);
                       handleDockClick(item);
                     }}
-                    className={`group relative flex w-[85vw] max-w-[340px] shrink-0 snap-start flex-col justify-between rounded-2xl border p-5 text-left transition-all duration-300 sm:w-[320px] lg:w-[310px] ${
+                    className={`group relative flex w-[82vw] max-w-[340px] shrink-0 snap-start flex-col justify-between rounded-2xl border p-5 text-left transition-all duration-500 sm:w-[320px] lg:w-[310px] ${
                       isActive
-                        ? 'border-[var(--app-primary)] bg-gradient-to-b from-white/[0.08] to-white/[0.02] shadow-xl shadow-black/70'
-                        : 'border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.05]'
+                        ? 'border-[var(--app-primary)] bg-gradient-to-b from-white/[0.14] via-white/[0.06] to-[var(--app-primary)]/15 shadow-2xl shadow-black/90 ring-1 ring-[var(--app-primary)]/60 scale-100 opacity-100 filter-none z-10 cursor-pointer'
+                        : 'border-white/5 bg-white/[0.02] shadow-none scale-[0.93] opacity-35 blur-[3.5px] hover:blur-none hover:opacity-85 hover:scale-[0.98] cursor-pointer'
                     }`}
                   >
                     {/* Top Row: Icon badge + top-right arrow */}
@@ -415,8 +448,8 @@ export function GrowthPortal() {
                       <div
                         className={`flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${
                           isActive
-                            ? 'border-[var(--app-primary)]/60 bg-[var(--app-primary)]/20 text-[var(--app-primary-light)]'
-                            : 'border-white/15 bg-[var(--app-dark)] text-[var(--app-primary-light)] group-hover:border-[var(--app-primary)]/40 group-hover:bg-[var(--app-primary)]/15'
+                            ? 'border-[var(--app-primary)]/70 bg-[var(--app-primary)]/20 text-[var(--app-primary-light)]'
+                            : 'border-white/10 bg-[var(--app-dark)] text-white/60 group-hover:border-[var(--app-primary)]/40 group-hover:bg-[var(--app-primary)]/15 group-hover:text-[var(--app-primary-light)]'
                         }`}
                       >
                         <Icon className="h-5 w-5" />
@@ -425,7 +458,7 @@ export function GrowthPortal() {
                         className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
                           isActive
                             ? 'text-[var(--app-primary-light)]'
-                            : 'text-white/40 group-hover:text-[var(--app-primary-light)]'
+                            : 'text-white/30 group-hover:text-[var(--app-primary-light)]'
                         }`}
                       >
                         <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -453,37 +486,17 @@ export function GrowthPortal() {
                       <span className="font-ui text-[11px] font-semibold uppercase tracking-wider text-[var(--app-primary-light)]">
                         {item.badge}
                       </span>
-                      <span className="font-ui text-[11px] text-white/40">
-                        0{idx + 1}
-                      </span>
                     </div>
                   </button>
                 );
               })}
-            </div>
-
-            {/* Slider Bottom Pagination Dots */}
-            <div className="mt-3 flex items-center justify-center gap-2 pt-1 border-t border-white/5">
-              {pathwayDockItems.map((item, idx) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => scrollToDockIndex(idx)}
-                  aria-label={`Go to slide ${idx + 1}: ${item.title}`}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    activeDockIndex === idx
-                      ? 'w-7 bg-[var(--app-primary)]'
-                      : 'w-2 bg-white/20 hover:bg-white/40'
-                  }`}
-                />
-              ))}
             </div>
           </div>
         </Container>
       </section>
 
       {/* ── 2. The 3 Core Discipleship Classes (Scroll-Triggered Slide-in Effect) ── */}
-      {GROWTH_CLASSES.map((item, index) => {
+      {GROWTH_CLASSES.map(item => {
         const isInverse = item.layout === 'inverse';
 
         return (
@@ -547,9 +560,6 @@ export function GrowthPortal() {
                         <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 font-ui text-caption font-bold uppercase tracking-wider text-[var(--app-primary-light)] backdrop-blur-sm">
                           <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                           {item.badge}
-                        </span>
-                        <span className="font-headline text-heading-lg font-bold italic text-white/30">
-                          0{index + 1}
                         </span>
                       </div>
 
