@@ -230,15 +230,18 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
   return (
     <>
       {/* ── 1. Senior Pastors Spotlight ─────────────────────── */}
-      <SeniorPastorsSpotlight
-        seniorPastors={seniorPastors}
-        onOpenBio={openBio}
-      />
+      <div id="senior-pastor" className="scroll-mt-24">
+        <SeniorPastorsSpotlight
+          seniorPastors={seniorPastors}
+          onOpenBio={openBio}
+        />
+      </div>
 
       {/* ── 2. Leadership Organogram & Resident Pastors ───────── */}
       <Section
+        id="resident-pastors"
         tone="canvas"
-        className="relative overflow-hidden bg-[radial-gradient(ellipse_80%_60%_at_15%_40%,color-mix(in_srgb,var(--app-primary-10)_80%,transparent)_0%,transparent_65%),var(--app-canvas-2)] py-20 sm:py-28"
+        className="scroll-mt-24 relative overflow-hidden bg-[radial-gradient(ellipse_80%_60%_at_15%_40%,color-mix(in_srgb,var(--app-primary-10)_80%,transparent)_0%,transparent_65%),var(--app-canvas-2)] py-20 sm:py-28"
       >
         <Container>
           <SectionHeader
@@ -262,8 +265,9 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
 
       {/* ── 3. Deacons & Deaconess Section ───────────────────── */}
       <Section
+        id="deacons"
         tone="dark"
-        className="border-t border-white/10 bg-[radial-gradient(ellipse_75%_55%_at_50%_25%,color-mix(in_srgb,var(--app-primary)_12%,transparent)_0%,transparent_70%),var(--app-dark)] py-20 sm:py-28 text-white"
+        className="scroll-mt-24 border-t border-white/10 bg-[radial-gradient(ellipse_75%_55%_at_50%_25%,color-mix(in_srgb,var(--app-primary)_12%,transparent)_0%,transparent_70%),var(--app-dark)] py-20 sm:py-28 text-white"
       >
         <Container>
           <SectionHeader

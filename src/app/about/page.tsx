@@ -1,5 +1,12 @@
 import type { Metadata } from 'next';
-import { ArrowRight, Church, HeartHandshake, MapPin, Play } from 'lucide-react';
+import {
+  ArrowRight,
+  Church,
+  HeartHandshake,
+  MapPin,
+  Play,
+  Users,
+} from 'lucide-react';
 
 import { apiClient } from '@/lib/api';
 import {
@@ -12,6 +19,9 @@ import {
 import { resolveAboutContent } from '@/content/about';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import SiteHero from '@/features/hero/SiteHero';
+import SectionFlowDock, {
+  type FlowDockItem,
+} from '@/shared/components/SectionFlowDock';
 import { DarkCard } from '@/features/leadership/LeadershipCards';
 import type {
   LeadershipMember,
@@ -23,7 +33,6 @@ import JsonLd from '@/shared/seo/JsonLd';
 import {
   Container,
   CtaLink,
-  Eyebrow,
   Page,
   Section,
   SectionHeader,
@@ -56,19 +65,40 @@ const SENIOR_ROLES: LeadershipRoleSlug[] = [
   'reverend',
 ];
 
-const serviceDetails = [
+const ABOUT_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
   {
+    id: 'dock-sunday-worship',
+    title: 'Sunday Worship Service',
+    description: `${SERVICE_INFO.sunday.time} ${SERVICE_INFO.sunday.timezone} · Honor Gardens Sanctuary`,
+    badge: 'Sunday 9:00 AM',
     icon: Church,
-    label: 'Sunday worship',
-    value: `${SERVICE_INFO.sunday.time} ${SERVICE_INFO.sunday.timezone}`,
+    targetId: 'sunday-worship',
   },
   {
+    id: 'dock-daily-prayer',
+    title: 'Daily Prayer Altar',
+    description: `${SERVICE_INFO.dailyPrayer.daysShort} · ${SERVICE_INFO.dailyPrayer.time} online & altar`,
+    badge: 'Daily Prayer',
     icon: HeartHandshake,
-    label: 'Daily prayer',
-    value: `${SERVICE_INFO.dailyPrayer.daysShort} · ${SERVICE_INFO.dailyPrayer.time}`,
+    targetId: 'daily-prayer',
   },
-  { icon: MapPin, label: 'Our church home', value: SERVICE_INFO.venue.short },
-] as const;
+  {
+    id: 'dock-church-home',
+    title: 'Our Sanctuary Home',
+    description: `${SERVICE_INFO.venue.short} · Ample parking & hospitality`,
+    badge: 'Honor Gardens',
+    icon: MapPin,
+    targetId: 'location',
+  },
+  {
+    id: 'dock-pastors',
+    title: 'Pastoral Shepherds',
+    description: 'Bishop Gabriel Ayilara & Pastoral Council oversight',
+    badge: 'Leadership',
+    icon: Users,
+    href: '/leadership',
+  },
+];
 
 export default async function AboutPage() {
   const [leadershipResult, contentResult] = await Promise.allSettled([
@@ -127,29 +157,11 @@ export default async function AboutPage() {
         }
       />
 
-      <Section compact tone="canvas">
-        <Container>
-          <div className="grid gap-px overflow-hidden rounded-card bg-[var(--app-border)] sm:grid-cols-3">
-            {serviceDetails.map(item => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.label}
-                  className="flex items-center gap-4 bg-[var(--app-canvas)] p-5 sm:p-6"
-                >
-                  <Icon className="h-5 w-5 shrink-0 text-[var(--app-primary-dark)]" />
-                  <div>
-                    <Eyebrow>{item.label}</Eyebrow>
-                    <p className="mt-1 font-headline text-heading-sm">
-                      {item.value}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Container>
-      </Section>
+      {/* ── 1.1 Floating Navigation Dock: Matches Growth Portal Flow ─────────── */}
+      <SectionFlowDock
+        label="About The Wisdom Church"
+        items={ABOUT_FLOW_DOCK_ITEMS}
+      />
 
       <Section>
         <Container>

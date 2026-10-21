@@ -1,0 +1,261 @@
+'use client';
+
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Container } from '@/shared/ui/layout';
+
+export interface FlowDockItem {
+  id: string;
+  title: string;
+  description: string;
+  badge: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href?: string;
+  targetId?: string;
+  onClick?: () => void;
+}
+
+export interface SectionFlowDockProps {
+  /** Section label displayed in the top bar pill, e.g. "Ministries Directory Track" */
+  label: string;
+  /** Items rendered inside the dock track */
+  items: readonly FlowDockItem[];
+  /** Optional container className */
+  className?: string;
+}
+
+export function SectionFlowDock({
+  label,
+  items,
+  className = '',
+}: SectionFlowDockProps) {
+  const [activeDockIndex, setActiveDockIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const dockScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollToDockIndex = useCallback((index: number) => {
+    const container = dockScrollRef.current;
+    if (!container) return;
+    const cards = container.querySelectorAll<HTMLElement>(
+      '[data-flow-dock-card]'
+    );
+    const targetCard = cards[index];
+    if (targetCard) {
+      const containerWidth = container.offsetWidth;
+      const cardWidth = targetCard.offsetWidth;
+      const cardLeft = targetCard.offsetLeft;
+      // Smoothly center the active card in the dock viewport
+      const targetScroll = cardLeft - containerWidth / 2 + cardWidth / 2;
+      container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    }
+    setActiveDockIndex(index);
+  }, []);
+
+  const scrollDock = (direction: 'left' | 'right') => {
+    const nextIndex =
+      direction === 'left'
+        ? Math.max(0, activeDockIndex - 1)
+        : Math.min(items.length - 1, activeDockIndex + 1);
+    scrollToDockIndex(nextIndex);
+  };
+
+  // Automated scroll effect: smoothly advances across cards every 3.8s
+  useEffect(() => {
+    if (isPaused || items.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setActiveDockIndex(prev => {
+        const next = (prev + 1) % items.length;
+        scrollToDockIndex(next);
+        return next;
+      });
+    }, 3800);
+
+    return () => clearInterval(timer);
+  }, [isPaused, items.length, scrollToDockIndex]);
+
+  const handleDockScroll = () => {
+    const container = dockScrollRef.current;
+    if (!container) return;
+    const cards = container.querySelectorAll<HTMLElement>(
+      '[data-flow-dock-card]'
+    );
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    cards.forEach((card, i) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = i;
+      }
+    });
+
+    setActiveDockIndex(closestIndex);
+  };
+
+  const handleItemClick = (item: FlowDockItem, idx: number) => {
+    scrollToDockIndex(idx);
+    if (item.onClick) {
+      item.onClick();
+      return;
+    }
+    if (item.targetId) {
+      const el = document.getElementById(item.targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
+  return (
+    <section
+      aria-label={`${label} Quick Navigation`}
+      className={`relative z-20 -mt-10 sm:-mt-14 pb-8 sm:pb-12 ${className}`}
+    >
+      <Container>
+        <div className="relative rounded-3xl border border-white/10 bg-[var(--app-dark-2)]/95 p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
+          {/* Ambient gold glow behind dock */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-1 -z-10 rounded-3xl bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,color-mix(in_srgb,var(--app-primary)_20%,transparent)_0%,transparent_70%)]"
+          />
+
+          {/* Slider Top Bar: Header label + navigation arrow controls */}
+          <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-2 w-2 rounded-full bg-[var(--app-primary)]" />
+              <span className="font-ui text-caption font-bold uppercase tracking-wider text-[var(--app-primary-light)]">
+                {label} · Step {activeDockIndex + 1} of {items.length}
+              </span>
+            </div>
+
+            {/* Slider Left / Right Navigation Buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollDock('left')}
+                disabled={activeDockIndex === 0}
+                aria-label="Scroll to previous pathway"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition-all hover:border-[var(--app-primary)]/50 hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollDock('right')}
+                disabled={activeDockIndex === items.length - 1}
+                aria-label="Scroll to next pathway"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition-all hover:border-[var(--app-primary)]/50 hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Scrollable / Slidable Track */}
+          <div
+            ref={dockScrollRef}
+            onScroll={handleDockScroll}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+            className="flex gap-4 overflow-x-auto px-1 py-3 scroll-smooth snap-x snap-mandatory no-scrollbar"
+          >
+            {items.map((item, idx) => {
+              const Icon = item.icon;
+              const isActive = activeDockIndex === idx;
+
+              const content = (
+                <>
+                  {/* Top Row: Icon badge + top-right arrow */}
+                  <div className="flex items-center justify-between">
+                    <div
+                      className={`flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${
+                        isActive
+                          ? 'border-[var(--app-primary)]/70 bg-[var(--app-primary)]/20 text-[var(--app-primary-light)]'
+                          : 'border-white/10 bg-[var(--app-dark)] text-white/60 group-hover:border-[var(--app-primary)]/40 group-hover:bg-[var(--app-primary)]/15 group-hover:text-[var(--app-primary-light)]'
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span
+                      className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+                        isActive
+                          ? 'text-[var(--app-primary-light)]'
+                          : 'text-white/30 group-hover:text-[var(--app-primary-light)]'
+                      }`}
+                    >
+                      <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                  </div>
+
+                  {/* Middle: Title & Description */}
+                  <div className="mt-4 space-y-1">
+                    <h2
+                      className={`font-ui text-body-sm font-bold tracking-tight transition-colors ${
+                        isActive
+                          ? 'text-[var(--app-primary-light)]'
+                          : 'text-white group-hover:text-[var(--app-primary-light)]'
+                      }`}
+                    >
+                      {item.title}
+                    </h2>
+                    <p className="font-ui text-caption text-white/70 leading-snug line-clamp-2">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  {/* Bottom: Pill indicator */}
+                  <div className="mt-4 border-t border-white/5 pt-2.5 flex items-center justify-between">
+                    <span className="font-ui text-[11px] font-semibold uppercase tracking-wider text-[var(--app-primary-light)]">
+                      {item.badge}
+                    </span>
+                  </div>
+                </>
+              );
+
+              const cardClasses = `group relative flex w-[82vw] max-w-[340px] shrink-0 snap-start flex-col justify-between rounded-2xl border p-5 text-left transition-all duration-500 sm:w-[320px] lg:w-[310px] ${
+                isActive
+                  ? 'border-[var(--app-primary)] bg-gradient-to-b from-white/[0.14] via-white/[0.06] to-[var(--app-primary)]/15 shadow-2xl shadow-black/90 ring-1 ring-[var(--app-primary)]/60 scale-100 opacity-100 filter-none z-10 cursor-pointer'
+                  : 'border-white/5 bg-white/[0.02] shadow-none scale-[0.93] opacity-35 blur-[3.5px] hover:blur-none hover:opacity-85 hover:scale-[0.98] cursor-pointer'
+              }`;
+
+              if (item.href && !item.targetId && !item.onClick) {
+                return (
+                  <Link
+                    key={item.id}
+                    data-flow-dock-card
+                    href={item.href}
+                    onClick={() => scrollToDockIndex(idx)}
+                    className={cardClasses}
+                  >
+                    {content}
+                  </Link>
+                );
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  data-flow-dock-card
+                  type="button"
+                  onClick={() => handleItemClick(item, idx)}
+                  className={cardClasses}
+                >
+                  {content}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+export default SectionFlowDock;
