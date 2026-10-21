@@ -55,7 +55,10 @@ export default async function LeadershipPage() {
     .catch(() => []);
 
   return (
-    <Page>
+    <Page
+      tone="surface"
+      className="bg-[var(--app-dark)] text-[var(--app-text)]"
+    >
       {/* ── SEO Structured Data ──────────────────────────────── */}
       <JsonLd
         data={buildBreadcrumbSchema([

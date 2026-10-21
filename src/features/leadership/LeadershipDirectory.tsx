@@ -12,6 +12,7 @@ import { ExploreMoreBand } from '@/features/resources/ExploreMoreBand';
 import {
   CANONICAL_SENIOR_PASTORS,
   CANONICAL_CO_MINISTERS,
+  CANONICAL_DEACONS,
 } from './canonicalData';
 
 interface LeadershipDirectoryProps {
@@ -91,37 +92,120 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
   }, []);
 
   // ── 3. Deacons & Deaconesses (Dynamic from API endpoint) ───────────────────
-  // Includes Jimba Oluwatoyosi Victoria and Deacon Temisan; excludes Michael Oluwatoyosi Osaseyi
+  // Includes all 4 deacons:
+  // 1. Ademola Adeyemi (Deacon)
+  // 2. Abimbola Adeyemi (Deaconess)
+  // 3. Temisan Oloyede (Deaconess)
+  // 4. Jimba Oluwatoyosi Victoria (Deacon)
+  // Strictly excludes Michael Oluwatoyosi Osaseyi
   const deacons = useMemo(() => {
-    return leaders
-      .filter(l => {
-        // Explicitly remove Michael Oluwatoyosi Osaseyi as instructed
-        if (matchesName(l, 'osaseyi')) return false;
+    // 1. Ademola Adeyemi (Deacon)
+    const apiAdemola = leaders.find(
+      l =>
+        matchesName(l, 'ademola') &&
+        matchesName(l, 'adeyemi') &&
+        !matchesName(l, 'osaseyi')
+    );
+    const ademola: LeadershipMember = apiAdemola
+      ? {
+          ...apiAdemola,
+          role: 'deacon',
+          department:
+            apiAdemola.department &&
+            apiAdemola.department.toLowerCase().trim() !== 'board of deacons'
+              ? apiAdemola.department
+              : null,
+          imageUrl: apiAdemola.imageUrl || CANONICAL_DEACONS[0].imageUrl,
+          bio: apiAdemola.bio || CANONICAL_DEACONS[0].bio,
+        }
+      : CANONICAL_DEACONS[0];
 
-        // Exclude Pastoral leadership
+    // 2. Abimbola Adeyemi (Deaconess)
+    const apiAbimbola = leaders.find(
+      l =>
+        matchesName(l, 'abimbola') &&
+        matchesName(l, 'adeyemi') &&
+        !matchesName(l, 'osaseyi')
+    );
+    const abimbola: LeadershipMember = apiAbimbola
+      ? {
+          ...apiAbimbola,
+          role: 'deaconess',
+          department:
+            apiAbimbola.department &&
+            apiAbimbola.department.toLowerCase().trim() !== 'board of deacons'
+              ? apiAbimbola.department
+              : null,
+          imageUrl: apiAbimbola.imageUrl || CANONICAL_DEACONS[1].imageUrl,
+          bio: apiAbimbola.bio || CANONICAL_DEACONS[1].bio,
+        }
+      : CANONICAL_DEACONS[1];
+
+    // 3. Temisan Oloyede (Deaconess)
+    const apiTemisan = leaders.find(
+      l => matchesName(l, 'temisan') && !matchesName(l, 'osaseyi')
+    );
+    const temisan: LeadershipMember = apiTemisan
+      ? {
+          ...apiTemisan,
+          role: 'deaconess',
+          department:
+            apiTemisan.department &&
+            apiTemisan.department.toLowerCase().trim() !== 'board of deacons'
+              ? apiTemisan.department
+              : null,
+          imageUrl: apiTemisan.imageUrl || CANONICAL_DEACONS[2].imageUrl,
+          bio: apiTemisan.bio || CANONICAL_DEACONS[2].bio,
+        }
+      : CANONICAL_DEACONS[2];
+
+    // 4. Jimba Oluwatoyosi Victoria (Deacon)
+    const apiToyosi = leaders.find(
+      l =>
+        (matchesName(l, 'oluwatoyosi') ||
+          matchesName(l, 'toyosi') ||
+          (matchesName(l, 'jimba') && !matchesName(l, 'victor'))) &&
+        !matchesName(l, 'osaseyi')
+    );
+    const toyosi: LeadershipMember = apiToyosi
+      ? {
+          ...apiToyosi,
+          role: 'deacon',
+          department:
+            apiToyosi.department &&
+            apiToyosi.department.toLowerCase().trim() !== 'board of deacons'
+              ? apiToyosi.department
+              : null,
+          imageUrl: apiToyosi.imageUrl || CANONICAL_DEACONS[3].imageUrl,
+          bio: apiToyosi.bio || CANONICAL_DEACONS[3].bio,
+        }
+      : CANONICAL_DEACONS[3];
+
+    // Any other dynamic deacons from the API (avoiding duplicates)
+    const knownIds = new Set([
+      ademola.id,
+      abimbola.id,
+      temisan.id,
+      toyosi.id,
+      '5d55c2ab-0096-4796-94f8-e26bae885b3d',
+      '0826c732-414a-498d-b1aa-4bbd27814d01',
+      '76658b4b-8523-4eac-957a-43d82cf2464b',
+      '6735ac1d-f7c5-4628-b820-4ab8146aa9b4',
+    ]);
+
+    const otherDeacons = leaders
+      .filter(l => {
+        if (knownIds.has(l.id)) return false;
+        if (matchesName(l, 'osaseyi')) return false;
         if (
           matchesName(l, 'gabriel') ||
           matchesName(l, 'kehinde') ||
           matchesName(l, 'bamidele') ||
-          (matchesName(l, 'jimba') &&
-            matchesName(l, 'victor') &&
-            !matchesName(l, 'victoria') &&
-            !matchesName(l, 'oluwatoyosi'))
+          (matchesName(l, 'jimba') && matchesName(l, 'victor'))
         ) {
           return false;
         }
 
-        // Include Deacon Temisan from the API
-        if (matchesName(l, 'temisan')) return true;
-
-        // Include Jimba Oluwatoyosi Victoria from the API
-        const isToyosiJimba =
-          matchesName(l, 'oluwatoyosi') ||
-          matchesName(l, 'toyosi') ||
-          (matchesName(l, 'jimba') && !matchesName(l, 'victor'));
-        if (isToyosiJimba) return true;
-
-        // Include any other deacons from the API
         const roleLower = (l.role || '').toLowerCase();
         const deptLower = (l.department || '').toLowerCase();
         return (
@@ -130,51 +214,16 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
           deptLower.includes('deacon')
         );
       })
-      .map(l => {
-        // Ensure Jimba Oluwatoyosi Victoria is accurately labeled as Deacon
-        const isToyosiJimba =
-          matchesName(l, 'oluwatoyosi') ||
-          matchesName(l, 'toyosi') ||
-          (matchesName(l, 'jimba') && !matchesName(l, 'victor'));
-        if (isToyosiJimba) {
-          return {
-            ...l,
-            role: 'deacon' as LeadershipMember['role'],
-            department:
-              l.department &&
-              l.department.toLowerCase().trim() !== 'board of deacons'
-                ? l.department
-                : null,
-          };
-        }
+      .map(l => ({
+        ...l,
+        department:
+          l.department &&
+          l.department.toLowerCase().trim() !== 'board of deacons'
+            ? l.department
+            : null,
+      }));
 
-        // If it's Deacon Temisan, ensure role displays cleanly as Deacon / Deaconess
-        if (matchesName(l, 'temisan')) {
-          const roleLower = (l.role || '').toLowerCase();
-          const role =
-            roleLower.includes('deaconess') || roleLower.includes('deacon')
-              ? l.role
-              : ('deacon' as LeadershipMember['role']);
-          return {
-            ...l,
-            role,
-            department:
-              l.department &&
-              l.department.toLowerCase().trim() !== 'board of deacons'
-                ? l.department
-                : null,
-          };
-        }
-
-        return {
-          ...l,
-          department:
-            l.department &&
-            l.department.toLowerCase().trim() !== 'board of deacons'
-              ? l.department
-              : null,
-        };
-      });
+    return [ademola, abimbola, temisan, toyosi, ...otherDeacons];
   }, [leaders]);
 
   /*
