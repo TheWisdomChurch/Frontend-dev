@@ -2,7 +2,6 @@ name: wisdom-frontend-dev
 
 services:
   frontend-dev:
-    profiles: ['dev']
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,42 +9,36 @@ services:
       args:
         NPM_REGISTRY: https://registry.npmjs.org
     ports:
-      - '${PORT:-2000}:2000'
+      - '${PORT:-2000}:${PORT:-2000}'
+    env_file:
+      - path: .env.local
+        required: false
+      - path: .env
+        required: false
     environment:
       NODE_ENV: development
       DOCKER_ENV: 'true'
       HOSTNAME: 0.0.0.0
-      PORT: '2000'
+      PORT: '${PORT:-2000}'
       WATCHPACK_POLLING: 'true'
       CHOKIDAR_USEPOLLING: 'true'
       NEXT_WEBPACK_USEPOLLING: '1'
-      CHOKIDAR_INTERVAL: '1000'
-      WATCHPACK_POLLING_INTERVAL: '1000'
+      CHOKIDAR_INTERVAL: '800'
+      WATCHPACK_POLLING_INTERVAL: '800'
       NEXT_TELEMETRY_DISABLED: '1'
       API_PROXY_TARGET: '${API_PROXY_TARGET:-https://api.wisdomchurchhq.org}'
-      # The source tree is bind-mounted read-only under Portainer / remote hosts.
-      # `next dev` regenerates next-env.d.ts if it looks stale (e.g. the working
-      # tree carries a `.next-prepush` build's copy); that write throws EROFS and
-      # the unhandled rejection would kill the dev server. Downgrade it to a
-      # warning — the container uses the default `.next`, so the file is right in
-      # normal use anyway.
       NODE_OPTIONS: '--unhandled-rejections=warn'
     volumes:
       - .:/app
       - frontend_node_modules:/app/node_modules
       - frontend_next:/app/.next
-      # Keep .next/types (which next-env.d.ts imports) on a writable volume.
     working_dir: /app
-    # The source tree is bind-mounted (often read-only under Portainer / remote
-    # Docker hosts) while node_modules lives in a persistent named volume that is
-    # seeded from the image build. On startup, top up any packages added since
-    # the volume was created — but never write to the bind-mounted source tree:
-    # `--no-package-lock` / `--no-save` keep npm off `/app/package-lock.json` and
-    # `/app/package.json`, and the step is non-fatal so a read-only mount or an
-    # offline registry can't block the dev server.
     command: >-
-      sh -c "npm install --no-package-lock --no-save --ignore-scripts --no-audit --no-fund --prefer-offline || echo '[dev] skipping npm install — using node_modules from the image';
-      exec npm run dev -- --hostname 0.0.0.0 --port 2000"
+      sh -c "if [ ! -d node_modules/next ]; then
+        echo '[dev] installing dependencies into volume...';
+        npm install --no-audit --no-fund;
+      fi;
+      exec npm run dev -- --hostname 0.0.0.0 --port $${PORT:-2000}"
     stdin_open: true
     tty: true
     healthcheck:
@@ -54,7 +47,7 @@ services:
           'CMD',
           'node',
           '-e',
-          "require('http').get('http://127.0.0.1:2000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
+          "require('http').get('http://127.0.0.1:' + (process.env.PORT || 2000) + '/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
         ]
       interval: 30s
       timeout: 10s
