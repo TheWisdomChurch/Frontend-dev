@@ -42,7 +42,7 @@ const FLOW_DOCK_MINISTRIES: readonly FlowDockItem[] = [
     title: 'Prayer Ministry',
     description: 'The engine room · Interceding and keeping the altar burning',
     badge: 'Weekly Altar',
-    icon: Flame,
+    icon: 'flame',
     href: '/ministries/prayer',
   },
   {
@@ -50,7 +50,7 @@ const FLOW_DOCK_MINISTRIES: readonly FlowDockItem[] = [
     title: 'Youth Ministry',
     description: 'Teenagers & young adults grounded in Word and purpose',
     badge: 'Bi-Weekly',
-    icon: Sparkles,
+    icon: 'sparkles',
     href: '/ministries/youth',
   },
   {
@@ -58,7 +58,7 @@ const FLOW_DOCK_MINISTRIES: readonly FlowDockItem[] = [
     title: "Men's Ministry",
     description: 'Brotherhood, conviction, spiritual discipline and leadership',
     badge: 'Monthly',
-    icon: Shield,
+    icon: 'shield',
     href: '/ministries/men',
   },
   {
@@ -66,7 +66,7 @@ const FLOW_DOCK_MINISTRIES: readonly FlowDockItem[] = [
     title: "Women's Ministry",
     description: 'Women growing together in the Word, grace and fellowship',
     badge: 'Monthly',
-    icon: HeartHandshake,
+    icon: 'heart-handshake',
     href: '/ministries/women',
   },
   {
@@ -75,7 +75,7 @@ const FLOW_DOCK_MINISTRIES: readonly FlowDockItem[] = [
     description:
       'Sharing the gospel and expressing Christ’s love in communities',
     badge: 'Outreaches',
-    icon: Compass,
+    icon: 'compass',
     href: '/ministries/outreach',
   },
   {
@@ -84,7 +84,7 @@ const FLOW_DOCK_MINISTRIES: readonly FlowDockItem[] = [
     description:
       'A safe, joyful place for nursery to pre-teens learning God’s truth',
     badge: 'Kingdom Kids',
-    icon: GraduationCap,
+    icon: 'graduation-cap',
     href: '/ministries/children',
   },
 ];

@@ -1,12 +1,5 @@
 import type { Metadata } from 'next';
-import {
-  ArrowRight,
-  Church,
-  HeartHandshake,
-  MapPin,
-  Play,
-  Users,
-} from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 
 import { apiClient } from '@/lib/api';
 import {
@@ -71,7 +64,7 @@ const ABOUT_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Sunday Worship Service',
     description: `${SERVICE_INFO.sunday.time} ${SERVICE_INFO.sunday.timezone} · Honor Gardens Sanctuary`,
     badge: 'Sunday 9:00 AM',
-    icon: Church,
+    icon: 'church',
     targetId: 'sunday-worship',
   },
   {
@@ -79,7 +72,7 @@ const ABOUT_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Daily Prayer Altar',
     description: `${SERVICE_INFO.dailyPrayer.daysShort} · ${SERVICE_INFO.dailyPrayer.time} online & altar`,
     badge: 'Daily Prayer',
-    icon: HeartHandshake,
+    icon: 'heart-handshake',
     targetId: 'daily-prayer',
   },
   {
@@ -87,7 +80,7 @@ const ABOUT_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Our Sanctuary Home',
     description: `${SERVICE_INFO.venue.short} · Ample parking & hospitality`,
     badge: 'Honor Gardens',
-    icon: MapPin,
+    icon: 'map-pin',
     targetId: 'location',
   },
   {
@@ -95,7 +88,7 @@ const ABOUT_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Pastoral Shepherds',
     description: 'Bishop Gabriel Ayilara & Pastoral Council oversight',
     badge: 'Leadership',
-    icon: Users,
+    icon: 'users',
     href: '/leadership',
   },
 ];

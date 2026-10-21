@@ -1,6 +1,5 @@
-import { Church, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import SiteHero from '@/features/hero/SiteHero';
-// import { apiClient } from '@/lib/api';
+import { apiClient } from '@/lib/api';
 import type { LeadershipMember } from '@/domain/leadership/types';
 import { formatLeadershipRole } from '@/domain/leadership/types';
 import JsonLd from '@/shared/seo/JsonLd';
@@ -26,7 +25,7 @@ const LEADERSHIP_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Senior Pastors',
     description: 'Bishop Gabriel Ayilara & Pastor Kehinde Ayilara',
     badge: 'Senior Pastors',
-    icon: Church,
+    icon: 'church',
     targetId: 'senior-pastor',
   },
   {
@@ -34,7 +33,7 @@ const LEADERSHIP_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Resident Pastors',
     description: 'Rev. Victor Jimba & Pastor Bamidele Shepherding',
     badge: 'Resident Pastors',
-    icon: Users,
+    icon: 'users',
     targetId: 'resident-pastors',
   },
   {
@@ -42,7 +41,7 @@ const LEADERSHIP_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Deacons & Deaconesses',
     description: 'Service, administration & congregational care',
     badge: 'Deaconate',
-    icon: ShieldCheck,
+    icon: 'shield-check',
     targetId: 'deacons',
   },
   {
@@ -50,17 +49,15 @@ const LEADERSHIP_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Leadership Organogram',
     description: 'Accountable biblical governance and ministry stewards',
     badge: 'Organogram',
-    icon: Sparkles,
+    icon: 'sparkles',
     targetId: 'resident-pastors',
   },
 ];
 
 export default async function LeadershipPage() {
-  // Dynamic CMS leadership endpoint temporarily commented out for organogram structure
-  // const cmsLeaders: LeadershipMember[] = await apiClient
-  //   .listLeadership()
-  //   .catch(() => []);
-  const cmsLeaders: LeadershipMember[] = [];
+  const cmsLeaders: LeadershipMember[] = await apiClient
+    .listLeadership()
+    .catch(() => []);
 
   // Combined set of leaders for search engine rich snippets
   const allLeadersForSchema = [

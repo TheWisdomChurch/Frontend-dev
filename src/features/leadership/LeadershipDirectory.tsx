@@ -1,15 +1,14 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { LeadershipMember } from '@/domain/leadership/types';
-// import { apiClient } from '@/lib/api';
+import { apiClient } from '@/lib/api';
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { LeaderCard } from '@/features/leadership/LeadershipCards';
 import { LeaderBioModal } from '@/features/leadership/LeaderBioModal';
 import { SeniorPastorsSpotlight } from '@/features/leadership/SeniorPastorsSpotlight';
 import { ExploreMoreBand } from '@/features/resources/ExploreMoreBand';
-import { LeadershipNewsletterSection } from '@/features/leadership/NewsletterSection';
 import {
   CANONICAL_SENIOR_PASTORS,
   CANONICAL_CO_MINISTERS,
@@ -26,22 +25,25 @@ function matchesName(leader: LeadershipMember, fragment: string): boolean {
 }
 
 export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
-  const [leaders] = useState<LeadershipMember[]>(cmsLeaders);
+  const [clientLeaders, setClientLeaders] = useState<LeadershipMember[] | null>(
+    null
+  );
   const [selectedLeader, setSelectedLeader] = useState<LeadershipMember | null>(
     null
   );
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
 
-  // Endpoint commented out per user instruction for organogram focus
-  /*
+  const leaders = clientLeaders ?? cmsLeaders;
+
+  // Live client-side revalidation: ensures any new updates on the live website / admin are instantly reflected
   useEffect(() => {
     let cancelled = false;
     apiClient
       .listLeadership()
       .then(fetched => {
         if (!cancelled && Array.isArray(fetched) && fetched.length > 0) {
-          setLeaders(fetched);
+          setClientLeaders(fetched);
         }
       })
       .catch(() => {
@@ -52,7 +54,6 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
       cancelled = true;
     };
   }, []);
-  */
 
   const openBio = (leader: LeadershipMember) => {
     setSelectedLeader(leader);
@@ -354,10 +355,7 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
       {/* ── 5. Explore More Band ────────────────────────────── */}
       <ExploreMoreBand tone="canvas" />
 
-      {/* ── 6. Newsletter Band ──────────────────────────────── */}
-      <LeadershipNewsletterSection />
-
-      {/* ── 7. Full Biography Modal ─────────────────────────── */}
+      {/* ── 6. Full Biography Modal ─────────────────────────── */}
       <LeaderBioModal
         leader={selectedLeader}
         isOpen={isBioOpen}

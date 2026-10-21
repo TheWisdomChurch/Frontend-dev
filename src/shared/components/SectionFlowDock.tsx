@@ -2,15 +2,92 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Bell,
+  Bookmark,
+  BookOpen,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Church,
+  Compass,
+  Cross,
+  Flame,
+  GraduationCap,
+  HeartHandshake,
+  MapPin,
+  Play,
+  Radio,
+  Shield,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Video,
+  type LucideIcon,
+} from 'lucide-react';
 import { Container } from '@/shared/ui/layout';
+
+export type FlowDockIconName =
+  | 'church'
+  | 'graduation-cap'
+  | 'users'
+  | 'shield-check'
+  | 'shield'
+  | 'heart-handshake'
+  | 'flame'
+  | 'sparkles'
+  | 'compass'
+  | 'map-pin'
+  | 'calendar-days'
+  | 'book-open'
+  | 'cross'
+  | 'radio'
+  | 'video'
+  | 'bookmark'
+  | 'bell'
+  | 'play'
+  | (string & {});
+
+const FLOW_DOCK_ICONS: Record<string, LucideIcon> = {
+  church: Church,
+  graduationcap: GraduationCap,
+  users: Users,
+  shieldcheck: ShieldCheck,
+  shield: Shield,
+  hearthandshake: HeartHandshake,
+  flame: Flame,
+  sparkles: Sparkles,
+  compass: Compass,
+  mappin: MapPin,
+  calendardays: CalendarDays,
+  bookopen: BookOpen,
+  cross: Cross,
+  radio: Radio,
+  video: Video,
+  bookmark: Bookmark,
+  bell: Bell,
+  play: Play,
+};
+
+function resolveDockIcon(
+  icon:
+    FlowDockIconName | React.ComponentType<{ className?: string }> | undefined
+): React.ComponentType<{ className?: string }> {
+  if (!icon) return Sparkles;
+  if (typeof icon === 'string') {
+    const normalized = icon.toLowerCase().replace(/[\s_-]/g, '');
+    return FLOW_DOCK_ICONS[normalized] || Sparkles;
+  }
+  return icon;
+}
 
 export interface FlowDockItem {
   id: string;
   title: string;
   description: string;
   badge: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: FlowDockIconName | React.ComponentType<{ className?: string }>;
   href?: string;
   targetId?: string;
   onClick?: () => void;
@@ -167,7 +244,7 @@ export function SectionFlowDock({
             className="flex gap-4 overflow-x-auto px-1 py-3 scroll-smooth snap-x snap-mandatory no-scrollbar"
           >
             {items.map((item, idx) => {
-              const Icon = item.icon;
+              const Icon = resolveDockIcon(item.icon);
               const isActive = activeDockIndex === idx;
 
               const content = (

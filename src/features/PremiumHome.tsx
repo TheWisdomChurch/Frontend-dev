@@ -1,13 +1,5 @@
 import Image from 'next/image';
-import {
-  CalendarDays,
-  Church,
-  GraduationCap,
-  HeartHandshake,
-  MapPin,
-  ShieldCheck,
-  Users,
-} from 'lucide-react';
+import { CalendarDays, MapPin } from 'lucide-react';
 
 import {
   HOME_BELIEFS,
@@ -44,7 +36,7 @@ const HOME_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Sunday Worship Service',
     description: 'Sundays at 9:00 AM (WAT) · In-Person & Streaming Live',
     badge: '9:00 AM WAT',
-    icon: Church,
+    icon: 'church',
     targetId: 'welcome',
   },
   {
@@ -52,7 +44,7 @@ const HOME_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Growth & Discipleship',
     description: 'Foundations, Believers Equipping & Spiritual Maturity',
     badge: 'Grow Portal',
-    icon: GraduationCap,
+    icon: 'graduation-cap',
     href: '/grow',
   },
   {
@@ -60,7 +52,7 @@ const HOME_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Cell Fellowship Centers',
     description: 'Midweek fellowship in neighborhood homes across Lagos',
     badge: 'Midweek',
-    icon: Users,
+    icon: 'users',
     targetId: 'community',
   },
   {
@@ -68,7 +60,7 @@ const HOME_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Leadership Organogram',
     description: 'Pastoral oversight, organogram, and church stewards',
     badge: 'Leadership',
-    icon: ShieldCheck,
+    icon: 'shield-check',
     href: '/leadership',
   },
   {
@@ -76,7 +68,7 @@ const HOME_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
     title: 'Ministries Directory',
     description: 'A place for men, women, youth, and kingdom children',
     badge: 'Find Your Tribe',
-    icon: HeartHandshake,
+    icon: 'heart-handshake',
     href: '/ministries',
   },
 ];
