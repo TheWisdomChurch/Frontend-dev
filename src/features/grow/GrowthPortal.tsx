@@ -371,10 +371,10 @@ export function GrowthPortal() {
       {/* ── 1. Floating Feature Cards Dock with Interactive Scroll Slider ─────── */}
       <section
         aria-label="Growth Pathways Quick Access"
-        className="relative z-20 -mt-10 sm:-mt-14 pb-8 sm:pb-12"
+        className="relative z-20 -mt-8 sm:-mt-12 lg:-mt-16 pb-12 sm:pb-16 lg:pb-20 bg-gradient-to-b from-[var(--app-dark)] via-[var(--app-dark)] to-transparent"
       >
         <Container>
-          <div className="relative rounded-3xl border border-white/10 bg-[var(--app-dark-2)]/95 p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
+          <div className="relative rounded-3xl border border-white/10 bg-[var(--app-dark-2)]/95 p-4 sm:p-6 lg:p-7 shadow-2xl backdrop-blur-xl">
             {/* Ambient gold glow behind dock */}
             <div
               aria-hidden="true"
@@ -382,23 +382,27 @@ export function GrowthPortal() {
             />
 
             {/* Slider Top Bar: Header label + navigation arrow controls */}
-            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-2 w-2 rounded-full bg-[var(--app-primary)]" />
+            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3 sm:mb-5 sm:pb-4">
+              <div className="flex items-center gap-2">
                 <span className="font-ui text-caption font-bold uppercase tracking-wider text-[var(--app-primary-light)]">
-                  Growth Pathways Track · Step {activeDockIndex + 1} of{' '}
-                  {pathwayDockItems.length}
+                  Growth Pathways Track
+                </span>
+                <span className="hidden sm:inline-block font-ui text-caption text-white/30">
+                  ·
+                </span>
+                <span className="hidden sm:inline-block font-ui text-caption font-medium text-white/60">
+                  Pathway {activeDockIndex + 1} of {pathwayDockItems.length}
                 </span>
               </div>
 
               {/* Slider Left / Right Navigation Buttons */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={() => scrollDock('left')}
                   disabled={activeDockIndex === 0}
                   aria-label="Scroll to previous pathway"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition-all hover:border-[var(--app-primary)]/50 hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                  className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 transition-all hover:border-[var(--app-primary)]/50 hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-25"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
@@ -407,7 +411,7 @@ export function GrowthPortal() {
                   onClick={() => scrollDock('right')}
                   disabled={activeDockIndex === pathwayDockItems.length - 1}
                   aria-label="Scroll to next pathway"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition-all hover:border-[var(--app-primary)]/50 hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                  className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 transition-all hover:border-[var(--app-primary)]/50 hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-25"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
@@ -440,16 +444,16 @@ export function GrowthPortal() {
                     className={`group relative flex w-[84vw] max-w-[340px] shrink-0 snap-start flex-col justify-between rounded-2xl border p-5 sm:p-6 text-left transition-all duration-300 sm:w-[320px] lg:w-[310px] xl:w-[320px] 2xl:w-[330px] min-h-[195px] ${
                       isActive
                         ? 'border-[var(--app-primary)] bg-gradient-to-b from-white/[0.14] via-white/[0.06] to-[var(--app-primary)]/15 shadow-2xl shadow-black/90 ring-1 ring-[var(--app-primary)]/60 scale-100 opacity-100 z-10 cursor-pointer'
-                        : 'border-white/10 bg-white/[0.03] shadow-md scale-[0.98] opacity-75 hover:opacity-100 hover:scale-100 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.07] cursor-pointer'
+                        : 'border-white/10 bg-white/[0.04] shadow-md scale-[0.98] opacity-85 hover:opacity-100 hover:scale-100 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.08] cursor-pointer'
                     }`}
                   >
                     {/* Top Row: Icon badge + top-right arrow */}
                     <div className="flex items-center justify-between">
                       <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${
+                        className={`flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-300 ${
                           isActive
-                            ? 'border-[var(--app-primary)]/70 bg-[var(--app-primary)]/20 text-[var(--app-primary-light)]'
-                            : 'border-white/10 bg-[var(--app-dark)] text-white/60 group-hover:border-[var(--app-primary)]/40 group-hover:bg-[var(--app-primary)]/15 group-hover:text-[var(--app-primary-light)]'
+                            ? 'border-[var(--app-primary)]/70 bg-[var(--app-primary)]/20 text-[var(--app-primary-light)] shadow-[0_0_12px_color-mix(in_srgb,var(--app-primary)_30%,transparent)]'
+                            : 'border-white/10 bg-[var(--app-dark)] text-white/80 group-hover:border-[var(--app-primary)]/50 group-hover:bg-[var(--app-primary)]/15 group-hover:text-[var(--app-primary-light)]'
                         }`}
                       >
                         <Icon className="h-5 w-5" />
@@ -458,7 +462,7 @@ export function GrowthPortal() {
                         className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
                           isActive
                             ? 'text-[var(--app-primary-light)]'
-                            : 'text-white/30 group-hover:text-[var(--app-primary-light)]'
+                            : 'text-white/40 group-hover:text-[var(--app-primary-light)]'
                         }`}
                       >
                         <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -466,7 +470,7 @@ export function GrowthPortal() {
                     </div>
 
                     {/* Middle: Title & Description */}
-                    <div className="mt-4 space-y-1">
+                    <div className="mt-4 space-y-1.5 flex-1">
                       <h2
                         className={`font-ui text-body-sm font-bold tracking-tight transition-colors ${
                           isActive
@@ -476,15 +480,20 @@ export function GrowthPortal() {
                       >
                         {item.title}
                       </h2>
-                      <p className="font-ui text-caption text-white/70 leading-snug line-clamp-2">
+                      <p className="font-ui text-caption text-white/75 leading-relaxed line-clamp-2">
                         {item.description}
                       </p>
                     </div>
 
-                    {/* Bottom: Pill indicator */}
-                    <div className="mt-4 border-t border-white/5 pt-2.5 flex items-center justify-between">
+                    {/* Bottom: Pill indicator + action trigger */}
+                    <div className="mt-4 border-t border-white/10 pt-3 flex items-center justify-between">
                       <span className="font-ui text-[11px] font-semibold uppercase tracking-wider text-[var(--app-primary-light)]">
                         {item.badge}
+                      </span>
+                      <span className="font-ui text-[10px] text-white/40 uppercase tracking-widest group-hover:text-white/80 transition-colors">
+                        {item.actionType === 'scroll'
+                          ? 'Explore Track →'
+                          : 'Enroll Now →'}
                       </span>
                     </div>
                   </button>
@@ -495,21 +504,28 @@ export function GrowthPortal() {
         </Container>
       </section>
 
-      {/* ── 2. The 3 Core Discipleship Classes (Scroll-Triggered Slide-in Effect) ── */}
-      {GROWTH_CLASSES.map(item => {
+      {/* ── 2. The 3 Core Discipleship Classes (Balanced Editorial Rhythm matching Landing Page) ── */}
+      {GROWTH_CLASSES.map((item, index) => {
         const isInverse = item.layout === 'inverse';
+        const isDarkClass = index === 1; // Middle class (Believers Equipping) is deep obsidian; others are warm editorial canvas
 
         return (
           <Section
             key={item.id}
             id={item.id}
-            tone="dark"
-            className="relative isolate overflow-hidden py-20 sm:py-28 lg:py-32 bg-[var(--app-dark)] text-white"
+            tone={isDarkClass ? 'dark' : 'canvas'}
+            className={
+              isDarkClass
+                ? 'scroll-mt-24 relative isolate overflow-hidden border-b border-white/10 py-20 sm:py-28 lg:py-32 bg-[radial-gradient(ellipse_75%_55%_at_50%_25%,color-mix(in_srgb,var(--app-primary)_14%,transparent)_0%,transparent_70%),var(--app-dark)] text-white'
+                : 'scroll-mt-24 relative isolate overflow-hidden border-b border-[var(--app-border)] py-20 sm:py-28 lg:py-32 bg-[radial-gradient(ellipse_80%_60%_at_15%_40%,color-mix(in_srgb,var(--app-primary-10)_80%,transparent)_0%,transparent_65%),var(--app-canvas-2)] text-[var(--app-text)]'
+            }
           >
             {/* Thematic Background Image Layer (No face portraits, purely architectural / thematic) */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -z-20 overflow-hidden opacity-25"
+              className={`pointer-events-none absolute inset-0 -z-20 overflow-hidden ${
+                isDarkClass ? 'opacity-25' : 'opacity-15'
+              }`}
             >
               <Image
                 src={item.thematicImage}
@@ -523,10 +539,12 @@ export function GrowthPortal() {
             </div>
 
             {/* Cinematic Gradient Overlays for 100% High Definition Contrast */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_75%_55%_at_50%_25%,color-mix(in_srgb,var(--app-primary)_15%,transparent)_0%,transparent_70%),linear-gradient(to_bottom,var(--app-dark)_0%,color-mix(in_srgb,var(--app-dark)_85%,transparent)_40%,var(--app-dark)_100%)]"
-            />
+            {isDarkClass ? (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_75%_55%_at_50%_25%,color-mix(in_srgb,var(--app-primary)_15%,transparent)_0%,transparent_70%),linear-gradient(to_bottom,var(--app-dark)_0%,color-mix(in_srgb,var(--app-dark)_85%,transparent)_40%,var(--app-dark)_100%)]"
+              />
+            ) : null}
 
             <Container className="relative z-10">
               <div className="grid items-center gap-10 sm:gap-14 lg:grid-cols-12 lg:gap-16">
@@ -544,20 +562,36 @@ export function GrowthPortal() {
                     {/* Ambient Aura */}
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute -inset-2 rounded-3xl bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,color-mix(in_srgb,var(--app-primary)_35%,transparent)_0%,transparent_70%)] opacity-70 blur-xl transition-opacity duration-500 group-hover:opacity-100"
+                      className={`pointer-events-none absolute -inset-2 rounded-3xl blur-xl transition-opacity duration-500 group-hover:opacity-100 ${
+                        isDarkClass
+                          ? 'bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,color-mix(in_srgb,var(--app-primary)_35%,transparent)_0%,transparent_70%)] opacity-70'
+                          : 'bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,color-mix(in_srgb,var(--app-primary-10)_50%,transparent)_0%,transparent_70%)] opacity-50'
+                      }`}
                     />
 
-                    {/* Main Card with Deep Obsidian Shell & Modern Border */}
-                    <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[var(--app-dark-2)] via-[var(--app-dark)] to-black/95 p-6 shadow-2xl shadow-black/80 sm:p-8 lg:p-9 transition-transform duration-500 group-hover:scale-[1.01]">
+                    {/* Main Card Shell */}
+                    <div
+                      className={`relative overflow-hidden rounded-3xl p-6 sm:p-8 lg:p-9 shadow-2xl transition-transform duration-500 group-hover:scale-[1.01] ${
+                        isDarkClass
+                          ? 'border border-white/15 bg-gradient-to-b from-[var(--app-dark-2)] via-[var(--app-dark)] to-black/95 text-white shadow-black/80'
+                          : 'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)] shadow-black/10'
+                      }`}
+                    >
                       {/* Diagonal Accent Slices */}
                       <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rotate-45 transform bg-gradient-to-b from-[var(--app-primary-light)]/20 to-transparent"
+                        className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rotate-45 transform bg-gradient-to-b from-[var(--app-primary)]/20 to-transparent"
                       />
 
                       {/* Card Header & Badge */}
                       <div className="flex items-center justify-between gap-4">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 font-ui text-caption font-bold uppercase tracking-wider text-[var(--app-primary-light)] backdrop-blur-sm">
+                        <span
+                          className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-ui text-caption font-bold uppercase tracking-wider backdrop-blur-sm ${
+                            isDarkClass
+                              ? 'border-white/15 bg-white/5 text-[var(--app-primary-light)]'
+                              : 'border-[color-mix(in_srgb,var(--app-primary)_40%,transparent)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] text-[var(--app-primary-dark)]'
+                          }`}
+                        >
                           <Sparkles className="h-3.5 w-3.5 text-[var(--app-primary)]" />
                           {item.badge}
                         </span>
@@ -565,19 +599,35 @@ export function GrowthPortal() {
 
                       {/* Curriculum List */}
                       <div className="mt-7 space-y-3.5">
-                        <h2 className="font-ui text-caption font-bold uppercase tracking-widest text-[var(--app-primary-light)]">
+                        <h2
+                          className={`font-ui text-caption font-bold uppercase tracking-widest ${
+                            isDarkClass
+                              ? 'text-[var(--app-primary-light)]'
+                              : 'text-[var(--app-primary-dark)]'
+                          }`}
+                        >
                           Core Curriculum Modules
                         </h2>
                         <div className="space-y-2.5">
                           {item.curriculum.map((mod, i) => (
                             <div
                               key={mod}
-                              className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:p-3.5 transition-colors hover:border-[var(--app-primary)]/30 hover:bg-white/[0.06]"
+                              className={`flex items-start gap-3 rounded-2xl border p-3 sm:p-3.5 transition-colors ${
+                                isDarkClass
+                                  ? 'border-white/10 bg-white/[0.04] text-white/95 hover:border-[var(--app-primary)]/30 hover:bg-white/[0.06]'
+                                  : 'border-[var(--app-border)] bg-[var(--app-canvas)] text-[var(--app-text)] hover:border-[var(--app-primary)]/40 hover:bg-[var(--app-surface)]'
+                              }`}
                             >
-                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--app-primary)]/25 font-ui text-caption font-bold text-[var(--app-primary-light)]">
+                              <span
+                                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full font-ui text-caption font-bold ${
+                                  isDarkClass
+                                    ? 'bg-[var(--app-primary)]/25 text-[var(--app-primary-light)]'
+                                    : 'bg-[color-mix(in_srgb,var(--app-primary)_18%,transparent)] text-[var(--app-primary-dark)]'
+                                }`}
+                              >
                                 {i + 1}
                               </span>
-                              <span className="font-ui text-body-sm font-medium leading-snug text-white/95">
+                              <span className="font-ui text-body-sm font-medium leading-snug">
                                 {mod}
                               </span>
                             </div>
@@ -586,14 +636,38 @@ export function GrowthPortal() {
                       </div>
 
                       {/* Format & Logistics Footer */}
-                      <div className="mt-7 border-t border-white/10 pt-5">
-                        <div className="flex flex-col gap-2 font-ui text-caption font-medium text-white/70">
+                      <div
+                        className={`mt-7 border-t pt-5 ${
+                          isDarkClass
+                            ? 'border-white/10'
+                            : 'border-[var(--app-border)]'
+                        }`}
+                      >
+                        <div
+                          className={`flex flex-col gap-2 font-ui text-caption font-medium ${
+                            isDarkClass
+                              ? 'text-white/85'
+                              : 'text-[var(--app-muted)]'
+                          }`}
+                        >
                           <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 shrink-0 text-[var(--app-primary-light)]" />
+                            <Clock
+                              className={`h-4 w-4 shrink-0 ${
+                                isDarkClass
+                                  ? 'text-[var(--app-primary-light)]'
+                                  : 'text-[var(--app-primary-dark)]'
+                              }`}
+                            />
                             <span>{item.duration}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 shrink-0 text-[var(--app-primary-light)]" />
+                            <Calendar
+                              className={`h-4 w-4 shrink-0 ${
+                                isDarkClass
+                                  ? 'text-[var(--app-primary-light)]'
+                                  : 'text-[var(--app-primary-dark)]'
+                              }`}
+                            />
                             <span>{item.schedule}</span>
                           </div>
                         </div>
@@ -622,11 +696,17 @@ export function GrowthPortal() {
                       title={item.title}
                       accent={item.accent}
                       description={item.subtitle}
-                      tone="dark"
+                      tone={isDarkClass ? 'dark' : undefined}
                       size="lg"
                     />
 
-                    <p className="font-ui text-body leading-[1.8] text-white/85 sm:text-body-lg">
+                    <p
+                      className={`font-ui text-body leading-[1.8] sm:text-body-lg ${
+                        isDarkClass
+                          ? 'text-white/85'
+                          : 'text-[var(--app-muted)]'
+                      }`}
+                    >
                       {item.description}
                     </p>
 
@@ -635,20 +715,34 @@ export function GrowthPortal() {
                       {item.features.map(feat => (
                         <div
                           key={feat}
-                          className="flex items-center gap-3 font-ui text-body-sm font-medium text-white/90"
+                          className={`flex items-center gap-3 font-ui text-body-sm font-medium ${
+                            isDarkClass
+                              ? 'text-white/95'
+                              : 'text-[var(--app-text)]'
+                          }`}
                         >
-                          <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--app-primary-light)]" />
+                          <CheckCircle2
+                            className={`h-4 w-4 shrink-0 ${
+                              isDarkClass
+                                ? 'text-[var(--app-primary-light)]'
+                                : 'text-[var(--app-primary-dark)]'
+                            }`}
+                          />
                           <span>{feat}</span>
                         </div>
                       ))}
                     </div>
 
-                    {/* Action CTA Button (Solid Radiant Luminous Gold Pill with Dark Text) */}
+                    {/* Action CTA Button */}
                     <div className="pt-4">
                       <button
                         type="button"
                         onClick={() => handleOpenModal(item)}
-                        className="group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[var(--app-primary-dark)] via-[var(--app-primary)] to-[var(--app-primary-light)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-dark)] shadow-[0_4px_20px_color-mix(in_srgb,var(--app-primary)_40%,transparent)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--app-primary)_70%,transparent)] hover:brightness-105 active:scale-[0.98]"
+                        className={
+                          isDarkClass
+                            ? 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[var(--app-primary-dark)] via-[var(--app-primary)] to-[var(--app-primary-light)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-dark)] shadow-[0_4px_20px_color-mix(in_srgb,var(--app-primary)_40%,transparent)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--app-primary)_70%,transparent)] hover:brightness-105 active:scale-[0.98]'
+                            : 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-[var(--app-dark)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-[var(--app-primary-dark)] hover:text-white transition-all duration-300 active:scale-[0.98]'
+                        }
                       >
                         <span>{item.buttonText}</span>
                         <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
