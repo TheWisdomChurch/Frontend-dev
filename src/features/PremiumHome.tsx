@@ -1,14 +1,9 @@
 import Image from 'next/image';
 import { CalendarDays, MapPin } from 'lucide-react';
 
-import {
-  HOME_BELIEFS,
-  HOME_COMMUNITY_GALLERY,
-  HOME_COPY,
-  HOME_IMAGES,
-} from '@/features/home/content';
+import { HOME_BELIEFS, HOME_COPY, HOME_IMAGES } from '@/features/home/content';
 import { CellFellowshipCta } from '@/features/community/CellFellowshipCta';
-import { ConnectCommunityCta } from '@/features/community/ConnectCommunityCta';
+import CommunityInteractiveShowcase from '@/features/community/CommunityInteractiveShowcase';
 import CommunityJoinTrigger from '@/features/community/CommunityJoinTrigger';
 import PlanVisitTrigger from '@/features/hero/PlanVisitTrigger';
 import HomeHero from '@/features/hero/HomeHero';
@@ -26,7 +21,6 @@ import {
   Figure,
   CtaLink,
   Section,
-  Split,
   SplitFeature,
 } from '@/shared/ui/layout';
 
@@ -430,80 +424,8 @@ export default function PremiumHome() {
         </Container>
       </Section>
 
-      {/* ── 6. Life at Wisdom Church / Community Gallery ─────────────────────── */}
-      <Section
-        id="community"
-        tone="canvas"
-        className="relative bg-[radial-gradient(ellipse_70%_50%_at_50%_15%,color-mix(in_srgb,var(--app-primary-10)_50%,transparent)_0%,transparent_60%),var(--app-canvas)] py-20 sm:py-28"
-      >
-        <Container>
-          <Split reverse>
-            <div className="grid grid-cols-2 gap-4 sm:gap-5">
-              <Figure
-                src={HOME_COMMUNITY_GALLERY[0].src}
-                alt={HOME_COMMUNITY_GALLERY[0].alt}
-                fill
-                unoptimized={HOME_COMMUNITY_GALLERY[0].unoptimized}
-                sizes="(max-width: 1023px) 50vw, 25vw"
-                className="aspect-[4/5] rounded-3xl border border-[var(--app-border)] shadow-md"
-                imageClassName={HOME_COMMUNITY_GALLERY[0].position}
-              />
-              <div className="grid gap-4 pt-8 sm:gap-5 sm:pt-12">
-                <Figure
-                  src={HOME_COMMUNITY_GALLERY[1].src}
-                  alt={HOME_COMMUNITY_GALLERY[1].alt}
-                  fill
-                  unoptimized={HOME_COMMUNITY_GALLERY[1].unoptimized}
-                  sizes="(max-width: 1023px) 50vw, 25vw"
-                  className="aspect-square rounded-3xl border border-[var(--app-border)] shadow-md"
-                  imageClassName={HOME_COMMUNITY_GALLERY[1].position}
-                />
-                <Figure
-                  src={HOME_COMMUNITY_GALLERY[2].src}
-                  alt={HOME_COMMUNITY_GALLERY[2].alt}
-                  fill
-                  unoptimized={HOME_COMMUNITY_GALLERY[2].unoptimized}
-                  sizes="(max-width: 1023px) 50vw, 25vw"
-                  className="aspect-square rounded-3xl border border-[var(--app-border)] shadow-md"
-                  imageClassName={HOME_COMMUNITY_GALLERY[2].position}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <SectionHeader
-                eyebrow={HOME_COPY.community.eyebrow}
-                title={HOME_COPY.community.title}
-                accent={HOME_COPY.community.accent}
-                description={HOME_COPY.community.description}
-              />
-
-              <div className="space-y-3 font-ui text-sm text-[var(--app-muted)]">
-                <div className="flex items-center gap-3">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
-                  <span>
-                    Active Men&apos;s, Women&apos;s, and Youth Fellowships
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
-                  <span>Nurturing Kingdom Kids church for our children</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
-                  <span>
-                    Meaningful service opportunities across ministry departments
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <ConnectCommunityCta label={HOME_COPY.actions.connect} />
-              </div>
-            </div>
-          </Split>
-        </Container>
-      </Section>
+      {/* ── 6. Life at Wisdom Church / Interactive Community Showcase ───────── */}
+      <CommunityInteractiveShowcase />
 
       {/* ── 7. Cell Fellowship Section: Elevated Obsidian Cards ─────────────── */}
       <Section

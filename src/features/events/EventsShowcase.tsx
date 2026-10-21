@@ -55,6 +55,10 @@ function getEventTimestamp(event: EventPublic): number {
     const t = new Date(event.startAt).getTime();
     if (!Number.isNaN(t)) return t;
   }
+  if (event.date) {
+    const t = new Date(event.date).getTime();
+    if (!Number.isNaN(t)) return t;
+  }
   return Number.MAX_SAFE_INTEGER;
 }
 
@@ -67,14 +71,21 @@ function formatDate(startAt?: string): string {
     .toUpperCase();
 }
 
-function statusBadge(startAt?: string, endAt?: string): string {
+function statusBadge(
+  startAt?: string,
+  endAt?: string,
+  currentTime?: number
+): string {
   if (!startAt) return 'Upcoming';
   const start = new Date(startAt).getTime();
-  const end = endAt ? new Date(endAt).getTime() : start;
-  const now = Date.now();
-  if (now >= start && now <= end) return 'Live now';
-  if (now < start) return 'Upcoming';
-  return 'Recent';
+  const end = endAt ? new Date(endAt).getTime() : start + 4 * 3600 * 1000;
+  const now = currentTime && currentTime > 0 ? currentTime : 0;
+  if (now > 0) {
+    if (now >= start && now <= end) return 'Live now';
+    if (now < start) return 'Upcoming';
+    return 'Concluded';
+  }
+  return 'Upcoming';
 }
 
 /* ── Shared pieces ──────────────────────────────────────── */
@@ -329,6 +340,7 @@ export default function EventsShowcase() {
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [loadingReels, setLoadingReels] = useState(true);
   const [events, setEvents] = useState<EventPublic[]>([]);
+  const [eventsLoadedAt, setEventsLoadedAt] = useState<number>(0);
   const [reels, setReels] = useState<ReelPublic[]>([]);
   const [reelModal, setReelModal] = useState<Slide | null>(null);
 
@@ -337,10 +349,16 @@ export default function EventsShowcase() {
     apiClient
       .listEvents()
       .then(data => {
-        if (live) setEvents(Array.isArray(data) ? data : []);
+        if (live) {
+          setEventsLoadedAt(Date.now());
+          setEvents(Array.isArray(data) ? data : []);
+        }
       })
       .catch(() => {
-        if (live) setEvents([]);
+        if (live) {
+          setEventsLoadedAt(Date.now());
+          setEvents([]);
+        }
       })
       .finally(() => {
         if (live) setLoadingEvents(false);
@@ -368,24 +386,46 @@ export default function EventsShowcase() {
     };
   }, []);
 
-  const programSlides = useMemo<Slide[]>(
-    () =>
-      [...events]
-        .sort((a, b) => getEventTimestamp(a) - getEventTimestamp(b))
-        .map(e => ({
-          id: e.id,
-          title: e.title,
-          description: e.description || 'Join us for this gathering.',
-          date: formatDate(e.startAt),
-          location: e.location || SERVICE_INFO.venue.short,
-          imageUrl: e.bannerUrl || e.imageUrl || EventBannerDesktop.src,
-          cta: 'Save a seat',
-          href: e.formSlug ? `/forms/${e.formSlug}` : '/events',
-          badge: statusBadge(e.startAt, e.endAt),
-          category: 'program' as const,
-        })),
-    [events]
-  );
+  const programSlides = useMemo<Slide[]>(() => {
+    const now = eventsLoadedAt > 0 ? eventsLoadedAt : 0;
+    // Prioritize upcoming/active events first, sorted by earliest upcoming date.
+    // Past events come afterwards, sorted descending (most recent past event first).
+    const sorted = [...events].sort((a, b) => {
+      const timeA = getEventTimestamp(a);
+      const timeB = getEventTimestamp(b);
+      const endA = a.endAt
+        ? new Date(a.endAt).getTime()
+        : timeA + 4 * 3600 * 1000;
+      const endB = b.endAt
+        ? new Date(b.endAt).getTime()
+        : timeB + 4 * 3600 * 1000;
+      const isPastA = now > 0 ? endA < now : false;
+      const isPastB = now > 0 ? endB < now : false;
+
+      if (!isPastA && isPastB) return -1;
+      if (isPastA && !isPastB) return 1;
+
+      // Both upcoming: earliest upcoming first
+      if (!isPastA && !isPastB) {
+        return timeA - timeB;
+      }
+      // Both past: most recent past first
+      return timeB - timeA;
+    });
+
+    return sorted.map(e => ({
+      id: e.id,
+      title: e.title,
+      description: e.description || 'Join us for this gathering.',
+      date: formatDate(e.startAt || e.date),
+      location: e.location || SERVICE_INFO.venue.short,
+      imageUrl: e.bannerUrl || e.imageUrl || EventBannerDesktop.src,
+      cta: 'Save a seat',
+      href: e.formSlug ? `/forms/${e.formSlug}` : e.registerLink || '/events',
+      badge: statusBadge(e.startAt || e.date, e.endAt, eventsLoadedAt),
+      category: 'program' as const,
+    }));
+  }, [events, eventsLoadedAt]);
 
   const reelSlides = useMemo<Slide[]>(
     () =>

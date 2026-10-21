@@ -20,7 +20,13 @@ const EMPTY = { name: '', phone: '', email: '' };
  * The last option posts to `/notifications/subscribe`; nothing routes away to
  * the contact page.
  */
-export function ConnectCommunityCta({ label }: { label: string }) {
+export function ConnectCommunityCta({
+  label,
+  className,
+}: {
+  label: string;
+  className?: string;
+}) {
   const [view, setView] = useState<View>('closed');
   const [form, setForm] = useState(EMPTY);
   const [submitting, setSubmitting] = useState(false);
@@ -67,7 +73,7 @@ export function ConnectCommunityCta({ label }: { label: string }) {
       <button
         type="button"
         onClick={() => setView('options')}
-        className={buttonClass('dark', 'md', 'mt-10')}
+        className={buttonClass('dark', 'md', className)}
       >
         <Users className="h-4 w-4" /> {label}
       </button>

@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/cn';
 import {
   ArrowRight,
+  ArrowUpRight,
   BookOpen,
   ChevronLeft,
   ChevronRight,
@@ -21,10 +20,9 @@ import { WhatWeDo_3, Deacon_1, wisdomShirt_1 } from '@/shared/assets';
 import type { YouTubeVideo } from '@/domain/media/types';
 import { mediaApi } from '@/domain/media/api';
 import { useApiQuery } from '@/hooks/useApiQuery';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { Media } from '@/shared/ui/Media';
-import { Container, Eyebrow, Section, SectionHeader } from '@/shared/ui/layout';
+import { Container, Section, SectionHeader } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
 import { decodeHtmlEntities } from '@/shared/utils/functionUtils/decodeHtmlEntities';
 import { cleanSermonTitle } from '@/shared/utils/functionUtils/cleanSermonTitle';
@@ -71,113 +69,187 @@ const ALL_RESOURCES = [
   },
 ];
 
-/* ── Resource Carousel component ────────────────────── */
+/* ── Resource Carousel component with Tracker Animation ── */
 
 function ResourceCarousel() {
-  const [index, setIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const prev = () => setIndex(i => Math.max(0, i - 1));
-  const next = () => setIndex(i => Math.min(ALL_RESOURCES.length - 1, i + 1));
+  const scrollToIndex = useCallback((index: number) => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const cards = container.querySelectorAll<HTMLElement>('[data-res-card]');
+    const targetCard = cards[index];
+    if (targetCard) {
+      const containerWidth = container.offsetWidth;
+      const cardWidth = targetCard.offsetWidth;
+      const cardLeft = targetCard.offsetLeft;
+      const targetScroll = cardLeft - containerWidth / 2 + cardWidth / 2;
+      container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    }
+    setActiveIndex(index);
+  }, []);
 
-  const canPrev = index > 0;
-  const canNext = index < ALL_RESOURCES.length - 1;
+  const scrollStep = (direction: 'left' | 'right') => {
+    const nextIndex =
+      direction === 'left'
+        ? Math.max(0, activeIndex - 1)
+        : Math.min(ALL_RESOURCES.length - 1, activeIndex + 1);
+    scrollToIndex(nextIndex);
+  };
+
+  // Automated tracker animation: auto-advances smoothly every 4s
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setActiveIndex(prev => {
+        const next = (prev + 1) % ALL_RESOURCES.length;
+        scrollToIndex(next);
+        return next;
+      });
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [isPaused, scrollToIndex]);
+
+  const handleScroll = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const cards = container.querySelectorAll<HTMLElement>('[data-res-card]');
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    cards.forEach((card, i) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = i;
+      }
+    });
+
+    setActiveIndex(closestIndex);
+  };
 
   return (
-    <div>
-      {/* Header */}
-      <div className="mb-8 flex items-end justify-between gap-4">
-        <SectionHeader
-          eyebrow="Explore"
-          title="You can do"
-          accent="more"
-          size="sm"
+    <div className="relative">
+      {/* Tracker Shell */}
+      <div className="relative rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)]/95 p-4 sm:p-6 lg:p-7 shadow-2xl backdrop-blur-xl">
+        {/* Ambient gold glow */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-1 -z-10 rounded-3xl bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,color-mix(in_srgb,var(--app-primary)_20%,transparent)_0%,transparent_70%)]"
         />
 
-        {/* Navigation arrows (visible on mobile/tablet, hidden on desktop where all 4 cards show) */}
-        <div className="flex shrink-0 items-center gap-2 lg:hidden">
-          <motion.button
-            type="button"
-            onClick={prev}
-            disabled={!canPrev}
-            aria-label="Previous resource"
-            whileHover={canPrev ? { scale: 1.08 } : undefined}
-            whileTap={canPrev ? { scale: 0.94 } : undefined}
-            transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </motion.button>
-          <motion.button
-            type="button"
-            onClick={next}
-            disabled={!canNext}
-            aria-label="Next resource"
-            whileHover={canNext ? { scale: 1.08 } : undefined}
-            whileTap={canNext ? { scale: 0.94 } : undefined}
-            transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-            className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center border border-[var(--app-border)] text-[var(--app-muted)] transition-colors hover:border-[color-mix(in_srgb,var(--app-primary)_45%,transparent)] hover:text-[color-mix(in_srgb,var(--app-ink)_80%,transparent)] disabled:pointer-events-none disabled:opacity-30"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </motion.button>
-        </div>
-      </div>
+        {/* Header & Controls Bar */}
+        <div className="mb-4 flex items-center justify-between border-b border-[var(--app-border)] pb-3 sm:mb-5 sm:pb-4">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-[var(--app-primary)]" />
+            <span className="font-ui text-caption font-bold uppercase tracking-wider text-[var(--app-primary-dark)]">
+              Explore Track
+            </span>
+            <span className="hidden sm:inline-block font-ui text-caption text-[var(--app-muted)]">
+              ·
+            </span>
+            <span className="hidden sm:inline-block font-ui text-caption font-medium text-[var(--app-subtle)]">
+              Pathway {activeIndex + 1} of {ALL_RESOURCES.length}
+            </span>
+          </div>
 
-      {/* Cards: 1-card slide on mobile, 2-card on tablet, 4-card grid on desktop */}
-      <div className="w-full overflow-hidden">
-        <div className="flex gap-5 sm:gap-5 lg:grid lg:grid-cols-4">
+          {/* Navigation arrow controls */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button
+              type="button"
+              onClick={() => scrollStep('left')}
+              disabled={activeIndex === 0}
+              aria-label="Previous resource"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-[var(--app-border)] bg-[var(--app-canvas)] text-[var(--app-text)] transition-all hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)] disabled:pointer-events-none disabled:opacity-25"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollStep('right')}
+              disabled={activeIndex === ALL_RESOURCES.length - 1}
+              aria-label="Next resource"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-[var(--app-border)] bg-[var(--app-canvas)] text-[var(--app-text)] transition-all hover:border-[var(--app-primary)] hover:text-[var(--app-primary-dark)] disabled:pointer-events-none disabled:opacity-25"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable / Slidable Track */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
+          className="flex gap-4 sm:gap-5 overflow-x-auto px-1 py-2 sm:py-3 scroll-smooth snap-x snap-mandatory no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
           {ALL_RESOURCES.map((item, i) => {
             const Icon = item.icon;
-            const isMobileVisible = i === index;
-            const isTabletVisible =
-              index === ALL_RESOURCES.length - 1
-                ? i === index || i === index - 1
-                : i === index || i === index + 1;
+            const isActive = activeIndex === i;
 
             return (
               <Link
                 key={item.title}
+                data-res-card
                 href={item.href}
+                onClick={() => scrollToIndex(i)}
                 className={cn(
-                  'group relative aspect-[4/5] min-h-[360px] flex-col justify-end overflow-hidden',
-                  isMobileVisible ? 'flex w-full' : 'hidden',
-                  isTabletVisible
-                    ? 'sm:flex sm:w-[calc(50%-0.625rem)]'
-                    : 'sm:hidden',
-                  'lg:flex lg:w-full'
+                  'group relative flex w-[84vw] max-w-[340px] shrink-0 snap-start flex-col justify-between rounded-2xl border p-5 sm:p-6 text-left transition-all duration-300 sm:w-[320px] lg:w-[calc(25%-0.95rem)] min-h-[220px]',
+                  isActive
+                    ? 'border-[var(--app-primary)] bg-gradient-to-b from-[var(--app-primary-10)] via-[var(--app-surface)] to-[var(--app-primary-10)] shadow-xl ring-1 ring-[var(--app-primary)]/50 scale-100 opacity-100 z-10'
+                    : 'border-[var(--app-border)] bg-[var(--app-canvas)] shadow-xs scale-[0.98] opacity-90 hover:opacity-100 hover:scale-100 hover:border-[var(--app-primary)]/60 hover:bg-[var(--app-surface)]'
                 )}
               >
-                {/* Background image — covers card fully, no gaps */}
-                <Image
-                  src={item.img}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  quality={IMAGE_QUALITY}
-                  className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-[1.04] sm:object-center"
-                />
-                {/* Bottom-up gradient so text is readable, top stays bright */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/5" />
-                {/* Top vignette */}
-                <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
-
-                {/* Icon chip — top right */}
-                <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center bg-black/30 backdrop-blur-sm transition duration-300 group-hover:bg-[color-mix(in_srgb,var(--app-primary)_80%,transparent)]">
-                  <Icon className="h-3.5 w-3.5 text-white" />
+                {/* Top Row: Icon badge + top-right arrow */}
+                <div className="flex items-center justify-between">
+                  <div
+                    className={cn(
+                      'flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-300',
+                      isActive
+                        ? 'border-[var(--app-primary)] bg-[color-mix(in_srgb,var(--app-primary)_20%,transparent)] text-[var(--app-primary-dark)] shadow-sm'
+                        : 'border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-muted)] group-hover:border-[var(--app-primary)] group-hover:text-[var(--app-primary-dark)]'
+                    )}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <span
+                    className={cn(
+                      'flex h-8 w-8 items-center justify-center rounded-full transition-colors',
+                      isActive
+                        ? 'text-[var(--app-primary-dark)]'
+                        : 'text-[var(--app-subtle)] group-hover:text-[var(--app-primary-dark)]'
+                    )}
+                  >
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
                 </div>
 
-                {/* Content */}
-                <div className="relative z-10 p-6">
-                  <Eyebrow>{item.label}</Eyebrow>
-                  <p className="mt-1.5 font-headline text-heading-sm font-normal leading-snug text-white">
+                {/* Middle: Title & Description */}
+                <div className="mt-4 space-y-1.5 flex-1">
+                  <span className="inline-block font-ui text-[11px] font-bold uppercase tracking-wider text-[var(--app-primary-dark)]">
+                    {item.label}
+                  </span>
+                  <h3 className="font-headline text-heading-sm font-semibold tracking-tight text-[var(--app-text)] transition-colors group-hover:text-[var(--app-primary-dark)]">
                     {item.title}
-                  </p>
-                  <p className="mt-1.5 font-ui text-label leading-[1.6] text-[var(--app-muted)]">
+                  </h3>
+                  <p className="font-ui text-caption leading-relaxed text-[var(--app-muted)] line-clamp-2">
                     {item.desc}
                   </p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-label font-semibold text-[var(--app-primary)] transition-all duration-200 group-hover:gap-2.5">
+                </div>
+
+                {/* Bottom: Action pill with animated arrow */}
+                <div className="mt-4 border-t border-[var(--app-border)] pt-3 flex items-center justify-between">
+                  <span className="font-ui text-caption font-bold text-[var(--app-primary-dark)] transition-all duration-200 group-hover:translate-x-0.5">
                     {item.cta}
-                    <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </span>
+                  <ArrowRight className="h-4 w-4 text-[var(--app-primary-dark)] transition-transform duration-200 group-hover:translate-x-1.5" />
                 </div>
               </Link>
             );

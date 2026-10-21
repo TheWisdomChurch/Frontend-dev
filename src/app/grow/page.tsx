@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import SiteHero from '@/features/hero/SiteHero';
 import { GrowthPortal } from '@/features/grow/GrowthPortal';
+import { ExploreMoreBand } from '@/features/resources/ExploreMoreBand';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { Page } from '@/shared/ui/layout';
@@ -22,7 +23,10 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function GrowPage() {
   return (
-    <Page>
+    <Page
+      tone="surface"
+      className="bg-[var(--app-dark)] text-[var(--app-text)]"
+    >
       {/* ── SEO Structured Data ──────────────────────────────── */}
       <JsonLd
         data={buildBreadcrumbSchema([
@@ -51,6 +55,12 @@ export default function GrowPage() {
 
       {/* ── 2. Diagonal 2-Column Discipleship Classes ─────────── */}
       <GrowthPortal />
+
+      {/* ── 3. Explore More Resources Band ───────────────────── */}
+      <ExploreMoreBand
+        tone="canvas"
+        className="border-t border-[var(--app-border)] bg-[var(--app-canvas-2)] py-20 sm:py-28"
+      />
     </Page>
   );
 }
