@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Church,
+  Clock,
   Compass,
   Cross,
   Flame,
@@ -39,6 +40,7 @@ export type FlowDockIconName =
   | 'sparkles'
   | 'compass'
   | 'map-pin'
+  | 'clock'
   | 'calendar-days'
   | 'book-open'
   | 'cross'
@@ -60,6 +62,7 @@ const FLOW_DOCK_ICONS: Record<string, LucideIcon> = {
   sparkles: Sparkles,
   compass: Compass,
   mappin: MapPin,
+  clock: Clock,
   calendardays: CalendarDays,
   bookopen: BookOpen,
   cross: Cross,
@@ -71,15 +74,11 @@ const FLOW_DOCK_ICONS: Record<string, LucideIcon> = {
 };
 
 function resolveDockIcon(
-  icon:
-    FlowDockIconName | React.ComponentType<{ className?: string }> | undefined
+  icon: FlowDockIconName | undefined
 ): React.ComponentType<{ className?: string }> {
   if (!icon) return Sparkles;
-  if (typeof icon === 'string') {
-    const normalized = icon.toLowerCase().replace(/[\s_-]/g, '');
-    return FLOW_DOCK_ICONS[normalized] || Sparkles;
-  }
-  return icon;
+  const normalized = icon.toLowerCase().replace(/[\s_-]/g, '');
+  return FLOW_DOCK_ICONS[normalized] || Sparkles;
 }
 
 export interface FlowDockItem {
@@ -87,10 +86,9 @@ export interface FlowDockItem {
   title: string;
   description: string;
   badge: string;
-  icon: FlowDockIconName | React.ComponentType<{ className?: string }>;
+  icon: FlowDockIconName;
   href?: string;
   targetId?: string;
-  onClick?: () => void;
 }
 
 export interface SectionFlowDockProps {
@@ -176,10 +174,6 @@ export function SectionFlowDock({
 
   const handleItemClick = (item: FlowDockItem, idx: number) => {
     scrollToDockIndex(idx);
-    if (item.onClick) {
-      item.onClick();
-      return;
-    }
     if (item.targetId) {
       const el = document.getElementById(item.targetId);
       if (el) {
@@ -302,7 +296,7 @@ export function SectionFlowDock({
                   : 'border-white/5 bg-white/[0.02] shadow-none scale-[0.93] opacity-35 blur-[3.5px] hover:blur-none hover:opacity-85 hover:scale-[0.98] cursor-pointer'
               }`;
 
-              if (item.href && !item.targetId && !item.onClick) {
+              if (item.href && !item.targetId) {
                 return (
                   <Link
                     key={item.id}
