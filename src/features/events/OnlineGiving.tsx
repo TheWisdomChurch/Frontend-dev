@@ -1,12 +1,23 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { ArrowRight, Heart, Phone, ShieldCheck } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  Church,
+  Globe,
+  Heart,
+  Phone,
+  ShieldCheck,
+} from 'lucide-react';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
+import { IMAGE_QUALITY } from '@/shared/constants';
+import { KeystoneBank, ProvidusBank } from '@/shared/assets';
 
 const GivingModal = dynamic(() => import('@/shared/ui/modals/GivingModal'), {
   ssr: false,
@@ -28,6 +39,48 @@ import {
   staggerViewport,
 } from '@/shared/ui/motion';
 
+const DEFAULT_GIVING_OPTIONS: GivingOption[] = [
+  {
+    title: 'Tithes, Offerings and Seeds',
+    description: 'Give your tithes as an act of worship and obedience to God.',
+    icon: Church,
+    accounts: [
+      {
+        bank: 'Keystone Bank',
+        accountNumber: '1012525608',
+        accountName: 'The Wisdom Church',
+        image: KeystoneBank,
+      },
+    ],
+  },
+  {
+    title: 'Building Projects, Outreach and Partnership',
+    description: 'Support expansion projects and community outreach.',
+    icon: Building2,
+    accounts: [
+      {
+        bank: 'Keystone Bank',
+        accountNumber: '1012879868',
+        accountName: 'The Wisdom Church',
+        image: KeystoneBank,
+      },
+    ],
+  },
+  {
+    title: 'Diaspora Giving',
+    description: 'International giving and partnership support.',
+    icon: Globe,
+    accounts: [
+      {
+        bank: 'Providus Bank',
+        accountNumber: '5403892948',
+        accountName: 'The Wisdom Church',
+        image: ProvidusBank,
+      },
+    ],
+  },
+];
+
 export default function OnlineGiving() {
   const { open } = useServiceUnavailable();
 
@@ -41,10 +94,16 @@ export default function OnlineGiving() {
     apiClient
       .listGivingOptions()
       .then(opts => {
-        if (mounted) setGivingOptions(Array.isArray(opts) ? opts : []);
+        if (mounted) {
+          if (Array.isArray(opts) && opts.length > 0) {
+            setGivingOptions(opts);
+          } else {
+            setGivingOptions(DEFAULT_GIVING_OPTIONS);
+          }
+        }
       })
       .catch(() => {
-        if (mounted) setGivingOptions([]);
+        if (mounted) setGivingOptions(DEFAULT_GIVING_OPTIONS);
       })
       .finally(() => {
         if (mounted) setLoading(false);
@@ -57,18 +116,10 @@ export default function OnlineGiving() {
   const handleGive = useCallback((option: GivingOption) => {
     setSelected(option);
     setModalOpen(true);
-    // Giving-intent tracking is disabled until the backend endpoint is
-    // properly configured — re-enable once /giving/intents is ready.
-    // apiClient.submitGivingIntent({
-    //   title: option.title,
-    //   description: option.description,
-    //   sourceChannel: 'frontend:web:online-giving',
-    //   metadata: { page: 'home', component: 'OnlineGiving' },
-    // }).catch(() => {});
   }, []);
 
   const handlePrimaryGive = useCallback(() => {
-    const firstOption = givingOptions[0];
+    const firstOption = givingOptions[0] ?? DEFAULT_GIVING_OPTIONS[0];
     if (firstOption) {
       handleGive(firstOption);
       return;
@@ -86,9 +137,28 @@ export default function OnlineGiving() {
     <>
       <Section
         tone="dark"
-        className="bg-[radial-gradient(ellipse_75%_55%_at_80%_35%,color-mix(in_srgb,var(--app-primary)_12%,transparent)_0%,transparent_65%),var(--app-dark-2)]"
+        className="relative overflow-hidden bg-[var(--app-dark)] py-20 sm:py-28 lg:py-32"
       >
-        <Container>
+        {/* ── HD Cinematic Giving Sanctuary Backdrop ── */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        >
+          <Image
+            src="/images/giving-banner-hd.jpg"
+            alt="The Wisdom Church giving and generosity atmosphere"
+            fill
+            quality={IMAGE_QUALITY}
+            sizes="100vw"
+            priority
+            className="h-full w-full object-cover object-center opacity-60 filter brightness-105 contrast-105"
+          />
+          {/* Subtle balanced cinematic scrims: readable text, clear visible backdrop */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--app-dark)] via-[var(--app-dark)]/75 to-[var(--app-dark)]/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-dark)] via-transparent to-[var(--app-dark)]/65" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_75%_55%_at_80%_35%,color-mix(in_srgb,var(--app-primary)_18%,transparent)_0%,transparent_60%)]" />
+        </div>
+        <Container className="relative z-10">
           <div className="grid items-start gap-10 sm:gap-12 md:gap-10 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:gap-14 xl:gap-20">
             <div className="contents lg:block lg:max-w-xl lg:self-start lg:sticky lg:top-28">
               <div className="order-1 lg:order-none">
