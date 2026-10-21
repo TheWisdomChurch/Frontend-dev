@@ -20,6 +20,7 @@ import { cn } from '@/lib/cn';
 const EXPLORE = [
   { href: '/about', label: 'About Us' },
   { href: '/leadership', label: 'Leadership' },
+  { href: '/grow', label: 'Growth Portal' },
   { href: '/events', label: 'Events' },
   { href: '/ministries', label: 'Ministries' },
   { href: '/resources/sermons', label: 'Sermons' },
@@ -190,7 +191,7 @@ export default function Footer() {
             </Link>
 
             <p className="max-w-sm font-ui text-body-sm leading-[1.85] text-[var(--app-muted)]">
-              A Spirit-filled community raised to carry God&apos;s glory —
+              A spirit filled community empowered by God for Greatness —
               equipping every believer with the Word, prayer, and purpose.
             </p>
 

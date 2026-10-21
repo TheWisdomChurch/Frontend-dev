@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { LeadershipMember } from '@/domain/leadership/types';
-import { apiClient } from '@/lib/api';
+// import { apiClient } from '@/lib/api';
 import { Container, Section, SectionHeader } from '@/shared/ui/layout';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { LeaderCard } from '@/features/leadership/LeadershipCards';
@@ -26,15 +26,15 @@ function matchesName(leader: LeadershipMember, fragment: string): boolean {
 }
 
 export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
-  const [leaders, setLeaders] = useState<LeadershipMember[]>(cmsLeaders);
+  const [leaders] = useState<LeadershipMember[]>(cmsLeaders);
   const [selectedLeader, setSelectedLeader] = useState<LeadershipMember | null>(
     null
   );
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
 
-  // Client-side revalidation: ensures fresh data from the integrated endpoint
-  // even if server-side cold start or local development network was offline during SSR.
+  // Endpoint commented out per user instruction for organogram focus
+  /*
   useEffect(() => {
     let cancelled = false;
     apiClient
@@ -52,6 +52,7 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
       cancelled = true;
     };
   }, []);
+  */
 
   const openBio = (leader: LeadershipMember) => {
     setSelectedLeader(leader);
@@ -234,19 +235,24 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
         onOpenBio={openBio}
       />
 
-      {/* ── 2. Co-Ministers & Pastoral Oversight ────────────── */}
-      <Section tone="canvas" className="py-16 sm:py-20">
+      {/* ── 2. Leadership Organogram & Resident Pastors ───────── */}
+      <Section
+        tone="canvas"
+        className="relative overflow-hidden bg-[radial-gradient(ellipse_80%_60%_at_15%_40%,color-mix(in_srgb,var(--app-primary-10)_80%,transparent)_0%,transparent_65%),var(--app-canvas-2)] py-20 sm:py-28"
+      >
         <Container>
           <SectionHeader
-            eyebrow="Pastoral Oversight"
-            title="Co-Ministers &"
-            accent="Pastoral Team."
-            description="Devoted ministers shepherding the congregation, teaching biblical doctrine, and guiding church ministries."
+            eyebrow="Leadership Organogram"
+            title="Have a glimpse of our leadership organogram,"
+            accent="who comes together to form the leadership structure of the wisdom church."
+            description="Our ordained resident pastors serve faithfully under senior apostolic oversight, shepherding the congregation, teaching biblical doctrine, and directing church ministries."
+            size="lg"
+            className="max-w-4xl"
           />
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-2 max-w-4xl">
+          <div className="mt-14 grid gap-8 sm:grid-cols-2 max-w-4xl">
             {coMinisters.map((leader, i) => (
-              <ScrollFadeIn key={leader.id} delay={i * 0.08}>
+              <ScrollFadeIn key={leader.id} delay={i * 0.1}>
                 <LeaderCard leader={leader} tone="canvas" onOpenBio={openBio} />
               </ScrollFadeIn>
             ))}
@@ -254,21 +260,22 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
         </Container>
       </Section>
 
-      {/* ── 3. Board of Deacons & Deaconesses ───────────────── */}
+      {/* ── 3. Deacons & Deaconess Section ───────────────────── */}
       <Section
         tone="dark"
-        className="border-t border-white/10 bg-[var(--app-dark)] py-16 sm:py-20"
+        className="border-t border-white/10 bg-[radial-gradient(ellipse_75%_55%_at_50%_25%,color-mix(in_srgb,var(--app-primary)_12%,transparent)_0%,transparent_70%),var(--app-dark)] py-20 sm:py-28 text-white"
       >
         <Container>
           <SectionHeader
             eyebrow="Servant Leadership"
-            title="Board of"
-            accent="Deacons & Deaconesses."
-            description="Dedicated leaders who coordinate day-to-day church stewardship, welfare, and congregational care."
+            title="Deacons &"
+            accent="Deaconesses."
+            description="Dedicated servant leaders who coordinate day-to-day church stewardship, welfare, and congregational care."
             tone="dark"
+            size="lg"
           />
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {deacons.map((leader, i) => (
               <ScrollFadeIn key={leader.id} delay={i * 0.08}>
                 <LeaderCard leader={leader} tone="dark" onOpenBio={openBio} />
@@ -278,53 +285,53 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
         </Container>
       </Section>
 
-      {/* ── 4. Departmental & Ministry Leaders (Dynamic from Endpoint) ── */}
-      <Section
-        tone="canvas"
-        className="border-t border-[var(--app-border)] py-16 sm:py-24"
-      >
-        <Container>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <SectionHeader
-              eyebrow="Ministry Operations"
-              title="Departmental &"
-              accent="Ministry Leaders."
-              description="Faithful believers heading worship, children, hospitality, media, and outreach operations across the church."
-            />
+      {/* ── 4. Departmental & Ministry Leaders (Appears when endpoint is active) ── */}
+      {departmentLeaders.length > 0 && (
+        <Section
+          tone="canvas"
+          className="border-t border-[var(--app-border)] py-16 sm:py-24"
+        >
+          <Container>
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <SectionHeader
+                eyebrow="Ministry Operations"
+                title="Departmental &"
+                accent="Ministry Leaders."
+                description="Faithful believers heading worship, children, hospitality, media, and outreach operations across the church."
+              />
 
-            {/* Department Filter Pills (Dynamic from Endpoint Data) */}
-            {departmentCategories.length > 0 && (
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveFilter('all')}
-                  className={`inline-flex min-h-[44px] items-center rounded-full px-5 font-ui text-caption font-bold uppercase tracking-wider transition-all duration-200 ${
-                    activeFilter === 'all'
-                      ? 'bg-[var(--app-dark)] text-white shadow-sm'
-                      : 'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-muted)] hover:border-[var(--app-primary)] hover:text-[var(--app-text)]'
-                  }`}
-                >
-                  All ({departmentLeaders.length})
-                </button>
-                {departmentCategories.map(category => (
+              {/* Department Filter Pills (Dynamic from Endpoint Data) */}
+              {departmentCategories.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2">
                   <button
-                    key={category}
                     type="button"
-                    onClick={() => setActiveFilter(category)}
+                    onClick={() => setActiveFilter('all')}
                     className={`inline-flex min-h-[44px] items-center rounded-full px-5 font-ui text-caption font-bold uppercase tracking-wider transition-all duration-200 ${
-                      activeFilter === category
+                      activeFilter === 'all'
                         ? 'bg-[var(--app-dark)] text-white shadow-sm'
                         : 'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-muted)] hover:border-[var(--app-primary)] hover:text-[var(--app-text)]'
                     }`}
                   >
-                    {category}
+                    All ({departmentLeaders.length})
                   </button>
-                ))}
-              </div>
-            )}
-          </div>
+                  {departmentCategories.map(category => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => setActiveFilter(category)}
+                      className={`inline-flex min-h-[44px] items-center rounded-full px-5 font-ui text-caption font-bold uppercase tracking-wider transition-all duration-200 ${
+                        activeFilter === category
+                          ? 'bg-[var(--app-dark)] text-white shadow-sm'
+                          : 'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-muted)] hover:border-[var(--app-primary)] hover:text-[var(--app-text)]'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          {filteredDepartmentLeaders.length > 0 ? (
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredDepartmentLeaders.map((leader, i) => (
                 <ScrollFadeIn key={leader.id} delay={i * 0.08}>
@@ -336,20 +343,9 @@ export function LeadershipDirectory({ cmsLeaders }: LeadershipDirectoryProps) {
                 </ScrollFadeIn>
               ))}
             </div>
-          ) : (
-            <div className="mt-12 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-8 text-center sm:p-12">
-              <p className="font-headline text-heading-md text-[var(--app-ink)]">
-                Department Heads & Ministry Leads
-              </p>
-              <p className="mx-auto mt-2 max-w-lg font-ui text-body-sm text-[var(--app-muted)]">
-                {activeFilter === 'all'
-                  ? 'Our department leaders and ministry heads are dynamically synchronized with church administration. As newly approved departmental heads are published, they will appear here.'
-                  : `No department heads found under "${activeFilter}".`}
-              </p>
-            </div>
-          )}
-        </Container>
-      </Section>
+          </Container>
+        </Section>
+      )}
 
       {/* ── 5. Explore More Band ────────────────────────────── */}
       <ExploreMoreBand tone="canvas" />

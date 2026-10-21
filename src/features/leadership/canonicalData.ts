@@ -40,7 +40,7 @@ export const CANONICAL_CO_MINISTERS: LeadershipMember[] = [
     id: 'canon-pastor-1',
     firstName: 'Rev. Victor',
     lastName: 'Jimba',
-    role: 'reverend',
+    role: 'resident_pastor',
     status: 'approved',
     department: 'Resident Pastor',
     imageUrl: Associate_2.src,
@@ -50,11 +50,11 @@ export const CANONICAL_CO_MINISTERS: LeadershipMember[] = [
     id: 'canon-pastor-2',
     firstName: 'Pastor',
     lastName: 'Bamidele',
-    role: 'associate_pastor',
+    role: 'resident_pastor',
     status: 'approved',
-    department: 'Associate Pastor',
+    department: 'Resident Pastor',
     imageUrl: Associate_1.src,
-    bio: 'Pastor Bamidele serves as Associate Pastor, actively leading youth discipleship, evangelistic outreaches, and kingdom community mentorship initiatives.',
+    bio: 'Pastor Bamidele serves as Resident Pastor, actively shepherding the congregation, leading discipleship ministries, and guiding kingdom community mentorship initiatives.',
   },
 ];
 

@@ -27,6 +27,10 @@ const NAV_ITEMS: NavItem[] = [
     href: '/resources/sermons',
   },
   {
+    label: 'Grow',
+    href: '/grow',
+  },
+  {
     label: 'Ministries',
     href: '/ministries',
     children: [
@@ -59,6 +63,7 @@ const NAV_ITEMS: NavItem[] = [
 // Links shown directly in the header bar on desktop
 const DESKTOP_NAV: NavItem[] = [
   { label: 'Watch', href: '/resources/sermons' },
+  { label: 'Grow', href: '/grow' },
   { label: 'Ministries', href: '/ministries' },
   { label: 'Events', href: '/events' },
   { label: 'About', href: '/about' },

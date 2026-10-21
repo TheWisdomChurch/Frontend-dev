@@ -4,13 +4,19 @@
  * them and gives them friendly labels — but any string is valid.
  */
 export type LeadershipRoleSlug =
-  'senior_pastor' | 'associate_pastor' | 'deacon' | 'deaconess' | 'reverend';
+  | 'senior_pastor'
+  | 'associate_pastor'
+  | 'resident_pastor'
+  | 'deacon'
+  | 'deaconess'
+  | 'reverend';
 
 export type LeadershipRole = LeadershipRoleSlug | (string & {});
 
 const ROLE_LABELS: Record<LeadershipRoleSlug, string> = {
   senior_pastor: 'Senior Pastor',
   associate_pastor: 'Associate Pastor',
+  resident_pastor: 'Resident Pastor',
   deacon: 'Deacon',
   deaconess: 'Deaconess',
   reverend: 'Reverend',

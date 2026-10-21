@@ -138,24 +138,13 @@ export default function HomeHero({
             </span>
           </div>
 
-          {/* Headline: Clean, Punchy, High Definition */}
-          <h1 className="w-full max-w-3xl font-ui leading-[1.08] tracking-[-0.03em] text-white [text-shadow:0_4px_36px_black]">
-            <span className="block overflow-hidden pb-[0.05em]">
-              <span
-                data-hero-title-line
-                className="block text-[clamp(2.4rem,1.6rem+4.2vw,4.5rem)] font-bold tracking-[-0.03em] text-white"
-              >
-                Raising Believers
-              </span>
+          {/* Headline: Clean, Punchy, High Definition (Immediately visible on load) */}
+          <h1 className="w-full max-w-4xl font-ui leading-[1.12] tracking-[-0.03em] text-white [text-shadow:0_4px_36px_black]">
+            <span className="block text-[clamp(2.3rem,1.5rem+4vw,4.4rem)] font-bold tracking-[-0.03em] text-white">
+              Empowering Believers
             </span>
-
-            <span className="block overflow-hidden pb-[0.08em]">
-              <span
-                data-hero-title-line
-                className="hero-accent block font-headline text-[clamp(2.5rem,1.7rem+4.5vw,4.8rem)] font-normal italic tracking-[-0.02em] text-[var(--app-primary-light)]"
-              >
-                for a life of Impact
-              </span>
+            <span className="hero-accent block font-headline text-[clamp(2.2rem,1.4rem+3.8vw,4.2rem)] font-normal italic tracking-[-0.02em] text-[var(--app-primary-light)]">
+              for a life of impact and greatness.
             </span>
           </h1>
 

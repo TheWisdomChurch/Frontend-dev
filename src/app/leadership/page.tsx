@@ -1,5 +1,5 @@
 import SiteHero from '@/features/hero/SiteHero';
-import { apiClient } from '@/lib/api';
+// import { apiClient } from '@/lib/api';
 import type { LeadershipMember } from '@/domain/leadership/types';
 import { formatLeadershipRole } from '@/domain/leadership/types';
 import JsonLd from '@/shared/seo/JsonLd';
@@ -17,10 +17,11 @@ import {
 export const dynamic = 'force-dynamic';
 
 export default async function LeadershipPage() {
-  // Fetch dynamic CMS leadership, with graceful fallback to empty array
-  const cmsLeaders: LeadershipMember[] = await apiClient
-    .listLeadership()
-    .catch(() => []);
+  // Dynamic CMS leadership endpoint temporarily commented out for organogram structure
+  // const cmsLeaders: LeadershipMember[] = await apiClient
+  //   .listLeadership()
+  //   .catch(() => []);
+  const cmsLeaders: LeadershipMember[] = [];
 
   // Combined set of leaders for search engine rich snippets
   const allLeadersForSchema = [
