@@ -68,7 +68,7 @@ export default function HomeHero({
       data-site-hero
       onMouseMove={handleHeroMouseMove}
       onMouseLeave={handleHeroMouseLeave}
-      className="tone-dark relative isolate flex h-screen min-h-[100svh] w-full max-w-full flex-col justify-end overflow-hidden overflow-x-clip bg-[var(--app-dark)] text-white"
+      className="tone-dark relative isolate flex min-h-[100svh] w-full max-w-full flex-col justify-end overflow-hidden overflow-x-clip bg-[var(--app-dark)] text-white"
     >
       {/* ── 1. Living Video Background Canvas (Ken Burns Drift, Light Beams, & Stage Flare) ── */}
       <div
@@ -125,8 +125,8 @@ export default function HomeHero({
       {/* Subtle warm gold ambient aura */}
       <div aria-hidden="true" className="hero-aurora" />
 
-      {/* ── 3. Hero Content: Full-Bleed Clean Layout (DCC Style) ──────────────── */}
-      <Container className="relative z-10 w-full pb-10 sm:pb-14 lg:pb-18">
+      {/* ── 3. Hero Content: Full-Bleed Clean Layout (Pushed Down) ──────────── */}
+      <Container className="relative z-10 w-full pt-36 pb-16 sm:pt-44 sm:pb-20 lg:pt-52 lg:pb-24">
         <div
           data-hero-content
           className="hero-parallax-content flex w-full max-w-4xl flex-col items-start gap-4 sm:gap-5"
@@ -151,7 +151,7 @@ export default function HomeHero({
           {/* Directional Interactive Action Buttons */}
           <div
             data-hero-item
-            className="flex flex-row flex-wrap items-center gap-3.5 pt-2 sm:gap-4 sm:pt-3"
+            className="flex flex-row flex-wrap items-center gap-3.5 pt-3 sm:gap-4 sm:pt-4"
           >
             {/* Primary Live Button (DCC Style Solid Pill with Hover Direction) */}
             <a

@@ -414,7 +414,7 @@ export function GrowthPortal() {
               </div>
             </div>
 
-            {/* Scrollable / Slidable Track (Auto-scrolled, inactive cards blurred, active card crystal clear) */}
+            {/* Scrollable / Slidable Track */}
             <div
               ref={dockScrollRef}
               onScroll={handleDockScroll}
@@ -422,7 +422,7 @@ export function GrowthPortal() {
               onMouseLeave={() => setIsPaused(false)}
               onTouchStart={() => setIsPaused(true)}
               onTouchEnd={() => setIsPaused(false)}
-              className="flex gap-4 overflow-x-auto px-1 py-3 scroll-smooth snap-x snap-mandatory no-scrollbar"
+              className="flex gap-4 sm:gap-5 overflow-x-auto px-1 py-2 sm:py-3 scroll-smooth snap-x snap-mandatory no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {pathwayDockItems.map((item, idx) => {
                 const Icon = item.icon;
@@ -437,10 +437,10 @@ export function GrowthPortal() {
                       scrollToDockIndex(idx);
                       handleDockClick(item);
                     }}
-                    className={`group relative flex w-[82vw] max-w-[340px] shrink-0 snap-start flex-col justify-between rounded-2xl border p-5 text-left transition-all duration-500 sm:w-[320px] lg:w-[310px] ${
+                    className={`group relative flex w-[84vw] max-w-[340px] shrink-0 snap-start flex-col justify-between rounded-2xl border p-5 sm:p-6 text-left transition-all duration-300 sm:w-[320px] lg:w-[310px] xl:w-[320px] 2xl:w-[330px] min-h-[195px] ${
                       isActive
-                        ? 'border-[var(--app-primary)] bg-gradient-to-b from-white/[0.14] via-white/[0.06] to-[var(--app-primary)]/15 shadow-2xl shadow-black/90 ring-1 ring-[var(--app-primary)]/60 scale-100 opacity-100 filter-none z-10 cursor-pointer'
-                        : 'border-white/5 bg-white/[0.02] shadow-none scale-[0.93] opacity-35 blur-[3.5px] hover:blur-none hover:opacity-85 hover:scale-[0.98] cursor-pointer'
+                        ? 'border-[var(--app-primary)] bg-gradient-to-b from-white/[0.14] via-white/[0.06] to-[var(--app-primary)]/15 shadow-2xl shadow-black/90 ring-1 ring-[var(--app-primary)]/60 scale-100 opacity-100 z-10 cursor-pointer'
+                        : 'border-white/10 bg-white/[0.03] shadow-md scale-[0.98] opacity-75 hover:opacity-100 hover:scale-100 hover:border-[var(--app-primary)]/40 hover:bg-white/[0.07] cursor-pointer'
                     }`}
                   >
                     {/* Top Row: Icon badge + top-right arrow */}
