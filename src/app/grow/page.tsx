@@ -37,7 +37,16 @@ export default function GrowPage() {
         imagePositionClassName="object-center"
         eyebrow="Training & Discipleship Portal"
         title="Forming Believers for Greatness and Impact."
+        titleLines={['Forming Believers', 'for Greatness and Impact.']}
+        highlightSecondLine
+        align="left"
         subtitle="A clear, progressive discipleship framework designed to ground you in sound doctrine, nurture spiritual authority, and integrate you into a purposeful covenant family."
+        chips={[
+          'Biblical Foundations',
+          'Spiritual Authority',
+          'Pastoral Mentorship',
+          'Certificate Tracks',
+        ]}
       />
 
       {/* ── 2. Diagonal 2-Column Discipleship Classes ─────────── */}
