@@ -97,16 +97,6 @@ export default function Header() {
     setNavOpen(false);
   }
 
-  // Scroll tracking for header background
-  useEffect(() => {
-    const onScroll = () => {
-      document.body.dataset.scrolled = window.scrollY > 16 ? 'true' : 'false';
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   // Scroll lock + focus management
   useEffect(() => {
     document.body.classList.toggle('nav-open', navOpen);
@@ -150,6 +140,7 @@ export default function Header() {
                 className="site-header__logo"
               />
             </span>
+            <span className="site-header__divider" aria-hidden="true" />
             <span className="site-header__wordmark" aria-hidden="true">
               <span className="site-header__wordmark-sub">The Wisdom</span>
               <strong className="site-header__wordmark-title">Church</strong>
@@ -241,6 +232,7 @@ export default function Header() {
                   className="nav-overlay__brand-logo"
                 />
               </span>
+              <span className="site-header__divider" aria-hidden="true" />
               <span className="nav-overlay__brand-wordmark">
                 <span>The Wisdom</span>
                 <strong>Church</strong>

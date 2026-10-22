@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 
 import { useServiceUnavailable } from '@/shared/contexts/ServiceUnavailableContext';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import { KeystoneBank, ProvidusBank } from '@/shared/assets';
 
 const GivingModal = dynamic(() => import('@/shared/ui/modals/GivingModal'), {
@@ -145,12 +144,11 @@ export default function OnlineGiving() {
           className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
         >
           <Image
-            src="/images/giving-banner-hd.jpg"
+            src="/images/giving-banner-hd.webp"
             alt="The Wisdom Church giving and generosity atmosphere"
             fill
-            quality={IMAGE_QUALITY}
+            unoptimized
             sizes="100vw"
-            priority
             className="h-full w-full object-cover object-center opacity-60 filter brightness-105 contrast-105"
           />
           {/* Subtle balanced cinematic scrims: readable text, clear visible backdrop */}

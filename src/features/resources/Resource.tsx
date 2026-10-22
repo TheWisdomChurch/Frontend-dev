@@ -423,7 +423,23 @@ export default function ResourceSection() {
         </Container>
       </div>
 
-      <Container className="py-section-sm">
+      <Container className="pt-16 pb-12 sm:pt-20 sm:pb-16">
+        <div className="mb-8 sm:mb-12 max-w-2xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-primary)]/30 bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] px-3.5 py-1 text-xs font-semibold text-[var(--app-primary)] mb-3.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
+            <span>Pathways & Ministries</span>
+          </div>
+          <h2 className="font-headline text-heading-xl sm:text-heading-2xl font-bold tracking-tight text-[var(--app-ink)]">
+            Explore our church,{' '}
+            <span className="text-[var(--app-primary)]">find your path.</span>
+          </h2>
+          <p className="mt-3.5 font-ui text-body-md sm:text-body-lg text-[var(--app-subtle)] leading-relaxed">
+            Whether you want to listen to life-transforming sermons, receive
+            dedicated pastoral care, equip your spiritual walk with store
+            resources, or connect with active ministries to serve — explore the
+            pathways prepared for you.
+          </p>
+        </div>
         <ResourceCarousel />
       </Container>
     </Section>

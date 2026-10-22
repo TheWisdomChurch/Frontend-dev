@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 
 import { cn } from '@/lib/cn';
 import { lader } from '@/shared/assets';
-import { IMAGE_QUALITY } from '@/shared/constants';
 import { Container } from '@/shared/ui/Container';
 
 export type SiteHeroProps = {
@@ -61,7 +60,7 @@ export default function SiteHero({
         alt=""
         fill
         priority
-        quality={IMAGE_QUALITY}
+        unoptimized
         sizes="100vw"
         data-hero-media
         className={cn(

@@ -1,17 +1,35 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function ClientScrollHandler() {
+  const rafId = useRef<number | null>(null);
+  const isScrolledRef = useRef<boolean | null>(null);
+
   useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY > 8;
-      document.body.dataset.scrolled = scrolled ? 'true' : 'false';
+    const update = () => {
+      const isScrolled = window.scrollY > 16;
+      if (isScrolledRef.current !== isScrolled) {
+        isScrolledRef.current = isScrolled;
+        document.body.dataset.scrolled = isScrolled ? 'true' : 'false';
+      }
+      rafId.current = null;
     };
 
-    handleScroll();
+    const handleScroll = () => {
+      if (rafId.current === null) {
+        rafId.current = window.requestAnimationFrame(update);
+      }
+    };
+
+    update();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId.current !== null) {
+        window.cancelAnimationFrame(rafId.current);
+      }
+    };
   }, []);
 
   return null;

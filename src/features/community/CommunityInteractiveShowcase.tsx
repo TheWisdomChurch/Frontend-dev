@@ -9,7 +9,6 @@ import { Container, Section, SectionHeader } from '@/shared/ui/layout';
 import { ConnectCommunityCta } from '@/features/community/ConnectCommunityCta';
 import { buttonClass } from '@/shared/ui/button';
 import { cn } from '@/lib/cn';
-import { IMAGE_QUALITY } from '@/shared/constants';
 
 export interface CommunityPillar {
   id: string;
@@ -163,7 +162,7 @@ export default function CommunityInteractiveShowcase() {
                           src={pillar.images.main.src}
                           alt={pillar.images.main.alt}
                           fill
-                          quality={IMAGE_QUALITY}
+                          unoptimized
                           sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 30vw"
                           className={cn(
                             'h-full w-full object-cover transition-transform duration-1000 ease-out hover:scale-105',
@@ -204,7 +203,7 @@ export default function CommunityInteractiveShowcase() {
                             src={pillar.images.sub1.src}
                             alt={pillar.images.sub1.alt}
                             fill
-                            quality={IMAGE_QUALITY}
+                            unoptimized
                             sizes="(max-width: 1023px) 50vw, 20vw"
                             className={cn(
                               'h-full w-full object-cover',
@@ -235,7 +234,7 @@ export default function CommunityInteractiveShowcase() {
                             src={pillar.images.sub2.src}
                             alt={pillar.images.sub2.alt}
                             fill
-                            quality={IMAGE_QUALITY}
+                            unoptimized
                             sizes="(max-width: 1023px) 50vw, 20vw"
                             className={cn(
                               'h-full w-full object-cover',
