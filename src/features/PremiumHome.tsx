@@ -23,6 +23,7 @@ import {
   Section,
   SplitFeature,
 } from '@/shared/ui/layout';
+import { Marquee } from '@/shared/ui/Marquee';
 
 const HOME_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
   {
@@ -103,19 +104,29 @@ export default function PremiumHome() {
                   description={HOME_COPY.welcome.description}
                 />
 
-                <div className="flex flex-wrap gap-2.5 pt-1">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 font-ui text-xs font-semibold text-[var(--app-text)] shadow-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
-                    Sound Doctrine
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 font-ui text-xs font-semibold text-[var(--app-text)] shadow-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
-                    Fervent Prayer
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 font-ui text-xs font-semibold text-[var(--app-text)] shadow-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-primary)]" />
-                    Genuine Family
-                  </span>
+                <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]/90 py-3 px-2 shadow-xs backdrop-blur-md">
+                  <div className="flex items-center gap-2 mb-2 px-3 border-b border-[var(--app-border)]/60 pb-2">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--app-primary)] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--app-primary)]" />
+                    </span>
+                    <span className="font-ui text-[10px] font-bold uppercase tracking-widest text-[var(--app-primary)]">
+                      Core Foundations · Church Ticker
+                    </span>
+                  </div>
+                  <Marquee
+                    items={[
+                      'Sound Doctrine',
+                      'Fervent Prayer',
+                      'Genuine Family',
+                      'Sound Doctrine',
+                      'Fervent Prayer',
+                      'Genuine Family',
+                    ]}
+                    speedSeconds={20}
+                    className="py-1"
+                    itemClassName="font-ui text-xs sm:text-sm font-bold tracking-wider uppercase text-[var(--app-ink)]"
+                  />
                 </div>
               </div>
             }
@@ -192,8 +203,7 @@ export default function PremiumHome() {
                     src={belief.image}
                     alt={belief.imageAlt}
                     fill
-                    unoptimized={false}
-                    quality={IMAGE_QUALITY}
+                    unoptimized
                     sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 58vw"
                     className={`object-cover ${belief.imagePosition} transition-transform duration-700 ease-out md:group-hover:scale-105`}
                   />
@@ -236,7 +246,7 @@ export default function PremiumHome() {
               src={HOME_IMAGES.service.desktopSrc}
               alt="Wisdom Church Sunday Service sanctuary atmosphere"
               fill
-              quality={IMAGE_QUALITY}
+              unoptimized
               sizes="100vw"
               className="h-full w-full object-cover object-center opacity-30"
             />
