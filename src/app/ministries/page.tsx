@@ -173,7 +173,10 @@ const pathway = [
 
 export default function MinistriesPage() {
   return (
-    <Page className="overflow-hidden">
+    <Page
+      tone="surface"
+      className="bg-[var(--app-dark)] text-[var(--app-text)] overflow-hidden"
+    >
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },

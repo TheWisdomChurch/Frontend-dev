@@ -20,7 +20,6 @@ import type {
   LeadershipMember,
   LeadershipRoleSlug,
 } from '@/domain/leadership/types';
-import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import { SOCIAL_LINKS } from '@/shared/constants/contactInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import {
@@ -60,36 +59,44 @@ const SENIOR_ROLES: LeadershipRoleSlug[] = [
 
 const ABOUT_FLOW_DOCK_ITEMS: readonly FlowDockItem[] = [
   {
-    id: 'dock-sunday-worship',
-    title: 'Sunday Worship Service',
-    description: `${SERVICE_INFO.sunday.time} ${SERVICE_INFO.sunday.timezone} · Honor Gardens Sanctuary`,
-    badge: 'Sunday 9:00 AM',
-    icon: 'church',
-    targetId: 'sunday-worship',
+    id: 'dock-message',
+    title: 'The Gospel Message',
+    description: 'Good news that establishes believers in sound doctrine',
+    badge: 'Our Message',
+    icon: 'book-open',
+    targetId: 'the-message',
   },
   {
-    id: 'dock-daily-prayer',
-    title: 'Daily Prayer Altar',
-    description: `${SERVICE_INFO.dailyPrayer.daysShort} · ${SERVICE_INFO.dailyPrayer.time} online & altar`,
-    badge: 'Daily Prayer',
+    id: 'dock-vision',
+    title: 'Vision & Mission',
+    description: 'Raising complete believers manifesting Christ everywhere',
+    badge: 'Our Mandate',
+    icon: 'compass',
+    targetId: 'vision-mission',
+  },
+  {
+    id: 'dock-pillars',
+    title: 'Five Core Pillars',
+    description: 'Sound doctrine, prayer, family, worship, and godly wisdom',
+    badge: 'Five Pillars',
+    icon: 'shield-check',
+    targetId: 'five-pillars',
+  },
+  {
+    id: 'dock-identity',
+    title: 'Church Identity & Family',
+    description: 'A warm, spirit-filled community where every soul belongs',
+    badge: 'Our Family',
     icon: 'heart-handshake',
-    targetId: 'daily-prayer',
-  },
-  {
-    id: 'dock-church-home',
-    title: 'Our Sanctuary Home',
-    description: `${SERVICE_INFO.venue.short} · Ample parking & hospitality`,
-    badge: 'Honor Gardens',
-    icon: 'map-pin',
-    targetId: 'location',
+    targetId: 'church-identity',
   },
   {
     id: 'dock-pastors',
-    title: 'Pastoral Shepherds',
+    title: 'Pastoral Council',
     description: 'Bishop Gabriel Ayilara & Pastoral Council oversight',
     badge: 'Leadership',
     icon: 'users',
-    href: '/leadership',
+    targetId: 'pastoral-leadership',
   },
 ];
 
@@ -110,7 +117,10 @@ export default async function AboutPage() {
     .slice(0, 2);
 
   return (
-    <Page tone="surface">
+    <Page
+      tone="surface"
+      className="bg-[var(--app-dark)] text-[var(--app-text)]"
+    >
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -156,7 +166,7 @@ export default async function AboutPage() {
         items={ABOUT_FLOW_DOCK_ITEMS}
       />
 
-      <Section>
+      <Section id="the-message" className="scroll-mt-24">
         <Container>
           <SectionHeader
             eyebrow={content.message.label}
@@ -170,7 +180,7 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      <Section tone="canvas">
+      <Section id="vision-mission" tone="canvas" className="scroll-mt-24">
         <Container>
           <div className="grid gap-5 lg:grid-cols-2">
             {[content.vision, content.mission].map(item => (
@@ -185,7 +195,7 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      <Section tone="dark">
+      <Section id="five-pillars" tone="dark" className="scroll-mt-24">
         <Container>
           <SectionHeader
             eyebrow="What shapes us"
@@ -209,7 +219,7 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      <Section>
+      <Section id="church-identity" className="scroll-mt-24">
         <Container>
           <Split>
             <div>
@@ -244,7 +254,7 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      <Section tone="dark">
+      <Section id="pastoral-leadership" tone="dark" className="scroll-mt-24">
         <Container>
           <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader

@@ -187,7 +187,7 @@ export function SectionFlowDock({
     <section
       aria-label={`${label} Quick Navigation`}
       className={cn(
-        'relative z-20 -mt-8 sm:-mt-12 lg:-mt-16 pb-12 sm:pb-16 lg:pb-20',
+        'tone-dark relative z-20 -mt-8 sm:-mt-12 lg:-mt-16 pb-12 sm:pb-16 lg:pb-20 bg-[var(--app-dark)] text-white',
         className
       )}
     >
