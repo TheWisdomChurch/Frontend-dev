@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { apiClient } from '@/lib/api';
 import type { EventPublic, ReelPublic } from '@/lib/apiTypes';
 import { useApiQuery } from './useApiQuery';
+import { getEventDetailHref } from '@/features/events/eventLinks';
 
 export interface HeroSlide {
   id: string;
@@ -40,14 +41,17 @@ function formatEventDate(startAt?: string, endAt?: string): string {
   const startLabel = startDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
+    timeZone: 'Africa/Lagos',
   });
 
   const endLabel = validEndDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
+    timeZone: 'Africa/Lagos',
   });
 
-  return startDate.toDateString() !== validEndDate.toDateString()
+  return startDate.toLocaleDateString('en-US', { timeZone: 'Africa/Lagos' }) !==
+    validEndDate.toLocaleDateString('en-US', { timeZone: 'Africa/Lagos' })
     ? `${startLabel} - ${endLabel}`
     : startLabel;
 }
@@ -61,6 +65,7 @@ function formatEventTime(startAt?: string): string | undefined {
   return startDate.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'Africa/Lagos',
   });
 }
 
@@ -83,8 +88,8 @@ function mapEventToHeroSlide(event: EventPublic): HeroSlide {
       date: dateLabel,
       time: formatEventTime(event.startAt),
       location: event.location || undefined,
-      ctaLabel: 'Register Now',
-      ctaUrl: event.registerLink || `/events/${event.id}`,
+      ctaLabel: 'View event',
+      ctaUrl: getEventDetailHref(event.id),
     },
     type: 'event',
   };
@@ -108,10 +113,11 @@ function mapReelToHeroSlide(reel: ReelPublic): HeroSlide {
         ? new Date(reel.publishedAt).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
+            timeZone: 'Africa/Lagos',
           })
         : 'Recently',
-      ctaLabel: 'Watch Now',
-      ctaUrl: `/resources/reels/${reel.id}`,
+      ctaLabel: 'Explore resources',
+      ctaUrl: '/resources',
     },
     type: 'reel',
   };

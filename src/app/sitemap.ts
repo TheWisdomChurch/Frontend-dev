@@ -1,6 +1,8 @@
 // src/app/sitemap.ts
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/seo';
+import { apiClient } from '@/lib/api';
+import { getEventDetailHref } from '@/features/events/eventLinks';
 
 // How often Next should refresh this sitemap (seconds)
 export const revalidate = 3600; // 1 hour
@@ -37,6 +39,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/grow`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/grow/believers-equipping`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.65,
     },
     {
       url: `${SITE_URL}/events/calendar`,
@@ -166,5 +180,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  return [...staticRoutes];
+  const eventRoutes = await apiClient
+    .listEvents()
+    .then(events =>
+      events.map(event => ({
+        url: `${SITE_URL}${getEventDetailHref(event.id)}`,
+        lastModified: now,
+        changeFrequency: 'weekly' as const,
+        priority: 0.65,
+      }))
+    )
+    .catch(() => [] as MetadataRoute.Sitemap);
+
+  return [...staticRoutes, ...eventRoutes];
 }

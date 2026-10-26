@@ -12,9 +12,12 @@ const requiredPublicPages = [
   'src/app/privacy/page.tsx',
   'src/app/terms/page.tsx',
   'src/app/events/page.tsx',
+  'src/app/events/[eventId]/page.tsx',
   'src/app/events/calendar/page.tsx',
   'src/app/events/upcoming/page.tsx',
   'src/app/events/weekly/page.tsx',
+  'src/app/grow/page.tsx',
+  'src/app/grow/believers-equipping/page.tsx',
   'src/app/leadership/page.tsx',
   'src/app/ministries/page.tsx',
   'src/app/ministries/children/page.tsx',
@@ -90,7 +93,7 @@ const publicPresentationFiles = new Set([
 
 for (const file of sourceFiles) {
   const source = readFileSync(file, 'utf8');
-  const displayPath = relative(root, file);
+  const displayPath = relative(root, file).replaceAll('\\', '/');
   const normalizedSource = source.replace(/^\uFEFF/, '').trimStart();
   const isClientComponent = /['"]use client['"]/.test(
     normalizedSource.slice(0, 512)

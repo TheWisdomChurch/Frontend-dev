@@ -190,19 +190,38 @@ function parseEventDate(
 ): { startAt?: string; endAt?: string } {
   if (!date) return {};
 
-  const baseDate = date.includes('T') ? date : `${date}T00:00:00`;
-  const start = new Date(baseDate);
+  const dateOnly = date.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
+  const timeParts = time?.trim().match(
+    /^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i
+  );
+
+  // Event dates without an explicit offset are church-local WAT times. Adding
+  // the fixed Lagos offset keeps server rendering consistent across hosts.
+  const start =
+    dateOnly && !date.includes('T') && timeParts
+      ? (() => {
+          let hour = Number(timeParts[1]);
+          const minute = Number(timeParts[2]);
+          const second = Number(timeParts[3] ?? 0);
+          const meridiem = timeParts[4]?.toUpperCase();
+          if (meridiem) {
+            if (hour < 1 || hour > 12) return new Date(Number.NaN);
+            hour = (hour % 12) + (meridiem === 'PM' ? 12 : 0);
+          }
+          if (hour > 23 || minute > 59 || second > 59) {
+            return new Date(Number.NaN);
+          }
+          const clock = [hour, minute, second]
+            .map(part => String(part).padStart(2, '0'))
+            .join(':');
+          return new Date(`${dateOnly}T${clock}+01:00`);
+        })()
+      : new Date(date.includes('T') ? date : `${date}T00:00:00+01:00`);
   if (Number.isNaN(start.getTime())) return {};
 
-  if (time) {
-    const parsedWithTime = new Date(`${date} ${time}`);
-    if (!Number.isNaN(parsedWithTime.getTime())) {
-      const end = new Date(parsedWithTime.getTime() + 2 * 60 * 60 * 1000);
-      return {
-        startAt: parsedWithTime.toISOString(),
-        endAt: end.toISOString(),
-      };
-    }
+  if (time && timeParts) {
+    const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+    return { startAt: start.toISOString(), endAt: end.toISOString() };
   }
 
   return { startAt: start.toISOString() };
@@ -233,8 +252,9 @@ function mapBackendEvent(input: unknown): EventPublic | null {
   const date = asNonEmptyString(input.date);
   const time = asNonEmptyString(input.time);
   const location = asNonEmptyString(input.location);
-  const bannerUrl = asNonEmptyString(input.bannerImage);
-  const imageUrl = bannerUrl ?? asNonEmptyString(input.image);
+  const bannerUrl = resolveMediaUrl(asNonEmptyString(input.bannerImage)) ?? undefined;
+  const imageUrl =
+    bannerUrl ?? resolveMediaUrl(asNonEmptyString(input.image)) ?? undefined;
   const registerLink = asNonEmptyString(input.registerLink);
   const { startAt, endAt } = parseEventDate(date, time);
 
@@ -758,6 +778,7 @@ export const apiClient = {
     const res = await request<unknown>(`/events${qs}`, {
       method: 'GET',
       signal,
+      skipCache: true,
     });
     return extractArrayData<unknown>(res)
       .map(mapBackendEvent)

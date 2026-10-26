@@ -6,6 +6,7 @@ import Link from 'next/link';
 import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
+import { getEventDetailHref } from '@/features/events/eventLinks';
 import type { EventPublic } from '@/lib/apiTypes';
 import Arrow from '@/shared/ui/icons/Arrow';
 import { getEventTimestamp as getTimestamp } from '@/shared/utils/eventDate';
@@ -264,9 +265,7 @@ export default function CalendarPage() {
                 {monthEvents.map(ev => {
                   const t = getTimestamp(ev);
                   const d = new Date(t);
-                  const href =
-                    ev.registerLink ??
-                    (ev.formSlug ? `/forms/${ev.formSlug}` : null);
+                  const href = getEventDetailHref(ev.id);
                   return (
                     <div key={ev.id} className="flex items-center gap-6 py-5">
                       <div className="w-14 shrink-0 text-right">
@@ -290,12 +289,12 @@ export default function CalendarPage() {
                         )}
                       </div>
                       {href && (
-                        <a
+                        <Link
                           href={href}
                           className={buttonClass('outline', 'sm', 'shrink-0')}
                         >
-                          Register <Arrow />
-                        </a>
+                          View details <Arrow />
+                        </Link>
                       )}
                     </div>
                   );

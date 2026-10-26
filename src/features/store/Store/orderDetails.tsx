@@ -86,14 +86,20 @@ const OrderConfirmation = () => {
   ];
 
   useEffect(() => {
-    const fetchOrderDetails = async () => {
+    let active = true;
+    let fetching = false;
+
+    const fetchOrderDetails = async (initial = false) => {
+      if (fetching || !active) return;
+      fetching = true;
       try {
-        const storedOrder =
-          (orderId ? await storeClient.getOrder(orderId) : null) ||
-          (await storeClient.getLastOrder());
+        // A confirmation must always match the requested order. Falling back
+        // to the last order held in this browser can show a different
+        // customer's checkout after navigation or a failed lookup.
+        const storedOrder = orderId ? await storeClient.getOrder(orderId) : null;
 
         if (!storedOrder) {
-          setOrderDetails(null);
+          if (active) setOrderDetails(null);
           return;
         }
 
@@ -120,16 +126,37 @@ const OrderConfirmation = () => {
           bankDetails: storedOrder.bankDetails,
         };
 
-        setOrderDetails(mappedOrder);
+        if (active) {
+          setOrderDetails(mappedOrder);
+          setLoadError(false);
+        }
       } catch (error) {
-        console.error('Error fetching order details:', error);
-        setLoadError(true);
+        if (initial && active) {
+          console.error('Error fetching order details:', error);
+          setLoadError(true);
+        }
       } finally {
-        setLoading(false);
+        fetching = false;
+        if (active && initial) setLoading(false);
       }
     };
 
-    fetchOrderDetails();
+    void fetchOrderDetails(true);
+    // Keep the confirmation aligned with staff updates without requiring a
+    // manual refresh. Pause polling in background tabs to avoid waste.
+    const refreshTimer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') void fetchOrderDetails();
+    }, 30_000);
+    const refreshOnReturn = () => {
+      if (document.visibilityState === 'visible') void fetchOrderDetails();
+    };
+    document.addEventListener('visibilitychange', refreshOnReturn);
+
+    return () => {
+      active = false;
+      window.clearInterval(refreshTimer);
+      document.removeEventListener('visibilitychange', refreshOnReturn);
+    };
   }, [orderId]);
 
   const paymentMethodConfig = {
