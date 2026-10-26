@@ -55,10 +55,6 @@ const API_ORIGIN = resolveConfiguredApiOrigin();
 const API_V1_BASE_URL = `${API_ORIGIN}/api/v1`;
 const storeHttp = createHttpClient({ baseUrl: API_V1_BASE_URL });
 
-const inMemoryFallback: { lastOrder: StoreOrder | null } = {
-  lastOrder: null,
-};
-
 const orderCredentialKey = (orderId: string) => `wisdom-store-order:${orderId}`;
 
 function rememberOrderCredential(orderId: string, token: string) {
@@ -132,7 +128,6 @@ export const storeClient = {
       unwrap: true,
     });
     rememberOrderCredential(order.orderId, payload.checkoutToken);
-    inMemoryFallback.lastOrder = order;
     return order;
   },
 
@@ -143,11 +138,11 @@ export const storeClient = {
         `/store/orders/${encodeURIComponent(orderId)}`,
         {
           method: 'GET',
+          skipCache: true,
           unwrap: true,
           headers: { 'X-Order-Access-Token': readOrderCredential(orderId) },
         }
       );
-      inMemoryFallback.lastOrder = order;
       return order;
     } catch (error) {
       if (isHttpError(error) && error.statusCode === 404) return null;
@@ -168,11 +163,6 @@ export const storeClient = {
         body: JSON.stringify({ paymentSlipUrl }),
       }
     );
-    inMemoryFallback.lastOrder = order;
     return order;
-  },
-
-  async getLastOrder(): Promise<StoreOrder | null> {
-    return inMemoryFallback.lastOrder;
   },
 };

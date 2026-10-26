@@ -6,6 +6,7 @@ import Link from 'next/link';
 import SiteHero from '@/features/hero/SiteHero';
 import { ScrollFadeIn } from '@/shared/ui/motion';
 import { apiClient } from '@/lib/api';
+import { getEventDetailHref } from '@/features/events/eventLinks';
 import type { EventPublic } from '@/lib/apiTypes';
 import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import Arrow from '@/shared/ui/icons/Arrow';
@@ -104,9 +105,7 @@ export default function UpcomingPage() {
             <div className="grid gap-4">
               {events.map((event, i) => {
                 const date = formatDate(event);
-                const href =
-                  event.registerLink ??
-                  (event.formSlug ? `/forms/${event.formSlug}` : null);
+                const href = getEventDetailHref(event.id);
                 return (
                   <ScrollFadeIn key={event.id} delay={i * 0.04}>
                     <article
@@ -140,12 +139,12 @@ export default function UpcomingPage() {
                       {/* CTA */}
                       <div className="flex items-center">
                         {href ? (
-                          <a
+                          <Link
                             href={href}
                             className="inline-flex items-center gap-2 border border-[color-mix(in_srgb,var(--app-primary)_35%,transparent)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-primary)] transition hover:bg-[var(--app-primary)] hover:text-[var(--app-ink)]"
                           >
-                            Register <Arrow />
-                          </a>
+                            View event <Arrow />
+                          </Link>
                         ) : (
                           <span className="inline-flex items-center border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-muted)]">
                             Free entry

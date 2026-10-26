@@ -29,22 +29,30 @@ export function formatEventDateParts(
   }
   const date = new Date(timestamp);
   return {
-    month: date.toLocaleString('en', { month: 'short' }).toUpperCase(),
-    day: String(date.getDate()),
+    month: date.toLocaleString('en', { month: 'short', timeZone: 'Africa/Lagos' }).toUpperCase(),
+    day: new Intl.DateTimeFormat('en', { day: 'numeric', timeZone: 'Africa/Lagos' }).format(date),
     full: date.toLocaleString('en', {
       weekday,
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+      timeZone: 'Africa/Lagos',
     }),
   };
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-const startOfDay = (value: number) => {
-  const d = new Date(value);
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+const lagosDayOrdinal = (value: number) => {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Africa/Lagos',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find(item => item.type === type)?.value);
+  return Date.UTC(part('year'), part('month') - 1, part('day'));
 };
 
 /**
@@ -63,12 +71,15 @@ export function getRelativeEventLabel(
   const end = Number.isNaN(endRaw) ? start : endRaw;
   if (now >= start && now <= end) return 'Happening now';
 
-  const dayDiff = Math.round((startOfDay(start) - startOfDay(now)) / DAY_MS);
+  const dayDiff = Math.round((lagosDayOrdinal(start) - lagosDayOrdinal(now)) / DAY_MS);
   if (dayDiff < 0) return null;
   if (dayDiff === 0) return 'Today';
   if (dayDiff === 1) return 'Tomorrow';
   if (dayDiff < 7) {
-    return new Date(start).toLocaleDateString('en', { weekday: 'long' });
+    return new Date(start).toLocaleDateString('en', {
+      weekday: 'long',
+      timeZone: 'Africa/Lagos',
+    });
   }
   return null;
 }
@@ -110,6 +121,7 @@ export function formatEventTime(event: EventPublic): string {
       return date.toLocaleString('en', {
         hour: '2-digit',
         minute: '2-digit',
+        timeZone: 'Africa/Lagos',
       });
     }
   }

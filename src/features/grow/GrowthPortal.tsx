@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   AlertCircle,
@@ -41,6 +42,7 @@ interface ClassItem {
   curriculum: string[];
   features: string[];
   buttonText: string;
+  detailHref?: string;
   layout: 'normal' | 'inverse';
 }
 
@@ -98,7 +100,8 @@ const GROWTH_CLASSES: ClassItem[] = [
       'Hands-On Ministry Practice & Impartation',
       'Pastoral Equipping Graduation',
     ],
-    buttonText: 'Register for Equipping Class',
+    buttonText: 'Read More',
+    detailHref: '/grow/believers-equipping',
     layout: 'inverse',
   },
   {
@@ -186,7 +189,7 @@ export function GrowthPortal() {
     preferredSchedule: 'In-Person Sanctuary (Honor Gardens)',
   });
 
-  const handleOpenModal = (item: ClassItem) => {
+  const handleOpenModal = useCallback((item: ClassItem) => {
     setSelectedClass(item);
     setSubmitted(false);
     setError(null);
@@ -196,7 +199,25 @@ export function GrowthPortal() {
       phone: '',
       preferredSchedule: 'In-Person Sanctuary (Honor Gardens)',
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    const registerTrack = new URLSearchParams(window.location.search).get(
+      'register',
+    );
+    const classToRegister = GROWTH_CLASSES.find(
+      item => item.id === registerTrack,
+    );
+
+    if (classToRegister) {
+      window.history.replaceState(
+        window.history.state,
+        '',
+        window.location.pathname,
+      );
+      handleOpenModal(classToRegister);
+    }
+  }, [handleOpenModal]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -504,18 +525,32 @@ export function GrowthPortal() {
 
                     {/* Action CTA Button */}
                     <div className="pt-4">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenModal(item)}
-                        className={
-                          isDarkClass
-                            ? 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[var(--app-primary-dark)] via-[var(--app-primary)] to-[var(--app-primary-light)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-dark)] shadow-[0_4px_20px_color-mix(in_srgb,var(--app-primary)_40%,transparent)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--app-primary)_70%,transparent)] hover:brightness-105 active:scale-[0.98]'
-                            : 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-[var(--app-dark)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-[var(--app-primary-dark)] hover:text-white transition-all duration-300 active:scale-[0.98]'
-                        }
-                      >
-                        <span>{item.buttonText}</span>
-                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </button>
+                      {item.detailHref ? (
+                        <Link
+                          href={item.detailHref}
+                          className={
+                            isDarkClass
+                              ? 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[var(--app-primary-dark)] via-[var(--app-primary)] to-[var(--app-primary-light)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-dark)] shadow-[0_4px_20px_color-mix(in_srgb,var(--app-primary)_40%,transparent)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--app-primary)_70%,transparent)] hover:brightness-105 active:scale-[0.98]'
+                              : 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-[var(--app-dark)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-[var(--app-primary-dark)] hover:text-white transition-all duration-300 active:scale-[0.98]'
+                          }
+                        >
+                          <span>{item.buttonText}</span>
+                          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenModal(item)}
+                          className={
+                            isDarkClass
+                              ? 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[var(--app-primary-dark)] via-[var(--app-primary)] to-[var(--app-primary-light)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-[var(--app-dark)] shadow-[0_4px_20px_color-mix(in_srgb,var(--app-primary)_40%,transparent)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--app-primary)_70%,transparent)] hover:brightness-105 active:scale-[0.98]'
+                              : 'group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-[var(--app-dark)] px-7 py-3.5 font-ui text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-[var(--app-primary-dark)] hover:text-white transition-all duration-300 active:scale-[0.98]'
+                          }
+                        >
+                          <span>{item.buttonText}</span>
+                          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </motion.div>

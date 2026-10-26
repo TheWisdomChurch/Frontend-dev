@@ -22,6 +22,7 @@ import {
 import { buttonClass } from '@/shared/ui/button';
 import { staggerContainer, staggerItem } from '@/shared/ui/motion';
 import { cn } from '@/lib/cn';
+import { getEventDetailHref } from './eventLinks';
 
 /* ── Types ──────────────────────────────────────────────── */
 
@@ -67,7 +68,11 @@ function formatDate(startAt?: string): string {
   const d = new Date(startAt);
   if (Number.isNaN(d.getTime())) return DATE_TBA;
   return d
-    .toLocaleDateString('en', { month: 'short', day: '2-digit' })
+    .toLocaleDateString('en', {
+      month: 'short',
+      day: '2-digit',
+      timeZone: 'Africa/Lagos',
+    })
     .toUpperCase();
 }
 
@@ -420,8 +425,8 @@ export default function EventsShowcase() {
       date: formatDate(e.startAt || e.date),
       location: e.location || SERVICE_INFO.venue.short,
       imageUrl: e.bannerUrl || e.imageUrl || EventBannerDesktop.src,
-      cta: 'Save a seat',
-      href: e.formSlug ? `/forms/${e.formSlug}` : e.registerLink || '/events',
+      cta: 'View details',
+      href: getEventDetailHref(e.id),
       badge: statusBadge(e.startAt || e.date, e.endAt, eventsLoadedAt),
       category: 'program' as const,
     }));

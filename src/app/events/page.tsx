@@ -3,11 +3,9 @@ import {
   CalendarClock,
   CalendarDays,
   CalendarRange,
-  Clock3,
   List,
   MapPin,
   Sparkles,
-  SunMedium,
 } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
@@ -37,40 +35,17 @@ import {
   Page,
   Panel,
   Section,
+  SectionEmpty,
   SectionHeader,
   interactiveCardClass,
 } from '@/shared/ui/layout';
 import { buttonClass } from '@/shared/ui/button';
+import { getEventDetailHref } from '@/features/events/eventLinks';
 
 /* ── Utilities ──────────────────────────────────────────── */
 
-function registerHref(event: EventPublic): string | null {
-  if (event.registerLink) return event.registerLink;
-  if (event.formSlug) return `/forms/${event.formSlug}`;
-  return null;
-}
-
 type DateParts = ReturnType<typeof formatDate>;
 
-/* ── Static weekly data ─────────────────────────────────── */
-
-const WEEKLY = [
-  {
-    day: SERVICE_INFO.sunday.day,
-    time: SERVICE_INFO.sunday.time,
-    name: 'Sunday Worship Service',
-    description:
-      'Spirit-filled corporate worship, prayer, and the preached Word.',
-    icon: SunMedium,
-  },
-  {
-    day: SERVICE_INFO.dailyPrayer.daysShort,
-    time: SERVICE_INFO.dailyPrayer.time,
-    name: 'Daily Morning Prayer',
-    description: 'Start the day in prayer, declaration, and the Word.',
-    icon: CalendarClock,
-  },
-] as const;
 
 const BROWSE = [
   {
@@ -187,7 +162,7 @@ function EventMeta({ event }: { event: EventPublic }) {
 /* ── Featured (next) event ──────────────────────────────── */
 
 function EventFeature({ event }: { event: EventPublic }) {
-  const href = registerHref(event);
+  const href = getEventDetailHref(event.id);
   const image = event.bannerUrl ?? event.imageUrl ?? null;
   const date = formatDate(event);
   const relative = getRelativeEventLabel(event);
@@ -223,9 +198,9 @@ function EventFeature({ event }: { event: EventPublic }) {
         ) : null}
         <div className="mt-auto pt-2">
           {href ? (
-            <a href={href} className={buttonClass('primary')}>
-              Register <Arrow />
-            </a>
+            <Link href={href} className={buttonClass('primary')}>
+              Event details <Arrow />
+            </Link>
           ) : (
             <span className="inline-flex items-center gap-2 rounded-button border border-[var(--app-border)] px-5 py-2.5 font-ui text-label font-semibold text-[var(--app-subtle)]">
               Free entry — just come
@@ -242,7 +217,7 @@ function EventFeature({ event }: { event: EventPublic }) {
 function EventCard({ event }: { event: EventPublic }) {
   const date = formatDate(event);
   const time = formatTime(event);
-  const href = registerHref(event);
+  const href = getEventDetailHref(event.id);
   const image = event.bannerUrl ?? event.imageUrl ?? null;
 
   return (
@@ -294,12 +269,12 @@ function EventCard({ event }: { event: EventPublic }) {
         </div>
 
         {href ? (
-          <a
+          <Link
             href={href}
             className={buttonClass('outline', 'sm', 'mt-1 self-start')}
           >
-            Register <Arrow />
-          </a>
+            View event <Arrow />
+          </Link>
         ) : (
           <span className="mt-1 self-start font-ui text-label font-semibold text-[var(--app-subtle)]">
             Free entry — just come
@@ -343,9 +318,10 @@ const HORIZON_META: { key: EventHorizon; label: string }[] = [
 /* ── Page ───────────────────────────────────────────────── */
 
 export default async function EventsPage() {
-  const rawEvents = await apiClient
+  const [rawEvents, eventsUnavailable] = await apiClient
     .listEvents()
-    .catch(() => [] as EventPublic[]);
+    .then(events => [events, false] as const)
+    .catch(() => [[] as EventPublic[], true] as const);
   const events = [...rawEvents]
     .filter(isUpcoming)
     .sort((a, b) => getTimestamp(a) - getTimestamp(b));
@@ -408,76 +384,7 @@ export default async function EventsPage() {
         </Container>
       </Section>
 
-      {/* ── 3. Weekly rhythm ─────────────────────────────────── */}
-      <Section tone="canvas">
-        <Container>
-          <ScrollFadeIn>
-            <SectionHeader
-              eyebrow="Weekly rhythm"
-              title="We gather every week."
-              accent="Come as you are."
-            />
-          </ScrollFadeIn>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
-            {WEEKLY.map((svc, i) => {
-              const ServiceIcon = svc.icon;
-              return (
-                <ScrollFadeIn key={svc.day} delay={i * 0.09} className="h-full">
-                  <div
-                    className={cn(
-                      'group flex h-full flex-col gap-5 rounded-card border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8',
-                      interactiveCardClass
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="font-ui text-heading-lg font-semibold leading-none text-[var(--app-ink)]">
-                          {svc.day}
-                        </p>
-                        <p className="mt-2 flex items-center gap-2 font-ui text-body-sm font-bold text-[var(--app-primary-dark)]">
-                          <Clock3 className="h-4 w-4" aria-hidden="true" />
-                          {svc.time}
-                        </p>
-                      </div>
-                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-button bg-[var(--app-primary-10)] text-[var(--app-primary-dark)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--app-primary)] group-hover:text-[var(--app-ink)]">
-                        <ServiceIcon className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                    </div>
-
-                    <div className="h-[1.5px] w-8 bg-[color-mix(in_srgb,var(--app-primary)_50%,transparent)]" />
-
-                    <div className="space-y-1.5">
-                      <p className="font-ui text-heading-sm font-semibold text-[var(--app-ink)]">
-                        {svc.name}
-                      </p>
-                      <p className="font-ui text-body-sm leading-[1.8] text-[var(--app-muted)]">
-                        {svc.description}
-                      </p>
-                      <p className="flex items-start gap-2 font-ui text-label leading-relaxed text-[var(--app-subtle)]">
-                        <MapPin
-                          className="mt-0.5 h-4 w-4 shrink-0 text-[var(--app-primary-dark)]"
-                          aria-hidden="true"
-                        />
-                        <span>{SERVICE_INFO.venue.full}</span>
-                      </p>
-                    </div>
-
-                    <PlanVisitTrigger
-                      variant="outline"
-                      className="mt-auto self-start"
-                    >
-                      Plan a visit
-                    </PlanVisitTrigger>
-                  </div>
-                </ScrollFadeIn>
-              );
-            })}
-          </div>
-        </Container>
-      </Section>
-
-      {/* ── 4. Upcoming events ───────────────────────────────── */}
+      {/* CMS-managed events */}
       <Section tone="dark">
         <Container>
           <ScrollFadeIn className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -495,7 +402,13 @@ export default async function EventsPage() {
             ) : null}
           </ScrollFadeIn>
 
-          {events.length === 0 ? (
+          {eventsUnavailable ? (
+            <SectionEmpty
+              title="Events are temporarily unavailable."
+              description="We could not load the latest event listings. Please try again shortly or contact our team for help."
+              action={<CtaLink href="/contact" variant="outline">Contact us <Arrow /></CtaLink>}
+            />
+          ) : events.length === 0 ? (
             <ScrollFadeIn>
               <EmptyState />
             </ScrollFadeIn>
