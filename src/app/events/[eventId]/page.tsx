@@ -79,7 +79,10 @@ export default async function EventDetailPage({ params }: EventRouteProps) {
   const image = event.bannerUrl ?? event.imageUrl;
 
   return (
-    <Page tone="surface" className="bg-[var(--app-dark)] text-[var(--app-text)]">
+    <Page
+      tone="surface"
+      className="bg-[var(--app-dark)] text-[var(--app-text)]"
+    >
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },

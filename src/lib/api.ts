@@ -191,9 +191,9 @@ function parseEventDate(
   if (!date) return {};
 
   const dateOnly = date.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
-  const timeParts = time?.trim().match(
-    /^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i
-  );
+  const timeParts = time
+    ?.trim()
+    .match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i);
 
   // Event dates without an explicit offset are church-local WAT times. Adding
   // the fixed Lagos offset keeps server rendering consistent across hosts.
@@ -252,7 +252,8 @@ function mapBackendEvent(input: unknown): EventPublic | null {
   const date = asNonEmptyString(input.date);
   const time = asNonEmptyString(input.time);
   const location = asNonEmptyString(input.location);
-  const bannerUrl = resolveMediaUrl(asNonEmptyString(input.bannerImage)) ?? undefined;
+  const bannerUrl =
+    resolveMediaUrl(asNonEmptyString(input.bannerImage)) ?? undefined;
   const imageUrl =
     bannerUrl ?? resolveMediaUrl(asNonEmptyString(input.image)) ?? undefined;
   const registerLink = asNonEmptyString(input.registerLink);
@@ -775,11 +776,14 @@ function normalizeTestimonial(raw: unknown): Testimonial {
 export const apiClient = {
   async listEvents(signal?: AbortSignal): Promise<EventPublic[]> {
     const qs = toQueryString({ page: 1, limit: 100 });
-    const res = await request<unknown>(`/events${qs}`, {
-      method: 'GET',
-      signal,
-      skipCache: true,
-    });
+    const res = await request<unknown>(
+      `/events${qs}`,
+      {
+        method: 'GET',
+        signal,
+      },
+      { skipCache: true }
+    );
     return extractArrayData<unknown>(res)
       .map(mapBackendEvent)
       .filter((item): item is EventPublic => item !== null);

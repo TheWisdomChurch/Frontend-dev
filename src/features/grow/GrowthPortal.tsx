@@ -203,19 +203,22 @@ export function GrowthPortal() {
 
   useEffect(() => {
     const registerTrack = new URLSearchParams(window.location.search).get(
-      'register',
+      'register'
     );
     const classToRegister = GROWTH_CLASSES.find(
-      item => item.id === registerTrack,
+      item => item.id === registerTrack
     );
 
     if (classToRegister) {
       window.history.replaceState(
         window.history.state,
         '',
-        window.location.pathname,
+        window.location.pathname
       );
-      handleOpenModal(classToRegister);
+      const frameId = window.requestAnimationFrame(() => {
+        handleOpenModal(classToRegister);
+      });
+      return () => window.cancelAnimationFrame(frameId);
     }
   }, [handleOpenModal]);
 

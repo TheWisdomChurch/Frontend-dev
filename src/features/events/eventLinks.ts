@@ -17,7 +17,5 @@ export function getEventRegistrationHref(event: EventPublic): string | null {
     }
   }
 
-  return event.formSlug
-    ? `/forms/${encodeURIComponent(event.formSlug)}`
-    : null;
+  return event.formSlug ? `/forms/${encodeURIComponent(event.formSlug)}` : null;
 }

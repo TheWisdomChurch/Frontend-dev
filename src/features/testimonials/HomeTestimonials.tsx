@@ -38,7 +38,9 @@ export default function HomeTestimonials() {
     null
   );
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const mobileSliderRef = useRef<HTMLDivElement | null>(null);
   const activeThumbRef = useRef<HTMLDivElement | null>(null);
+  const hasInteractedOrRotatedRef = useRef(false);
 
   useEffect(() => {
     let mounted = true;
@@ -91,15 +93,18 @@ export default function HomeTestimonials() {
     };
   }, [current, isPaused, userInteracted, goTo, quotes.length]);
 
-  // Scroll active mobile thumbnail into view smoothly
+  // Scroll active mobile thumbnail horizontally inside its container only (never scrolls the page)
   useEffect(() => {
-    if (activeThumbRef.current) {
-      activeThumbRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center',
-      });
+    if (!hasInteractedOrRotatedRef.current) {
+      hasInteractedOrRotatedRef.current = true;
+      return;
     }
+    const container = mobileSliderRef.current;
+    const thumb = activeThumbRef.current;
+    if (!container || !thumb || container.offsetParent === null) return;
+    const targetLeft =
+      thumb.offsetLeft - container.clientWidth / 2 + thumb.clientWidth / 2;
+    container.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
   }, [current]);
 
   // Loading skeleton
@@ -201,7 +206,7 @@ export default function HomeTestimonials() {
                 {/* Subtle Watermark Quote */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute right-4 top-2 select-none font-headline text-[10rem] sm:text-[13rem] font-bold leading-none text-[var(--app-primary)]/5"
+                  className="pointer-events-none absolute right-4 top-2 select-none font-headline text-[10rem] sm:text-[13rem] font-bold leading-none text-[var(--app-primary)] opacity-[0.06]"
                 >
                   &rdquo;
                 </div>
@@ -305,7 +310,7 @@ export default function HomeTestimonials() {
             </div>
 
             {/* ── Right 5 Cols: Community Praise Reports Deck ── */}
-            <div className="lg:col-span-5 flex flex-col justify-between min-w-0 lg:rounded-3xl lg:border lg:border-[var(--app-border)] lg:bg-[var(--app-canvas)] lg:p-6 sm:lg:p-7 xl:lg:p-8 lg:shadow-xl">
+            <div className="lg:col-span-5 flex flex-col justify-between min-w-0 lg:rounded-3xl lg:border lg:border-[var(--app-border)] lg:bg-[var(--app-canvas)] lg:p-6 xl:p-8 lg:shadow-xl">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   {/* Deck Title Bar */}
@@ -320,7 +325,7 @@ export default function HomeTestimonials() {
                   </div>
 
                   {/* ── Desktop Deck: Scrollable & Proportionally Fitted ── */}
-                  <div className="hidden lg:flex flex-col gap-3 max-h-[380px] xl:max-h-[410px] overflow-y-auto pr-1.5 scrollbar-thin">
+                  <div className="hidden lg:flex flex-col gap-3 max-h-[420px] xl:max-h-[460px] overflow-y-auto pr-1.5 scrollbar-thin">
                     {quotes.map((quote, idx) => {
                       const isActive = idx === current;
                       return (
@@ -336,7 +341,7 @@ export default function HomeTestimonials() {
                             }
                           }}
                           className={cn(
-                            'group relative block w-full rounded-2xl border p-4 text-left transition-all duration-200 cursor-pointer',
+                            'group relative block w-full shrink-0 overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 cursor-pointer',
                             isActive
                               ? 'border-[var(--app-primary)] bg-[color-mix(in_srgb,var(--app-primary)_10%,transparent)] shadow-sm ring-1 ring-[var(--app-primary)]/40 border-l-4 border-l-[var(--app-primary)]'
                               : 'border-[var(--app-border)] bg-[var(--app-canvas-2)]/60 hover:border-[var(--app-primary)]/40 hover:bg-[var(--app-canvas-2)]'
@@ -384,7 +389,10 @@ export default function HomeTestimonials() {
                   </div>
 
                   {/* ── Mobile & Tablet Deck: Horizontal Snap Slider ── */}
-                  <div className="lg:hidden flex gap-3 overflow-x-auto pb-3 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x scrollbar-none">
+                  <div
+                    ref={mobileSliderRef}
+                    className="lg:hidden flex gap-3 overflow-x-auto pb-3 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x scrollbar-none"
+                  >
                     {quotes.map((quote, idx) => {
                       const isActive = idx === current;
                       return (
