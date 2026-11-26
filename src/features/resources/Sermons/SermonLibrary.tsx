@@ -1,6 +1,7 @@
 'use client';
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import {
   ArrowRight,
   BookOpen,
@@ -423,7 +424,7 @@ export default function SermonLibrary({
                       </a>
                     </div>
                     <div className="mt-9 grid gap-3 border-t border-[var(--app-border)] pt-6 sm:grid-cols-2">
-                      <a
+                      <Link
                         href="/events/weekly"
                         className="group flex items-center gap-3 rounded-2xl bg-white/[.045] p-4 transition hover:bg-white/[.08]"
                       >
@@ -439,8 +440,8 @@ export default function SermonLibrary({
                             {SERVICE_INFO.venue.short}
                           </span>
                         </span>
-                      </a>
-                      <a
+                      </Link>
+                      <Link
                         href="/resources"
                         className="group flex items-center gap-3 rounded-2xl bg-white/[.045] p-4 transition hover:bg-white/[.08]"
                       >
@@ -455,7 +456,7 @@ export default function SermonLibrary({
                             Books, articles and growth tools
                           </span>
                         </span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
