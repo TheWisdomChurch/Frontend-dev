@@ -57,7 +57,10 @@ const outcomes = [
 
 export default function BelieversEquippingPage() {
   return (
-    <Page tone="surface" className="bg-[var(--app-dark)] text-[var(--app-text)]">
+    <Page
+      tone="surface"
+      className="bg-[var(--app-dark)] text-[var(--app-text)]"
+    >
       <JsonLd
         data={buildBreadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -88,7 +91,8 @@ export default function BelieversEquippingPage() {
               Spiritual Dominion &amp; Ministry
             </span>
             <h1 className="mt-7 font-headline text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-7xl">
-              Believers Equipping <span className="text-[var(--app-primary-light)]">Class</span>
+              Believers Equipping{' '}
+              <span className="text-[var(--app-primary-light)]">Class</span>
             </h1>
             <p className="mt-6 max-w-2xl font-ui text-lg leading-relaxed text-white/75 sm:text-xl">
               Deepening your walk in the Spirit and Truth.
@@ -137,17 +141,28 @@ export default function BelieversEquippingPage() {
             </div>
             <div className="space-y-5 font-ui text-base leading-8 text-[var(--app-muted)]">
               <p>
-                The Believers Equipping Class is for Christians ready to grow in spiritual maturity and become more effective in the life and work of the church. Each session brings biblical teaching together with guided discussion, mentorship, and practical application.
+                The Believers Equipping Class is for Christians ready to grow in
+                spiritual maturity and become more effective in the life and
+                work of the church. Each session brings biblical teaching
+                together with guided discussion, mentorship, and practical
+                application.
               </p>
               <p>
-                You will study how the Holy Spirit works, learn to steward spiritual gifts with humility, and explore what it means to exercise kingdom authority in a life of service. The aim is not simply to add knowledge, but to help you live what you learn and serve people well.
+                You will study how the Holy Spirit works, learn to steward
+                spiritual gifts with humility, and explore what it means to
+                exercise kingdom authority in a life of service. The aim is not
+                simply to add knowledge, but to help you live what you learn and
+                serve people well.
               </p>
             </div>
           </div>
         </Container>
       </Section>
 
-      <Section tone="surface" className="border-b border-white/10 bg-[var(--app-dark-2)] py-16 text-white sm:py-24">
+      <Section
+        tone="surface"
+        className="border-b border-white/10 bg-[var(--app-dark-2)] py-16 text-white sm:py-24"
+      >
         <Container>
           <div className="max-w-2xl">
             <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary-light)]">
@@ -159,29 +174,51 @@ export default function BelieversEquippingPage() {
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             {modules.map((module, index) => (
-              <article key={module.title} className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
-                <span className="font-ui text-sm font-bold text-[var(--app-primary-light)]">MODULE 0{index + 1}</span>
-                <h3 className="mt-4 font-headline text-xl font-bold text-white">{module.title}</h3>
-                <p className="mt-3 font-ui text-sm leading-7 text-white/65">{module.description}</p>
+              <article
+                key={module.title}
+                className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8"
+              >
+                <span className="font-ui text-sm font-bold text-[var(--app-primary-light)]">
+                  MODULE 0{index + 1}
+                </span>
+                <h3 className="mt-4 font-headline text-xl font-bold text-white">
+                  {module.title}
+                </h3>
+                <p className="mt-3 font-ui text-sm leading-7 text-white/65">
+                  {module.description}
+                </p>
               </article>
             ))}
           </div>
         </Container>
       </Section>
 
-      <Section tone="canvas" className="bg-[var(--app-canvas-2)] py-16 sm:py-24">
+      <Section
+        tone="canvas"
+        className="bg-[var(--app-canvas-2)] py-16 sm:py-24"
+      >
         <Container>
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
             <div>
-              <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">Equipped to serve</p>
-              <h2 className="mt-4 font-headline text-3xl font-bold text-[var(--app-text)] sm:text-4xl">Learning that continues into ministry.</h2>
+              <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
+                Equipped to serve
+              </p>
+              <h2 className="mt-4 font-headline text-3xl font-bold text-[var(--app-text)] sm:text-4xl">
+                Learning that continues into ministry.
+              </h2>
               <p className="mt-5 font-ui leading-8 text-[var(--app-muted)]">
-                Training includes spiritual gifts assessment and mentorship, hands-on ministry practice, and pastoral guidance. Participants who complete the pathway are celebrated at the Pastoral Equipping Graduation.
+                Training includes spiritual gifts assessment and mentorship,
+                hands-on ministry practice, and pastoral guidance. Participants
+                who complete the pathway are celebrated at the Pastoral
+                Equipping Graduation.
               </p>
             </div>
             <ul className="space-y-4">
               {outcomes.map(outcome => (
-                <li key={outcome} className="flex gap-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4 font-ui leading-7 text-[var(--app-text)]">
+                <li
+                  key={outcome}
+                  className="flex gap-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4 font-ui leading-7 text-[var(--app-text)]"
+                >
                   <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[var(--app-primary-dark)]" />
                   <span>{outcome}</span>
                 </li>
@@ -191,9 +228,16 @@ export default function BelieversEquippingPage() {
 
           <div className="mt-14 rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)] p-7 sm:p-10 lg:flex lg:items-center lg:justify-between lg:gap-10">
             <div>
-              <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">Take your next step</p>
-              <h2 className="mt-3 font-headline text-2xl font-bold text-[var(--app-text)] sm:text-3xl">Grow in the Spirit. Serve with purpose.</h2>
-              <p className="mt-3 max-w-2xl font-ui leading-7 text-[var(--app-muted)]">Register your interest and our discipleship team will follow up with cohort onboarding details.</p>
+              <p className="font-ui text-xs font-bold uppercase tracking-[0.2em] text-[var(--app-primary-dark)]">
+                Take your next step
+              </p>
+              <h2 className="mt-3 font-headline text-2xl font-bold text-[var(--app-text)] sm:text-3xl">
+                Grow in the Spirit. Serve with purpose.
+              </h2>
+              <p className="mt-3 max-w-2xl font-ui leading-7 text-[var(--app-muted)]">
+                Register your interest and our discipleship team will follow up
+                with cohort onboarding details.
+              </p>
             </div>
             <Link
               href="/grow?register=believers-equipping"

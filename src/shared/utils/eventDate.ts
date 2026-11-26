@@ -29,8 +29,13 @@ export function formatEventDateParts(
   }
   const date = new Date(timestamp);
   return {
-    month: date.toLocaleString('en', { month: 'short', timeZone: 'Africa/Lagos' }).toUpperCase(),
-    day: new Intl.DateTimeFormat('en', { day: 'numeric', timeZone: 'Africa/Lagos' }).format(date),
+    month: date
+      .toLocaleString('en', { month: 'short', timeZone: 'Africa/Lagos' })
+      .toUpperCase(),
+    day: new Intl.DateTimeFormat('en', {
+      day: 'numeric',
+      timeZone: 'Africa/Lagos',
+    }).format(date),
     full: date.toLocaleString('en', {
       weekday,
       day: 'numeric',
@@ -71,7 +76,9 @@ export function getRelativeEventLabel(
   const end = Number.isNaN(endRaw) ? start : endRaw;
   if (now >= start && now <= end) return 'Happening now';
 
-  const dayDiff = Math.round((lagosDayOrdinal(start) - lagosDayOrdinal(now)) / DAY_MS);
+  const dayDiff = Math.round(
+    (lagosDayOrdinal(start) - lagosDayOrdinal(now)) / DAY_MS
+  );
   if (dayDiff < 0) return null;
   if (dayDiff === 0) return 'Today';
   if (dayDiff === 1) return 'Tomorrow';

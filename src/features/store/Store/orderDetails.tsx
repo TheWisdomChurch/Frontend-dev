@@ -96,7 +96,9 @@ const OrderConfirmation = () => {
         // A confirmation must always match the requested order. Falling back
         // to the last order held in this browser can show a different
         // customer's checkout after navigation or a failed lookup.
-        const storedOrder = orderId ? await storeClient.getOrder(orderId) : null;
+        const storedOrder = orderId
+          ? await storeClient.getOrder(orderId)
+          : null;
 
         if (!storedOrder) {
           if (active) setOrderDetails(null);
