@@ -16,7 +16,6 @@ import { Media } from '@/shared/ui/Media';
 import { EventCalendarStrip } from '@/features/events/EventCalendarStrip';
 import { apiClient } from '@/lib/api';
 import type { EventPublic } from '@/lib/apiTypes';
-import { SERVICE_INFO } from '@/shared/constants/serviceInfo';
 import JsonLd from '@/shared/seo/JsonLd';
 import { buildEventSchema, buildBreadcrumbSchema } from '@/lib/seo';
 import Arrow from '@/shared/ui/icons/Arrow';
@@ -45,7 +44,6 @@ import { getEventDetailHref } from '@/features/events/eventLinks';
 /* ── Utilities ──────────────────────────────────────────── */
 
 type DateParts = ReturnType<typeof formatDate>;
-
 
 const BROWSE = [
   {
@@ -406,7 +404,11 @@ export default async function EventsPage() {
             <SectionEmpty
               title="Events are temporarily unavailable."
               description="We could not load the latest event listings. Please try again shortly or contact our team for help."
-              action={<CtaLink href="/contact" variant="outline">Contact us <Arrow /></CtaLink>}
+              action={
+                <CtaLink href="/contact" variant="outline">
+                  Contact us <Arrow />
+                </CtaLink>
+              }
             />
           ) : events.length === 0 ? (
             <ScrollFadeIn>
